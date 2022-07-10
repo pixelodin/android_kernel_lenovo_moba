@@ -16,6 +16,10 @@
 #include <linux/export.h>
 #include <linux/interrupt.h>
 #include <linux/io.h>
+<<<<<<< HEAD
+=======
+#include <linux/io-pgtable.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/iommu.h>
 #include <linux/module.h>
 #include <linux/of.h>
@@ -37,8 +41,11 @@
 #define arm_iommu_detach_device(...)	do {} while (0)
 #endif
 
+<<<<<<< HEAD
 #include "io-pgtable.h"
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define IPMMU_CTX_MAX 8
 
 struct ipmmu_features {

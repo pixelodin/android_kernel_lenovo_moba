@@ -295,9 +295,15 @@ static inline u32 netvsc_get_hash(
 		else if (flow.basic.n_proto == htons(ETH_P_IPV6))
 			hash = jhash2((u32 *)&flow.addrs.v6addrs, 8, hashrnd);
 		else
+<<<<<<< HEAD
 			hash = 0;
 
 		skb_set_hash(skb, hash, PKT_HASH_TYPE_L3);
+=======
+			return 0;
+
+		__skb_set_sw_hash(skb, hash, false);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	return hash;
@@ -804,8 +810,12 @@ static struct sk_buff *netvsc_alloc_recv_skb(struct net_device *net,
 	    skb->protocol == htons(ETH_P_IP))
 		netvsc_comp_ipcsum(skb);
 
+<<<<<<< HEAD
 	/* Do L4 checksum offload if enabled and present.
 	 */
+=======
+	/* Do L4 checksum offload if enabled and present. */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (csum_info && (net->features & NETIF_F_RXCSUM)) {
 		if (csum_info->receive.tcp_checksum_succeeded ||
 		    csum_info->receive.udp_checksum_succeeded)
@@ -985,6 +995,10 @@ static int netvsc_attach(struct net_device *ndev,
 	}
 
 	/* In any case device is now ready */
+<<<<<<< HEAD
+=======
+	nvdev->tx_disable = false;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	netif_device_attach(ndev);
 
 	/* Note: enable and attach happen when sub-channels setup */
@@ -993,7 +1007,11 @@ static int netvsc_attach(struct net_device *ndev,
 	if (netif_running(ndev)) {
 		ret = rndis_filter_open(nvdev);
 		if (ret)
+<<<<<<< HEAD
 			return ret;
+=======
+			goto err;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		rdev = nvdev->extension;
 		if (!rdev->link_state)
@@ -1001,6 +1019,16 @@ static int netvsc_attach(struct net_device *ndev,
 	}
 
 	return 0;
+<<<<<<< HEAD
+=======
+
+err:
+	netif_device_detach(ndev);
+
+	rndis_filter_device_remove(hdev, nvdev);
+
+	return ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int netvsc_set_channels(struct net_device *net,
@@ -1681,7 +1709,11 @@ static int netvsc_get_rxfh(struct net_device *dev, u32 *indir, u8 *key,
 	rndis_dev = ndev->extension;
 	if (indir) {
 		for (i = 0; i < ITAB_NUM; i++)
+<<<<<<< HEAD
 			indir[i] = rndis_dev->rx_table[i];
+=======
+			indir[i] = ndc->rx_table[i];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	if (key)
@@ -1711,7 +1743,11 @@ static int netvsc_set_rxfh(struct net_device *dev, const u32 *indir,
 				return -EINVAL;
 
 		for (i = 0; i < ITAB_NUM; i++)
+<<<<<<< HEAD
 			rndis_dev->rx_table[i] = indir[i];
+=======
+			ndc->rx_table[i] = indir[i];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	if (!key) {
@@ -1997,6 +2033,15 @@ static rx_handler_result_t netvsc_vf_handle_frame(struct sk_buff **pskb)
 	struct netvsc_vf_pcpu_stats *pcpu_stats
 		 = this_cpu_ptr(ndev_ctx->vf_stats);
 
+<<<<<<< HEAD
+=======
+	skb = skb_share_check(skb, GFP_ATOMIC);
+	if (unlikely(!skb))
+		return RX_HANDLER_CONSUMED;
+
+	*pskb = skb;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	skb->dev = ndev;
 
 	u64_stats_update_begin(&pcpu_stats->syncp);
@@ -2324,6 +2369,11 @@ static int netvsc_probe(struct hv_device *dev,
 	else
 		net->max_mtu = ETH_DATA_LEN;
 
+<<<<<<< HEAD
+=======
+	nvdev->tx_disable = false;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = register_netdevice(net);
 	if (ret != 0) {
 		pr_err("Unable to register netdev.\n");

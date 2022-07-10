@@ -863,9 +863,12 @@ cleanup_file:
  * the return value of d_splice_alias(), then the caller needs to perform dput()
  * on it after finish_open().
  *
+<<<<<<< HEAD
  * On successful return @file is a fully instantiated open file.  After this, if
  * an error occurs in ->atomic_open(), it needs to clean up with fput().
  *
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * Returns zero on success or -errno if the open failed.
  */
 int finish_open(struct file *file, struct dentry *dentry,

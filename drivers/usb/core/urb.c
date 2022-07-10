@@ -45,6 +45,10 @@ void usb_init_urb(struct urb *urb)
 	if (urb) {
 		memset(urb, 0, sizeof(*urb));
 		kref_init(&urb->kref);
+<<<<<<< HEAD
+=======
+		INIT_LIST_HEAD(&urb->urb_list);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		INIT_LIST_HEAD(&urb->anchor_list);
 	}
 }

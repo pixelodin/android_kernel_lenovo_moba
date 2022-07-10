@@ -1223,11 +1223,18 @@ static struct bus_attribute *const ap_bus_attrs[] = {
 };
 
 /**
+<<<<<<< HEAD
  * ap_select_domain(): Select an AP domain.
  *
  * Pick one of the 16 AP domains.
  */
 static int ap_select_domain(void)
+=======
+ * ap_select_domain(): Select an AP domain if possible and we haven't
+ * already done so before.
+ */
+static void ap_select_domain(void)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	int count, max_count, best_domain;
 	struct ap_queue_status status;
@@ -1242,7 +1249,11 @@ static int ap_select_domain(void)
 	if (ap_domain_index >= 0) {
 		/* Domain has already been selected. */
 		spin_unlock_bh(&ap_domain_lock);
+<<<<<<< HEAD
 		return 0;
+=======
+		return;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	best_domain = -1;
 	max_count = 0;
@@ -1269,11 +1280,16 @@ static int ap_select_domain(void)
 	if (best_domain >= 0) {
 		ap_domain_index = best_domain;
 		AP_DBF(DBF_DEBUG, "new ap_domain_index=%d\n", ap_domain_index);
+<<<<<<< HEAD
 		spin_unlock_bh(&ap_domain_lock);
 		return 0;
 	}
 	spin_unlock_bh(&ap_domain_lock);
 	return -ENODEV;
+=======
+	}
+	spin_unlock_bh(&ap_domain_lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /*
@@ -1351,8 +1367,12 @@ static void ap_scan_bus(struct work_struct *unused)
 	AP_DBF(DBF_DEBUG, "%s running\n", __func__);
 
 	ap_query_configuration(ap_configuration);
+<<<<<<< HEAD
 	if (ap_select_domain() != 0)
 		goto out;
+=======
+	ap_select_domain();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	for (id = 0; id < AP_DEVICES; id++) {
 		/* check if device is registered */
@@ -1468,12 +1488,19 @@ static void ap_scan_bus(struct work_struct *unused)
 		}
 	} /* end device loop */
 
+<<<<<<< HEAD
 	if (defdomdevs < 1)
+=======
+	if (ap_domain_index >= 0 && defdomdevs < 1)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		AP_DBF(DBF_INFO,
 		       "no queue device with default domain %d available\n",
 		       ap_domain_index);
 
+<<<<<<< HEAD
 out:
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mod_timer(&ap_config_timer, jiffies + ap_config_time * HZ);
 }
 

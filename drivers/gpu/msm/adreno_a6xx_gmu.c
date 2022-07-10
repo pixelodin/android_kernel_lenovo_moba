@@ -121,6 +121,11 @@ static int a6xx_load_pdc_ucode(struct kgsl_device *device)
 	const struct adreno_a6xx_core *a6xx_core = to_a6xx_core(adreno_dev);
 	u32 vrm_resource_addr = cmd_db_read_addr("vrm.soc");
 	u32 xo_resource_addr = cmd_db_read_addr("xo.lvl");
+<<<<<<< HEAD
+=======
+	u32 cx_res_addr = cmd_db_read_addr("cx.lvl");
+	u32 mx_res_addr = cmd_db_read_addr("mx.lvl");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!xo_resource_addr) {
 		dev_err(&gmu->pdev->dev,
@@ -128,6 +133,20 @@ static int a6xx_load_pdc_ucode(struct kgsl_device *device)
 		return -ENOENT;
 	}
 
+<<<<<<< HEAD
+=======
+	if (!cx_res_addr) {
+		dev_err(&gmu->pdev->dev,
+				"Failed to get 'cx.lvl' addr from cmd_db\n");
+		return -ENOENT;
+	}
+
+	if (!mx_res_addr) {
+		dev_err(&gmu->pdev->dev,
+				"Failed to get 'mx.lvl' addr from cmd_db\n");
+		return -ENOENT;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/*
 	 * Older A6x platforms specified PDC registers in the DT using a
 	 * single base pointer that encompassed the entire PDC range. Current
@@ -205,10 +224,17 @@ static int a6xx_load_pdc_ucode(struct kgsl_device *device)
 	_regwrite(cfg, PDC_GPU_TCS1_CMD_WAIT_FOR_CMPL_BANK, 0);
 	_regwrite(cfg, PDC_GPU_TCS1_CONTROL, 0);
 	_regwrite(cfg, PDC_GPU_TCS1_CMD0_MSGID, 0x10108);
+<<<<<<< HEAD
 	_regwrite(cfg, PDC_GPU_TCS1_CMD0_ADDR, 0x30010);
 	_regwrite(cfg, PDC_GPU_TCS1_CMD0_DATA, 1);
 	_regwrite(cfg, PDC_GPU_TCS1_CMD0_MSGID + PDC_CMD_OFFSET, 0x10108);
 	_regwrite(cfg, PDC_GPU_TCS1_CMD0_ADDR + PDC_CMD_OFFSET, 0x30000);
+=======
+	_regwrite(cfg, PDC_GPU_TCS1_CMD0_ADDR, mx_res_addr);
+	_regwrite(cfg, PDC_GPU_TCS1_CMD0_DATA, 1);
+	_regwrite(cfg, PDC_GPU_TCS1_CMD0_MSGID + PDC_CMD_OFFSET, 0x10108);
+	_regwrite(cfg, PDC_GPU_TCS1_CMD0_ADDR + PDC_CMD_OFFSET, cx_res_addr);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	_regwrite(cfg, PDC_GPU_TCS1_CMD0_DATA + PDC_CMD_OFFSET, 0x0);
 	_regwrite(cfg, PDC_GPU_TCS1_CMD0_MSGID + PDC_CMD_OFFSET * 2, 0x10108);
 
@@ -230,10 +256,17 @@ static int a6xx_load_pdc_ucode(struct kgsl_device *device)
 	_regwrite(cfg, PDC_GPU_TCS3_CMD_WAIT_FOR_CMPL_BANK, 0);
 	_regwrite(cfg, PDC_GPU_TCS3_CONTROL, 0);
 	_regwrite(cfg, PDC_GPU_TCS3_CMD0_MSGID, 0x10108);
+<<<<<<< HEAD
 	_regwrite(cfg, PDC_GPU_TCS3_CMD0_ADDR, 0x30010);
 	_regwrite(cfg, PDC_GPU_TCS3_CMD0_DATA, 2);
 	_regwrite(cfg, PDC_GPU_TCS3_CMD0_MSGID + PDC_CMD_OFFSET, 0x10108);
 	_regwrite(cfg, PDC_GPU_TCS3_CMD0_ADDR + PDC_CMD_OFFSET, 0x30000);
+=======
+	_regwrite(cfg, PDC_GPU_TCS3_CMD0_ADDR, mx_res_addr);
+	_regwrite(cfg, PDC_GPU_TCS3_CMD0_DATA, 2);
+	_regwrite(cfg, PDC_GPU_TCS3_CMD0_MSGID + PDC_CMD_OFFSET, 0x10108);
+	_regwrite(cfg, PDC_GPU_TCS3_CMD0_ADDR + PDC_CMD_OFFSET, cx_res_addr);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (adreno_is_a618(adreno_dev) || adreno_is_a619(adreno_dev) ||
 			adreno_is_a650_family(adreno_dev))

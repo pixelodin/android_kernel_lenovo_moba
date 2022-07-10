@@ -566,6 +566,10 @@ static void flexcan_irq_bus_err(struct net_device *dev, u32 reg_esr)
 	struct can_frame *cf;
 	bool rx_errors = false, tx_errors = false;
 	u32 timestamp;
+<<<<<<< HEAD
+=======
+	int err;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	timestamp = priv->read(&regs->timer) << 16;
 
@@ -614,7 +618,13 @@ static void flexcan_irq_bus_err(struct net_device *dev, u32 reg_esr)
 	if (tx_errors)
 		dev->stats.tx_errors++;
 
+<<<<<<< HEAD
 	can_rx_offload_queue_sorted(&priv->offload, skb, timestamp);
+=======
+	err = can_rx_offload_queue_sorted(&priv->offload, skb, timestamp);
+	if (err)
+		dev->stats.rx_fifo_errors++;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void flexcan_irq_state(struct net_device *dev, u32 reg_esr)
@@ -627,6 +637,10 @@ static void flexcan_irq_state(struct net_device *dev, u32 reg_esr)
 	int flt;
 	struct can_berr_counter bec;
 	u32 timestamp;
+<<<<<<< HEAD
+=======
+	int err;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	timestamp = priv->read(&regs->timer) << 16;
 
@@ -658,7 +672,13 @@ static void flexcan_irq_state(struct net_device *dev, u32 reg_esr)
 	if (unlikely(new_state == CAN_STATE_BUS_OFF))
 		can_bus_off(dev);
 
+<<<<<<< HEAD
 	can_rx_offload_queue_sorted(&priv->offload, skb, timestamp);
+=======
+	err = can_rx_offload_queue_sorted(&priv->offload, skb, timestamp);
+	if (err)
+		dev->stats.rx_fifo_errors++;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static inline struct flexcan_priv *rx_offload_to_priv(struct can_rx_offload *offload)
@@ -1048,6 +1068,10 @@ static int flexcan_chip_start(struct net_device *dev)
 		reg_mecr = priv->read(&regs->mecr);
 		reg_mecr &= ~FLEXCAN_MECR_ECRWRDIS;
 		priv->write(reg_mecr, &regs->mecr);
+<<<<<<< HEAD
+=======
+		reg_mecr |= FLEXCAN_MECR_ECCDIS;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		reg_mecr &= ~(FLEXCAN_MECR_NCEFAFRZ | FLEXCAN_MECR_HANCEI_MSK |
 			      FLEXCAN_MECR_FANCEI_MSK);
 		priv->write(reg_mecr, &regs->mecr);

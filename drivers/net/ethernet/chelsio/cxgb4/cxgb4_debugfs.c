@@ -70,8 +70,12 @@ static void *seq_tab_start(struct seq_file *seq, loff_t *pos)
 static void *seq_tab_next(struct seq_file *seq, void *v, loff_t *pos)
 {
 	v = seq_tab_get_idx(seq->private, *pos + 1);
+<<<<<<< HEAD
 	if (v)
 		++*pos;
+=======
+	++(*pos);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return v;
 }
 
@@ -3035,6 +3039,12 @@ static int sge_queue_entries(const struct adapter *adap)
 	int tot_uld_entries = 0;
 	int i;
 
+<<<<<<< HEAD
+=======
+	if (!is_uld(adap))
+		goto lld_only;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mutex_lock(&uld_mutex);
 	for (i = 0; i < CXGB4_TX_MAX; i++)
 		tot_uld_entries += sge_qinfo_uld_txq_entries(adap, i);
@@ -3045,6 +3055,10 @@ static int sge_queue_entries(const struct adapter *adap)
 	}
 	mutex_unlock(&uld_mutex);
 
+<<<<<<< HEAD
+=======
+lld_only:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return DIV_ROUND_UP(adap->sge.ethqsets, 4) +
 	       tot_uld_entries +
 	       DIV_ROUND_UP(MAX_CTRL_QUEUES, 4) + 1;

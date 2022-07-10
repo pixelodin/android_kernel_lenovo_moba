@@ -134,7 +134,13 @@ static int fts_command(struct fts_ts_info *info, unsigned char cmd);
 static int fts_chip_initialization(struct fts_ts_info *info);
 static int fts_enable_reg(struct fts_ts_info *info, bool enable);
 
+<<<<<<< HEAD
 static struct drm_panel *active_panel;
+=======
+#if !defined(CONFIG_FB_MSM)
+static struct drm_panel *active_panel;
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 void touch_callback(unsigned int status)
 {
@@ -1596,7 +1602,11 @@ static ssize_t fts_gesture_mask_show(struct device *dev,
 	if (mask[0] == 0) {
 		res = ERROR_OP_NOT_ALLOW;
 		logError(1, "%s %s:Call before echo enable/disable xx xx >",
+<<<<<<< HEAD
 			tag), __func__;
+=======
+			tag, __func__);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		logError(1, "%s %s: gesture_mask with a correct number of ",
 			tag, __func__);
 		logError(1, "parameters! ERROR %08X\n", res);
@@ -3263,7 +3273,11 @@ static void fts_event_handler(struct work_struct *work)
 	 * read all the FIFO and parsing events
 	 */
 
+<<<<<<< HEAD
 	__pm_wakeup_event(&info->wakeup_source, HZ);
+=======
+	__pm_wakeup_event(info->wakeup_source, HZ);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	regAdd = FIFO_CMD_READONE;
 
 	for (count = 0; count < FIFO_DEPTH; count++) {
@@ -4115,7 +4129,11 @@ static void fts_resume_work(struct work_struct *work)
 
 	info = container_of(work, struct fts_ts_info, resume_work);
 
+<<<<<<< HEAD
 	__pm_wakeup_event(&info->wakeup_source, HZ);
+=======
+	__pm_wakeup_event(info->wakeup_source, HZ);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	fts_chip_power_switch(info, true);
 
@@ -4145,7 +4163,11 @@ static void fts_suspend_work(struct work_struct *work)
 
 	info = container_of(work, struct fts_ts_info, suspend_work);
 
+<<<<<<< HEAD
 	__pm_wakeup_event(&info->wakeup_source, HZ);
+=======
+	__pm_wakeup_event(info->wakeup_source, HZ);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	info->resume_bit = 0;
 
@@ -4167,7 +4189,11 @@ static int fts_fb_state_chg_callback(struct notifier_block *nb,
 	struct fb_event *evdata = data;
 	unsigned int blank;
 
+<<<<<<< HEAD
 	if (!evdata || (evdata->id != 0))
+=======
+	if (!evdata)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return 0;
 
 	if (val != FB_EVENT_BLANK)
@@ -4238,7 +4264,11 @@ static int fts_fb_state_chg_callback(struct notifier_block *nb,
 
 			if (info->aoi_wake_on_suspend) {
 				info->sensor_sleep = true;
+<<<<<<< HEAD
 				__pm_stay_awake(&info->wakeup_source);
+=======
+				__pm_stay_awake(info->wakeup_source);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			} else {
 				queue_work(info->event_wq, &info->suspend_work);
 			}
@@ -4246,7 +4276,11 @@ static int fts_fb_state_chg_callback(struct notifier_block *nb,
 
 		case DRM_PANEL_BLANK_UNBLANK:
 			if (info->aoi_wake_on_suspend)
+<<<<<<< HEAD
 				__pm_relax(&info->wakeup_source);
+=======
+				__pm_relax(info->wakeup_source);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 			if (!info->sensor_sleep)
 				break;
@@ -4556,6 +4590,10 @@ static int parse_dt(struct device *dev,
 
 static int check_dt(struct device_node *np)
 {
+<<<<<<< HEAD
+=======
+#if !defined(CONFIG_FB_MSM)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int i;
 	int count;
 	struct device_node *node;
@@ -4575,6 +4613,10 @@ static int check_dt(struct device_node *np)
 		}
 	}
 
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return -ENODEV;
 }
 
@@ -4710,7 +4752,12 @@ static int fts_probe_internal(struct i2c_client *client,
 	INIT_DELAYED_WORK(&info->fwu_work, fts_fw_update_auto);
 
 	logError(0, "%s SET Event Handler:\n", tag);
+<<<<<<< HEAD
 	wakeup_source_init(&info->wakeup_source, "fts_tp");
+=======
+	info->wakeup_source = wakeup_source_register(&client->dev,
+						     dev_name(&client->dev));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	info->event_wq = alloc_workqueue("fts-event-queue",
 				WQ_UNBOUND|WQ_HIGHPRI|WQ_CPU_INTENSIVE, 1);
 	if (!info->event_wq) {
@@ -4963,7 +5010,11 @@ ProbeErrorExit_5:
 
 ProbeErrorExit_4:
 	destroy_workqueue(info->fwu_workqueue);
+<<<<<<< HEAD
 	wakeup_source_trash(&info->wakeup_source);
+=======
+	wakeup_source_unregister(info->wakeup_source);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 ProbeErrorExit_3:
 	if (info->ts_pinctrl) {
@@ -5056,7 +5107,11 @@ static int fts_remove(struct i2c_client *client)
 	/* Remove the work thread */
 	destroy_workqueue(info->event_wq);
 	/* wake_lock_destroy(&info->wakelock); */
+<<<<<<< HEAD
 	wakeup_source_trash(&info->wakeup_source);
+=======
+	wakeup_source_unregister(info->wakeup_source);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	destroy_workqueue(info->fwu_workqueue);
 
 	if (info->ts_pinctrl) {

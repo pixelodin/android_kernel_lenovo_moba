@@ -2813,9 +2813,12 @@ static int macsec_dev_open(struct net_device *dev)
 	struct net_device *real_dev = macsec->real_dev;
 	int err;
 
+<<<<<<< HEAD
 	if (!(real_dev->flags & IFF_UP))
 		return -ENETDOWN;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	err = dev_uc_add(real_dev, dev->dev_addr);
 	if (err < 0)
 		return err;
@@ -2889,6 +2892,14 @@ static void macsec_dev_set_rx_mode(struct net_device *dev)
 	dev_uc_sync(real_dev, dev);
 }
 
+<<<<<<< HEAD
+=======
+static sci_t dev_to_sci(struct net_device *dev, __be16 port)
+{
+	return make_sci(dev->dev_addr, port);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int macsec_set_mac_address(struct net_device *dev, void *p)
 {
 	struct macsec_dev *macsec = macsec_priv(dev);
@@ -2910,6 +2921,10 @@ static int macsec_set_mac_address(struct net_device *dev, void *p)
 
 out:
 	ether_addr_copy(dev->dev_addr, addr->sa_data);
+<<<<<<< HEAD
+=======
+	macsec->secy.sci = dev_to_sci(dev, MACSEC_PORT_ES);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 }
 
@@ -2992,6 +3007,10 @@ static const struct device_type macsec_type = {
 
 static const struct nla_policy macsec_rtnl_policy[IFLA_MACSEC_MAX + 1] = {
 	[IFLA_MACSEC_SCI] = { .type = NLA_U64 },
+<<<<<<< HEAD
+=======
+	[IFLA_MACSEC_PORT] = { .type = NLA_U16 },
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	[IFLA_MACSEC_ICV_LEN] = { .type = NLA_U8 },
 	[IFLA_MACSEC_CIPHER_SUITE] = { .type = NLA_U64 },
 	[IFLA_MACSEC_WINDOW] = { .type = NLA_U32 },
@@ -3008,12 +3027,18 @@ static const struct nla_policy macsec_rtnl_policy[IFLA_MACSEC_MAX + 1] = {
 static void macsec_free_netdev(struct net_device *dev)
 {
 	struct macsec_dev *macsec = macsec_priv(dev);
+<<<<<<< HEAD
 	struct net_device *real_dev = macsec->real_dev;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	free_percpu(macsec->stats);
 	free_percpu(macsec->secy.tx_sc.stats);
 
+<<<<<<< HEAD
 	dev_put(real_dev);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void macsec_setup(struct net_device *dev)
@@ -3193,11 +3218,14 @@ static bool sci_exists(struct net_device *dev, sci_t sci)
 	return false;
 }
 
+<<<<<<< HEAD
 static sci_t dev_to_sci(struct net_device *dev, __be16 port)
 {
 	return make_sci(dev->dev_addr, port);
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int macsec_add_dev(struct net_device *dev, sci_t sci, u8 icv_len)
 {
 	struct macsec_dev *macsec = macsec_priv(dev);
@@ -3268,8 +3296,11 @@ static int macsec_newlink(struct net *net, struct net_device *dev,
 	if (err < 0)
 		return err;
 
+<<<<<<< HEAD
 	dev_hold(real_dev);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	macsec->nest_level = dev_get_nest_level(real_dev) + 1;
 	netdev_lockdep_set_classes(dev);
 	lockdep_set_class_and_subclass(&dev->addr_list_lock,
@@ -3309,6 +3340,12 @@ static int macsec_newlink(struct net *net, struct net_device *dev,
 	if (err < 0)
 		goto del_dev;
 
+<<<<<<< HEAD
+=======
+	netif_stacked_transfer_operstate(real_dev, dev);
+	linkwatch_fire_event(dev);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	macsec_generation++;
 
 	return 0;
@@ -3493,6 +3530,23 @@ static int macsec_notify(struct notifier_block *this, unsigned long event,
 		return NOTIFY_DONE;
 
 	switch (event) {
+<<<<<<< HEAD
+=======
+	case NETDEV_DOWN:
+	case NETDEV_UP:
+	case NETDEV_CHANGE: {
+		struct macsec_dev *m, *n;
+		struct macsec_rxh_data *rxd;
+
+		rxd = macsec_data_rtnl(real_dev);
+		list_for_each_entry_safe(m, n, &rxd->secys, secys) {
+			struct net_device *dev = m->secy.netdev;
+
+			netif_stacked_transfer_operstate(real_dev, dev);
+		}
+		break;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	case NETDEV_UNREGISTER: {
 		struct macsec_dev *m, *n;
 		struct macsec_rxh_data *rxd;

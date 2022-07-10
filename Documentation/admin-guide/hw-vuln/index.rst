@@ -12,3 +12,8 @@ are configurable at compile, boot or run time.
    spectre
    l1tf
    mds
+<<<<<<< HEAD
+=======
+   tsx_async_abort
+   multihit.rst
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

@@ -23,6 +23,12 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
 	int nr;
 	struct page **pages;
 
+<<<<<<< HEAD
+=======
+	if (gup->size > ULONG_MAX)
+		return -EINVAL;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	nr_pages = gup->size / PAGE_SIZE;
 	pages = kvcalloc(nr_pages, sizeof(void *), GFP_KERNEL);
 	if (!pages)

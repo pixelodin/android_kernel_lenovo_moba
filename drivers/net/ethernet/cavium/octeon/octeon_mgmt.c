@@ -1268,12 +1268,21 @@ static int octeon_mgmt_stop(struct net_device *netdev)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int octeon_mgmt_xmit(struct sk_buff *skb, struct net_device *netdev)
+=======
+static netdev_tx_t
+octeon_mgmt_xmit(struct sk_buff *skb, struct net_device *netdev)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct octeon_mgmt *p = netdev_priv(netdev);
 	union mgmt_port_ring_entry re;
 	unsigned long flags;
+<<<<<<< HEAD
 	int rv = NETDEV_TX_BUSY;
+=======
+	netdev_tx_t rv = NETDEV_TX_BUSY;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	re.d64 = 0;
 	re.s.tstamp = ((skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) != 0);
@@ -1495,7 +1504,11 @@ static int octeon_mgmt_probe(struct platform_device *pdev)
 	netdev->ethtool_ops = &octeon_mgmt_ethtool_ops;
 
 	netdev->min_mtu = 64 - OCTEON_MGMT_RX_HEADROOM;
+<<<<<<< HEAD
 	netdev->max_mtu = 16383 - OCTEON_MGMT_RX_HEADROOM;
+=======
+	netdev->max_mtu = 16383 - OCTEON_MGMT_RX_HEADROOM - VLAN_HLEN;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	mac = of_get_mac_address(pdev->dev.of_node);
 

@@ -73,8 +73,13 @@ extern unsigned long __xchg_called_with_bad_pointer(void)
 extern unsigned long __xchg_small(volatile void *ptr, unsigned long val,
 				  unsigned int size);
 
+<<<<<<< HEAD
 static inline unsigned long __xchg(volatile void *ptr, unsigned long x,
 				   int size)
+=======
+static __always_inline
+unsigned long __xchg(volatile void *ptr, unsigned long x, int size)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	switch (size) {
 	case 1:
@@ -146,8 +151,14 @@ static inline unsigned long __xchg(volatile void *ptr, unsigned long x,
 extern unsigned long __cmpxchg_small(volatile void *ptr, unsigned long old,
 				     unsigned long new, unsigned int size);
 
+<<<<<<< HEAD
 static inline unsigned long __cmpxchg(volatile void *ptr, unsigned long old,
 				      unsigned long new, unsigned int size)
+=======
+static __always_inline
+unsigned long __cmpxchg(volatile void *ptr, unsigned long old,
+			unsigned long new, unsigned int size)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	switch (size) {
 	case 1:

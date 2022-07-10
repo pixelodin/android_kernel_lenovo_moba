@@ -261,9 +261,18 @@ static void pcpu_prepare_secondary(struct pcpu *pcpu, int cpu)
 	lc->spinlock_index = 0;
 	lc->percpu_offset = __per_cpu_offset[cpu];
 	lc->kernel_asce = S390_lowcore.kernel_asce;
+<<<<<<< HEAD
 	lc->machine_flags = S390_lowcore.machine_flags;
 	lc->user_timer = lc->system_timer = lc->steal_timer = 0;
 	__ctl_store(lc->cregs_save_area, 0, 15);
+=======
+	lc->user_asce = S390_lowcore.kernel_asce;
+	lc->machine_flags = S390_lowcore.machine_flags;
+	lc->user_timer = lc->system_timer = lc->steal_timer = 0;
+	__ctl_store(lc->cregs_save_area, 0, 15);
+	lc->cregs_save_area[1] = lc->kernel_asce;
+	lc->cregs_save_area[7] = lc->vdso_asce;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	save_access_regs((unsigned int *) lc->access_regs_save_area);
 	memcpy(lc->stfle_fac_list, S390_lowcore.stfle_fac_list,
 	       sizeof(lc->stfle_fac_list));
@@ -712,6 +721,7 @@ static void __ref smp_get_core_info(struct sclp_core_info *info, int early)
 
 static int smp_add_present_cpu(int cpu);
 
+<<<<<<< HEAD
 static int __smp_rescan_cpus(struct sclp_core_info *info, int sysfs_add)
 {
 	struct pcpu *pcpu;
@@ -745,6 +755,69 @@ static int __smp_rescan_cpus(struct sclp_core_info *info, int sysfs_add)
 				break;
 		}
 	}
+=======
+static int smp_add_core(struct sclp_core_entry *core, cpumask_t *avail,
+			bool configured, bool early)
+{
+	struct pcpu *pcpu;
+	int cpu, nr, i;
+	u16 address;
+
+	nr = 0;
+	if (sclp.has_core_type && core->type != boot_core_type)
+		return nr;
+	cpu = cpumask_first(avail);
+	address = core->core_id << smp_cpu_mt_shift;
+	for (i = 0; (i <= smp_cpu_mtid) && (cpu < nr_cpu_ids); i++) {
+		if (pcpu_find_address(cpu_present_mask, address + i))
+			continue;
+		pcpu = pcpu_devices + cpu;
+		pcpu->address = address + i;
+		if (configured)
+			pcpu->state = CPU_STATE_CONFIGURED;
+		else
+			pcpu->state = CPU_STATE_STANDBY;
+		smp_cpu_set_polarization(cpu, POLARIZATION_UNKNOWN);
+		set_cpu_present(cpu, true);
+		if (!early && smp_add_present_cpu(cpu) != 0)
+			set_cpu_present(cpu, false);
+		else
+			nr++;
+		cpumask_clear_cpu(cpu, avail);
+		cpu = cpumask_next(cpu, avail);
+	}
+	return nr;
+}
+
+static int __smp_rescan_cpus(struct sclp_core_info *info, bool early)
+{
+	struct sclp_core_entry *core;
+	cpumask_t avail;
+	bool configured;
+	u16 core_id;
+	int nr, i;
+
+	nr = 0;
+	cpumask_xor(&avail, cpu_possible_mask, cpu_present_mask);
+	/*
+	 * Add IPL core first (which got logical CPU number 0) to make sure
+	 * that all SMT threads get subsequent logical CPU numbers.
+	 */
+	if (early) {
+		core_id = pcpu_devices[0].address >> smp_cpu_mt_shift;
+		for (i = 0; i < info->configured; i++) {
+			core = &info->core[i];
+			if (core->core_id == core_id) {
+				nr += smp_add_core(core, &avail, true, early);
+				break;
+			}
+		}
+	}
+	for (i = 0; i < info->combined; i++) {
+		configured = i < info->configured;
+		nr += smp_add_core(&info->core[i], &avail, configured, early);
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return nr;
 }
 
@@ -790,7 +863,11 @@ void __init smp_detect_cpus(void)
 
 	/* Add CPUs present at boot */
 	get_online_cpus();
+<<<<<<< HEAD
 	__smp_rescan_cpus(info, 0);
+=======
+	__smp_rescan_cpus(info, true);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	put_online_cpus();
 	memblock_free_early((unsigned long)info, sizeof(*info));
 }
@@ -810,6 +887,11 @@ static void smp_start_secondary(void *cpuvoid)
 	restore_access_regs(S390_lowcore.access_regs_save_area);
 	__ctl_load(S390_lowcore.cregs_save_area, 0, 15);
 	__load_psw_mask(PSW_KERNEL_BITS | PSW_MASK_DAT);
+<<<<<<< HEAD
+=======
+	set_cpu_flag(CIF_ASCE_PRIMARY);
+	set_cpu_flag(CIF_ASCE_SECONDARY);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	cpu_init();
 	preempt_disable();
 	init_cpu_timer();
@@ -1140,7 +1222,11 @@ int __ref smp_rescan_cpus(void)
 	smp_get_core_info(info, 0);
 	get_online_cpus();
 	mutex_lock(&smp_cpu_state_mutex);
+<<<<<<< HEAD
 	nr = __smp_rescan_cpus(info, 1);
+=======
+	nr = __smp_rescan_cpus(info, false);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mutex_unlock(&smp_cpu_state_mutex);
 	put_online_cpus();
 	kfree(info);

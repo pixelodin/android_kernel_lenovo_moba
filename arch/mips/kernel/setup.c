@@ -76,7 +76,11 @@ static char __initdata builtin_cmdline[COMMAND_LINE_SIZE] = CONFIG_CMDLINE;
  * mips_io_port_base is the begin of the address space to which x86 style
  * I/O ports are mapped.
  */
+<<<<<<< HEAD
 const unsigned long mips_io_port_base = -1;
+=======
+unsigned long mips_io_port_base = -1;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 EXPORT_SYMBOL(mips_io_port_base);
 
 static struct resource code_resource = { .name = "Kernel code", };

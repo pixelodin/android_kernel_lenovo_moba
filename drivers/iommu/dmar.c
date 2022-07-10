@@ -39,6 +39,10 @@
 #include <linux/dmi.h>
 #include <linux/slab.h>
 #include <linux/iommu.h>
+<<<<<<< HEAD
+=======
+#include <linux/limits.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <asm/irq_remapping.h>
 #include <asm/iommu_table.h>
 
@@ -139,6 +143,16 @@ dmar_alloc_pci_notify_info(struct pci_dev *dev, unsigned long event)
 
 	BUG_ON(dev->is_virtfn);
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Ignore devices that have a domain number higher than what can
+	 * be looked up in DMAR, e.g. VMD subdevices with domain 0x10000
+	 */
+	if (pci_domain_nr(dev->bus) > U16_MAX)
+		return NULL;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Only generate path[] for device addition event */
 	if (event == BUS_NOTIFY_ADD_DEVICE)
 		for (tmp = dev; tmp; tmp = tmp->bus->self)
@@ -451,12 +465,20 @@ static int __init dmar_parse_one_andd(struct acpi_dmar_header *header,
 
 	/* Check for NUL termination within the designated length */
 	if (strnlen(andd->device_name, header->length - 8) == header->length - 8) {
+<<<<<<< HEAD
 		WARN_TAINT(1, TAINT_FIRMWARE_WORKAROUND,
+=======
+		pr_warn(FW_BUG
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			   "Your BIOS is broken; ANDD object name is not NUL-terminated\n"
 			   "BIOS vendor: %s; Ver: %s; Product Version: %s\n",
 			   dmi_get_system_info(DMI_BIOS_VENDOR),
 			   dmi_get_system_info(DMI_BIOS_VERSION),
 			   dmi_get_system_info(DMI_PRODUCT_VERSION));
+<<<<<<< HEAD
+=======
+		add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EINVAL;
 	}
 	pr_info("ANDD device: %x name: %s\n", andd->device_number,
@@ -482,6 +504,7 @@ static int dmar_parse_one_rhsa(struct acpi_dmar_header *header, void *arg)
 			return 0;
 		}
 	}
+<<<<<<< HEAD
 	WARN_TAINT(
 		1, TAINT_FIRMWARE_WORKAROUND,
 		"Your BIOS is broken; RHSA refers to non-existent DMAR unit at %llx\n"
@@ -490,6 +513,16 @@ static int dmar_parse_one_rhsa(struct acpi_dmar_header *header, void *arg)
 		dmi_get_system_info(DMI_BIOS_VENDOR),
 		dmi_get_system_info(DMI_BIOS_VERSION),
 		dmi_get_system_info(DMI_PRODUCT_VERSION));
+=======
+	pr_warn(FW_BUG
+		"Your BIOS is broken; RHSA refers to non-existent DMAR unit at %llx\n"
+		"BIOS vendor: %s; Ver: %s; Product Version: %s\n",
+		rhsa->base_address,
+		dmi_get_system_info(DMI_BIOS_VENDOR),
+		dmi_get_system_info(DMI_BIOS_VERSION),
+		dmi_get_system_info(DMI_PRODUCT_VERSION));
+	add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return 0;
 }
@@ -838,14 +871,22 @@ int __init dmar_table_init(void)
 
 static void warn_invalid_dmar(u64 addr, const char *message)
 {
+<<<<<<< HEAD
 	WARN_TAINT_ONCE(
 		1, TAINT_FIRMWARE_WORKAROUND,
+=======
+	pr_warn_once(FW_BUG
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		"Your BIOS is broken; DMAR reported at address %llx%s!\n"
 		"BIOS vendor: %s; Ver: %s; Product Version: %s\n",
 		addr, message,
 		dmi_get_system_info(DMI_BIOS_VENDOR),
 		dmi_get_system_info(DMI_BIOS_VERSION),
 		dmi_get_system_info(DMI_PRODUCT_VERSION));
+<<<<<<< HEAD
+=======
+	add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int __ref
@@ -1345,7 +1386,10 @@ void qi_flush_dev_iotlb(struct intel_iommu *iommu, u16 sid, u16 pfsid,
 	struct qi_desc desc;
 
 	if (mask) {
+<<<<<<< HEAD
 		WARN_ON_ONCE(addr & ((1ULL << (VTD_PAGE_SHIFT + mask)) - 1));
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		addr |= (1ULL << (VTD_PAGE_SHIFT + mask - 1)) - 1;
 		desc.high = QI_DEV_IOTLB_ADDR(addr) | QI_DEV_IOTLB_SIZE;
 	} else

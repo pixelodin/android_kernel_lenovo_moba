@@ -328,7 +328,11 @@ static int dsi_mgr_connector_get_modes(struct drm_connector *connector)
 	return num;
 }
 
+<<<<<<< HEAD
 static int dsi_mgr_connector_mode_valid(struct drm_connector *connector,
+=======
+static enum drm_mode_status dsi_mgr_connector_mode_valid(struct drm_connector *connector,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				struct drm_display_mode *mode)
 {
 	int id = dsi_mgr_connector_get_id(connector);
@@ -471,6 +475,10 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
 	struct msm_dsi *msm_dsi1 = dsi_mgr_get_dsi(DSI_1);
 	struct mipi_dsi_host *host = msm_dsi->host;
 	struct drm_panel *panel = msm_dsi->panel;
+<<<<<<< HEAD
+=======
+	struct msm_dsi_pll *src_pll;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	bool is_dual_dsi = IS_DUAL_DSI();
 	int ret;
 
@@ -511,6 +519,13 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
 								id, ret);
 	}
 
+<<<<<<< HEAD
+=======
+	/* Save PLL status if it is a clock source */
+	src_pll = msm_dsi_phy_get_pll(msm_dsi->phy);
+	msm_dsi_pll_save_state(src_pll);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = msm_dsi_host_power_off(host);
 	if (ret)
 		pr_err("%s: host %d power off failed,%d\n", __func__, id, ret);

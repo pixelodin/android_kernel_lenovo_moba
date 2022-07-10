@@ -910,6 +910,10 @@ void pwm_put(struct pwm_device *pwm)
 	if (pwm->chip->ops->free)
 		pwm->chip->ops->free(pwm->chip, pwm);
 
+<<<<<<< HEAD
+=======
+	pwm_set_chip_data(pwm, NULL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pwm->label = NULL;
 
 	module_put(pwm->chip->ops->owner);

@@ -2397,6 +2397,10 @@ add_swap_extent(struct swap_info_struct *sis, unsigned long start_page,
 	list_add_tail(&new_se->list, &sis->first_swap_extent.list);
 	return 1;
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(add_swap_extent);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /*
  * A `swap extent' is a simple thing which maps a contiguous range of pages
@@ -2418,9 +2422,14 @@ add_swap_extent(struct swap_info_struct *sis, unsigned long start_page,
  * requirements, they are simply tossed out - we will never use those blocks
  * for swapping.
  *
+<<<<<<< HEAD
  * For S_ISREG swapfiles we set S_SWAPFILE across the life of the swapon.  This
  * prevents root from shooting her foot off by ftruncating an in-use swapfile,
  * which will scribble on the fs.
+=======
+ * For all swap devices we set S_SWAPFILE across the life of the swapon.  This
+ * prevents users from writing to the swap device, which will corrupt memory.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  *
  * The amount of disk space which a single swap extent represents varies.
  * Typically it is in the 1-4 megabyte range.  So we can have hundreds of
@@ -2683,6 +2692,7 @@ SYSCALL_DEFINE1(swapoff, const char __user *, specialfile)
 	inode = mapping->host;
 	if (S_ISBLK(inode->i_mode)) {
 		struct block_device *bdev = I_BDEV(inode);
+<<<<<<< HEAD
 		set_blocksize(bdev, old_block_size);
 		blkdev_put(bdev, FMODE_READ | FMODE_WRITE | FMODE_EXCL);
 	} else {
@@ -2690,6 +2700,16 @@ SYSCALL_DEFINE1(swapoff, const char __user *, specialfile)
 		inode->i_flags &= ~S_SWAPFILE;
 		inode_unlock(inode);
 	}
+=======
+
+		set_blocksize(bdev, old_block_size);
+		blkdev_put(bdev, FMODE_READ | FMODE_WRITE | FMODE_EXCL);
+	}
+
+	inode_lock(inode);
+	inode->i_flags &= ~S_SWAPFILE;
+	inode_unlock(inode);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	filp_close(swap_file, NULL);
 
 	/*
@@ -2913,11 +2933,15 @@ static int claim_swapfile(struct swap_info_struct *p, struct inode *inode)
 		p->flags |= SWP_BLKDEV;
 	} else if (S_ISREG(inode->i_mode)) {
 		p->bdev = inode->i_sb->s_bdev;
+<<<<<<< HEAD
 		inode_lock(inode);
 		if (IS_SWAPFILE(inode))
 			return -EBUSY;
 	} else
 		return -EINVAL;
+=======
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return 0;
 }
@@ -3173,36 +3197,64 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
 	mapping = swap_file->f_mapping;
 	inode = mapping->host;
 
+<<<<<<< HEAD
 	/* If S_ISREG(inode->i_mode) will do inode_lock(inode); */
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	error = claim_swapfile(p, inode);
 	if (unlikely(error))
 		goto bad_swap;
 
+<<<<<<< HEAD
+=======
+	inode_lock(inode);
+	if (IS_SWAPFILE(inode)) {
+		error = -EBUSY;
+		goto bad_swap_unlock_inode;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/*
 	 * Read the swap header.
 	 */
 	if (!mapping->a_ops->readpage) {
 		error = -EINVAL;
+<<<<<<< HEAD
 		goto bad_swap;
+=======
+		goto bad_swap_unlock_inode;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	page = read_mapping_page(mapping, 0, swap_file);
 	if (IS_ERR(page)) {
 		error = PTR_ERR(page);
+<<<<<<< HEAD
 		goto bad_swap;
+=======
+		goto bad_swap_unlock_inode;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	swap_header = kmap(page);
 
 	maxpages = read_swap_header(p, swap_header, inode);
 	if (unlikely(!maxpages)) {
 		error = -EINVAL;
+<<<<<<< HEAD
 		goto bad_swap;
+=======
+		goto bad_swap_unlock_inode;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	/* OK, set up the swap map and apply the bad block list */
 	swap_map = vzalloc(maxpages);
 	if (!swap_map) {
 		error = -ENOMEM;
+<<<<<<< HEAD
 		goto bad_swap;
+=======
+		goto bad_swap_unlock_inode;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	if (bdi_cap_stable_pages_required(inode_to_bdi(inode)))
@@ -3227,7 +3279,11 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
 					GFP_KERNEL);
 		if (!cluster_info) {
 			error = -ENOMEM;
+<<<<<<< HEAD
 			goto bad_swap;
+=======
+			goto bad_swap_unlock_inode;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 
 		for (ci = 0; ci < nr_cluster; ci++)
@@ -3236,7 +3292,11 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
 		p->percpu_cluster = alloc_percpu(struct percpu_cluster);
 		if (!p->percpu_cluster) {
 			error = -ENOMEM;
+<<<<<<< HEAD
 			goto bad_swap;
+=======
+			goto bad_swap_unlock_inode;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 		for_each_possible_cpu(cpu) {
 			struct percpu_cluster *cluster;
@@ -3250,13 +3310,21 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
 
 	error = swap_cgroup_swapon(p->type, maxpages);
 	if (error)
+<<<<<<< HEAD
 		goto bad_swap;
+=======
+		goto bad_swap_unlock_inode;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	nr_extents = setup_swap_map_and_extents(p, swap_header, swap_map,
 		cluster_info, maxpages, &span);
 	if (unlikely(nr_extents < 0)) {
 		error = nr_extents;
+<<<<<<< HEAD
 		goto bad_swap;
+=======
+		goto bad_swap_unlock_inode;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	/* frontswap enabled? set up bit-per-page map for frontswap */
 	if (IS_ENABLED(CONFIG_FRONTSWAP))
@@ -3296,7 +3364,22 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
 
 	error = init_swap_address_space(p->type, maxpages);
 	if (error)
+<<<<<<< HEAD
 		goto bad_swap;
+=======
+		goto bad_swap_unlock_inode;
+
+	/*
+	 * Flush any pending IO and dirty mappings before we start using this
+	 * swap device.
+	 */
+	inode->i_flags |= S_SWAPFILE;
+	error = inode_drain_writes(inode);
+	if (error) {
+		inode->i_flags &= ~S_SWAPFILE;
+		goto bad_swap_unlock_inode;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	mutex_lock(&swapon_mutex);
 	prio = -1;
@@ -3320,10 +3403,17 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
 	atomic_inc(&proc_poll_event);
 	wake_up_interruptible(&proc_poll_wait);
 
+<<<<<<< HEAD
 	if (S_ISREG(inode->i_mode))
 		inode->i_flags |= S_SWAPFILE;
 	error = 0;
 	goto out;
+=======
+	error = 0;
+	goto out;
+bad_swap_unlock_inode:
+	inode_unlock(inode);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 bad_swap:
 	free_percpu(p->percpu_cluster);
 	p->percpu_cluster = NULL;
@@ -3331,6 +3421,10 @@ bad_swap:
 		set_blocksize(p->bdev, p->old_block_size);
 		blkdev_put(p->bdev, FMODE_READ | FMODE_WRITE | FMODE_EXCL);
 	}
+<<<<<<< HEAD
+=======
+	inode = NULL;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	destroy_swap_extents(p);
 	swap_cgroup_swapoff(p->type);
 	spin_lock(&swap_lock);
@@ -3342,6 +3436,7 @@ bad_swap:
 	kvfree(frontswap_map);
 	if (inced_nr_rotate_swap)
 		atomic_dec(&nr_rotate_swap);
+<<<<<<< HEAD
 	if (swap_file) {
 		if (inode && S_ISREG(inode->i_mode)) {
 			inode_unlock(inode);
@@ -3349,6 +3444,10 @@ bad_swap:
 		}
 		filp_close(swap_file, NULL);
 	}
+=======
+	if (swap_file)
+		filp_close(swap_file, NULL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 out:
 	if (page && !IS_ERR(page)) {
 		kunmap(page);
@@ -3356,7 +3455,11 @@ out:
 	}
 	if (name)
 		putname(name);
+<<<<<<< HEAD
 	if (inode && S_ISREG(inode->i_mode))
+=======
+	if (inode)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		inode_unlock(inode);
 	if (!error)
 		enable_swap_slots_cache();

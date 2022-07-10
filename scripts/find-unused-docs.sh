@@ -54,7 +54,11 @@ for file in `find $1 -name '*.c'`; do
 	if [[ ${FILES_INCLUDED[$file]+_} ]]; then
 	continue;
 	fi
+<<<<<<< HEAD
 	str=$(scripts/kernel-doc -text -export "$file" 2>/dev/null)
+=======
+	str=$(scripts/kernel-doc -export "$file" 2>/dev/null)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if [[ -n "$str" ]]; then
 	echo "$file"
 	fi

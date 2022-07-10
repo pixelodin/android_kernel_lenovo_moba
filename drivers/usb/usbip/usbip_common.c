@@ -680,8 +680,17 @@ EXPORT_SYMBOL_GPL(usbip_pad_iso);
 /* some members of urb must be substituted before. */
 int usbip_recv_xbuff(struct usbip_device *ud, struct urb *urb)
 {
+<<<<<<< HEAD
 	int ret;
 	int size;
+=======
+	struct scatterlist *sg;
+	int ret = 0;
+	int recv;
+	int size;
+	int copy;
+	int i;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (ud->side == USBIP_STUB || ud->side == USBIP_VUDC) {
 		/* the direction of urb must be OUT. */
@@ -701,6 +710,7 @@ int usbip_recv_xbuff(struct usbip_device *ud, struct urb *urb)
 	if (!(size > 0))
 		return 0;
 
+<<<<<<< HEAD
 	if (size > urb->transfer_buffer_length) {
 		/* should not happen, probably malicious packet */
 		if (ud->side == USBIP_STUB) {
@@ -724,6 +734,53 @@ int usbip_recv_xbuff(struct usbip_device *ud, struct urb *urb)
 	}
 
 	return ret;
+=======
+	if (size > urb->transfer_buffer_length)
+		/* should not happen, probably malicious packet */
+		goto error;
+
+	if (urb->num_sgs) {
+		copy = size;
+		for_each_sg(urb->sg, sg, urb->num_sgs, i) {
+			int recv_size;
+
+			if (copy < sg->length)
+				recv_size = copy;
+			else
+				recv_size = sg->length;
+
+			recv = usbip_recv(ud->tcp_socket, sg_virt(sg),
+						recv_size);
+
+			if (recv != recv_size)
+				goto error;
+
+			copy -= recv;
+			ret += recv;
+
+			if (!copy)
+				break;
+		}
+
+		if (ret != size)
+			goto error;
+	} else {
+		ret = usbip_recv(ud->tcp_socket, urb->transfer_buffer, size);
+		if (ret != size)
+			goto error;
+	}
+
+	return ret;
+
+error:
+	dev_err(&urb->dev->dev, "recv xbuf, %d\n", ret);
+	if (ud->side == USBIP_STUB || ud->side == USBIP_VUDC)
+		usbip_event_add(ud, SDEV_EVENT_ERROR_TCP);
+	else
+		usbip_event_add(ud, VDEV_EVENT_ERROR_TCP);
+
+	return -EPIPE;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 EXPORT_SYMBOL_GPL(usbip_recv_xbuff);
 

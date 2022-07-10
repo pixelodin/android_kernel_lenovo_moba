@@ -713,6 +713,11 @@ static unsigned long bch_mca_scan(struct shrinker *shrink,
 	 * IO can always make forward progress:
 	 */
 	nr /= c->btree_pages;
+<<<<<<< HEAD
+=======
+	if (nr == 0)
+		nr = 1;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	nr = min_t(unsigned long, nr, mca_can_free(c));
 
 	i = 0;

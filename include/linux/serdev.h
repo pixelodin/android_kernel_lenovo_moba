@@ -173,9 +173,27 @@ int serdev_device_add(struct serdev_device *);
 void serdev_device_remove(struct serdev_device *);
 
 struct serdev_controller *serdev_controller_alloc(struct device *, size_t);
+<<<<<<< HEAD
 int serdev_controller_add(struct serdev_controller *);
 void serdev_controller_remove(struct serdev_controller *);
 
+=======
+int serdev_controller_add_platform(struct serdev_controller *, bool);
+void serdev_controller_remove(struct serdev_controller *);
+
+/**
+ * serdev_controller_add() - Add an serdev controller
+ * @ctrl:	controller to be registered.
+ *
+ * Register a controller previously allocated via serdev_controller_alloc() with
+ * the serdev core.
+ */
+static inline int serdev_controller_add(struct serdev_controller *ctrl)
+{
+	return serdev_controller_add_platform(ctrl, false);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static inline void serdev_controller_write_wakeup(struct serdev_controller *ctrl)
 {
 	struct serdev_device *serdev = ctrl->serdev;

@@ -284,7 +284,11 @@ static void clk_generated_startup(struct clk_generated *gck)
 static struct clk_hw * __init
 at91_clk_register_generated(struct regmap *regmap, spinlock_t *lock,
 			    const char *name, const char **parent_names,
+<<<<<<< HEAD
 			    u8 num_parents, u8 id,
+=======
+			    u8 num_parents, u8 id, bool pll_audio,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			    const struct clk_range *range)
 {
 	struct clk_generated *gck;
@@ -308,6 +312,10 @@ at91_clk_register_generated(struct regmap *regmap, spinlock_t *lock,
 	gck->regmap = regmap;
 	gck->lock = lock;
 	gck->range = *range;
+<<<<<<< HEAD
+=======
+	gck->audio_pll_allowed = pll_audio;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	clk_generated_startup(gck);
 	hw = &gck->hw;
@@ -333,7 +341,10 @@ static void __init of_sama5d2_clk_generated_setup(struct device_node *np)
 	struct device_node *gcknp;
 	struct clk_range range = CLK_RANGE(0, 0);
 	struct regmap *regmap;
+<<<<<<< HEAD
 	struct clk_generated *gck;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	num_parents = of_clk_get_parent_count(np);
 	if (num_parents == 0 || num_parents > GENERATED_SOURCE_MAX)
@@ -350,6 +361,11 @@ static void __init of_sama5d2_clk_generated_setup(struct device_node *np)
 		return;
 
 	for_each_child_of_node(np, gcknp) {
+<<<<<<< HEAD
+=======
+		bool pll_audio = false;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (of_property_read_u32(gcknp, "reg", &id))
 			continue;
 
@@ -362,6 +378,7 @@ static void __init of_sama5d2_clk_generated_setup(struct device_node *np)
 		of_at91_get_clk_range(gcknp, "atmel,clk-output-range",
 				      &range);
 
+<<<<<<< HEAD
 		hw = at91_clk_register_generated(regmap, &pmc_pcr_lock, name,
 						  parent_names, num_parents,
 						  id, &range);
@@ -380,6 +397,16 @@ static void __init of_sama5d2_clk_generated_setup(struct device_node *np)
 			gck->audio_pll_allowed = false;
 		}
 
+=======
+		if (of_device_is_compatible(np, "atmel,sama5d2-clk-generated") &&
+		    (id == GCK_ID_I2S0 || id == GCK_ID_I2S1 ||
+		     id == GCK_ID_CLASSD))
+			pll_audio = true;
+
+		hw = at91_clk_register_generated(regmap, &pmc_pcr_lock, name,
+						  parent_names, num_parents,
+						  id, pll_audio, &range);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (IS_ERR(hw))
 			continue;
 

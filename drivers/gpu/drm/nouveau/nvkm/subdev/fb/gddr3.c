@@ -87,7 +87,11 @@ nvkm_gddr3_calc(struct nvkm_ram *ram)
 		WR  = (ram->next->bios.timing[2] & 0x007f0000) >> 16;
 		/* XXX: Get these values from the VBIOS instead */
 		DLL = !(ram->mr[1] & 0x1);
+<<<<<<< HEAD
 		RON = !(ram->mr[1] & 0x300) >> 8;
+=======
+		RON = !((ram->mr[1] & 0x300) >> 8);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 	default:
 		return -ENOSYS;

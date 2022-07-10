@@ -653,6 +653,22 @@ acpi_ev_execute_reg_methods(struct acpi_namespace_node *node,
 
 	ACPI_FUNCTION_TRACE(ev_execute_reg_methods);
 
+<<<<<<< HEAD
+=======
+	/*
+	 * These address spaces do not need a call to _REG, since the ACPI
+	 * specification defines them as: "must always be accessible". Since
+	 * they never change state (never become unavailable), no need to ever
+	 * call _REG on them. Also, a data_table is not a "real" address space,
+	 * so do not call _REG. September 2018.
+	 */
+	if ((space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) ||
+	    (space_id == ACPI_ADR_SPACE_SYSTEM_IO) ||
+	    (space_id == ACPI_ADR_SPACE_DATA_TABLE)) {
+		return_VOID;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	info.space_id = space_id;
 	info.function = function;
 	info.reg_run_count = 0;
@@ -714,8 +730,13 @@ acpi_ev_reg_run(acpi_handle obj_handle,
 	}
 
 	/*
+<<<<<<< HEAD
 	 * We only care about regions.and objects that are allowed to have address
 	 * space handlers
+=======
+	 * We only care about regions and objects that are allowed to have
+	 * address space handlers
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	 */
 	if ((node->type != ACPI_TYPE_REGION) && (node != acpi_gbl_root_node)) {
 		return (AE_OK);

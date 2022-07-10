@@ -623,6 +623,10 @@ enum {
 	SDF_RORECOVERY		= 7, /* read only recovery */
 	SDF_SKIP_DLM_UNLOCK	= 8,
 	SDF_FORCE_AIL_FLUSH     = 9,
+<<<<<<< HEAD
+=======
+	SDF_AIL1_IO_ERROR	= 10,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 enum gfs2_freeze_state {

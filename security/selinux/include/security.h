@@ -15,6 +15,10 @@
 #include <linux/types.h>
 #include <linux/refcount.h>
 #include <linux/workqueue.h>
+<<<<<<< HEAD
+=======
+#include "flask.h"
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define SECSID_NULL			0x00000000 /* unspecified SID */
 #define SECSID_WILD			0xffffffff /* wildcard SID */
@@ -80,7 +84,11 @@ enum {
 };
 #define POLICYDB_CAPABILITY_MAX (__POLICYDB_CAPABILITY_MAX - 1)
 
+<<<<<<< HEAD
 extern char *selinux_policycap_names[__POLICYDB_CAPABILITY_MAX];
+=======
+extern const char *selinux_policycap_names[__POLICYDB_CAPABILITY_MAX];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /*
  * type_datum properties
@@ -103,6 +111,10 @@ struct selinux_state {
 	bool checkreqprot;
 	bool initialized;
 	bool policycap[__POLICYDB_CAPABILITY_MAX];
+<<<<<<< HEAD
+=======
+	bool android_netlink_route;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct selinux_avc *avc;
 	struct selinux_ss *ss;
 };
@@ -175,6 +187,16 @@ static inline bool selinux_policycap_nnp_nosuid_transition(void)
 	return state->policycap[POLICYDB_CAPABILITY_NNP_NOSUID_TRANSITION];
 }
 
+<<<<<<< HEAD
+=======
+static inline bool selinux_android_nlroute_getlink(void)
+{
+	struct selinux_state *state = &selinux_state;
+
+	return state->android_netlink_route;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 int security_mls_enabled(struct selinux_state *state);
 int security_load_policy(struct selinux_state *state,
 			 void *data, size_t len);
@@ -389,5 +411,11 @@ extern int selinux_nlmsg_lookup(u16 sclass, u16 nlmsg_type, u32 *perm);
 extern void avtab_cache_init(void);
 extern void ebitmap_cache_init(void);
 extern void hashtab_cache_init(void);
+<<<<<<< HEAD
+=======
+extern void selinux_nlmsg_init(void);
+extern int security_sidtab_hash_stats(struct selinux_state *state, char *page);
+extern void selinux_nlmsg_init(void);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #endif /* _SELINUX_SECURITY_H_ */

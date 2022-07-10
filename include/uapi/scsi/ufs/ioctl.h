@@ -10,10 +10,13 @@
  */
 #define UFS_IOCTL_QUERY			0x5388
 
+<<<<<<< HEAD
 #if defined(CONFIG_UFSFEATURE)
 #define UFSFEATURE_QUERY_OPCODE		0x5500
 #endif
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /**
  * struct ufs_ioctl_query_data - used to transfer data to and from user via
  * ioctl

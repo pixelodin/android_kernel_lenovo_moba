@@ -10,6 +10,10 @@
 #include <linux/fs.h>
 #include <linux/mm.h>
 #include <linux/audit.h>
+<<<<<<< HEAD
+=======
+#include <linux/scs.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #include <asm/pgtable.h>
 #include <linux/uaccess.h>
@@ -183,6 +187,16 @@ struct task_struct init_task
 };
 EXPORT_SYMBOL(init_task);
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_SHADOW_CALL_STACK
+unsigned long init_shadow_call_stack[SCS_SIZE / sizeof(long)] __init_task_data
+		__aligned(SCS_SIZE) = {
+	[(SCS_SIZE / sizeof(long)) - 1] = SCS_END_MAGIC
+};
+#endif
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * Initial thread structure. Alignment of this is handled by a special
  * linker map entry.

@@ -17,6 +17,11 @@ ccflags-y += -nostdlib -Wl,-soname=linux-vdso.so.1 \
 		$(call cc-ldoption, -Wl$(comma)--hash-style=sysv)
 ccflags-y += $(DISABLE_LTO)
 
+<<<<<<< HEAD
+=======
+CFLAGS_REMOVE_vgettimeofday.o += $(CC_FLAGS_SCS)
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 # Disable gcov profiling for VDSO code
 GCOV_PROFILE := n
 

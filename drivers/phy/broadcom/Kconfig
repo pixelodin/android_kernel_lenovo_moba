@@ -60,7 +60,12 @@ config PHY_NS2_USB_DRD
 
 config PHY_BRCM_SATA
 	tristate "Broadcom SATA PHY driver"
+<<<<<<< HEAD
 	depends on ARCH_BRCMSTB || ARCH_BCM_IPROC || BMIPS_GENERIC || COMPILE_TEST
+=======
+	depends on ARCH_BRCMSTB || ARCH_BCM_IPROC || BMIPS_GENERIC || \
+		   ARCH_BCM_63XX || COMPILE_TEST
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	depends on OF
 	select GENERIC_PHY
 	default ARCH_BCM_IPROC

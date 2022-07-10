@@ -179,7 +179,10 @@ DTC_INCLUDE    := $(srctree)/scripts/dtc/include-prefixes
 
 dtc_cpp_flags  = -Wp,-MD,$(depfile).pre.tmp -nostdinc                    \
 		 $(addprefix -I,$(DTC_INCLUDE))                          \
+<<<<<<< HEAD
 		 -I$(objtree)/include                          \
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		 -undef -D__DTS__
 
 # Useful for describing the dependency of composite objects
@@ -258,8 +261,12 @@ DTC ?= $(objtree)/scripts/dtc/dtc
 
 # Disable noisy checks by default
 ifeq ($(findstring 1,$(KBUILD_ENABLE_EXTRA_GCC_CHECKS)),)
+<<<<<<< HEAD
 DTC_FLAGS += -Wno-unit_address_vs_reg \
         -Wno-simple_bus_reg
+=======
+DTC_FLAGS += -Wno-unit_address_vs_reg
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 endif
 ifeq ($(DTC_EXT),)
 DTC_FLAGS += -Wno-simple_bus_reg \
@@ -268,6 +275,10 @@ DTC_FLAGS += -Wno-simple_bus_reg \
 	-Wno-alias_paths \
 	-Wno-graph_child_address \
 	-Wno-graph_port \
+<<<<<<< HEAD
+=======
+	-Wno-simple_bus_reg \
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	-Wno-unique_unit_address \
 	-Wno-pci_device_reg
 endif

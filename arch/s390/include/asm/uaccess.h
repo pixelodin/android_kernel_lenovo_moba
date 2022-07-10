@@ -84,7 +84,11 @@ raw_copy_to_user(void __user *to, const void *from, unsigned long n);
 	__rc;							\
 })
 
+<<<<<<< HEAD
 static inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
+=======
+static __always_inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	unsigned long spec = 0x010000UL;
 	int rc;
@@ -114,7 +118,11 @@ static inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
 	return rc;
 }
 
+<<<<<<< HEAD
 static inline int __get_user_fn(void *x, const void __user *ptr, unsigned long size)
+=======
+static __always_inline int __get_user_fn(void *x, const void __user *ptr, unsigned long size)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	unsigned long spec = 0x01UL;
 	int rc;

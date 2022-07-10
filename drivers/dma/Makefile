@@ -72,6 +72,10 @@ obj-$(CONFIG_TIMB_DMA) += timb_dma.o
 obj-$(CONFIG_XGENE_DMA) += xgene-dma.o
 obj-$(CONFIG_ZX_DMA) += zx_dma.o
 obj-$(CONFIG_ST_FDMA) += st_fdma.o
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_QCOM_SPS_DMA) += qcom-sps-dma.o
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 obj-y += mediatek/
 obj-y += qcom/

@@ -545,10 +545,18 @@ int drm_mode_create_lease_ioctl(struct drm_device *dev,
 	}
 
 	DRM_DEBUG_LEASE("Creating lease\n");
+<<<<<<< HEAD
+=======
+	/* lessee will take the ownership of leases */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	lessee = drm_lease_create(lessor, &leases);
 
 	if (IS_ERR(lessee)) {
 		ret = PTR_ERR(lessee);
+<<<<<<< HEAD
+=======
+		idr_destroy(&leases);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto out_leases;
 	}
 
@@ -583,7 +591,10 @@ out_lessee:
 
 out_leases:
 	put_unused_fd(fd);
+<<<<<<< HEAD
 	idr_destroy(&leases);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	DRM_DEBUG_LEASE("drm_mode_create_lease_ioctl failed: %d\n", ret);
 	return ret;

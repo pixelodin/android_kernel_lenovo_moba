@@ -11,6 +11,10 @@
 #include <linux/smp.h>
 #include <linux/kernel.h>
 #include <linux/mm_types.h>
+<<<<<<< HEAD
+=======
+#include <linux/elf.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #include <asm/processor.h>
 #include <asm/vdso.h>

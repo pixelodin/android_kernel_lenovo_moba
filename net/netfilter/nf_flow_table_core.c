@@ -187,6 +187,11 @@ int flow_offload_add(struct nf_flowtable *flow_table, struct flow_offload *flow)
 {
 	int err;
 
+<<<<<<< HEAD
+=======
+	flow->timeout = (u32)jiffies + NF_FLOW_TIMEOUT;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	err = rhashtable_insert_fast(&flow_table->rhashtable,
 				     &flow->tuplehash[0].node,
 				     nf_flow_offload_rhash_params);
@@ -203,7 +208,10 @@ int flow_offload_add(struct nf_flowtable *flow_table, struct flow_offload *flow)
 		return err;
 	}
 
+<<<<<<< HEAD
 	flow->timeout = (u32)jiffies + NF_FLOW_TIMEOUT;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 }
 EXPORT_SYMBOL_GPL(flow_offload_add);
@@ -490,14 +498,26 @@ EXPORT_SYMBOL_GPL(nf_flow_table_init);
 static void nf_flow_table_do_cleanup(struct flow_offload *flow, void *data)
 {
 	struct net_device *dev = data;
+<<<<<<< HEAD
+=======
+	struct flow_offload_entry *e;
+
+	e = container_of(flow, struct flow_offload_entry, flow);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!dev) {
 		flow_offload_teardown(flow);
 		return;
 	}
+<<<<<<< HEAD
 
 	if (flow->tuplehash[0].tuple.iifidx == dev->ifindex ||
 	    flow->tuplehash[1].tuple.iifidx == dev->ifindex)
+=======
+	if (net_eq(nf_ct_net(e->ct), dev_net(dev)) &&
+	    (flow->tuplehash[0].tuple.iifidx == dev->ifindex ||
+	     flow->tuplehash[1].tuple.iifidx == dev->ifindex))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		flow_offload_dead(flow);
 }
 

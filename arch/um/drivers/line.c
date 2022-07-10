@@ -261,7 +261,11 @@ static irqreturn_t line_write_interrupt(int irq, void *data)
 	if (err == 0) {
 		spin_unlock(&line->lock);
 		return IRQ_NONE;
+<<<<<<< HEAD
 	} else if (err < 0) {
+=======
+	} else if ((err < 0) && (err != -EAGAIN)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		line->head = line->buffer;
 		line->tail = line->buffer;
 	}
@@ -284,7 +288,11 @@ int line_setup_irq(int fd, int input, int output, struct line *line, void *data)
 	if (err)
 		return err;
 	if (output)
+<<<<<<< HEAD
 		err = um_request_irq(driver->write_irq, fd, IRQ_NONE,
+=======
+		err = um_request_irq(driver->write_irq, fd, IRQ_WRITE,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				     line_write_interrupt, IRQF_SHARED,
 				     driver->write_irq_name, data);
 	return err;

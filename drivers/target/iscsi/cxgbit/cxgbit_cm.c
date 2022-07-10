@@ -1832,7 +1832,11 @@ static void cxgbit_fw4_ack(struct cxgbit_sock *csk, struct sk_buff *skb)
 
 	while (credits) {
 		struct sk_buff *p = cxgbit_sock_peek_wr(csk);
+<<<<<<< HEAD
 		const u32 csum = (__force u32)p->csum;
+=======
+		u32 csum;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		if (unlikely(!p)) {
 			pr_err("csk 0x%p,%u, cr %u,%u+%u, empty.\n",
@@ -1841,6 +1845,10 @@ static void cxgbit_fw4_ack(struct cxgbit_sock *csk, struct sk_buff *skb)
 			break;
 		}
 
+<<<<<<< HEAD
+=======
+		csum = (__force u32)p->csum;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (unlikely(credits < csum)) {
 			pr_warn("csk 0x%p,%u, cr %u,%u+%u, < %u.\n",
 				csk,  csk->tid,

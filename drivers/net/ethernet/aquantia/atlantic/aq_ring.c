@@ -162,9 +162,18 @@ bool aq_ring_tx_clean(struct aq_ring_s *self)
 			}
 		}
 
+<<<<<<< HEAD
 		if (unlikely(buff->is_eop))
 			dev_kfree_skb_any(buff->skb);
 
+=======
+		if (unlikely(buff->is_eop)) {
+			++self->stats.rx.packets;
+			self->stats.tx.bytes += buff->skb->len;
+
+			dev_kfree_skb_any(buff->skb);
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		buff->pa = 0U;
 		buff->eop_index = 0xffffU;
 		self->sw_head = aq_ring_next_dx(self, self->sw_head);

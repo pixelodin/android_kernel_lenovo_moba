@@ -112,7 +112,11 @@
 const char gfar_driver_version[] = "2.0";
 
 static int gfar_enet_open(struct net_device *dev);
+<<<<<<< HEAD
 static int gfar_start_xmit(struct sk_buff *skb, struct net_device *dev);
+=======
+static netdev_tx_t gfar_start_xmit(struct sk_buff *skb, struct net_device *dev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static void gfar_reset_task(struct work_struct *work);
 static void gfar_timeout(struct net_device *dev);
 static int gfar_close(struct net_device *dev);
@@ -2334,7 +2338,11 @@ static inline bool gfar_csum_errata_76(struct gfar_private *priv,
 /* This is called by the kernel when a frame is ready for transmission.
  * It is pointed to by the dev->hard_start_xmit function pointer
  */
+<<<<<<< HEAD
 static int gfar_start_xmit(struct sk_buff *skb, struct net_device *dev)
+=======
+static netdev_tx_t gfar_start_xmit(struct sk_buff *skb, struct net_device *dev)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct gfar_private *priv = netdev_priv(dev);
 	struct gfar_priv_tx_q *tx_queue = NULL;
@@ -2685,13 +2693,24 @@ static void gfar_clean_tx_ring(struct gfar_priv_tx_q *tx_queue)
 	skb_dirtytx = tx_queue->skb_dirtytx;
 
 	while ((skb = tx_queue->tx_skbuff[skb_dirtytx])) {
+<<<<<<< HEAD
+=======
+		bool do_tstamp;
+
+		do_tstamp = (skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
+			    priv->hwts_tx_en;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		frags = skb_shinfo(skb)->nr_frags;
 
 		/* When time stamping, one additional TxBD must be freed.
 		 * Also, we need to dma_unmap_single() the TxPAL.
 		 */
+<<<<<<< HEAD
 		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS))
+=======
+		if (unlikely(do_tstamp))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			nr_txbds = frags + 2;
 		else
 			nr_txbds = frags + 1;
@@ -2705,7 +2724,11 @@ static void gfar_clean_tx_ring(struct gfar_priv_tx_q *tx_queue)
 		    (lstatus & BD_LENGTH_MASK))
 			break;
 
+<<<<<<< HEAD
 		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS)) {
+=======
+		if (unlikely(do_tstamp)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			next = next_txbd(bdp, base, tx_ring_size);
 			buflen = be16_to_cpu(next->length) +
 				 GMAC_FCB_LEN + GMAC_TXPAL_LEN;
@@ -2715,7 +2738,11 @@ static void gfar_clean_tx_ring(struct gfar_priv_tx_q *tx_queue)
 		dma_unmap_single(priv->dev, be32_to_cpu(bdp->bufPtr),
 				 buflen, DMA_TO_DEVICE);
 
+<<<<<<< HEAD
 		if (unlikely(skb_shinfo(skb)->tx_flags & SKBTX_IN_PROGRESS)) {
+=======
+		if (unlikely(do_tstamp)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			struct skb_shared_hwtstamps shhwtstamps;
 			u64 *ns = (u64 *)(((uintptr_t)skb->data + 0x10) &
 					  ~0x7UL);

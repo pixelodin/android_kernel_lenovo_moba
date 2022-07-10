@@ -1197,8 +1197,13 @@ static int ena_io_poll(struct napi_struct *napi, int budget)
 	struct ena_napi *ena_napi = container_of(napi, struct ena_napi, napi);
 	struct ena_ring *tx_ring, *rx_ring;
 
+<<<<<<< HEAD
 	u32 tx_work_done;
 	u32 rx_work_done;
+=======
+	int tx_work_done;
+	int rx_work_done = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int tx_budget;
 	int napi_comp_call = 0;
 	int ret;
@@ -1215,7 +1220,15 @@ static int ena_io_poll(struct napi_struct *napi, int budget)
 	}
 
 	tx_work_done = ena_clean_tx_irq(tx_ring, tx_budget);
+<<<<<<< HEAD
 	rx_work_done = ena_clean_rx_irq(rx_ring, napi, budget);
+=======
+	/* On netpoll the budget is zero and the handler should only clean the
+	 * tx completions.
+	 */
+	if (likely(budget))
+		rx_work_done = ena_clean_rx_irq(rx_ring, napi, budget);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* If the device is about to reset or down, avoid unmask
 	 * the interrupt and return 0 so NAPI won't reschedule
@@ -1796,6 +1809,10 @@ err_setup_rx:
 err_setup_tx:
 	ena_free_io_irq(adapter);
 err_req_irq:
+<<<<<<< HEAD
+=======
+	ena_del_napi(adapter);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return rc;
 }
@@ -2842,8 +2859,13 @@ static void check_for_missing_keep_alive(struct ena_adapter *adapter)
 	if (adapter->keep_alive_timeout == ENA_HW_HINTS_NO_TIMEOUT)
 		return;
 
+<<<<<<< HEAD
 	keep_alive_expired = round_jiffies(adapter->last_keep_alive_jiffies +
 					   adapter->keep_alive_timeout);
+=======
+	keep_alive_expired = adapter->last_keep_alive_jiffies +
+			     adapter->keep_alive_timeout;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (unlikely(time_is_before_jiffies(keep_alive_expired))) {
 		netif_err(adapter, drv, adapter->netdev,
 			  "Keep alive watchdog timeout.\n");
@@ -2945,7 +2967,11 @@ static void ena_timer_service(struct timer_list *t)
 	}
 
 	/* Reset the timer */
+<<<<<<< HEAD
 	mod_timer(&adapter->timer_service, jiffies + HZ);
+=======
+	mod_timer(&adapter->timer_service, round_jiffies(jiffies + HZ));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int ena_calc_io_queue_num(struct pci_dev *pdev,

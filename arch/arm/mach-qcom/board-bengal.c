@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2019-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include <linux/kernel.h>
@@ -10,6 +14,10 @@
 
 static const char *trinket_dt_match[] __initconst = {
 	"qcom,bengal",
+<<<<<<< HEAD
+=======
+	"qcom,bengal-iot",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	NULL
 };
 

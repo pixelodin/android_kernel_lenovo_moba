@@ -544,7 +544,11 @@ int rcar_du_modeset_init(struct rcar_du_device *rcdu)
 	 * Initialize vertical blanking interrupts handling. Start with vblank
 	 * disabled for all CRTCs.
 	 */
+<<<<<<< HEAD
 	ret = drm_vblank_init(dev, (1 << rcdu->num_crtcs) - 1);
+=======
+	ret = drm_vblank_init(dev, rcdu->num_crtcs);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (ret < 0)
 		return ret;
 

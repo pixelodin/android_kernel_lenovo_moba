@@ -1053,7 +1053,10 @@ static int pasemi_mac_phy_init(struct net_device *dev)
 
 	dn = pci_device_to_OF_node(mac->pdev);
 	phy_dn = of_parse_phandle(dn, "phy-handle", 0);
+<<<<<<< HEAD
 	of_node_put(phy_dn);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	mac->link = 0;
 	mac->speed = 0;
@@ -1062,6 +1065,10 @@ static int pasemi_mac_phy_init(struct net_device *dev)
 	phydev = of_phy_connect(dev, phy_dn, &pasemi_adjust_link, 0,
 				PHY_INTERFACE_MODE_SGMII);
 
+<<<<<<< HEAD
+=======
+	of_node_put(phy_dn);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!phydev) {
 		printk(KERN_ERR "%s: Could not attach to phy\n", dev->name);
 		return -ENODEV;

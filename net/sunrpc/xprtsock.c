@@ -129,7 +129,11 @@ static struct ctl_table xs_tunables_table[] = {
 		.mode		= 0644,
 		.proc_handler	= proc_dointvec_minmax,
 		.extra1		= &xprt_min_resvport_limit,
+<<<<<<< HEAD
 		.extra2		= &xprt_max_resvport
+=======
+		.extra2		= &xprt_max_resvport_limit
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	{
 		.procname	= "max_resvport",
@@ -137,7 +141,11 @@ static struct ctl_table xs_tunables_table[] = {
 		.maxlen		= sizeof(unsigned int),
 		.mode		= 0644,
 		.proc_handler	= proc_dointvec_minmax,
+<<<<<<< HEAD
 		.extra1		= &xprt_min_resvport,
+=======
+		.extra1		= &xprt_min_resvport_limit,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.extra2		= &xprt_max_resvport_limit
 	},
 	{
@@ -1611,6 +1619,12 @@ static void xs_tcp_state_change(struct sock *sk)
 			clear_bit(XPRT_SOCK_CONNECTING, &transport->sock_state);
 			xprt_clear_connecting(xprt);
 
+<<<<<<< HEAD
+=======
+			xprt->stat.connect_count++;
+			xprt->stat.connect_time += (long)jiffies -
+						   xprt->stat.connect_start;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			xprt_wake_pending_tasks(xprt, -EAGAIN);
 		}
 		spin_unlock(&xprt->transport_lock);
@@ -1773,11 +1787,25 @@ static void xs_udp_timer(struct rpc_xprt *xprt, struct rpc_task *task)
 	spin_unlock_bh(&xprt->transport_lock);
 }
 
+<<<<<<< HEAD
 static unsigned short xs_get_random_port(void)
 {
 	unsigned short range = xprt_max_resvport - xprt_min_resvport + 1;
 	unsigned short rand = (unsigned short) prandom_u32() % range;
 	return rand + xprt_min_resvport;
+=======
+static int xs_get_random_port(void)
+{
+	unsigned short min = xprt_min_resvport, max = xprt_max_resvport;
+	unsigned short range;
+	unsigned short rand;
+
+	if (max < min)
+		return -EADDRINUSE;
+	range = max - min + 1;
+	rand = (unsigned short) prandom_u32() % range;
+	return rand + min;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /**
@@ -1833,9 +1861,15 @@ static void xs_set_srcport(struct sock_xprt *transport, struct socket *sock)
 		transport->srcport = xs_sock_getport(sock);
 }
 
+<<<<<<< HEAD
 static unsigned short xs_get_srcport(struct sock_xprt *transport)
 {
 	unsigned short port = transport->srcport;
+=======
+static int xs_get_srcport(struct sock_xprt *transport)
+{
+	int port = transport->srcport;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (port == 0 && transport->xprt.resvport)
 		port = xs_get_random_port();
@@ -1856,7 +1890,11 @@ static int xs_bind(struct sock_xprt *transport, struct socket *sock)
 {
 	struct sockaddr_storage myaddr;
 	int err, nloop = 0;
+<<<<<<< HEAD
 	unsigned short port = xs_get_srcport(transport);
+=======
+	int port = xs_get_srcport(transport);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	unsigned short last;
 
 	/*
@@ -1874,8 +1912,13 @@ static int xs_bind(struct sock_xprt *transport, struct socket *sock)
 	 * transport->xprt.resvport == 1) xs_get_srcport above will
 	 * ensure that port is non-zero and we will bind as needed.
 	 */
+<<<<<<< HEAD
 	if (port == 0)
 		return 0;
+=======
+	if (port <= 0)
+		return port;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	memcpy(&myaddr, &transport->srcaddr, transport->xprt.addrlen);
 	do {
@@ -2029,8 +2072,11 @@ static int xs_local_finish_connecting(struct rpc_xprt *xprt,
 	}
 
 	/* Tell the socket layer to start connecting... */
+<<<<<<< HEAD
 	xprt->stat.connect_count++;
 	xprt->stat.connect_start = jiffies;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return kernel_connect(sock, xs_addr(xprt), xprt->addrlen, 0);
 }
 
@@ -2062,6 +2108,12 @@ static int xs_local_setup_socket(struct sock_xprt *transport)
 	case 0:
 		dprintk("RPC:       xprt %p connected to %s\n",
 				xprt, xprt->address_strings[RPC_DISPLAY_ADDR]);
+<<<<<<< HEAD
+=======
+		xprt->stat.connect_count++;
+		xprt->stat.connect_time += (long)jiffies -
+					   xprt->stat.connect_start;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		xprt_set_connected(xprt);
 	case -ENOBUFS:
 		break;
@@ -2387,8 +2439,11 @@ static int xs_tcp_finish_connecting(struct rpc_xprt *xprt, struct socket *sock)
 	xs_set_memalloc(xprt);
 
 	/* Tell the socket layer to start connecting... */
+<<<<<<< HEAD
 	xprt->stat.connect_count++;
 	xprt->stat.connect_start = jiffies;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	set_bit(XPRT_SOCK_CONNECTING, &transport->sock_state);
 	ret = kernel_connect(sock, xs_addr(xprt), xprt->addrlen, O_NONBLOCK);
 	switch (ret) {
@@ -3317,12 +3372,17 @@ static int param_set_uint_minmax(const char *val,
 
 static int param_set_portnr(const char *val, const struct kernel_param *kp)
 {
+<<<<<<< HEAD
 	if (kp->arg == &xprt_min_resvport)
 		return param_set_uint_minmax(val, kp,
 			RPC_MIN_RESVPORT,
 			xprt_max_resvport);
 	return param_set_uint_minmax(val, kp,
 			xprt_min_resvport,
+=======
+	return param_set_uint_minmax(val, kp,
+			RPC_MIN_RESVPORT,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			RPC_MAX_RESVPORT);
 }
 

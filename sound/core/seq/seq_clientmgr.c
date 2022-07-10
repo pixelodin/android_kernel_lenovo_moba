@@ -563,7 +563,11 @@ static int update_timestamp_of_queue(struct snd_seq_event *event,
 	event->queue = queue;
 	event->flags &= ~SNDRV_SEQ_TIME_STAMP_MASK;
 	if (real_time) {
+<<<<<<< HEAD
 		event->time.time = snd_seq_timer_get_cur_time(q->timer);
+=======
+		event->time.time = snd_seq_timer_get_cur_time(q->timer, true);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		event->flags |= SNDRV_SEQ_TIME_STAMP_REAL;
 	} else {
 		event->time.tick = snd_seq_timer_get_cur_tick(q->timer);
@@ -1642,7 +1646,11 @@ static int snd_seq_ioctl_get_queue_status(struct snd_seq_client *client,
 	tmr = queue->timer;
 	status->events = queue->tickq->cells + queue->timeq->cells;
 
+<<<<<<< HEAD
 	status->time = snd_seq_timer_get_cur_time(tmr);
+=======
+	status->time = snd_seq_timer_get_cur_time(tmr, true);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	status->tick = snd_seq_timer_get_cur_tick(tmr);
 
 	status->running = tmr->running;

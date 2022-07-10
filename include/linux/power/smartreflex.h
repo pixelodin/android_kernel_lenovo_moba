@@ -296,6 +296,12 @@ struct omap_sr_data {
 	struct voltagedomain		*voltdm;
 };
 
+<<<<<<< HEAD
+=======
+
+extern struct omap_sr_data omap_sr_pdata[OMAP_SR_NR];
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #ifdef CONFIG_POWER_AVS_OMAP
 
 /* Smartreflex module enable/disable interface */

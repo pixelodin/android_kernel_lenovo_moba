@@ -5452,7 +5452,11 @@ static int init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 	whoami = t4_read_reg(adapter, PL_WHOAMI_A);
 	pci_read_config_word(pdev, PCI_DEVICE_ID, &device_id);
 	chip = t4_get_chip_type(adapter, CHELSIO_PCI_ID_VER(device_id));
+<<<<<<< HEAD
 	if (chip < 0) {
+=======
+	if ((int)chip < 0) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		dev_err(&pdev->dev, "Device %d is not supported\n", device_id);
 		err = chip;
 		goto out_free_adapter;

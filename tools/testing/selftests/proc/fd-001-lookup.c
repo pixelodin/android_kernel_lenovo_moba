@@ -14,7 +14,11 @@
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 // Test /proc/*/fd lookup.
+<<<<<<< HEAD
 #define _GNU_SOURCE
+=======
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #undef NDEBUG
 #include <assert.h>
 #include <dirent.h>

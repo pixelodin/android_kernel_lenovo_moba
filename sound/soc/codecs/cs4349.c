@@ -381,6 +381,10 @@ static struct i2c_driver cs4349_i2c_driver = {
 	.driver = {
 		.name		= "cs4349",
 		.of_match_table	= cs4349_of_match,
+<<<<<<< HEAD
+=======
+		.pm = &cs4349_runtime_pm,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	.id_table	= cs4349_i2c_id,
 	.probe		= cs4349_i2c_probe,

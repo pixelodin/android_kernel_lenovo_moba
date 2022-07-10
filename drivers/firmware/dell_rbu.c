@@ -45,6 +45,10 @@
 #include <linux/moduleparam.h>
 #include <linux/firmware.h>
 #include <linux/dma-mapping.h>
+<<<<<<< HEAD
+=======
+#include <asm/set_memory.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 MODULE_AUTHOR("Abhay Salunke <abhay_salunke@dell.com>");
 MODULE_DESCRIPTION("Driver for updating BIOS image on DELL systems");
@@ -181,6 +185,14 @@ static int create_packet(void *data, size_t length)
 			packet_data_temp_buf = NULL;
 		}
 	}
+<<<<<<< HEAD
+=======
+	/*
+	 * set to uncachable or it may never get written back before reboot
+	 */
+	set_memory_uc((unsigned long)packet_data_temp_buf, 1 << ordernum);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	spin_lock(&rbu_data.lock);
 
 	newpacket->data = packet_data_temp_buf;
@@ -349,6 +361,11 @@ static void packet_empty_list(void)
 		 * to make sure there are no stale RBU packets left in memory
 		 */
 		memset(newpacket->data, 0, rbu_data.packetsize);
+<<<<<<< HEAD
+=======
+		set_memory_wb((unsigned long)newpacket->data,
+			1 << newpacket->ordernum);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		free_pages((unsigned long) newpacket->data,
 			newpacket->ordernum);
 		kfree(newpacket);

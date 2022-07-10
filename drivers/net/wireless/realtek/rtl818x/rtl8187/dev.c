@@ -444,12 +444,22 @@ static int rtl8187_init_urbs(struct ieee80211_hw *dev)
 		skb_queue_tail(&priv->rx_queue, skb);
 		usb_anchor_urb(entry, &priv->anchored);
 		ret = usb_submit_urb(entry, GFP_KERNEL);
+<<<<<<< HEAD
 		usb_put_urb(entry);
 		if (ret) {
 			skb_unlink(skb, &priv->rx_queue);
 			usb_unanchor_urb(entry);
 			goto err;
 		}
+=======
+		if (ret) {
+			skb_unlink(skb, &priv->rx_queue);
+			usb_unanchor_urb(entry);
+			usb_put_urb(entry);
+			goto err;
+		}
+		usb_put_urb(entry);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	return ret;
 

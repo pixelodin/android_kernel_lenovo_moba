@@ -142,7 +142,12 @@ static unsigned int	 ipv4_mtu(const struct dst_entry *dst);
 static struct dst_entry *ipv4_negative_advice(struct dst_entry *dst);
 static void		 ipv4_link_failure(struct sk_buff *skb);
 static void		 ip_rt_update_pmtu(struct dst_entry *dst, struct sock *sk,
+<<<<<<< HEAD
 					   struct sk_buff *skb, u32 mtu);
+=======
+					   struct sk_buff *skb, u32 mtu,
+					   bool confirm_neigh);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static void		 ip_do_redirect(struct dst_entry *dst, struct sock *sk,
 					struct sk_buff *skb);
 static void		ipv4_dst_destroy(struct dst_entry *dst);
@@ -1035,7 +1040,12 @@ static void __ip_rt_update_pmtu(struct rtable *rt, struct flowi4 *fl4, u32 mtu)
 }
 
 static void ip_rt_update_pmtu(struct dst_entry *dst, struct sock *sk,
+<<<<<<< HEAD
 			      struct sk_buff *skb, u32 mtu)
+=======
+			      struct sk_buff *skb, u32 mtu,
+			      bool confirm_neigh)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct rtable *rt = (struct rtable *) dst;
 	struct flowi4 fl4;
@@ -2559,7 +2569,12 @@ static unsigned int ipv4_blackhole_mtu(const struct dst_entry *dst)
 }
 
 static void ipv4_rt_blackhole_update_pmtu(struct dst_entry *dst, struct sock *sk,
+<<<<<<< HEAD
 					  struct sk_buff *skb, u32 mtu)
+=======
+					  struct sk_buff *skb, u32 mtu,
+					  bool confirm_neigh)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 }
 

@@ -155,7 +155,11 @@ static inline void __nocfi cpu_replace_ttbr1(pgd_t *pgdp)
 
 	phys_addr_t pgd_phys = virt_to_phys(pgdp);
 
+<<<<<<< HEAD
 	replace_phys = (void *)__pa_symbol(idmap_cpu_replace_ttbr1);
+=======
+	replace_phys = (void *)__pa_function(idmap_cpu_replace_ttbr1);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	cpu_install_idmap();
 	replace_phys(pgd_phys);

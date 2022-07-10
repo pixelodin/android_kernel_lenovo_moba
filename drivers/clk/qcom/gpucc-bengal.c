@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2019-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #define pr_fmt(fmt) "clk: %s: " fmt, __func__
@@ -26,6 +30,10 @@
 #define CX_GMU_CBCR_WAKE_SHIFT          8
 
 static DEFINE_VDD_REGULATORS(vdd_cx, VDD_NUM, 1, vdd_corner);
+<<<<<<< HEAD
+=======
+static DEFINE_VDD_REGULATORS(vdd_mx, VDD_NUM, 1, vdd_corner);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 enum {
 	P_BI_TCXO,
@@ -80,6 +88,7 @@ static const char * const gpu_cc_parent_names_1[] = {
 
 static struct pll_vco default_vco[] = {
 	{ 1000000000, 2000000000, 0 },
+<<<<<<< HEAD
 	{ 750000000, 1500000000, 1 },
 	{ 500000000, 1000000000, 2 },
 	{ 250000000, 500000000, 3 },
@@ -89,6 +98,20 @@ static const struct alpha_pll_config gpu_cc_pll0_config = {
 	.l = 0x1B,
 	.alpha = 0x55000000,
 	.alpha_hi = 0xB5,
+=======
+};
+
+static struct pll_vco pll1_vco[] = {
+	{ 500000000, 1000000000, 2 },
+};
+
+static const struct alpha_pll_config gpu_cc_pll0_config = {
+	.l = 0x3E,
+	.alpha = 0x00000000,
+	.alpha_hi = 0x80,
+	.vco_val = 0x0 << 20,
+	.vco_mask = GENMASK(21, 20),
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.alpha_en_mask = BIT(24),
 	.main_output_mask = BIT(0),
 	.aux_output_mask = BIT(1),
@@ -98,7 +121,11 @@ static const struct alpha_pll_config gpu_cc_pll0_config = {
 	.test_ctl_hi_mask = 0x1,
 };
 
+<<<<<<< HEAD
 /* 532MHz configuration */
+=======
+/* 1200MHz configuration */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static struct clk_alpha_pll gpu_cc_pll0 = {
 	.offset = 0x0,
 	.vco_table = default_vco,
@@ -111,7 +138,11 @@ static struct clk_alpha_pll gpu_cc_pll0 = {
 			.parent_names = (const char *[]){ "bi_tcxo" },
 			.num_parents = 1,
 			.ops = &clk_alpha_pll_ops,
+<<<<<<< HEAD
 			.vdd_class = &vdd_cx,
+=======
+			.vdd_class = &vdd_mx,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			.num_rate_max = VDD_NUM,
 			.rate_max = (unsigned long[VDD_NUM]) {
 				[VDD_MIN] = 1000000000,
@@ -158,8 +189,13 @@ static const struct alpha_pll_config gpu_cc_pll1_config = {
 
 static struct clk_alpha_pll gpu_cc_pll1 = {
 	.offset = 0x100,
+<<<<<<< HEAD
 	.vco_table = default_vco,
 	.num_vco = ARRAY_SIZE(default_vco),
+=======
+	.vco_table = pll1_vco,
+	.num_vco = ARRAY_SIZE(pll1_vco),
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.flags = SUPPORTS_DYNAMIC_UPDATE,
 	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
 	.clkr = {
@@ -168,7 +204,11 @@ static struct clk_alpha_pll gpu_cc_pll1 = {
 			.parent_names = (const char *[]){ "bi_tcxo" },
 			.num_parents = 1,
 			.ops = &clk_alpha_pll_ops,
+<<<<<<< HEAD
 			.vdd_class = &vdd_cx,
+=======
+			.vdd_class = &vdd_mx,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			.num_rate_max = VDD_NUM,
 			.rate_max = (unsigned long[VDD_NUM]) {
 				[VDD_MIN] = 1000000000,
@@ -474,6 +514,17 @@ static int gpucc_bengal_probe(struct platform_device *pdev)
 		return PTR_ERR(vdd_cx.regulator[0]);
 	}
 
+<<<<<<< HEAD
+=======
+	vdd_mx.regulator[0] = devm_regulator_get(&pdev->dev, "vdd_mx");
+	if (IS_ERR(vdd_mx.regulator[0])) {
+		if (!(PTR_ERR(vdd_mx.regulator[0]) == -EPROBE_DEFER))
+			dev_err(&pdev->dev,
+				"Unable to get vdd_mx regulator\n");
+		return PTR_ERR(vdd_mx.regulator[0]);
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	regmap = qcom_cc_map(pdev, &gpu_cc_bengal_desc);
 	if (IS_ERR(regmap))
 		return PTR_ERR(regmap);

@@ -1590,7 +1590,11 @@ static int kvaser_usb_hydra_setup_endpoints(struct kvaser_usb *dev)
 	struct usb_endpoint_descriptor *ep;
 	int i;
 
+<<<<<<< HEAD
 	iface_desc = &dev->intf->altsetting[0];
+=======
+	iface_desc = dev->intf->cur_altsetting;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
 		ep = &iface_desc->endpoint[i].desc;

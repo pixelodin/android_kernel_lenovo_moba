@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 /*
+<<<<<<< HEAD
  * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2019-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #ifndef __MSM_CAMERA_H
@@ -62,10 +66,22 @@
 #define CAM_CPAS_TRAFFIC_MERGE_SUM 0
 #define CAM_CPAS_TRAFFIC_MERGE_SUM_INTERLEAVE 1
 
+<<<<<<< HEAD
 
 /* Feature support bit positions in feature fuse register*/
 #define CAM_CPAS_QCFA_BINNING_ENABLE 0
 #define CAM_CPAS_SECURE_CAMERA_ENABLE 1
 #define CAM_CPAS_FUSE_FEATURE_MAX 2
+=======
+#define CAM_CPAS_FEATURE_TYPE_DISABLE        0
+#define CAM_CPAS_FEATURE_TYPE_ENABLE         1
+
+/* Fuse Feature support ids */
+#define CAM_CPAS_QCFA_BINNING_ENABLE        0
+#define CAM_CPAS_SECURE_CAMERA_ENABLE       1
+#define CAM_CPAS_ISP_FUSE_ID                2
+#define CAM_CPAS_ISP_PIX_FUSE_ID            3
+#define CAM_CPAS_FUSE_FEATURE_MAX           4
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #endif

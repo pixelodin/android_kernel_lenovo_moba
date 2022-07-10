@@ -1505,10 +1505,32 @@ static int v4l_enum_fmt(const struct v4l2_ioctl_ops *ops,
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static void v4l_pix_format_touch(struct v4l2_pix_format *p)
+{
+	/*
+	 * The v4l2_pix_format structure contains fields that make no sense for
+	 * touch. Set them to default values in this case.
+	 */
+
+	p->field = V4L2_FIELD_NONE;
+	p->colorspace = V4L2_COLORSPACE_RAW;
+	p->flags = 0;
+	p->ycbcr_enc = 0;
+	p->quantization = 0;
+	p->xfer_func = 0;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int v4l_g_fmt(const struct v4l2_ioctl_ops *ops,
 				struct file *file, void *fh, void *arg)
 {
 	struct v4l2_format *p = arg;
+<<<<<<< HEAD
+=======
+	struct video_device *vfd = video_devdata(file);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int ret = check_fmt(file, p->type);
 
 	if (ret)
@@ -1546,6 +1568,11 @@ static int v4l_g_fmt(const struct v4l2_ioctl_ops *ops,
 		ret = ops->vidioc_g_fmt_vid_cap(file, fh, arg);
 		/* just in case the driver zeroed it again */
 		p->fmt.pix.priv = V4L2_PIX_FMT_PRIV_MAGIC;
+<<<<<<< HEAD
+=======
+		if (vfd->vfl_type == VFL_TYPE_TOUCH)
+			v4l_pix_format_touch(&p->fmt.pix);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return ret;
 	case V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE:
 		return ops->vidioc_g_fmt_vid_cap_mplane(file, fh, arg);
@@ -1581,6 +1608,7 @@ static int v4l_g_fmt(const struct v4l2_ioctl_ops *ops,
 	return -EINVAL;
 }
 
+<<<<<<< HEAD
 static void v4l_pix_format_touch(struct v4l2_pix_format *p)
 {
 	/*
@@ -1596,6 +1624,8 @@ static void v4l_pix_format_touch(struct v4l2_pix_format *p)
 	p->xfer_func = 0;
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int v4l_s_fmt(const struct v4l2_ioctl_ops *ops,
 				struct file *file, void *fh, void *arg)
 {
@@ -1635,12 +1665,20 @@ static int v4l_s_fmt(const struct v4l2_ioctl_ops *ops,
 	case V4L2_BUF_TYPE_VBI_CAPTURE:
 		if (unlikely(!ops->vidioc_s_fmt_vbi_cap))
 			break;
+<<<<<<< HEAD
 		CLEAR_AFTER_FIELD(p, fmt.vbi);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.vbi.flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return ops->vidioc_s_fmt_vbi_cap(file, fh, arg);
 	case V4L2_BUF_TYPE_SLICED_VBI_CAPTURE:
 		if (unlikely(!ops->vidioc_s_fmt_sliced_vbi_cap))
 			break;
+<<<<<<< HEAD
 		CLEAR_AFTER_FIELD(p, fmt.sliced);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.sliced.io_size);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return ops->vidioc_s_fmt_sliced_vbi_cap(file, fh, arg);
 	case V4L2_BUF_TYPE_VIDEO_OUTPUT:
 		if (unlikely(!ops->vidioc_s_fmt_vid_out))
@@ -1663,22 +1701,38 @@ static int v4l_s_fmt(const struct v4l2_ioctl_ops *ops,
 	case V4L2_BUF_TYPE_VBI_OUTPUT:
 		if (unlikely(!ops->vidioc_s_fmt_vbi_out))
 			break;
+<<<<<<< HEAD
 		CLEAR_AFTER_FIELD(p, fmt.vbi);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.vbi.flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return ops->vidioc_s_fmt_vbi_out(file, fh, arg);
 	case V4L2_BUF_TYPE_SLICED_VBI_OUTPUT:
 		if (unlikely(!ops->vidioc_s_fmt_sliced_vbi_out))
 			break;
+<<<<<<< HEAD
 		CLEAR_AFTER_FIELD(p, fmt.sliced);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.sliced.io_size);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return ops->vidioc_s_fmt_sliced_vbi_out(file, fh, arg);
 	case V4L2_BUF_TYPE_SDR_CAPTURE:
 		if (unlikely(!ops->vidioc_s_fmt_sdr_cap))
 			break;
+<<<<<<< HEAD
 		CLEAR_AFTER_FIELD(p, fmt.sdr);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.sdr.buffersize);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return ops->vidioc_s_fmt_sdr_cap(file, fh, arg);
 	case V4L2_BUF_TYPE_SDR_OUTPUT:
 		if (unlikely(!ops->vidioc_s_fmt_sdr_out))
 			break;
+<<<<<<< HEAD
 		CLEAR_AFTER_FIELD(p, fmt.sdr);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.sdr.buffersize);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return ops->vidioc_s_fmt_sdr_out(file, fh, arg);
 	case V4L2_BUF_TYPE_META_CAPTURE:
 		if (unlikely(!ops->vidioc_s_fmt_meta_cap))
@@ -1722,12 +1776,20 @@ static int v4l_try_fmt(const struct v4l2_ioctl_ops *ops,
 	case V4L2_BUF_TYPE_VBI_CAPTURE:
 		if (unlikely(!ops->vidioc_try_fmt_vbi_cap))
 			break;
+<<<<<<< HEAD
 		CLEAR_AFTER_FIELD(p, fmt.vbi);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.vbi.flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return ops->vidioc_try_fmt_vbi_cap(file, fh, arg);
 	case V4L2_BUF_TYPE_SLICED_VBI_CAPTURE:
 		if (unlikely(!ops->vidioc_try_fmt_sliced_vbi_cap))
 			break;
+<<<<<<< HEAD
 		CLEAR_AFTER_FIELD(p, fmt.sliced);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.sliced.io_size);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return ops->vidioc_try_fmt_sliced_vbi_cap(file, fh, arg);
 	case V4L2_BUF_TYPE_VIDEO_OUTPUT:
 		if (unlikely(!ops->vidioc_try_fmt_vid_out))
@@ -1750,22 +1812,38 @@ static int v4l_try_fmt(const struct v4l2_ioctl_ops *ops,
 	case V4L2_BUF_TYPE_VBI_OUTPUT:
 		if (unlikely(!ops->vidioc_try_fmt_vbi_out))
 			break;
+<<<<<<< HEAD
 		CLEAR_AFTER_FIELD(p, fmt.vbi);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.vbi.flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return ops->vidioc_try_fmt_vbi_out(file, fh, arg);
 	case V4L2_BUF_TYPE_SLICED_VBI_OUTPUT:
 		if (unlikely(!ops->vidioc_try_fmt_sliced_vbi_out))
 			break;
+<<<<<<< HEAD
 		CLEAR_AFTER_FIELD(p, fmt.sliced);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.sliced.io_size);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return ops->vidioc_try_fmt_sliced_vbi_out(file, fh, arg);
 	case V4L2_BUF_TYPE_SDR_CAPTURE:
 		if (unlikely(!ops->vidioc_try_fmt_sdr_cap))
 			break;
+<<<<<<< HEAD
 		CLEAR_AFTER_FIELD(p, fmt.sdr);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.sdr.buffersize);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return ops->vidioc_try_fmt_sdr_cap(file, fh, arg);
 	case V4L2_BUF_TYPE_SDR_OUTPUT:
 		if (unlikely(!ops->vidioc_try_fmt_sdr_out))
 			break;
+<<<<<<< HEAD
 		CLEAR_AFTER_FIELD(p, fmt.sdr);
+=======
+		CLEAR_AFTER_FIELD(p, fmt.sdr.buffersize);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return ops->vidioc_try_fmt_sdr_out(file, fh, arg);
 	case V4L2_BUF_TYPE_META_CAPTURE:
 		if (unlikely(!ops->vidioc_try_fmt_meta_cap))

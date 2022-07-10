@@ -165,10 +165,17 @@ static int sharpsl_nand_get_logical_num(u8 *oob)
 
 static int sharpsl_nand_init_ftl(struct mtd_info *mtd, struct sharpsl_ftl *ftl)
 {
+<<<<<<< HEAD
 	unsigned int block_num, log_num, phymax;
 	loff_t block_adr;
 	u8 *oob;
 	int i, ret;
+=======
+	unsigned int block_num, phymax;
+	int i, ret, log_num;
+	loff_t block_adr;
+	u8 *oob;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	oob = kzalloc(mtd->oobsize, GFP_KERNEL);
 	if (!oob)

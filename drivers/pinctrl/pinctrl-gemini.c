@@ -591,13 +591,23 @@ static const unsigned int tvc_3512_pins[] = {
 	319, /* TVC_DATA[1] */
 	301, /* TVC_DATA[2] */
 	283, /* TVC_DATA[3] */
+<<<<<<< HEAD
 	265, /* TVC_CLK */
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	320, /* TVC_DATA[4] */
 	302, /* TVC_DATA[5] */
 	284, /* TVC_DATA[6] */
 	266, /* TVC_DATA[7] */
 };
 
+<<<<<<< HEAD
+=======
+static const unsigned int tvc_clk_3512_pins[] = {
+	265, /* TVC_CLK */
+};
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* NAND flash pins */
 static const unsigned int nflash_3512_pins[] = {
 	199, 200, 201, 202, 216, 217, 218, 219, 220, 234, 235, 236, 237, 252,
@@ -629,7 +639,11 @@ static const unsigned int pflash_3512_pins_extended[] = {
 /* Serial flash pins CE0, CE1, DI, DO, CK */
 static const unsigned int sflash_3512_pins[] = { 230, 231, 232, 233, 211 };
 
+<<<<<<< HEAD
 /* The GPIO0A (0) pin overlap with TVC and extended parallel flash */
+=======
+/* The GPIO0A (0) pin overlap with TVC CLK and extended parallel flash */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static const unsigned int gpio0a_3512_pins[] = { 265 };
 
 /* The GPIO0B (1-4) pins overlap with TVC and ICE */
@@ -823,7 +837,17 @@ static const struct gemini_pin_group gemini_3512_pin_groups[] = {
 		.num_pins = ARRAY_SIZE(tvc_3512_pins),
 		/* Conflict with character LCD and ICE */
 		.mask = LCD_PADS_ENABLE,
+<<<<<<< HEAD
 		.value = TVC_PADS_ENABLE | TVC_CLK_PAD_ENABLE,
+=======
+		.value = TVC_PADS_ENABLE,
+	},
+	{
+		.name = "tvcclkgrp",
+		.pins = tvc_clk_3512_pins,
+		.num_pins = ARRAY_SIZE(tvc_clk_3512_pins),
+		.value = TVC_CLK_PAD_ENABLE,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	/*
 	 * The construction is done such that it is possible to use a serial
@@ -860,8 +884,13 @@ static const struct gemini_pin_group gemini_3512_pin_groups[] = {
 		.name = "gpio0agrp",
 		.pins = gpio0a_3512_pins,
 		.num_pins = ARRAY_SIZE(gpio0a_3512_pins),
+<<<<<<< HEAD
 		/* Conflict with TVC */
 		.mask = TVC_PADS_ENABLE,
+=======
+		/* Conflict with TVC CLK */
+		.mask = TVC_CLK_PAD_ENABLE,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	{
 		.name = "gpio0bgrp",
@@ -1531,13 +1560,23 @@ static const unsigned int tvc_3516_pins[] = {
 	311, /* TVC_DATA[1] */
 	394, /* TVC_DATA[2] */
 	374, /* TVC_DATA[3] */
+<<<<<<< HEAD
 	333, /* TVC_CLK */
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	354, /* TVC_DATA[4] */
 	395, /* TVC_DATA[5] */
 	312, /* TVC_DATA[6] */
 	334, /* TVC_DATA[7] */
 };
 
+<<<<<<< HEAD
+=======
+static const unsigned int tvc_clk_3516_pins[] = {
+	333, /* TVC_CLK */
+};
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* NAND flash pins */
 static const unsigned int nflash_3516_pins[] = {
 	243, 260, 261, 224, 280, 262, 281, 264, 300, 263, 282, 301, 320, 283,
@@ -1570,7 +1609,11 @@ static const unsigned int pflash_3516_pins_extended[] = {
 static const unsigned int sflash_3516_pins[] = { 296, 338, 295, 359, 339 };
 
 /* The GPIO0A (0-4) pins overlap with TVC and extended parallel flash */
+<<<<<<< HEAD
 static const unsigned int gpio0a_3516_pins[] = { 333, 354, 395, 312, 334 };
+=======
+static const unsigned int gpio0a_3516_pins[] = { 354, 395, 312, 334 };
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /* The GPIO0B (5-7) pins overlap with ICE */
 static const unsigned int gpio0b_3516_pins[] = { 375, 396, 376 };
@@ -1602,6 +1645,12 @@ static const unsigned int gpio0j_3516_pins[] = { 359, 339 };
 /* The GPIO0K (30,31) pins overlap with NAND flash */
 static const unsigned int gpio0k_3516_pins[] = { 275, 298 };
 
+<<<<<<< HEAD
+=======
+/* The GPIO0L (0) pins overlap with TVC_CLK */
+static const unsigned int gpio0l_3516_pins[] = { 333 };
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* The GPIO1A (0-4) pins that overlap with IDE and parallel flash */
 static const unsigned int gpio1a_3516_pins[] = { 221, 200, 222, 201, 220 };
 
@@ -1761,7 +1810,17 @@ static const struct gemini_pin_group gemini_3516_pin_groups[] = {
 		.num_pins = ARRAY_SIZE(tvc_3516_pins),
 		/* Conflict with character LCD */
 		.mask = LCD_PADS_ENABLE,
+<<<<<<< HEAD
 		.value = TVC_PADS_ENABLE | TVC_CLK_PAD_ENABLE,
+=======
+		.value = TVC_PADS_ENABLE,
+	},
+	{
+		.name = "tvcclkgrp",
+		.pins = tvc_clk_3516_pins,
+		.num_pins = ARRAY_SIZE(tvc_clk_3516_pins),
+		.value = TVC_CLK_PAD_ENABLE,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	/*
 	 * The construction is done such that it is possible to use a serial
@@ -1873,6 +1932,16 @@ static const struct gemini_pin_group gemini_3516_pin_groups[] = {
 		.value = PFLASH_PADS_DISABLE | NAND_PADS_DISABLE,
 	},
 	{
+<<<<<<< HEAD
+=======
+		.name = "gpio0lgrp",
+		.pins = gpio0l_3516_pins,
+		.num_pins = ARRAY_SIZE(gpio0l_3516_pins),
+		/* Conflict with TVE CLK */
+		.mask = TVC_CLK_PAD_ENABLE,
+	},
+	{
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.name = "gpio1agrp",
 		.pins = gpio1a_3516_pins,
 		.num_pins = ARRAY_SIZE(gpio1a_3516_pins),
@@ -2184,7 +2253,12 @@ static int gemini_pmx_set_mux(struct pinctrl_dev *pctldev,
 		 func->name, grp->name);
 
 	regmap_read(pmx->map, GLOBAL_MISC_CTRL, &before);
+<<<<<<< HEAD
 	regmap_update_bits(pmx->map, GLOBAL_MISC_CTRL, grp->mask,
+=======
+	regmap_update_bits(pmx->map, GLOBAL_MISC_CTRL,
+			   grp->mask | grp->value,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			   grp->value);
 	regmap_read(pmx->map, GLOBAL_MISC_CTRL, &after);
 

@@ -541,6 +541,11 @@ struct hns3_nic_priv {
 	/* Vxlan/Geneve information */
 	struct hns3_udp_tunnel udp_tnl[HNS3_UDP_TNL_MAX];
 	unsigned long active_vlans[BITS_TO_LONGS(VLAN_N_VID)];
+<<<<<<< HEAD
+=======
+	struct hns3_enet_coalesce tx_coal;
+	struct hns3_enet_coalesce rx_coal;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 union l3_hdr_info {

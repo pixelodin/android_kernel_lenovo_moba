@@ -36,7 +36,11 @@ h2_destroy()
 {
 	ip -6 route del 2001:db8:1::/64 vrf v$h2
 	ip -4 route del 192.0.2.0/28 vrf v$h2
+<<<<<<< HEAD
 	simple_if_fini $h2 192.0.2.130/28
+=======
+	simple_if_fini $h2 192.0.2.130/28 2001:db8:2::2/64
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 router_create()

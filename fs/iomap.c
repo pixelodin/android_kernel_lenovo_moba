@@ -14,6 +14,10 @@
 #include <linux/module.h>
 #include <linux/compiler.h>
 #include <linux/fs.h>
+<<<<<<< HEAD
+=======
+#include <linux/fscrypt.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/iomap.h>
 #include <linux/uaccess.h>
 #include <linux/gfp.h>
@@ -150,13 +154,21 @@ static void
 iomap_adjust_read_range(struct inode *inode, struct iomap_page *iop,
 		loff_t *pos, loff_t length, unsigned *offp, unsigned *lenp)
 {
+<<<<<<< HEAD
+=======
+	loff_t orig_pos = *pos;
+	loff_t isize = i_size_read(inode);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	unsigned block_bits = inode->i_blkbits;
 	unsigned block_size = (1 << block_bits);
 	unsigned poff = offset_in_page(*pos);
 	unsigned plen = min_t(loff_t, PAGE_SIZE - poff, length);
 	unsigned first = poff >> block_bits;
 	unsigned last = (poff + plen - 1) >> block_bits;
+<<<<<<< HEAD
 	unsigned end = offset_in_page(i_size_read(inode)) >> block_bits;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/*
 	 * If the block size is smaller than the page size we need to check the
@@ -191,8 +203,17 @@ iomap_adjust_read_range(struct inode *inode, struct iomap_page *iop,
 	 * handle both halves separately so that we properly zero data in the
 	 * page cache for blocks that are entirely outside of i_size.
 	 */
+<<<<<<< HEAD
 	if (first <= end && last > end)
 		plen -= (last - end) * block_size;
+=======
+	if (orig_pos <= isize && orig_pos + length > isize) {
+		unsigned end = offset_in_page(isize - 1) >> block_bits;
+
+		if (first <= end && last > end)
+			plen -= (last - end) * block_size;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	*offp = poff;
 	*lenp = plen;
@@ -1575,10 +1596,19 @@ static blk_qc_t
 iomap_dio_zero(struct iomap_dio *dio, struct iomap *iomap, loff_t pos,
 		unsigned len)
 {
+<<<<<<< HEAD
+=======
+	struct inode *inode = file_inode(dio->iocb->ki_filp);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct page *page = ZERO_PAGE(0);
 	struct bio *bio;
 
 	bio = bio_alloc(GFP_KERNEL, 1);
+<<<<<<< HEAD
+=======
+	fscrypt_set_bio_crypt_ctx(bio, inode, pos >> inode->i_blkbits,
+				  GFP_KERNEL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	bio_set_dev(bio, iomap->bdev);
 	bio->bi_iter.bi_sector = iomap_sector(iomap, pos);
 	bio->bi_private = dio;
@@ -1603,7 +1633,11 @@ iomap_dio_bio_actor(struct inode *inode, loff_t pos, loff_t length,
 	struct bio *bio;
 	bool need_zeroout = false;
 	bool use_fua = false;
+<<<<<<< HEAD
 	int nr_pages, ret;
+=======
+	int nr_pages, ret = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	size_t copied = 0;
 
 	if ((pos | length | align) & ((1 << blkbits) - 1))
@@ -1619,12 +1653,22 @@ iomap_dio_bio_actor(struct inode *inode, loff_t pos, loff_t length,
 
 	if (iomap->flags & IOMAP_F_NEW) {
 		need_zeroout = true;
+<<<<<<< HEAD
 	} else {
 		/*
 		 * Use a FUA write if we need datasync semantics, this
 		 * is a pure data IO that doesn't require any metadata
 		 * updates and the underlying device supports FUA. This
 		 * allows us to avoid cache flushes on IO completion.
+=======
+	} else if (iomap->type == IOMAP_MAPPED) {
+		/*
+		 * Use a FUA write if we need datasync semantics, this is a pure
+		 * data IO that doesn't require any metadata updates (including
+		 * after IO completion such as unwritten extent conversion) and
+		 * the underlying device supports FUA. This allows us to avoid
+		 * cache flushes on IO completion.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		 */
 		if (!(iomap->flags & (IOMAP_F_SHARED|IOMAP_F_DIRTY)) &&
 		    (dio->flags & IOMAP_DIO_WRITE_FUA) &&
@@ -1658,6 +1702,11 @@ iomap_dio_bio_actor(struct inode *inode, loff_t pos, loff_t length,
 		}
 
 		bio = bio_alloc(GFP_KERNEL, nr_pages);
+<<<<<<< HEAD
+=======
+		fscrypt_set_bio_crypt_ctx(bio, inode, pos >> inode->i_blkbits,
+					  GFP_KERNEL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		bio_set_dev(bio, iomap->bdev);
 		bio->bi_iter.bi_sector = iomap_sector(iomap, pos);
 		bio->bi_write_hint = dio->iocb->ki_hint;
@@ -1667,8 +1716,19 @@ iomap_dio_bio_actor(struct inode *inode, loff_t pos, loff_t length,
 
 		ret = bio_iov_iter_get_pages(bio, &iter);
 		if (unlikely(ret)) {
+<<<<<<< HEAD
 			bio_put(bio);
 			return copied ? copied : ret;
+=======
+			/*
+			 * We have to stop part way through an IO. We must fall
+			 * through to the sub-block tail zeroing here, otherwise
+			 * this short IO may expose stale data in the tail of
+			 * the block we haven't written data to.
+			 */
+			bio_put(bio);
+			goto zero_tail;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 
 		n = bio->bi_iter.bi_size;
@@ -1699,13 +1759,29 @@ iomap_dio_bio_actor(struct inode *inode, loff_t pos, loff_t length,
 		dio->submit.cookie = submit_bio(bio);
 	} while (nr_pages);
 
+<<<<<<< HEAD
 	if (need_zeroout) {
+=======
+	/*
+	 * We need to zeroout the tail of a sub-block write if the extent type
+	 * requires zeroing or the write extends beyond EOF. If we don't zero
+	 * the block tail in the latter case, we can expose stale data via mmap
+	 * reads of the EOF block.
+	 */
+zero_tail:
+	if (need_zeroout ||
+	    ((dio->flags & IOMAP_DIO_WRITE) && pos >= i_size_read(inode))) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/* zero out from the end of the write to the end of the block */
 		pad = pos & (fs_block_size - 1);
 		if (pad)
 			iomap_dio_zero(dio, iomap, pos, fs_block_size - pad);
 	}
+<<<<<<< HEAD
 	return copied;
+=======
+	return copied ? copied : ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static loff_t
@@ -1884,8 +1960,20 @@ iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
 		}
 		pos += ret;
 
+<<<<<<< HEAD
 		if (iov_iter_rw(iter) == READ && pos >= dio->i_size)
 			break;
+=======
+		if (iov_iter_rw(iter) == READ && pos >= dio->i_size) {
+			/*
+			 * We only report that we've read data up to i_size.
+			 * Revert iter to a state corresponding to that as
+			 * some callers (such as splice code) rely on it.
+			 */
+			iov_iter_revert(iter, pos - dio->i_size);
+			break;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	} while ((count = iov_iter_count(iter)) > 0);
 	blk_finish_plug(&plug);
 

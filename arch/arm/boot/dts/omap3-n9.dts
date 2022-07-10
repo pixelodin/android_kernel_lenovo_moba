@@ -40,7 +40,11 @@
 };
 
 &i2c3 {
+<<<<<<< HEAD
 	ak8975@0f {
+=======
+	ak8975@f {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		compatible = "asahi-kasei,ak8975";
 		reg = <0x0f>;
 	};

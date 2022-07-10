@@ -1762,6 +1762,13 @@ int start_sync_thread(struct netns_ipvs *ipvs, struct ipvs_sync_daemon_cfg *c,
 	IP_VS_DBG(7, "Each ip_vs_sync_conn entry needs %zd bytes\n",
 		  sizeof(struct ip_vs_sync_conn_v0));
 
+<<<<<<< HEAD
+=======
+	/* increase the module use count */
+	if (!ip_vs_use_count_inc())
+		return -ENOPROTOOPT;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Do not hold one mutex and then to block on another */
 	for (;;) {
 		rtnl_lock();
@@ -1892,9 +1899,12 @@ int start_sync_thread(struct netns_ipvs *ipvs, struct ipvs_sync_daemon_cfg *c,
 	mutex_unlock(&ipvs->sync_mutex);
 	rtnl_unlock();
 
+<<<<<<< HEAD
 	/* increase the module use count */
 	ip_vs_use_count_inc();
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 
 out:
@@ -1924,11 +1934,23 @@ out:
 		}
 		kfree(ti);
 	}
+<<<<<<< HEAD
+=======
+
+	/* decrease the module use count */
+	ip_vs_use_count_dec();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return result;
 
 out_early:
 	mutex_unlock(&ipvs->sync_mutex);
 	rtnl_unlock();
+<<<<<<< HEAD
+=======
+
+	/* decrease the module use count */
+	ip_vs_use_count_dec();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return result;
 }
 

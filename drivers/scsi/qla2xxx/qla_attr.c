@@ -655,7 +655,12 @@ qla2x00_sysfs_write_reset(struct file *filp, struct kobject *kobj,
 			break;
 		} else {
 			/* Make sure FC side is not in reset */
+<<<<<<< HEAD
 			qla2x00_wait_for_hba_online(vha);
+=======
+			WARN_ON_ONCE(qla2x00_wait_for_hba_online(vha) !=
+				     QLA_SUCCESS);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 			/* Issue MPI reset */
 			scsi_block_requests(vha->host);
@@ -2161,6 +2166,11 @@ qla24xx_vport_delete(struct fc_vport *fc_vport)
 	    test_bit(FCPORT_UPDATE_NEEDED, &vha->dpc_flags))
 		msleep(1000);
 
+<<<<<<< HEAD
+=======
+	qla_nvme_delete(vha);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	qla24xx_disable_vp(vha);
 	qla2x00_wait_for_sess_deletion(vha);
 

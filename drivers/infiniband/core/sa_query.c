@@ -1078,7 +1078,11 @@ int ib_nl_handle_set_timeout(struct sk_buff *skb,
 	}
 
 settimeout_out:
+<<<<<<< HEAD
 	return skb->len;
+=======
+	return 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static inline int ib_nl_is_good_resolve_resp(const struct nlmsghdr *nlh)
@@ -1149,7 +1153,11 @@ int ib_nl_handle_resolve_resp(struct sk_buff *skb,
 	}
 
 resp_out:
+<<<<<<< HEAD
 	return skb->len;
+=======
+	return 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void free_sm_ah(struct kref *kref)

@@ -28,6 +28,10 @@
 #include <linux/compiler.h>
 #include <linux/if_ether.h>
 #include <linux/kref.h>
+<<<<<<< HEAD
+=======
+#include <linux/mutex.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/netdevice.h>
 #include <linux/netlink.h>
 #include <linux/sched.h> /* for linux/wait.h */
@@ -91,6 +95,12 @@ struct batadv_hard_iface_bat_iv {
 
 	/** @ogm_seqno: OGM sequence number - used to identify each OGM */
 	atomic_t ogm_seqno;
+<<<<<<< HEAD
+=======
+
+	/** @ogm_buff_mutex: lock protecting ogm_buff and ogm_buff_len */
+	struct mutex ogm_buff_mutex;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 /**
@@ -1490,6 +1500,12 @@ struct batadv_priv_bat_v {
 	/** @ogm_seqno: OGM sequence number - used to identify each OGM */
 	atomic_t ogm_seqno;
 
+<<<<<<< HEAD
+=======
+	/** @ogm_buff_mutex: lock protecting ogm_buff and ogm_buff_len */
+	struct mutex ogm_buff_mutex;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/** @ogm_wq: workqueue used to schedule OGM transmissions */
 	struct delayed_work ogm_wq;
 };

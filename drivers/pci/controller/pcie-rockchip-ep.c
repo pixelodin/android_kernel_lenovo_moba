@@ -350,7 +350,11 @@ static void rockchip_pcie_ep_assert_intx(struct rockchip_pcie_ep *ep, u8 fn,
 	struct rockchip_pcie *rockchip = &ep->rockchip;
 	u32 r = ep->max_regions - 1;
 	u32 offset;
+<<<<<<< HEAD
 	u16 status;
+=======
+	u32 status;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u8 msg_code;
 
 	if (unlikely(ep->irq_pci_addr != ROCKCHIP_PCIE_EP_PCI_LEGACY_IRQ_ADDR ||

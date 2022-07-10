@@ -58,6 +58,10 @@ arm64-obj-$(CONFIG_CRASH_DUMP)		+= crash_dump.o
 arm64-obj-$(CONFIG_CRASH_CORE)		+= crash_core.o
 arm64-obj-$(CONFIG_ARM_SDE_INTERFACE)	+= sdei.o
 arm64-obj-$(CONFIG_ARM64_SSBD)		+= ssbd.o
+<<<<<<< HEAD
+=======
+arm64-obj-$(CONFIG_SHADOW_CALL_STACK)	+= scs.o
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 obj-y					+= $(arm64-obj-y) vdso/ probes/
 obj-m					+= $(arm64-obj-m)

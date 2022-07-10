@@ -273,7 +273,11 @@ static void *synproxy_cpu_seq_next(struct seq_file *seq, void *v, loff_t *pos)
 		*pos = cpu + 1;
 		return per_cpu_ptr(snet->stats, cpu);
 	}
+<<<<<<< HEAD
 
+=======
+	(*pos)++;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return NULL;
 }
 

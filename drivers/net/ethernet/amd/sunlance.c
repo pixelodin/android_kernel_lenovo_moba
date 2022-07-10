@@ -1106,7 +1106,11 @@ static void lance_tx_timeout(struct net_device *dev)
 	netif_wake_queue(dev);
 }
 
+<<<<<<< HEAD
 static int lance_start_xmit(struct sk_buff *skb, struct net_device *dev)
+=======
+static netdev_tx_t lance_start_xmit(struct sk_buff *skb, struct net_device *dev)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct lance_private *lp = netdev_priv(dev);
 	int entry, skblen, len;

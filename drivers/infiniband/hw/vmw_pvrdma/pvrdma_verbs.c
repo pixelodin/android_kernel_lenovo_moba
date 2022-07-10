@@ -555,7 +555,11 @@ struct ib_ah *pvrdma_create_ah(struct ib_pd *pd, struct rdma_ah_attr *ah_attr,
 	if (!atomic_add_unless(&dev->num_ahs, 1, dev->dsr->caps.max_ah))
 		return ERR_PTR(-ENOMEM);
 
+<<<<<<< HEAD
 	ah = kzalloc(sizeof(*ah), GFP_KERNEL);
+=======
+	ah = kzalloc(sizeof(*ah), GFP_ATOMIC);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!ah) {
 		atomic_dec(&dev->num_ahs);
 		return ERR_PTR(-ENOMEM);

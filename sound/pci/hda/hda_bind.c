@@ -42,6 +42,13 @@ static void hda_codec_unsol_event(struct hdac_device *dev, unsigned int ev)
 {
 	struct hda_codec *codec = container_of(dev, struct hda_codec, core);
 
+<<<<<<< HEAD
+=======
+	/* ignore unsol events during shutdown */
+	if (codec->bus->shutdown)
+		return;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (codec->patch_ops.unsol_event)
 		codec->patch_ops.unsol_event(codec, ev);
 }

@@ -59,11 +59,19 @@ struct rcar_lvds {
 	enum rcar_lvds_mode mode;
 };
 
+<<<<<<< HEAD
 #define bridge_to_rcar_lvds(bridge) \
 	container_of(bridge, struct rcar_lvds, bridge)
 
 #define connector_to_rcar_lvds(connector) \
 	container_of(connector, struct rcar_lvds, connector)
+=======
+#define bridge_to_rcar_lvds(b) \
+	container_of(b, struct rcar_lvds, bridge)
+
+#define connector_to_rcar_lvds(c) \
+	container_of(c, struct rcar_lvds, connector)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 static void rcar_lvds_write(struct rcar_lvds *lvds, u32 reg, u32 data)
 {

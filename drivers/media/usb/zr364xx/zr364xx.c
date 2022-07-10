@@ -703,7 +703,12 @@ static int zr364xx_vidioc_querycap(struct file *file, void *priv,
 	struct zr364xx_camera *cam = video_drvdata(file);
 
 	strlcpy(cap->driver, DRIVER_DESC, sizeof(cap->driver));
+<<<<<<< HEAD
 	strlcpy(cap->card, cam->udev->product, sizeof(cap->card));
+=======
+	if (cam->udev->product)
+		strlcpy(cap->card, cam->udev->product, sizeof(cap->card));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	strlcpy(cap->bus_info, dev_name(&cam->udev->dev),
 		sizeof(cap->bus_info));
 	cap->device_caps = V4L2_CAP_VIDEO_CAPTURE |

@@ -955,6 +955,10 @@ vt6656_probe(struct usb_interface *intf, const struct usb_device_id *id)
 	priv = hw->priv;
 	priv->hw = hw;
 	priv->usb = udev;
+<<<<<<< HEAD
+=======
+	priv->intf = intf;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	vnt_set_options(priv);
 
@@ -977,6 +981,10 @@ vt6656_probe(struct usb_interface *intf, const struct usb_device_id *id)
 	ieee80211_hw_set(priv->hw, RX_INCLUDES_FCS);
 	ieee80211_hw_set(priv->hw, REPORTS_TX_ACK_STATUS);
 	ieee80211_hw_set(priv->hw, SUPPORTS_PS);
+<<<<<<< HEAD
+=======
+	ieee80211_hw_set(priv->hw, PS_NULLFUNC_STACK);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	priv->hw->max_signal = 100;
 

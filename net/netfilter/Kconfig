@@ -1650,6 +1650,7 @@ config NETFILTER_XT_MATCH_U32
 
 	  Details and examples are in the kernel module source.
 
+<<<<<<< HEAD
 config NETFILTER_XT_MATCH_QTAGUID_EXT
 	tristate "Netfilter xt_qtaguid_ext"
 	default n
@@ -1662,6 +1663,8 @@ config NETFILTER_XT_MATCH_TLV
 	---help---
 	  This option enables for reporting a netlink msg when data matched.
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 endif # NETFILTER_XTABLES
 
 endmenu

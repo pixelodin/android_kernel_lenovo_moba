@@ -244,8 +244,13 @@ struct ntb_ctrl_regs {
 		u64 xlate_addr;
 	} bar_entry[6];
 	u32 reserved2[216];
+<<<<<<< HEAD
 	u32 req_id_table[256];
 	u32 reserved3[512];
+=======
+	u32 req_id_table[512];
+	u32 reserved3[256];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u64 lut_entry[512];
 } __packed;
 

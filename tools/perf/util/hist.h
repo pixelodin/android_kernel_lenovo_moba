@@ -324,10 +324,17 @@ static inline void perf_hpp__prepend_sort_field(struct perf_hpp_fmt *format)
 	list_for_each_entry_safe(format, tmp, &(_list)->sorts, sort_list)
 
 #define hists__for_each_format(hists, format) \
+<<<<<<< HEAD
 	perf_hpp_list__for_each_format((hists)->hpp_list, fmt)
 
 #define hists__for_each_sort_list(hists, format) \
 	perf_hpp_list__for_each_sort_list((hists)->hpp_list, fmt)
+=======
+	perf_hpp_list__for_each_format((hists)->hpp_list, format)
+
+#define hists__for_each_sort_list(hists, format) \
+	perf_hpp_list__for_each_sort_list((hists)->hpp_list, format)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 extern struct perf_hpp_fmt perf_hpp__format[];
 

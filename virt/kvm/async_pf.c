@@ -76,7 +76,11 @@ static void async_pf_execute(struct work_struct *work)
 	struct mm_struct *mm = apf->mm;
 	struct kvm_vcpu *vcpu = apf->vcpu;
 	unsigned long addr = apf->addr;
+<<<<<<< HEAD
 	gva_t gva = apf->gva;
+=======
+	gpa_t cr2_or_gpa = apf->cr2_or_gpa;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int locked = 1;
 
 	might_sleep();
@@ -104,7 +108,11 @@ static void async_pf_execute(struct work_struct *work)
 	 * this point
 	 */
 
+<<<<<<< HEAD
 	trace_kvm_async_pf_completed(addr, gva);
+=======
+	trace_kvm_async_pf_completed(addr, cr2_or_gpa);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (swq_has_sleeper(&vcpu->wq))
 		swake_up_one(&vcpu->wq);
@@ -177,8 +185,13 @@ void kvm_check_async_pf_completion(struct kvm_vcpu *vcpu)
 	}
 }
 
+<<<<<<< HEAD
 int kvm_setup_async_pf(struct kvm_vcpu *vcpu, gva_t gva, unsigned long hva,
 		       struct kvm_arch_async_pf *arch)
+=======
+int kvm_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+		       unsigned long hva, struct kvm_arch_async_pf *arch)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct kvm_async_pf *work;
 
@@ -197,7 +210,11 @@ int kvm_setup_async_pf(struct kvm_vcpu *vcpu, gva_t gva, unsigned long hva,
 
 	work->wakeup_all = false;
 	work->vcpu = vcpu;
+<<<<<<< HEAD
 	work->gva = gva;
+=======
+	work->cr2_or_gpa = cr2_or_gpa;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	work->addr = hva;
 	work->arch = *arch;
 	work->mm = current->mm;

@@ -14,8 +14,20 @@
 static inline bool
 xchk_should_terminate(
 	struct xfs_scrub	*sc,
+<<<<<<< HEAD
 	int				*error)
 {
+=======
+	int			*error)
+{
+	/*
+	 * If preemption is disabled, we need to yield to the scheduler every
+	 * few seconds so that we don't run afoul of the soft lockup watchdog
+	 * or RCU stall detector.
+	 */
+	cond_resched();
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (fatal_signal_pending(current)) {
 		if (*error == 0)
 			*error = -EAGAIN;

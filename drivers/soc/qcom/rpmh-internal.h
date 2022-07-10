@@ -1,9 +1,15 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
+<<<<<<< HEAD
  * Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
  */
 
 
+=======
+ * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
+ */
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #ifndef __RPM_INTERNAL_H__
 #define __RPM_INTERNAL_H__
 
@@ -124,5 +130,9 @@ void rpmh_rsc_mode_solver_set(struct rsc_drv *drv, bool enable);
 
 void rpmh_tx_done(const struct tcs_request *msg, int r);
 
+<<<<<<< HEAD
 void rpmh_rsc_debug(struct rsc_drv *drv);
+=======
+void rpmh_rsc_debug(struct rsc_drv *drv, struct completion *compl);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif /* __RPM_INTERNAL_H__ */

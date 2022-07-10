@@ -59,10 +59,17 @@
 
 	pmu {
 		compatible = "arm,armv8-pmuv3";
+<<<<<<< HEAD
 		interrupts = <0 120 8>,
 			     <0 121 8>,
 			     <0 122 8>,
 			     <0 123 8>;
+=======
+		interrupts = <0 170 4>,
+			     <0 171 4>,
+			     <0 172 4>,
+			     <0 173 4>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		interrupt-affinity = <&cpu0>,
 				     <&cpu1>,
 				     <&cpu2>,

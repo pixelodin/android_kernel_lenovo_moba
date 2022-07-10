@@ -2599,7 +2599,11 @@ static int kdb_per_cpu(int argc, const char **argv)
 		diag = kdbgetularg(argv[3], &whichcpu);
 		if (diag)
 			return diag;
+<<<<<<< HEAD
 		if (!cpu_online(whichcpu)) {
+=======
+		if (whichcpu >= nr_cpu_ids || !cpu_online(whichcpu)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			kdb_printf("cpu %ld is not online\n", whichcpu);
 			return KDB_BADCPUNUM;
 		}

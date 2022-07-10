@@ -13,6 +13,12 @@
 #include <linux/limits.h>
 #include <linux/ioctl.h>
 #include <linux/types.h>
+<<<<<<< HEAD
+=======
+#ifndef __KERNEL__
+#include <linux/fscrypt.h>
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /*
  * It's silly to have NR_OPEN bigger than NR_FILE, but you can change
@@ -259,6 +265,7 @@ struct fsxattr {
 #define FS_IOC_SETFSLABEL		_IOW(0x94, 50, char[FSLABEL_MAX])
 
 /*
+<<<<<<< HEAD
  * File system encryption support
  */
 /* Policy provided via an ioctl on the topmost directory */
@@ -311,6 +318,8 @@ struct fscrypt_key {
 };
 
 /*
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * Inode flags (FS_IOC_GETFLAGS / FS_IOC_SETFLAGS)
  *
  * Note: for historical reasons, these flags were originally used and
@@ -353,11 +362,19 @@ struct fscrypt_key {
 #define FS_TOPDIR_FL			0x00020000 /* Top of directory hierarchies*/
 #define FS_HUGE_FILE_FL			0x00040000 /* Reserved for ext4 */
 #define FS_EXTENT_FL			0x00080000 /* Extents */
+<<<<<<< HEAD
+=======
+#define FS_VERITY_FL			0x00100000 /* Verity protected inode */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define FS_EA_INODE_FL			0x00200000 /* Inode used for large EA */
 #define FS_EOFBLOCKS_FL			0x00400000 /* Reserved for ext4 */
 #define FS_NOCOW_FL			0x00800000 /* Do not cow file */
 #define FS_INLINE_DATA_FL		0x10000000 /* Reserved for ext4 */
 #define FS_PROJINHERIT_FL		0x20000000 /* Create with parents projid */
+<<<<<<< HEAD
+=======
+#define FS_CASEFOLD_FL			0x40000000 /* Folder is case insensitive */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define FS_RESERVED_FL			0x80000000 /* reserved for ext2 lib */
 
 #define FS_FL_USER_VISIBLE		0x0003DFFF /* User visible flags */

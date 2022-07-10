@@ -4146,7 +4146,11 @@ static void qla4xxx_mem_free(struct scsi_qla_host *ha)
 		dma_free_coherent(&ha->pdev->dev, ha->queues_len, ha->queues,
 				  ha->queues_dma);
 
+<<<<<<< HEAD
 	 if (ha->fw_dump)
+=======
+	if (ha->fw_dump)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		vfree(ha->fw_dump);
 
 	ha->queues_len = 0;
@@ -4280,7 +4284,10 @@ static int qla4xxx_mem_alloc(struct scsi_qla_host *ha)
 	return QLA_SUCCESS;
 
 mem_alloc_error_exit:
+<<<<<<< HEAD
 	qla4xxx_mem_free(ha);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return QLA_ERROR;
 }
 

@@ -776,8 +776,14 @@ static int p4_validate_raw_event(struct perf_event *event)
 	 * the user needs special permissions to be able to use it
 	 */
 	if (p4_ht_active() && p4_event_bind_map[v].shared) {
+<<<<<<< HEAD
 		if (perf_paranoid_cpu() && !capable(CAP_SYS_ADMIN))
 			return -EACCES;
+=======
+		v = perf_allow_cpu(&event->attr);
+		if (v)
+			return v;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	/* ESCR EventMask bits may be invalid */

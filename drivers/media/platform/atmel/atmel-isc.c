@@ -1895,6 +1895,11 @@ static int isc_async_complete(struct v4l2_async_notifier *notifier)
 	struct vb2_queue *q = &isc->vb2_vidq;
 	int ret;
 
+<<<<<<< HEAD
+=======
+	INIT_WORK(&isc->awb_work, isc_awb_work);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = v4l2_device_register_subdev_nodes(&isc->v4l2_dev);
 	if (ret < 0) {
 		v4l2_err(&isc->v4l2_dev, "Failed to register subdev nodes\n");
@@ -1948,8 +1953,11 @@ static int isc_async_complete(struct v4l2_async_notifier *notifier)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	INIT_WORK(&isc->awb_work, isc_awb_work);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Register video device */
 	strlcpy(vdev->name, ATMEL_ISC_NAME, sizeof(vdev->name));
 	vdev->release		= video_device_release_empty;
@@ -2062,8 +2070,16 @@ static int isc_parse_dt(struct device *dev, struct isc_device *isc)
 			break;
 		}
 
+<<<<<<< HEAD
 		subdev_entity->asd = devm_kzalloc(dev,
 				     sizeof(*subdev_entity->asd), GFP_KERNEL);
+=======
+		/* asd will be freed by the subsystem once it's added to the
+		 * notifier list
+		 */
+		subdev_entity->asd = kzalloc(sizeof(*subdev_entity->asd),
+					     GFP_KERNEL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (!subdev_entity->asd) {
 			of_node_put(rem);
 			ret = -ENOMEM;
@@ -2209,6 +2225,10 @@ static int atmel_isc_probe(struct platform_device *pdev)
 						   &subdev_entity->notifier);
 		if (ret) {
 			dev_err(dev, "fail to register async notifier\n");
+<<<<<<< HEAD
+=======
+			kfree(subdev_entity->asd);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			goto cleanup_subdev;
 		}
 

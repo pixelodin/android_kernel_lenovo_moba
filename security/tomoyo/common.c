@@ -2254,9 +2254,15 @@ static const char * const tomoyo_memory_headers[TOMOYO_MAX_MEMORY_STAT] = {
 	[TOMOYO_MEMORY_QUERY]  = "query message:",
 };
 
+<<<<<<< HEAD
 /* Timestamp counter for last updated. */
 static unsigned int tomoyo_stat_updated[TOMOYO_MAX_POLICY_STAT];
 /* Counter for number of updates. */
+=======
+/* Counter for number of updates. */
+static atomic_t tomoyo_stat_updated[TOMOYO_MAX_POLICY_STAT];
+/* Timestamp counter for last updated. */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static time64_t tomoyo_stat_modified[TOMOYO_MAX_POLICY_STAT];
 
 /**
@@ -2268,10 +2274,14 @@ static time64_t tomoyo_stat_modified[TOMOYO_MAX_POLICY_STAT];
  */
 void tomoyo_update_stat(const u8 index)
 {
+<<<<<<< HEAD
 	/*
 	 * I don't use atomic operations because race condition is not fatal.
 	 */
 	tomoyo_stat_updated[index]++;
+=======
+	atomic_inc(&tomoyo_stat_updated[index]);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	tomoyo_stat_modified[index] = ktime_get_real_seconds();
 }
 
@@ -2291,7 +2301,11 @@ static void tomoyo_read_stat(struct tomoyo_io_buffer *head)
 	for (i = 0; i < TOMOYO_MAX_POLICY_STAT; i++) {
 		tomoyo_io_printf(head, "Policy %-30s %10u",
 				 tomoyo_policy_headers[i],
+<<<<<<< HEAD
 				 tomoyo_stat_updated[i]);
+=======
+				 atomic_read(&tomoyo_stat_updated[i]));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (tomoyo_stat_modified[i]) {
 			struct tomoyo_time stamp;
 			tomoyo_convert_time(tomoyo_stat_modified[i], &stamp);

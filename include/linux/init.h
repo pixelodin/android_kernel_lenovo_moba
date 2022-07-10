@@ -167,6 +167,7 @@ extern bool initcall_debug;
 
 #ifndef __ASSEMBLY__
 
+<<<<<<< HEAD
 #ifdef CONFIG_LTO_CLANG
   /*
    * Use __COUNTER__ prefix in the variable to help ensure ordering
@@ -181,6 +182,8 @@ extern bool initcall_debug;
   #define __initcall_name(fn, id) 	__initcall_##fn##id
 #endif
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * initcalls are now grouped by functionality into separate
  * subsections. Ordering inside the subsections is determined
@@ -201,6 +204,7 @@ extern bool initcall_debug;
 #define ___define_initcall(fn, id, __sec)			\
 	__ADDRESSABLE(fn)					\
 	asm(".section	\"" #__sec ".init\", \"a\"	\n"	\
+<<<<<<< HEAD
 	__stringify(__initcall_name(fn, id)) ":		\n"	\
 	    ".long	" #fn " - .			\n"	\
 	    ".previous					\n");
@@ -209,6 +213,38 @@ extern bool initcall_debug;
 	static initcall_t __initcall_name(fn, id) __used \
 		__attribute__((__section__(#__sec ".init"))) = fn;
 #endif
+=======
+	"__initcall_" #fn #id ":			\n"	\
+	    ".long	" #fn " - .			\n"	\
+	    ".previous					\n");
+#else
+#ifdef CONFIG_LTO_CLANG
+  /*
+   * With LTO, the compiler doesn't necessarily obey link order for
+   * initcalls, and the initcall variable needs to be globally unique
+   * to avoid naming collisions.  In order to preserve the correct
+   * order, we add each variable into its own section and generate a
+   * linker script (in scripts/link-vmlinux.sh) to ensure the order
+   * remains correct.  We also add a __COUNTER__ prefix to the name,
+   * so we can retain the order of initcalls within each compilation
+   * unit, and __LINE__ to make the names more unique.
+   */
+  #define ___lto_initcall(c, l, fn, id, __sec) \
+	static initcall_t __initcall_##c##_##l##_##fn##id __used \
+		__attribute__((__section__( #__sec \
+			__stringify(.init..##c##_##l##_##fn)))) = fn;
+  #define __lto_initcall(c, l, fn, id, __sec) \
+	___lto_initcall(c, l, fn, id, __sec)
+
+  #define ___define_initcall(fn, id, __sec) \
+	__lto_initcall(__COUNTER__, __LINE__, fn, id, __sec)
+#else
+  #define ___define_initcall(fn, id, __sec) \
+	static initcall_t __initcall_##fn##id __used \
+		__attribute__((__section__(#__sec ".init"))) = fn;
+#endif
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define __define_initcall(fn, id) ___define_initcall(fn, id, .initcall##id)
 
@@ -249,8 +285,13 @@ extern bool initcall_debug;
 #define __exitcall(fn)						\
 	static exitcall_t __exitcall_##fn __exit_call = fn
 
+<<<<<<< HEAD
 #define console_initcall(fn)	___define_initcall(fn,, .con_initcall)
 #define security_initcall(fn)	___define_initcall(fn,, .security_initcall)
+=======
+#define console_initcall(fn)	___define_initcall(fn, con, .con_initcall)
+#define security_initcall(fn)	___define_initcall(fn, security, .security_initcall)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 struct obs_kernel_param {
 	const char *str;

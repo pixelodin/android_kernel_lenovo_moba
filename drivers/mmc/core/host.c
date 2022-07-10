@@ -410,8 +410,11 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
 
 	if (mmc_gpio_alloc(host)) {
 		put_device(&host->class_dev);
+<<<<<<< HEAD
 		ida_simple_remove(&mmc_host_ida, host->index);
 		kfree(host);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return NULL;
 	}
 

@@ -3162,6 +3162,11 @@ static int __maybe_unused mxt_suspend(struct device *dev)
 
 	mutex_unlock(&input_dev->mutex);
 
+<<<<<<< HEAD
+=======
+	disable_irq(data->irq);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 }
 
@@ -3174,6 +3179,11 @@ static int __maybe_unused mxt_resume(struct device *dev)
 	if (!input_dev)
 		return 0;
 
+<<<<<<< HEAD
+=======
+	enable_irq(data->irq);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mutex_lock(&input_dev->mutex);
 
 	if (input_dev->users)

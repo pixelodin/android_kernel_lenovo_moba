@@ -56,7 +56,11 @@ static void test_dump_stack(void)
 #pragma GCC diagnostic pop
 }
 
+<<<<<<< HEAD
 static pid_t gettid(void)
+=======
+static pid_t _gettid(void)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	return syscall(SYS_gettid);
 }
@@ -73,7 +77,11 @@ test_assert(bool exp, const char *exp_str,
 		fprintf(stderr, "==== Test Assertion Failure ====\n"
 			"  %s:%u: %s\n"
 			"  pid=%d tid=%d - %s\n",
+<<<<<<< HEAD
 			file, line, exp_str, getpid(), gettid(),
+=======
+			file, line, exp_str, getpid(), _gettid(),
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			strerror(errno));
 		test_dump_stack();
 		if (fmt) {

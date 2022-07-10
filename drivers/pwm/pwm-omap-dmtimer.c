@@ -259,7 +259,11 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
 	if (!timer_pdev) {
 		dev_err(&pdev->dev, "Unable to find Timer pdev\n");
 		ret = -ENODEV;
+<<<<<<< HEAD
 		goto put;
+=======
+		goto err_find_timer_pdev;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	timer_pdata = dev_get_platdata(&timer_pdev->dev);
@@ -267,7 +271,11 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
 		dev_dbg(&pdev->dev,
 			 "dmtimer pdata structure NULL, deferring probe\n");
 		ret = -EPROBE_DEFER;
+<<<<<<< HEAD
 		goto put;
+=======
+		goto err_platdata;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	pdata = timer_pdata->timer_ops;
@@ -286,18 +294,27 @@ static int pwm_omap_dmtimer_probe(struct platform_device *pdev)
 	    !pdata->write_counter) {
 		dev_err(&pdev->dev, "Incomplete dmtimer pdata structure\n");
 		ret = -EINVAL;
+<<<<<<< HEAD
 		goto put;
+=======
+		goto err_platdata;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	if (!of_get_property(timer, "ti,timer-pwm", NULL)) {
 		dev_err(&pdev->dev, "Missing ti,timer-pwm capability\n");
 		ret = -ENODEV;
+<<<<<<< HEAD
 		goto put;
+=======
+		goto err_timer_property;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	dm_timer = pdata->request_by_node(timer);
 	if (!dm_timer) {
 		ret = -EPROBE_DEFER;
+<<<<<<< HEAD
 		goto put;
 	}
 
@@ -310,6 +327,15 @@ put:
 	if (!omap) {
 		pdata->free(dm_timer);
 		return -ENOMEM;
+=======
+		goto err_request_timer;
+	}
+
+	omap = devm_kzalloc(&pdev->dev, sizeof(*omap), GFP_KERNEL);
+	if (!omap) {
+		ret = -ENOMEM;
+		goto err_alloc_omap;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	omap->pdata = pdata;
@@ -342,6 +368,7 @@ put:
 	ret = pwmchip_add(&omap->chip);
 	if (ret < 0) {
 		dev_err(&pdev->dev, "failed to register PWM\n");
+<<<<<<< HEAD
 		omap->pdata->free(omap->dm_timer);
 		return ret;
 	}
@@ -349,20 +376,67 @@ put:
 	platform_set_drvdata(pdev, omap);
 
 	return 0;
+=======
+		goto err_pwmchip_add;
+	}
+
+	of_node_put(timer);
+
+	platform_set_drvdata(pdev, omap);
+
+	return 0;
+
+err_pwmchip_add:
+
+	/*
+	 * *omap is allocated using devm_kzalloc,
+	 * so no free necessary here
+	 */
+err_alloc_omap:
+
+	pdata->free(dm_timer);
+err_request_timer:
+
+err_timer_property:
+err_platdata:
+
+	put_device(&timer_pdev->dev);
+err_find_timer_pdev:
+
+	of_node_put(timer);
+
+	return ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int pwm_omap_dmtimer_remove(struct platform_device *pdev)
 {
 	struct pwm_omap_dmtimer_chip *omap = platform_get_drvdata(pdev);
+<<<<<<< HEAD
+=======
+	int ret;
+
+	ret = pwmchip_remove(&omap->chip);
+	if (ret)
+		return ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (pm_runtime_active(&omap->dm_timer_pdev->dev))
 		omap->pdata->stop(omap->dm_timer);
 
 	omap->pdata->free(omap->dm_timer);
 
+<<<<<<< HEAD
 	mutex_destroy(&omap->mutex);
 
 	return pwmchip_remove(&omap->chip);
+=======
+	put_device(&omap->dm_timer_pdev->dev);
+
+	mutex_destroy(&omap->mutex);
+
+	return 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static const struct of_device_id pwm_omap_dmtimer_of_match[] = {

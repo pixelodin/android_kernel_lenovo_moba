@@ -26,6 +26,10 @@
 #include <linux/interrupt.h>
 #include <linux/io.h>
 #include <linux/io-64-nonatomic-hi-lo.h>
+<<<<<<< HEAD
+=======
+#include <linux/io-pgtable.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/iommu.h>
 #include <linux/iopoll.h>
 #include <linux/kconfig.h>
@@ -42,7 +46,10 @@
 #include <linux/slab.h>
 #include <linux/spinlock.h>
 
+<<<<<<< HEAD
 #include "io-pgtable.h"
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include "arm-smmu-regs.h"
 
 #define SMMU_INTR_SEL_NS     0x2000
@@ -333,6 +340,7 @@ static void qcom_iommu_domain_free(struct iommu_domain *domain)
 {
 	struct qcom_iommu_domain *qcom_domain = to_qcom_iommu_domain(domain);
 
+<<<<<<< HEAD
 	if (WARN_ON(qcom_domain->iommu))    /* forgot to detach? */
 		return;
 
@@ -348,6 +356,21 @@ static void qcom_iommu_domain_free(struct iommu_domain *domain)
 	free_io_pgtable_ops(qcom_domain->pgtbl_ops);
 
 	pm_runtime_put_sync(qcom_domain->iommu->dev);
+=======
+	iommu_put_dma_cookie(domain);
+
+	if (qcom_domain->iommu) {
+		/*
+		 * NOTE: unmap can be called after client device is powered
+		 * off, for example, with GPUs or anything involving dma-buf.
+		 * So we cannot rely on the device_link.  Make sure the IOMMU
+		 * is on to avoid unclocked accesses in the TLB inv path:
+		 */
+		pm_runtime_get_sync(qcom_domain->iommu->dev);
+		free_io_pgtable_ops(qcom_domain->pgtbl_ops);
+		pm_runtime_put_sync(qcom_domain->iommu->dev);
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	kfree(qcom_domain);
 }
@@ -392,7 +415,11 @@ static void qcom_iommu_detach_dev(struct iommu_domain *domain, struct device *de
 	struct qcom_iommu_domain *qcom_domain = to_qcom_iommu_domain(domain);
 	unsigned i;
 
+<<<<<<< HEAD
 	if (!qcom_domain->iommu)
+=======
+	if (WARN_ON(!qcom_domain->iommu))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return;
 
 	pm_runtime_get_sync(qcom_iommu->dev);
@@ -405,8 +432,11 @@ static void qcom_iommu_detach_dev(struct iommu_domain *domain, struct device *de
 		ctx->domain = NULL;
 	}
 	pm_runtime_put_sync(qcom_iommu->dev);
+<<<<<<< HEAD
 
 	qcom_domain->iommu = NULL;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int qcom_iommu_map(struct iommu_domain *domain, unsigned long iova,

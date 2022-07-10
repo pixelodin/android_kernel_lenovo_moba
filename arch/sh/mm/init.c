@@ -443,6 +443,7 @@ int memory_add_physaddr_to_nid(u64 addr)
 EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_MEMORY_HOTREMOVE
 int arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
 {
@@ -460,4 +461,14 @@ int arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
 	return ret;
 }
 #endif
+=======
+void arch_remove_memory(int nid, u64 start, u64 size,
+			struct vmem_altmap *altmap)
+{
+	unsigned long start_pfn = PFN_DOWN(start);
+	unsigned long nr_pages = size >> PAGE_SHIFT;
+
+	__remove_pages(start_pfn, nr_pages, altmap);
+}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif /* CONFIG_MEMORY_HOTPLUG */

@@ -1220,9 +1220,12 @@ static const struct v4l2_file_operations venc_fops = {
 	.unlocked_ioctl = video_ioctl2,
 	.poll = v4l2_m2m_fop_poll,
 	.mmap = v4l2_m2m_fop_mmap,
+<<<<<<< HEAD
 #ifdef CONFIG_COMPAT
 	.compat_ioctl32 = v4l2_compat_ioctl32,
 #endif
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 static int venc_probe(struct platform_device *pdev)

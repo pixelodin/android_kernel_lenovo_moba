@@ -197,7 +197,11 @@ struct iser_data_buf {
 	struct scatterlist *sg;
 	int                size;
 	unsigned long      data_len;
+<<<<<<< HEAD
 	unsigned int       dma_nents;
+=======
+	int                dma_nents;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 /* fwd declarations */

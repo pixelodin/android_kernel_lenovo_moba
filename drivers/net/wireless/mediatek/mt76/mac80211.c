@@ -548,6 +548,15 @@ mt76_check_ps(struct mt76_dev *dev, struct sk_buff *skb)
 	struct mt76_wcid *wcid = status->wcid;
 	bool ps;
 
+<<<<<<< HEAD
+=======
+	if (ieee80211_is_pspoll(hdr->frame_control) && !wcid) {
+		sta = ieee80211_find_sta_by_ifaddr(dev->hw, hdr->addr2, NULL);
+		if (sta)
+			wcid = status->wcid = (struct mt76_wcid *) sta->drv_priv;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!wcid || !wcid->sta)
 		return;
 

@@ -158,6 +158,10 @@ struct rxe_comp_info {
 	int			opcode;
 	int			timeout;
 	int			timeout_retry;
+<<<<<<< HEAD
+=======
+	int			started_retry;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u32			retry_cnt;
 	u32			rnr_retry;
 	struct rxe_task		task;
@@ -406,18 +410,30 @@ struct rxe_dev {
 	struct list_head	pending_mmaps;
 
 	spinlock_t		mmap_offset_lock; /* guard mmap_offset */
+<<<<<<< HEAD
 	int			mmap_offset;
 
 	u64			stats_counters[RXE_NUM_OF_COUNTERS];
+=======
+	u64			mmap_offset;
+
+	atomic64_t		stats_counters[RXE_NUM_OF_COUNTERS];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	struct rxe_port		port;
 	struct list_head	list;
 	struct crypto_shash	*tfm;
 };
 
+<<<<<<< HEAD
 static inline void rxe_counter_inc(struct rxe_dev *rxe, enum rxe_counters cnt)
 {
 	rxe->stats_counters[cnt]++;
+=======
+static inline void rxe_counter_inc(struct rxe_dev *rxe, enum rxe_counters index)
+{
+	atomic64_inc(&rxe->stats_counters[index]);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static inline struct rxe_dev *to_rdev(struct ib_device *dev)

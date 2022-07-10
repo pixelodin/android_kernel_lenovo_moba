@@ -608,7 +608,11 @@ static int kvaser_usb_leaf_simple_cmd_async(struct kvaser_usb_net_priv *priv,
 	struct kvaser_cmd *cmd;
 	int err;
 
+<<<<<<< HEAD
 	cmd = kmalloc(sizeof(*cmd), GFP_ATOMIC);
+=======
+	cmd = kzalloc(sizeof(*cmd), GFP_ATOMIC);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!cmd)
 		return -ENOMEM;
 
@@ -1140,7 +1144,11 @@ static int kvaser_usb_leaf_set_opt_mode(const struct kvaser_usb_net_priv *priv)
 	struct kvaser_cmd *cmd;
 	int rc;
 
+<<<<<<< HEAD
 	cmd = kmalloc(sizeof(*cmd), GFP_KERNEL);
+=======
+	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!cmd)
 		return -ENOMEM;
 
@@ -1206,7 +1214,11 @@ static int kvaser_usb_leaf_flush_queue(struct kvaser_usb_net_priv *priv)
 	struct kvaser_cmd *cmd;
 	int rc;
 
+<<<<<<< HEAD
 	cmd = kmalloc(sizeof(*cmd), GFP_KERNEL);
+=======
+	cmd = kzalloc(sizeof(*cmd), GFP_KERNEL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!cmd)
 		return -ENOMEM;
 
@@ -1310,7 +1322,11 @@ static int kvaser_usb_leaf_setup_endpoints(struct kvaser_usb *dev)
 	struct usb_endpoint_descriptor *endpoint;
 	int i;
 
+<<<<<<< HEAD
 	iface_desc = &dev->intf->altsetting[0];
+=======
+	iface_desc = dev->intf->cur_altsetting;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
 		endpoint = &iface_desc->endpoint[i].desc;

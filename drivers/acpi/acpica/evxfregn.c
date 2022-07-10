@@ -193,7 +193,10 @@ acpi_remove_address_space_handler(acpi_handle device,
 				 */
 				region_obj =
 				    handler_obj->address_space.region_list;
+<<<<<<< HEAD
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			}
 
 			/* Remove this Handler object from the list */

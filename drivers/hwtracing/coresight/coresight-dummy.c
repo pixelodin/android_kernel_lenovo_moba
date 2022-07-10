@@ -35,7 +35,12 @@ static void dummy_source_disable(struct coresight_device *csdev,
 	dev_info(drvdata->dev, "Dummy source disabled\n");
 }
 
+<<<<<<< HEAD
 static int dummy_sink_enable(struct coresight_device *csdev, u32 mode)
+=======
+static int dummy_sink_enable(struct coresight_device *csdev, u32 mode,
+			     void *data)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct dummy_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
 
@@ -44,11 +49,20 @@ static int dummy_sink_enable(struct coresight_device *csdev, u32 mode)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void dummy_sink_disable(struct coresight_device *csdev)
+=======
+static int dummy_sink_disable(struct coresight_device *csdev)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct dummy_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
 
 	dev_info(drvdata->dev, "Dummy sink disabled\n");
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int dummy_trace_id(struct coresight_device *csdev)

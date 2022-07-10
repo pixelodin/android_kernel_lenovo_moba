@@ -59,7 +59,13 @@ static int write_kprobe_events(const char *val)
 {
 	int fd, ret, flags;
 
+<<<<<<< HEAD
 	if ((val != NULL) && (val[0] == '\0'))
+=======
+	if (val == NULL)
+		return -1;
+	else if (val[0] == '\0')
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		flags = O_WRONLY | O_TRUNC;
 	else
 		flags = O_WRONLY | O_APPEND;

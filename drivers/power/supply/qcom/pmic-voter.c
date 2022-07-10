@@ -456,8 +456,11 @@ int vote(struct votable *votable, const char *client_str, bool enabled, int val)
 		goto out;
 	}
 
+<<<<<<< HEAD
 	if (memcmp(client_str, "fg_sram_read", 12) &&
 			memcmp(client_str, "fg_sram_write", 13))
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pr_debug("%s: %s,%d voting %s of val=%d\n",
 		votable->name,
 		client_str, client_id, enabled ? "on" : "off", val);

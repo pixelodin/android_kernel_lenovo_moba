@@ -136,6 +136,7 @@ static int qxl_drm_freeze(struct drm_device *dev)
 {
 	struct pci_dev *pdev = dev->pdev;
 	struct qxl_device *qdev = dev->dev_private;
+<<<<<<< HEAD
 	struct drm_crtc *crtc;
 
 	drm_kms_helper_poll_disable(dev);
@@ -150,6 +151,13 @@ static int qxl_drm_freeze(struct drm_device *dev)
 		if (crtc->enabled)
 			(*crtc_funcs->disable)(crtc);
 	}
+=======
+	int ret;
+
+	ret = drm_mode_config_helper_suspend(dev);
+	if (ret)
+		return ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	qxl_destroy_monitors_object(qdev);
 	qxl_surf_evict(qdev);
@@ -175,6 +183,7 @@ static int qxl_drm_resume(struct drm_device *dev, bool thaw)
 	}
 
 	qxl_create_monitors_object(qdev);
+<<<<<<< HEAD
 	drm_helper_resume_force_mode(dev);
 
 	console_lock();
@@ -183,6 +192,9 @@ static int qxl_drm_resume(struct drm_device *dev, bool thaw)
 
 	drm_kms_helper_poll_enable(dev);
 	return 0;
+=======
+	return drm_mode_config_helper_resume(dev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int qxl_pm_suspend(struct device *dev)

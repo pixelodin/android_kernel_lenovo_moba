@@ -130,10 +130,13 @@ static const struct smb_to_posix_error mapping_table_ERRSRV[] = {
 	{0, 0}
 };
 
+<<<<<<< HEAD
 static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
 	{0, 0}
 };
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * Convert a string containing text IPv4 or IPv6 address to binary form.
  *

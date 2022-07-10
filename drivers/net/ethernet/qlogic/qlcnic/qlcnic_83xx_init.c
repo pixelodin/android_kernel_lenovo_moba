@@ -2043,6 +2043,10 @@ static void qlcnic_83xx_exec_template_cmd(struct qlcnic_adapter *p_dev,
 			break;
 		}
 		entry += p_hdr->size;
+<<<<<<< HEAD
+=======
+		cond_resched();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	p_dev->ahw->reset.seq_index = index;
 }

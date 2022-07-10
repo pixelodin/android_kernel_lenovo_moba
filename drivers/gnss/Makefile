@@ -14,3 +14,9 @@ gnss-sirf-y := sirf.o
 
 obj-$(CONFIG_GNSS_UBX_SERIAL)		+= gnss-ubx.o
 gnss-ubx-y := ubx.o
+<<<<<<< HEAD
+=======
+
+obj-$(CONFIG_GNSS_CMDLINE_SERIAL)	+= gnss-cmdline.o
+gnss-cmdline-y := cmdline.o
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

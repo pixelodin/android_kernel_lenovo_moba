@@ -520,8 +520,13 @@ STACK_SIZE	= _RSP      + _RSP_SIZE
 .endm
 
 ########################################################################
+<<<<<<< HEAD
 ## void sha256_transform_rorx(void *input_data, UINT32 digest[8], UINT64 num_blks)
 ## arg 1 : pointer to digest
+=======
+## void sha256_transform_rorx(struct sha256_state *state, const u8 *data, int blocks)
+## arg 1 : pointer to state
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 ## arg 2 : pointer to input data
 ## arg 3 : Num blocks
 ########################################################################

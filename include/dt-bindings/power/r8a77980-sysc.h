@@ -15,14 +15,23 @@
 #define R8A77980_PD_A2SC2		0
 #define R8A77980_PD_A2SC3		1
 #define R8A77980_PD_A2SC4		2
+<<<<<<< HEAD
 #define R8A77980_PD_A2PD0		3
 #define R8A77980_PD_A2PD1		4
+=======
+#define R8A77980_PD_A2DP0		3
+#define R8A77980_PD_A2DP1		4
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define R8A77980_PD_CA53_CPU0		5
 #define R8A77980_PD_CA53_CPU1		6
 #define R8A77980_PD_CA53_CPU2		7
 #define R8A77980_PD_CA53_CPU3		8
 #define R8A77980_PD_A2CN		10
+<<<<<<< HEAD
 #define R8A77980_PD_A3VIP		11
+=======
+#define R8A77980_PD_A3VIP0		11
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define R8A77980_PD_A2IR5		12
 #define R8A77980_PD_CR7			13
 #define R8A77980_PD_A2IR4		15

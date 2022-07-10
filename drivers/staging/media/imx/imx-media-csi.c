@@ -166,6 +166,12 @@ static int csi_get_upstream_endpoint(struct csi_priv *priv,
 	struct v4l2_subdev *sd;
 	struct media_pad *pad;
 
+<<<<<<< HEAD
+=======
+	if (!IS_ENABLED(CONFIG_OF))
+		return -ENXIO;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!priv->src_sd)
 		return -EPIPE;
 
@@ -1072,7 +1078,11 @@ static int csi_link_validate(struct v4l2_subdev *sd,
 			     struct v4l2_subdev_format *sink_fmt)
 {
 	struct csi_priv *priv = v4l2_get_subdevdata(sd);
+<<<<<<< HEAD
 	struct v4l2_fwnode_endpoint upstream_ep = {};
+=======
+	struct v4l2_fwnode_endpoint upstream_ep;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	bool is_csi2;
 	int ret;
 

@@ -699,10 +699,20 @@ static int ext2_get_blocks(struct inode *inode,
 		if (!partial) {
 			count++;
 			mutex_unlock(&ei->truncate_mutex);
+<<<<<<< HEAD
 			if (err)
 				goto cleanup;
 			goto got_it;
 		}
+=======
+			goto got_it;
+		}
+
+		if (err) {
+			mutex_unlock(&ei->truncate_mutex);
+			goto cleanup;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	/*

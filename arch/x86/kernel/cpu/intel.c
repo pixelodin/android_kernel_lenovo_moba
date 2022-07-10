@@ -766,6 +766,14 @@ static void init_intel(struct cpuinfo_x86 *c)
 	init_intel_energy_perf(c);
 
 	init_intel_misc_features(c);
+<<<<<<< HEAD
+=======
+
+	if (tsx_ctrl_state == TSX_CTRL_ENABLE)
+		tsx_enable();
+	if (tsx_ctrl_state == TSX_CTRL_DISABLE)
+		tsx_disable();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 #ifdef CONFIG_X86_32

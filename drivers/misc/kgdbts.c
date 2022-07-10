@@ -985,6 +985,15 @@ static void kgdbts_run_tests(void)
 	int nmi_sleep = 0;
 	int i;
 
+<<<<<<< HEAD
+=======
+	verbose = 0;
+	if (strstr(config, "V1"))
+		verbose = 1;
+	if (strstr(config, "V2"))
+		verbose = 2;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ptr = strchr(config, 'F');
 	if (ptr)
 		fork_test = simple_strtol(ptr + 1, NULL, 10);
@@ -1068,6 +1077,7 @@ static int kgdbts_option_setup(char *opt)
 		return -ENOSPC;
 	}
 	strcpy(config, opt);
+<<<<<<< HEAD
 
 	verbose = 0;
 	if (strstr(config, "V1"))
@@ -1075,6 +1085,8 @@ static int kgdbts_option_setup(char *opt)
 	if (strstr(config, "V2"))
 		verbose = 2;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 }
 
@@ -1086,9 +1098,12 @@ static int configure_kgdbts(void)
 
 	if (!strlen(config) || isspace(config[0]))
 		goto noconfig;
+<<<<<<< HEAD
 	err = kgdbts_option_setup(config);
 	if (err)
 		goto noconfig;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	final_ack = 0;
 	run_plant_and_detach_test(1);

@@ -555,8 +555,12 @@ static int function_stat_show(struct seq_file *m, void *v)
 	}
 
 #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+<<<<<<< HEAD
 	avg = rec->time;
 	do_div(avg, rec->counter);
+=======
+	avg = div64_ul(rec->time, rec->counter);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (tracing_thresh && (avg < tracing_thresh))
 		goto out;
 #endif
@@ -582,7 +586,12 @@ static int function_stat_show(struct seq_file *m, void *v)
 		 * Divide only 1000 for ns^2 -> us^2 conversion.
 		 * trace_print_graph_duration will divide 1000 again.
 		 */
+<<<<<<< HEAD
 		do_div(stddev, rec->counter * (rec->counter - 1) * 1000);
+=======
+		stddev = div64_ul(stddev,
+				  rec->counter * (rec->counter - 1) * 1000);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	trace_seq_init(&s);
@@ -5073,8 +5082,13 @@ static const struct file_operations ftrace_notrace_fops = {
 
 static DEFINE_MUTEX(graph_lock);
 
+<<<<<<< HEAD
 struct ftrace_hash *ftrace_graph_hash = EMPTY_HASH;
 struct ftrace_hash *ftrace_graph_notrace_hash = EMPTY_HASH;
+=======
+struct ftrace_hash __rcu *ftrace_graph_hash = EMPTY_HASH;
+struct ftrace_hash __rcu *ftrace_graph_notrace_hash = EMPTY_HASH;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 enum graph_filter_type {
 	GRAPH_FILTER_NOTRACE	= 0,
@@ -5345,8 +5359,20 @@ ftrace_graph_release(struct inode *inode, struct file *file)
 
 		mutex_unlock(&graph_lock);
 
+<<<<<<< HEAD
 		/* Wait till all users are no longer using the old hash */
 		synchronize_sched();
+=======
+		/*
+		 * We need to do a hard force of sched synchronization.
+		 * This is because we use preempt_disable() to do RCU, but
+		 * the function tracers can be called where RCU is not watching
+		 * (like before user_exit()). We can not rely on the RCU
+		 * infrastructure to do the synchronization, thus we must do it
+		 * ourselves.
+		 */
+		schedule_on_each_cpu(ftrace_sync);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		free_ftrace_hash(old_hash);
 	}
@@ -6520,9 +6546,16 @@ static void *fpid_next(struct seq_file *m, void *v, loff_t *pos)
 	struct trace_array *tr = m->private;
 	struct trace_pid_list *pid_list = rcu_dereference_sched(tr->function_pids);
 
+<<<<<<< HEAD
 	if (v == FTRACE_NO_PIDS)
 		return NULL;
 
+=======
+	if (v == FTRACE_NO_PIDS) {
+		(*pos)++;
+		return NULL;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return trace_pid_next(pid_list, v, pos);
 }
 

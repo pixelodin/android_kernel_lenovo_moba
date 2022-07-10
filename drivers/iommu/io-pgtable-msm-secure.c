@@ -15,7 +15,11 @@
 #include <linux/dma-mapping.h>
 #include <asm/cacheflush.h>
 
+<<<<<<< HEAD
 #include "io-pgtable.h"
+=======
+#include <linux/io-pgtable.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define IOMMU_SECURE_PTBL_SIZE  3
 #define IOMMU_SECURE_PTBL_INIT  4

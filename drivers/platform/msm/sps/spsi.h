@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
+<<<<<<< HEAD
  * Copyright (c) 2011-2018, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2011-2018, 2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 /**
  * Smart-Peripheral-Switch (SPS) internal API.
@@ -212,6 +216,7 @@ extern u8 print_limit_option;
 		}	\
 	} while (0)
 #else
+<<<<<<< HEAD
 #define	SPS_DBG3(x...)		pr_debug(x)
 #define	SPS_DBG2(x...)		pr_debug(x)
 #define	SPS_DBG1(x...)		pr_debug(x)
@@ -219,6 +224,15 @@ extern u8 print_limit_option;
 #define	SPS_INFO(x...)		pr_info(x)
 #define	SPS_ERR(x...)		pr_err(x)
 #define	SPS_DUMP(x...)		pr_info(x)
+=======
+#define SPS_DBG3(dev, msg, args...)             pr_debug(msg, ##args)
+#define SPS_DBG2(dev, msg, args...)             pr_debug(msg, ##args)
+#define SPS_DBG1(dev, msg, args...)             pr_debug(msg, ##args)
+#define SPS_DBG(dev, msg, args...)              pr_debug(msg, ##args)
+#define SPS_INFO(dev, msg, args...)             pr_info(msg, ##args)
+#define SPS_ERR(dev, msg, args...)              pr_err(msg, ##args)
+#define SPS_DUMP(msg, args...)                  pr_info(msg, ##args)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif
 
 /* End point parameters */

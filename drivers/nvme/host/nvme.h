@@ -238,6 +238,12 @@ struct nvme_ctrl {
 	u16 maxcmd;
 	int nr_reconnects;
 	struct nvmf_ctrl_options *opts;
+<<<<<<< HEAD
+=======
+
+	struct page *discard_page;
+	unsigned long discard_page_busy;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct nvme_subsystem {

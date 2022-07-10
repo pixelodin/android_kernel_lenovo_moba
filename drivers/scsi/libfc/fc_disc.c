@@ -640,6 +640,11 @@ redisc:
 	}
 out:
 	kref_put(&rdata->kref, fc_rport_destroy);
+<<<<<<< HEAD
+=======
+	if (!IS_ERR(fp))
+		fc_frame_free(fp);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /**

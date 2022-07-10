@@ -599,10 +599,17 @@ static __poll_t mei_poll(struct file *file, poll_table *wait)
 			mei_cl_read_start(cl, mei_cl_mtu(cl), file);
 	}
 
+<<<<<<< HEAD
 	if (req_events & (POLLOUT | POLLWRNORM)) {
 		poll_wait(file, &cl->tx_wait, wait);
 		if (cl->tx_cb_queued < dev->tx_queue_limit)
 			mask |= POLLOUT | POLLWRNORM;
+=======
+	if (req_events & (EPOLLOUT | EPOLLWRNORM)) {
+		poll_wait(file, &cl->tx_wait, wait);
+		if (cl->tx_cb_queued < dev->tx_queue_limit)
+			mask |= EPOLLOUT | EPOLLWRNORM;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 out:

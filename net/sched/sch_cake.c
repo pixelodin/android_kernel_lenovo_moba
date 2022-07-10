@@ -1666,7 +1666,11 @@ static s32 cake_enqueue(struct sk_buff *skb, struct Qdisc *sch,
 	if (skb_is_gso(skb) && q->rate_flags & CAKE_FLAG_SPLIT_GSO) {
 		struct sk_buff *segs, *nskb;
 		netdev_features_t features = netif_skb_features(skb);
+<<<<<<< HEAD
 		unsigned int slen = 0;
+=======
+		unsigned int slen = 0, numsegs = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		segs = skb_gso_segment(skb, features & ~NETIF_F_GSO_MASK);
 		if (IS_ERR_OR_NULL(segs))
@@ -1682,6 +1686,10 @@ static s32 cake_enqueue(struct sk_buff *skb, struct Qdisc *sch,
 			flow_queue_add(flow, segs);
 
 			sch->q.qlen++;
+<<<<<<< HEAD
+=======
+			numsegs++;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			slen += segs->len;
 			q->buffer_used += segs->truesize;
 			b->packets++;
@@ -1695,7 +1703,11 @@ static s32 cake_enqueue(struct sk_buff *skb, struct Qdisc *sch,
 		sch->qstats.backlog += slen;
 		q->avg_window_bytes += slen;
 
+<<<<<<< HEAD
 		qdisc_tree_reduce_backlog(sch, 1, len);
+=======
+		qdisc_tree_reduce_backlog(sch, 1-numsegs, len-slen);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		consume_skb(skb);
 	} else {
 		/* not splitting */
@@ -1757,7 +1769,11 @@ static s32 cake_enqueue(struct sk_buff *skb, struct Qdisc *sch,
 						      q->avg_window_begin));
 			u64 b = q->avg_window_bytes * (u64)NSEC_PER_SEC;
 
+<<<<<<< HEAD
 			do_div(b, window_interval);
+=======
+			b = div64_u64(b, window_interval);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			q->avg_peak_bandwidth =
 				cake_ewma(q->avg_peak_bandwidth, b,
 					  b > q->avg_peak_bandwidth ? 2 : 8);

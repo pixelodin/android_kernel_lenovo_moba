@@ -385,7 +385,11 @@ static void encode_sattr(struct xdr_stream *xdr, const struct iattr *attr)
 	} else
 		p = xdr_time_not_set(p);
 	if (attr->ia_valid & ATTR_MTIME_SET) {
+<<<<<<< HEAD
 		ts = timespec64_to_timespec(attr->ia_atime);
+=======
+		ts = timespec64_to_timespec(attr->ia_mtime);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		xdr_encode_time(p, &ts);
 	} else if (attr->ia_valid & ATTR_MTIME) {
 		ts = timespec64_to_timespec(attr->ia_mtime);

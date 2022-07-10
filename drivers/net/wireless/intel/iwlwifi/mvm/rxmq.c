@@ -1077,7 +1077,10 @@ void iwl_mvm_rx_mpdu_mq(struct iwl_mvm *mvm, struct napi_struct *napi,
 			he_phy_data = le64_to_cpu(desc->v1.he_phy_data);
 
 		rx_status->flag |= RX_FLAG_AMPDU_DETAILS;
+<<<<<<< HEAD
 		rx_status->ampdu_reference = mvm->ampdu_ref;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/* toggle is switched whenever new aggregation starts */
 		if (toggle_bit != mvm->ampdu_toggle) {
 			mvm->ampdu_ref++;
@@ -1092,6 +1095,10 @@ void iwl_mvm_rx_mpdu_mq(struct iwl_mvm *mvm, struct napi_struct *napi,
 						RX_FLAG_AMPDU_EOF_BIT;
 			}
 		}
+<<<<<<< HEAD
+=======
+		rx_status->ampdu_reference = mvm->ampdu_ref;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	rcu_read_lock();

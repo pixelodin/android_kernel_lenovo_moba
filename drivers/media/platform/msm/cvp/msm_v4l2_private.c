@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include "msm_v4l2_private.h"
@@ -612,13 +616,18 @@ static long cvp_ioctl(struct msm_cvp_inst *inst,
 	unsigned int cmd, unsigned long arg)
 {
 	int rc;
+<<<<<<< HEAD
 	struct cvp_kmd_arg karg;
+=======
+	struct cvp_kmd_arg *karg;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!inst) {
 		dprintk(CVP_ERR, "%s: invalid params\n", __func__);
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	memset(&karg, 0, sizeof(struct cvp_kmd_arg));
 
 	if (convert_from_user(&karg, arg, inst)) {
@@ -640,6 +649,35 @@ static long cvp_ioctl(struct msm_cvp_inst *inst,
 		return -EFAULT;
 	}
 
+=======
+	karg = kzalloc(sizeof(*karg), GFP_KERNEL);
+	if (!karg)
+		return -ENOMEM;
+
+	if (convert_from_user(karg, arg, inst)) {
+		dprintk(CVP_ERR, "%s: failed to get from user cmd %x\n",
+			__func__, karg->type);
+		kfree(karg);
+		return -EFAULT;
+	}
+
+	rc = msm_cvp_private((void *)inst, cmd, karg);
+	if (rc) {
+		dprintk(CVP_ERR, "%s: failed cmd type %x %d\n",
+			__func__, karg->type, rc);
+		kfree(karg);
+		return rc;
+	}
+
+	if (convert_to_user(karg, arg)) {
+		dprintk(CVP_ERR, "%s: failed to copy to user cmd %x\n",
+			__func__, karg->type);
+		kfree(karg);
+		return -EFAULT;
+	}
+
+	kfree(karg);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return rc;
 }
 

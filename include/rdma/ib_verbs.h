@@ -310,7 +310,11 @@ struct ib_tm_caps {
 
 struct ib_cq_init_attr {
 	unsigned int	cqe;
+<<<<<<< HEAD
 	int		comp_vector;
+=======
+	u32		comp_vector;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u32		flags;
 };
 
@@ -1147,7 +1151,11 @@ struct ib_qp_init_attr {
 	struct ib_qp_cap	cap;
 	enum ib_sig_type	sq_sig_type;
 	enum ib_qp_type		qp_type;
+<<<<<<< HEAD
 	enum ib_qp_create_flags	create_flags;
+=======
+	u32			create_flags;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/*
 	 * Only needed for special QP types, or when using the RW API.
@@ -3864,6 +3872,12 @@ static inline int ib_check_mr_access(int flags)
 	    !(flags & IB_ACCESS_LOCAL_WRITE))
 		return -EINVAL;
 
+<<<<<<< HEAD
+=======
+	if (flags & ~IB_ACCESS_SUPPORTED)
+		return -EINVAL;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 }
 

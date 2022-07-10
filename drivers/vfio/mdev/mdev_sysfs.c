@@ -280,7 +280,13 @@ type_link_failed:
 
 void mdev_remove_sysfs_files(struct device *dev, struct mdev_type *type)
 {
+<<<<<<< HEAD
 	sysfs_remove_link(&dev->kobj, "mdev_type");
 	sysfs_remove_link(type->devices_kobj, dev_name(dev));
 	sysfs_remove_files(&dev->kobj, mdev_device_attrs);
+=======
+	sysfs_remove_files(&dev->kobj, mdev_device_attrs);
+	sysfs_remove_link(&dev->kobj, "mdev_type");
+	sysfs_remove_link(type->devices_kobj, dev_name(dev));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }

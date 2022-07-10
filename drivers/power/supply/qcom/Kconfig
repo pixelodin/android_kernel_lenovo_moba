@@ -2,6 +2,22 @@
 
 menu "Qualcomm Technologies, Inc. Charger and Fuel Gauge support"
 
+<<<<<<< HEAD
+=======
+config QPNP_SMB2
+        tristate "SMB2 Battery Charger"
+        depends on MFD_SPMI_PMIC
+        help
+          Say Y to enables support for the SMB2 charging peripheral.
+          The QPNP SMB2 charger driver supports the charger peripheral
+          present in the PMICOBALT chip.
+          The power supply framework is used to communicate battery and
+          usb properties to userspace and other driver consumers such
+          as fuel gauge, USB, and USB-PD.
+          VBUS and VCONN regulators are registered for supporting OTG,
+          and powered Type-C cables respectively.
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 config QPNP_SMB5
 	tristate "SMB5 Battery Charger"
 	depends on MFD_SPMI_PMIC
@@ -15,6 +31,32 @@ config QPNP_SMB5
 	  VBUS and VCONN regulators are registered for supporting OTG,
 	  and powered Type-C cables respectively.
 
+<<<<<<< HEAD
+=======
+config QPNP_SMBLITE
+	tristate "SMBLITE Battery Charger"
+	depends on MFD_SPMI_PMIC
+	help
+	  Say Y to enables support for the SMBLITE charging peripheral.
+	  The QPNP SMBLITE charger driver supports the charger peripheral
+	  present in the chip.
+	  The power supply framework is used to communicate battery and
+	  usb properties to userspace and other driver consumers such
+	  as fuel gauge and USB.
+	  VBUS regulator is registered for supporting OTG.
+
+config SMB138X_CHARGER
+	tristate "SMB138X Battery Charger"
+	depends on MFD_I2C_PMIC
+	help
+	  Say Y to include support for SMB138X Battery Charger.
+	  SMB1380 is a dual phase 6A battery charger, and SMB1381 is a single
+	  phase 5A battery charger.
+	  The driver supports charger enable/disable.
+	  The driver reports the charger status via the power supply framework.
+	  A charger status change triggers an IRQ via the device STAT pin.
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 config SMB1390_CHARGE_PUMP_PSY
 	tristate "SMB1390 power supply framework based driver"
 	depends on MFD_I2C_PMIC
@@ -27,6 +69,19 @@ config SMB1390_CHARGE_PUMP_PSY
 	  Technologies, Inc.’s family of standalone chargers to enable a high
 	  current, low profile Li+ battery charging system.
 
+<<<<<<< HEAD
+=======
+config SMB1351_USB_CHARGER
+        tristate "smb1351 usb charger (with VBUS detection)"
+        depends on I2C
+        help
+         Say Y to enable support for the SMB1351 switching mode based charger.
+         The driver supports charging control (enable/disable) and
+         charge-current limiting. It also provides USB VBUS detection and
+         notification support. The driver controls SMB1351 via I2C and
+         supports device-tree interface.
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 config SMB1355_SLAVE_CHARGER
 	tristate "SMB1355 Slave Battery Charger"
 	depends on MFD_I2C_PMIC
@@ -46,6 +101,18 @@ config QPNP_QNOVO5
 	  the hardware module. It also allows userspace code to read diagnostics
 	  of voltage and current measured during certain phases of the pulses.
 
+<<<<<<< HEAD
+=======
+config QPNP_FG_GEN3
+        tristate "QPNP GEN3 fuel gauge driver"
+        depends on MFD_SPMI_PMIC
+        help
+          Say Y here to enable the GEN3 Fuel Gauge driver. This adds support
+          for battery fuel gauging and state of charge of battery connected to
+          the fuel gauge. The state of charge is reported through a BMS power
+          supply property and also sends uevents when the capacity is updated.
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 config QPNP_FG_GEN4
 	tristate "QPNP GEN4 fuel gauge driver"
 	depends on MFD_SPMI_PMIC
@@ -90,10 +157,13 @@ config SMB1398_CHARGER
 	      wireless charger receiver and provide the input for downstream
 	      chargers.
 
+<<<<<<< HEAD
 config BATTERY_FAC
 	tristate "Battery Factory upport"
 	default n
 	help
 	  Say Y here to enable support for battery factory mode.
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 endmenu

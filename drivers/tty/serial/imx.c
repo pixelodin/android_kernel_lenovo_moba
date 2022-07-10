@@ -608,7 +608,11 @@ static void imx_uart_dma_tx(struct imx_port *sport)
 
 	sport->tx_bytes = uart_circ_chars_pending(xmit);
 
+<<<<<<< HEAD
 	if (xmit->tail < xmit->head) {
+=======
+	if (xmit->tail < xmit->head || xmit->head == 0) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		sport->dma_tx_nents = 1;
 		sg_init_one(sgl, xmit->buf + xmit->tail, sport->tx_bytes);
 	} else {
@@ -624,7 +628,11 @@ static void imx_uart_dma_tx(struct imx_port *sport)
 		dev_err(dev, "DMA mapping error for TX.\n");
 		return;
 	}
+<<<<<<< HEAD
 	desc = dmaengine_prep_slave_sg(chan, sgl, sport->dma_tx_nents,
+=======
+	desc = dmaengine_prep_slave_sg(chan, sgl, ret,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 					DMA_MEM_TO_DEV, DMA_PREP_INTERRUPT);
 	if (!desc) {
 		dma_unmap_sg(dev, sgl, sport->dma_tx_nents,
@@ -2071,7 +2079,11 @@ imx_uart_console_setup(struct console *co, char *options)
 
 	retval = clk_prepare(sport->clk_per);
 	if (retval)
+<<<<<<< HEAD
 		clk_disable_unprepare(sport->clk_ipg);
+=======
+		clk_unprepare(sport->clk_ipg);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 error_console:
 	return retval;

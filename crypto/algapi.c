@@ -654,11 +654,17 @@ EXPORT_SYMBOL_GPL(crypto_grab_spawn);
 
 void crypto_drop_spawn(struct crypto_spawn *spawn)
 {
+<<<<<<< HEAD
 	if (!spawn->alg)
 		return;
 
 	down_write(&crypto_alg_sem);
 	list_del(&spawn->list);
+=======
+	down_write(&crypto_alg_sem);
+	if (spawn->alg)
+		list_del(&spawn->list);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	up_write(&crypto_alg_sem);
 }
 EXPORT_SYMBOL_GPL(crypto_drop_spawn);
@@ -666,6 +672,7 @@ EXPORT_SYMBOL_GPL(crypto_drop_spawn);
 static struct crypto_alg *crypto_spawn_alg(struct crypto_spawn *spawn)
 {
 	struct crypto_alg *alg;
+<<<<<<< HEAD
 	struct crypto_alg *alg2;
 
 	down_read(&crypto_alg_sem);
@@ -682,6 +689,18 @@ static struct crypto_alg *crypto_spawn_alg(struct crypto_spawn *spawn)
 	}
 
 	return alg;
+=======
+
+	down_read(&crypto_alg_sem);
+	alg = spawn->alg;
+	if (alg && !crypto_mod_get(alg)) {
+		alg->cra_flags |= CRYPTO_ALG_DYING;
+		alg = NULL;
+	}
+	up_read(&crypto_alg_sem);
+
+	return alg ?: ERR_PTR(-EAGAIN);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 struct crypto_tfm *crypto_spawn_tfm(struct crypto_spawn *spawn, u32 type,

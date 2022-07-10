@@ -1389,6 +1389,10 @@ static void __init clockgen_init(struct device_node *np)
 				pr_err("%s: Couldn't map %pOF regs\n", __func__,
 				       guts);
 			}
+<<<<<<< HEAD
+=======
+			of_node_put(guts);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 
 	}

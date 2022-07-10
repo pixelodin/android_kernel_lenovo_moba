@@ -8,6 +8,10 @@
 #define _CORESIGHT_TMC_H
 
 #include <linux/dma-mapping.h>
+<<<<<<< HEAD
+=======
+#include <linux/idr.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/miscdevice.h>
 #include <linux/delay.h>
 #include <asm/cacheflush.h>
@@ -19,6 +23,11 @@
 #include <linux/coresight-cti.h>
 
 #include "coresight-byte-cntr.h"
+<<<<<<< HEAD
+=======
+#include <linux/mutex.h>
+#include <linux/refcount.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define TMC_RSZ			0x004
 #define TMC_STS			0x00c
@@ -46,6 +55,10 @@
 #define TMC_ITATBCTR2		0xef0
 #define TMC_ITATBCTR1		0xef4
 #define TMC_ITATBCTR0		0xef8
+<<<<<<< HEAD
+=======
+#define TMC_AUTHSTATUS		0xfb8
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /* register description */
 /* TMC_CTL - 0x020 */
@@ -54,6 +67,10 @@
 #define TMC_STS_TMCREADY_BIT	2
 #define TMC_STS_FULL		BIT(0)
 #define TMC_STS_TRIGGERED	BIT(1)
+<<<<<<< HEAD
+=======
+#define TMC_STS_MEMERR		BIT(5)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * TMC_AXICTL - 0x110
  *
@@ -102,6 +119,11 @@
 #define TMC_ETR_BAM_PIPE_INDEX	0
 #define TMC_ETR_BAM_NR_PIPES	2
 
+<<<<<<< HEAD
+=======
+#define TMC_AUTH_NSID_MASK	GENMASK(1, 0)
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 enum tmc_config_type {
 	TMC_CONFIG_TYPE_ETB,
 	TMC_CONFIG_TYPE_ETR,
@@ -180,6 +202,10 @@ struct etr_flat_buf {
 
 /**
  * struct etr_buf - Details of the buffer used by ETR
+<<<<<<< HEAD
+=======
+ * refcount	; Number of sources currently using this etr_buf.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * @mode	: Mode of the ETR buffer, contiguous, Scatter Gather etc.
  * @full	: Trace data overflow
  * @size	: Size of the buffer.
@@ -190,6 +216,10 @@ struct etr_flat_buf {
  * @private	: Backend specific information for the buf
  */
 struct etr_buf {
+<<<<<<< HEAD
+=======
+	refcount_t			refcount;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	enum etr_mode			mode;
 	bool				full;
 	ssize_t				size;
@@ -207,6 +237,11 @@ struct etr_buf {
  * @csdev:	component vitals needed by the framework.
  * @miscdev:	specifics to handle "/dev/xyz.tmc" entry.
  * @spinlock:	only one at a time pls.
+<<<<<<< HEAD
+=======
+ * @pid:	Process ID of the process being monitored by the session
+ *		that is using this component.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * @buf:	Snapshot of the trace data for ETF/ETB.
  * @etr_buf:	details of buffer used in TMC-ETR
  * @len:	size of the available trace for ETF/ETB.
@@ -217,6 +252,13 @@ struct etr_buf {
  * @trigger_cntr: amount of words to store after a trigger.
  * @etr_caps:	Bitmask of capabilities of the TMC ETR, inferred from the
  *		device configuration register (DEVID)
+<<<<<<< HEAD
+=======
+ * @idr:	Holds etr_bufs allocated for this ETR.
+ * @idr_mutex:	Access serialisation for idr.
+ * @sysfs_buf:	SYSFS buffer for ETR.
+ * @perf_buf:	PERF buffer for ETR.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 struct tmc_drvdata {
 	void __iomem		*base;
@@ -224,6 +266,10 @@ struct tmc_drvdata {
 	struct coresight_device	*csdev;
 	struct miscdevice	miscdev;
 	spinlock_t		spinlock;
+<<<<<<< HEAD
+=======
+	pid_t			pid;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	bool			reading;
 	union {
 		char		*buf;		/* TMC ETB */
@@ -237,6 +283,10 @@ struct tmc_drvdata {
 	struct mutex		mem_lock;
 	u32			trigger_cntr;
 	u32			etr_caps;
+<<<<<<< HEAD
+=======
+	struct etr_buf		*sysfs_buf;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct coresight_csr	*csr;
 	const char		*csr_name;
 	bool			enable;
@@ -248,6 +298,12 @@ struct tmc_drvdata {
 	enum tmc_etr_out_mode	out_mode;
 	struct byte_cntr	*byte_cntr;
 	struct dma_iommu_mapping *iommu_mapping;
+<<<<<<< HEAD
+=======
+	struct idr		idr;
+	struct mutex		idr_mutex;
+	struct etr_buf		*perf_buf;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct etr_buf_operations {
@@ -296,6 +352,10 @@ void tmc_wait_for_tmcready(struct tmc_drvdata *drvdata);
 void tmc_flush_and_stop(struct tmc_drvdata *drvdata);
 void tmc_enable_hw(struct tmc_drvdata *drvdata);
 void tmc_disable_hw(struct tmc_drvdata *drvdata);
+<<<<<<< HEAD
+=======
+u32 tmc_get_memwidth_mask(struct tmc_drvdata *drvdata);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /* ETB/ETF functions */
 int tmc_read_prepare_etb(struct tmc_drvdata *drvdata);
@@ -311,8 +371,11 @@ int tmc_read_unprepare_etr(struct tmc_drvdata *drvdata);
 void tmc_free_etr_buf(struct etr_buf *etr_buf);
 void __tmc_etr_disable_to_bam(struct tmc_drvdata *drvdata);
 void tmc_etr_bam_disable(struct tmc_drvdata *drvdata);
+<<<<<<< HEAD
 void tmc_etr_enable_hw(struct tmc_drvdata *drvdata);
 void tmc_etr_disable_hw(struct tmc_drvdata *drvdata);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 void usb_notifier(void *priv, unsigned int event, struct qdss_request *d_req,
 		  struct usb_qdss_ch *ch);
 int tmc_etr_bam_init(struct amba_device *adev,

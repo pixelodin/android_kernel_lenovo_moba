@@ -885,6 +885,10 @@ struct netns_ipvs {
 	struct delayed_work	defense_work;   /* Work handler */
 	int			drop_rate;
 	int			drop_counter;
+<<<<<<< HEAD
+=======
+	int			old_secure_tcp;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	atomic_t		dropentry;
 	/* locks in ctl.c */
 	spinlock_t		dropentry_lock;  /* drop entry handling */

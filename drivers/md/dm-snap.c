@@ -19,7 +19,10 @@
 #include <linux/vmalloc.h>
 #include <linux/log2.h>
 #include <linux/dm-kcopyd.h>
+<<<<<<< HEAD
 #include <linux/semaphore.h>
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #include "dm.h"
 
@@ -106,8 +109,13 @@ struct dm_snapshot {
 	/* The on disk metadata handler */
 	struct dm_exception_store *store;
 
+<<<<<<< HEAD
 	/* Maximum number of in-flight COW jobs. */
 	struct semaphore cow_count;
+=======
+	unsigned in_progress;
+	struct wait_queue_head in_progress_wait;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	struct dm_kcopyd_client *kcopyd_client;
 
@@ -158,8 +166,13 @@ struct dm_snapshot {
  */
 #define DEFAULT_COW_THRESHOLD 2048
 
+<<<<<<< HEAD
 static int cow_threshold = DEFAULT_COW_THRESHOLD;
 module_param_named(snapshot_cow_threshold, cow_threshold, int, 0644);
+=======
+static unsigned cow_threshold = DEFAULT_COW_THRESHOLD;
+module_param_named(snapshot_cow_threshold, cow_threshold, uint, 0644);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 MODULE_PARM_DESC(snapshot_cow_threshold, "Maximum number of chunks being copied on write");
 
 DECLARE_DM_KCOPYD_THROTTLE_WITH_MODULE_PARM(snapshot_copy_throttle,
@@ -1207,7 +1220,11 @@ static int snapshot_ctr(struct dm_target *ti, unsigned int argc, char **argv)
 		goto bad_hash_tables;
 	}
 
+<<<<<<< HEAD
 	sema_init(&s->cow_count, (cow_threshold > 0) ? cow_threshold : INT_MAX);
+=======
+	init_waitqueue_head(&s->in_progress_wait);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	s->kcopyd_client = dm_kcopyd_client_create(&dm_kcopyd_throttle);
 	if (IS_ERR(s->kcopyd_client)) {
@@ -1396,9 +1413,62 @@ static void snapshot_dtr(struct dm_target *ti)
 
 	dm_put_device(ti, s->origin);
 
+<<<<<<< HEAD
 	kfree(s);
 }
 
+=======
+	WARN_ON(s->in_progress);
+
+	kfree(s);
+}
+
+static void account_start_copy(struct dm_snapshot *s)
+{
+	spin_lock(&s->in_progress_wait.lock);
+	s->in_progress++;
+	spin_unlock(&s->in_progress_wait.lock);
+}
+
+static void account_end_copy(struct dm_snapshot *s)
+{
+	spin_lock(&s->in_progress_wait.lock);
+	BUG_ON(!s->in_progress);
+	s->in_progress--;
+	if (likely(s->in_progress <= cow_threshold) &&
+	    unlikely(waitqueue_active(&s->in_progress_wait)))
+		wake_up_locked(&s->in_progress_wait);
+	spin_unlock(&s->in_progress_wait.lock);
+}
+
+static bool wait_for_in_progress(struct dm_snapshot *s, bool unlock_origins)
+{
+	if (unlikely(s->in_progress > cow_threshold)) {
+		spin_lock(&s->in_progress_wait.lock);
+		if (likely(s->in_progress > cow_threshold)) {
+			/*
+			 * NOTE: this throttle doesn't account for whether
+			 * the caller is servicing an IO that will trigger a COW
+			 * so excess throttling may result for chunks not required
+			 * to be COW'd.  But if cow_threshold was reached, extra
+			 * throttling is unlikely to negatively impact performance.
+			 */
+			DECLARE_WAITQUEUE(wait, current);
+			__add_wait_queue(&s->in_progress_wait, &wait);
+			__set_current_state(TASK_UNINTERRUPTIBLE);
+			spin_unlock(&s->in_progress_wait.lock);
+			if (unlock_origins)
+				up_read(&_origins_lock);
+			io_schedule();
+			remove_wait_queue(&s->in_progress_wait, &wait);
+			return false;
+		}
+		spin_unlock(&s->in_progress_wait.lock);
+	}
+	return true;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * Flush a list of buffers.
  */
@@ -1414,7 +1484,11 @@ static void flush_bios(struct bio *bio)
 	}
 }
 
+<<<<<<< HEAD
 static int do_origin(struct dm_dev *origin, struct bio *bio);
+=======
+static int do_origin(struct dm_dev *origin, struct bio *bio, bool limit);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /*
  * Flush a list of buffers.
@@ -1427,7 +1501,11 @@ static void retry_origin_bios(struct dm_snapshot *s, struct bio *bio)
 	while (bio) {
 		n = bio->bi_next;
 		bio->bi_next = NULL;
+<<<<<<< HEAD
 		r = do_origin(s->origin, bio);
+=======
+		r = do_origin(s->origin, bio, false);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (r == DM_MAPIO_REMAPPED)
 			generic_make_request(bio);
 		bio = n;
@@ -1594,7 +1672,11 @@ static void copy_callback(int read_err, unsigned long write_err, void *context)
 		rb_link_node(&pe->out_of_order_node, parent, p);
 		rb_insert_color(&pe->out_of_order_node, &s->out_of_order_tree);
 	}
+<<<<<<< HEAD
 	up(&s->cow_count);
+=======
+	account_end_copy(s);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /*
@@ -1618,7 +1700,11 @@ static void start_copy(struct dm_snap_pending_exception *pe)
 	dest.count = src.count;
 
 	/* Hand over to kcopyd */
+<<<<<<< HEAD
 	down(&s->cow_count);
+=======
+	account_start_copy(s);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	dm_kcopyd_copy(s->kcopyd_client, &src, 1, &dest, 0, copy_callback, pe);
 }
 
@@ -1638,7 +1724,11 @@ static void start_full_bio(struct dm_snap_pending_exception *pe,
 	pe->full_bio = bio;
 	pe->full_bio_end_io = bio->bi_end_io;
 
+<<<<<<< HEAD
 	down(&s->cow_count);
+=======
+	account_start_copy(s);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	callback_data = dm_kcopyd_prepare_callback(s->kcopyd_client,
 						   copy_callback, pe);
 
@@ -1729,6 +1819,14 @@ static int snapshot_map(struct dm_target *ti, struct bio *bio)
 	if (!s->valid)
 		return DM_MAPIO_KILL;
 
+<<<<<<< HEAD
+=======
+	if (bio_data_dir(bio) == WRITE) {
+		while (unlikely(!wait_for_in_progress(s, false)))
+			; /* wait_for_in_progress() has slept */
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mutex_lock(&s->lock);
 
 	if (!s->valid || (unlikely(s->snapshot_overflowed) &&
@@ -1877,7 +1975,11 @@ redirect_to_origin:
 
 	if (bio_data_dir(bio) == WRITE) {
 		mutex_unlock(&s->lock);
+<<<<<<< HEAD
 		return do_origin(s->origin, bio);
+=======
+		return do_origin(s->origin, bio, false);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 out_unlock:
@@ -2214,15 +2316,35 @@ next_snapshot:
 /*
  * Called on a write from the origin driver.
  */
+<<<<<<< HEAD
 static int do_origin(struct dm_dev *origin, struct bio *bio)
+=======
+static int do_origin(struct dm_dev *origin, struct bio *bio, bool limit)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct origin *o;
 	int r = DM_MAPIO_REMAPPED;
 
+<<<<<<< HEAD
 	down_read(&_origins_lock);
 	o = __lookup_origin(origin->bdev);
 	if (o)
 		r = __origin_write(&o->snapshots, bio->bi_iter.bi_sector, bio);
+=======
+again:
+	down_read(&_origins_lock);
+	o = __lookup_origin(origin->bdev);
+	if (o) {
+		if (limit) {
+			struct dm_snapshot *s;
+			list_for_each_entry(s, &o->snapshots, list)
+				if (unlikely(!wait_for_in_progress(s, true)))
+					goto again;
+		}
+
+		r = __origin_write(&o->snapshots, bio->bi_iter.bi_sector, bio);
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	up_read(&_origins_lock);
 
 	return r;
@@ -2335,7 +2457,11 @@ static int origin_map(struct dm_target *ti, struct bio *bio)
 		dm_accept_partial_bio(bio, available_sectors);
 
 	/* Only tell snapshots if this is a write */
+<<<<<<< HEAD
 	return do_origin(o->dev, bio);
+=======
+	return do_origin(o->dev, bio, true);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static long origin_dax_direct_access(struct dm_target *ti, pgoff_t pgoff,

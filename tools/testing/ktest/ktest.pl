@@ -1372,7 +1372,11 @@ sub reboot {
 
     } else {
 	# Make sure everything has been written to disk
+<<<<<<< HEAD
 	run_ssh("sync");
+=======
+	run_ssh("sync", 10);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (defined($time)) {
 	    start_monitor;

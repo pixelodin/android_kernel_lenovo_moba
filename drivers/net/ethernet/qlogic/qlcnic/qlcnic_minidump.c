@@ -703,6 +703,10 @@ static u32 qlcnic_read_memory_test_agent(struct qlcnic_adapter *adapter,
 		addr += 16;
 		reg_read -= 16;
 		ret += 16;
+<<<<<<< HEAD
+=======
+		cond_resched();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 out:
 	mutex_unlock(&adapter->ahw->mem_lock);
@@ -1383,6 +1387,10 @@ int qlcnic_dump_fw(struct qlcnic_adapter *adapter)
 		buf_offset += entry->hdr.cap_size;
 		entry_offset += entry->hdr.offset;
 		buffer = fw_dump->data + buf_offset;
+<<<<<<< HEAD
+=======
+		cond_resched();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	fw_dump->clr = 1;

@@ -765,8 +765,15 @@ struct failover *net_failover_create(struct net_device *standby_dev)
 	netif_carrier_off(failover_dev);
 
 	failover = failover_register(failover_dev, &net_failover_ops);
+<<<<<<< HEAD
 	if (IS_ERR(failover))
 		goto err_failover_register;
+=======
+	if (IS_ERR(failover)) {
+		err = PTR_ERR(failover);
+		goto err_failover_register;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return failover;
 

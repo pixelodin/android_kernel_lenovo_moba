@@ -222,12 +222,21 @@ _decode_session4(struct sk_buff *skb, struct flowi *fl, int reverse)
 }
 
 static void xfrm4_update_pmtu(struct dst_entry *dst, struct sock *sk,
+<<<<<<< HEAD
 			      struct sk_buff *skb, u32 mtu)
+=======
+			      struct sk_buff *skb, u32 mtu,
+			      bool confirm_neigh)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct xfrm_dst *xdst = (struct xfrm_dst *)dst;
 	struct dst_entry *path = xdst->route;
 
+<<<<<<< HEAD
 	path->ops->update_pmtu(path, sk, skb, mtu);
+=======
+	path->ops->update_pmtu(path, sk, skb, mtu, confirm_neigh);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void xfrm4_redirect(struct dst_entry *dst, struct sock *sk,

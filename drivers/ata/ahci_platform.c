@@ -33,6 +33,16 @@ static const struct ata_port_info ahci_port_info = {
 	.port_ops	= &ahci_platform_ops,
 };
 
+<<<<<<< HEAD
+=======
+static const struct ata_port_info ahci_port_info_nolpm = {
+	.flags		= AHCI_FLAG_COMMON | ATA_FLAG_NO_LPM,
+	.pio_mask	= ATA_PIO4,
+	.udma_mask	= ATA_UDMA6,
+	.port_ops	= &ahci_platform_ops,
+};
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static struct scsi_host_template ahci_platform_sht = {
 	AHCI_SHT(DRV_NAME),
 };
@@ -41,6 +51,10 @@ static int ahci_probe(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
 	struct ahci_host_priv *hpriv;
+<<<<<<< HEAD
+=======
+	const struct ata_port_info *port;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int rc;
 
 	hpriv = ahci_platform_get_resources(pdev,
@@ -58,7 +72,15 @@ static int ahci_probe(struct platform_device *pdev)
 	if (of_device_is_compatible(dev->of_node, "hisilicon,hisi-ahci"))
 		hpriv->flags |= AHCI_HFLAG_NO_FBS | AHCI_HFLAG_NO_NCQ;
 
+<<<<<<< HEAD
 	rc = ahci_platform_init_host(pdev, hpriv, &ahci_port_info,
+=======
+	port = acpi_device_get_match_data(dev);
+	if (!port)
+		port = &ahci_port_info;
+
+	rc = ahci_platform_init_host(pdev, hpriv, port,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				     &ahci_platform_sht);
 	if (rc)
 		goto disable_resources;
@@ -85,6 +107,10 @@ static const struct of_device_id ahci_of_match[] = {
 MODULE_DEVICE_TABLE(of, ahci_of_match);
 
 static const struct acpi_device_id ahci_acpi_match[] = {
+<<<<<<< HEAD
+=======
+	{ "APMC0D33", (unsigned long)&ahci_port_info_nolpm },
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	{ ACPI_DEVICE_CLASS(PCI_CLASS_STORAGE_SATA_AHCI, 0xffffff) },
 	{},
 };

@@ -17,7 +17,11 @@ if NET_VENDOR_AMAZON
 
 config ENA_ETHERNET
 	tristate "Elastic Network Adapter (ENA) support"
+<<<<<<< HEAD
 	depends on (PCI_MSI && X86)
+=======
+	depends on PCI_MSI && !CPU_BIG_ENDIAN
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	---help---
 	  This driver supports Elastic Network Adapter (ENA)"
 

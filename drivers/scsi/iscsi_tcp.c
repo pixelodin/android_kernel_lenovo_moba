@@ -374,8 +374,21 @@ static int iscsi_sw_tcp_pdu_xmit(struct iscsi_task *task)
 {
 	struct iscsi_conn *conn = task->conn;
 	unsigned int noreclaim_flag;
+<<<<<<< HEAD
 	int rc = 0;
 
+=======
+	struct iscsi_tcp_conn *tcp_conn = conn->dd_data;
+	struct iscsi_sw_tcp_conn *tcp_sw_conn = tcp_conn->dd_data;
+	int rc = 0;
+
+	if (!tcp_sw_conn->sock) {
+		iscsi_conn_printk(KERN_ERR, conn,
+				  "Transport not bound to socket!\n");
+		return -EINVAL;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	noreclaim_flag = memalloc_noreclaim_save();
 
 	while (iscsi_sw_tcp_xmit_qlen(conn)) {
@@ -800,7 +813,12 @@ static int iscsi_sw_tcp_host_get_param(struct Scsi_Host *shost,
 			return rc;
 
 		return iscsi_conn_get_addr_param((struct sockaddr_storage *)
+<<<<<<< HEAD
 						 &addr, param, buf);
+=======
+						 &addr,
+						 (enum iscsi_param)param, buf);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	default:
 		return iscsi_host_get_param(shost, param, buf);
 	}
@@ -883,6 +901,13 @@ free_host:
 static void iscsi_sw_tcp_session_destroy(struct iscsi_cls_session *cls_session)
 {
 	struct Scsi_Host *shost = iscsi_session_to_shost(cls_session);
+<<<<<<< HEAD
+=======
+	struct iscsi_session *session = cls_session->dd_data;
+
+	if (WARN_ON_ONCE(session->leadconn))
+		return;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	iscsi_tcp_r2tpool_free(cls_session->dd_data);
 	iscsi_session_teardown(cls_session);

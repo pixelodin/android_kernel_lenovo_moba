@@ -834,7 +834,11 @@ static void phys_init_v1_hw(struct hisi_hba *hisi_hba)
 	mod_timer(timer, jiffies + HZ);
 }
 
+<<<<<<< HEAD
 static void sl_notify_v1_hw(struct hisi_hba *hisi_hba, int phy_no)
+=======
+static void sl_notify_ssp_v1_hw(struct hisi_hba *hisi_hba, int phy_no)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	u32 sl_control;
 
@@ -1822,7 +1826,11 @@ static struct scsi_host_template sht_v1_hw = {
 static const struct hisi_sas_hw hisi_sas_v1_hw = {
 	.hw_init = hisi_sas_v1_init,
 	.setup_itct = setup_itct_v1_hw,
+<<<<<<< HEAD
 	.sl_notify = sl_notify_v1_hw,
+=======
+	.sl_notify_ssp = sl_notify_ssp_v1_hw,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.clear_itct = clear_itct_v1_hw,
 	.prep_smp = prep_smp_v1_hw,
 	.prep_ssp = prep_ssp_v1_hw,

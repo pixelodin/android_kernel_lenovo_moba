@@ -1390,7 +1390,11 @@ static int send_nic_timestamp_pkt(struct octeon_device *oct,
  * @returns whether the packet was transmitted to the device okay or not
  *             (NETDEV_TX_OK or NETDEV_TX_BUSY)
  */
+<<<<<<< HEAD
 static int liquidio_xmit(struct sk_buff *skb, struct net_device *netdev)
+=======
+static netdev_tx_t liquidio_xmit(struct sk_buff *skb, struct net_device *netdev)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct octnet_buf_free_info *finfo;
 	union octnic_cmd_setup cmdsetup;

@@ -458,7 +458,11 @@
 		};
 
 		ethmac: ethernet@ff3f0000 {
+<<<<<<< HEAD
 			compatible = "amlogic,meson-gxbb-dwmac", "snps,dwmac";
+=======
+			compatible = "amlogic,meson-axg-dwmac", "snps,dwmac";
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			reg = <0x0 0xff3f0000 0x0 0x10000
 				0x0 0xff634540 0x0 0x8>;
 			interrupts = <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;

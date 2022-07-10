@@ -137,11 +137,19 @@ enum desc_header_offset {
 };
 
 enum ufs_desc_def_size {
+<<<<<<< HEAD
 	QUERY_DESC_DEVICE_DEF_SIZE		= 0x5F,
 	QUERY_DESC_CONFIGURATION_DEF_SIZE	= 0xE6,
 	QUERY_DESC_UNIT_DEF_SIZE		= 0x2D,
 	QUERY_DESC_INTERCONNECT_DEF_SIZE	= 0x06,
 	QUERY_DESC_GEOMETRY_DEF_SIZE		= 0x59,
+=======
+	QUERY_DESC_DEVICE_DEF_SIZE		= 0x59,
+	QUERY_DESC_CONFIGURATION_DEF_SIZE	= 0x90,
+	QUERY_DESC_UNIT_DEF_SIZE		= 0x23,
+	QUERY_DESC_INTERCONNECT_DEF_SIZE	= 0x06,
+	QUERY_DESC_GEOMETRY_DEF_SIZE		= 0x48,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	QUERY_DESC_POWER_DEF_SIZE		= 0x62,
 	QUERY_DESC_HEALTH_DEF_SIZE		= 0x25,
 };
@@ -165,6 +173,7 @@ enum unit_desc_param {
 	UNIT_DESC_PARAM_PHY_MEM_RSRC_CNT	= 0x18,
 	UNIT_DESC_PARAM_CTX_CAPABILITIES	= 0x20,
 	UNIT_DESC_PARAM_LARGE_UNIT_SIZE_M1	= 0x22,
+<<<<<<< HEAD
 #if defined(CONFIG_UFSHPB)
 	UNIT_DESC_HPB_LU_MAX_ACTIVE_REGIONS		= 0x23,
 	UNIT_DESC_HPB_LU_PIN_REGION_START_OFFSET	= 0x25,
@@ -173,6 +182,9 @@ enum unit_desc_param {
 #if defined(CONFIG_UFSTW)
 	UNIT_DESC_TW_LU_WRITE_BUFFER_ALLOC_UNIT		= 0x29,
 #endif
+=======
+	UNIT_DESC_PARAM_WB_BUF_ALLOC_UNITS	= 0x29,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 /* Device descriptor parameters offsets in bytes*/
@@ -213,6 +225,7 @@ enum device_desc_param {
 	DEVICE_DESC_PARAM_PSA_TMT		= 0x29,
 	DEVICE_DESC_PARAM_PRDCT_REV		= 0x2A,
 	DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP	= 0x4F,
+<<<<<<< HEAD
 	DEVICE_DESC_PARAM_FEAT_SUP		= 0x1F,
 #if defined(CONFIG_UFSHPB)
 	DEVICE_DESC_PARAM_HPB_VER		= 0x40,
@@ -227,6 +240,11 @@ enum device_desc_param {
 	DEVICE_DESC_PARAM_TW_BUF_TYPE		= 0x54,
 	DEVICE_DESC_PARAM_TW_SHARED_BUF_ALLOC_UNITS	= 0x55,
 #endif
+=======
+	DEVICE_DESC_PARAM_WB_US_RED_EN		= 0x53,
+	DEVICE_DESC_PARAM_WB_TYPE		= 0x54,
+	DEVICE_DESC_PARAM_WB_SHARED_ALLOC_UNITS = 0x55,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 /* Interconnect descriptor parameters offsets in bytes*/
@@ -271,6 +289,7 @@ enum geometry_desc_param {
 	GEOMETRY_DESC_PARAM_ENM4_MAX_NUM_UNITS	= 0x3E,
 	GEOMETRY_DESC_PARAM_ENM4_CAP_ADJ_FCTR	= 0x42,
 	GEOMETRY_DESC_PARAM_OPT_LOG_BLK_SIZE	= 0x44,
+<<<<<<< HEAD
 #if defined(CONFIG_UFSHPB)
 	GEOMETRY_DESC_HPB_REGION_SIZE			= 0x48,
 	GEOMETRY_DESC_HPB_NUMBER_LU 			= 0x49,
@@ -285,6 +304,13 @@ enum geometry_desc_param {
 	GEOMETRY_DESC_TW_SUPPORT_USER_REDUCTION_TYPES	= 0x55,
 	GEOMETRY_DESC_TW_SUPPORT_BUF_TYPE		= 0x56,
 #endif
+=======
+	GEOMETRY_DESC_PARAM_WB_MAX_ALLOC_UNITS	= 0x4F,
+	GEOMETRY_DESC_PARAM_WB_MAX_WB_LUNS	= 0x53,
+	GEOMETRY_DESC_PARAM_WB_BUFF_CAP_ADJ	= 0x54,
+	GEOMETRY_DESC_PARAM_WB_SUP_RED_TYPE	= 0x55,
+	GEOMETRY_DESC_PARAM_WB_SUP_WB_TYPE	= 0x56,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 /* Health descriptor parameters offsets in bytes*/
@@ -337,9 +363,12 @@ enum power_desc_param_offset {
 enum {
 	MASK_EE_STATUS		= 0xFFFF,
 	MASK_EE_URGENT_BKOPS	= (1 << 2),
+<<<<<<< HEAD
 #if defined(CONFIG_UFSTW)
 	MASK_EE_TW		= (1 << 5),
 #endif
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 /* Background operation status */
@@ -639,6 +668,10 @@ struct ufs_dev_info {
 	u8	i_product_name;
 	u16	w_spec_version;
 	u32	d_ext_ufs_feature_sup;
+<<<<<<< HEAD
+=======
+	u8	b_wb_buffer_type;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* query flags */
 	bool f_power_on_wp_en;
@@ -652,6 +685,11 @@ struct ufs_dev_info {
 	unsigned int quirks;
 
 	bool keep_vcc_on;
+<<<<<<< HEAD
+=======
+
+	bool wb_config_lun;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 #define MAX_MODEL_LEN 16

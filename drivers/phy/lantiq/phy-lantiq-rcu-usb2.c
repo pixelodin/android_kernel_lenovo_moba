@@ -156,7 +156,10 @@ static int ltq_rcu_usb2_of_parse(struct ltq_rcu_usb2_priv *priv,
 {
 	struct device *dev = priv->dev;
 	const __be32 *offset;
+<<<<<<< HEAD
 	int ret;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	priv->reg_bits = of_device_get_match_data(dev);
 

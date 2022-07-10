@@ -936,6 +936,11 @@ next:
 out_of_memory:
 	pr_alert("%s: out of memory\n", __func__);
 	put_free_pages(ring, pages_to_gnt, segs_to_map);
+<<<<<<< HEAD
+=======
+	for (i = last_map; i < num; i++)
+		pages[i]->handle = BLKBACK_INVALID_HANDLE;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return -ENOMEM;
 }
 

@@ -567,8 +567,15 @@ static int gs_start_io(struct gs_port *port)
 	port->n_read = 0;
 	started = gs_start_rx(port);
 
+<<<<<<< HEAD
 	/* unblock any pending writes into our circular buffer */
 	if (started) {
+=======
+	if (started) {
+		gs_start_tx(port);
+		/* Unblock any pending writes into our circular buffer, in case
+		 * we didn't in gs_start_tx() */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		tty_wakeup(port->port.tty);
 	} else {
 		gs_free_requests(ep, head, &port->read_allocated);
@@ -1246,8 +1253,15 @@ int gserial_alloc_line(unsigned char *line_num)
 				__func__, port_num, PTR_ERR(tty_dev));
 
 		ret = PTR_ERR(tty_dev);
+<<<<<<< HEAD
 		port = ports[port_num].port;
 		ports[port_num].port = NULL;
+=======
+		mutex_lock(&ports[port_num].lock);
+		port = ports[port_num].port;
+		ports[port_num].port = NULL;
+		mutex_unlock(&ports[port_num].lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		gserial_free_port(port);
 		goto err;
 	}

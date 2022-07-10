@@ -80,6 +80,10 @@ static struct sctp_association *sctp_association_init(
 	/* Discarding const is appropriate here.  */
 	asoc->ep = (struct sctp_endpoint *)ep;
 	asoc->base.sk = (struct sock *)sk;
+<<<<<<< HEAD
+=======
+	asoc->base.net = sock_net(sk);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	sctp_endpoint_hold(asoc->ep);
 	sock_hold(asoc->base.sk);

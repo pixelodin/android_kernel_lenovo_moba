@@ -23,7 +23,11 @@ objdump="$1"
 vmlinux="$2"
 
 bad_relocs=$(
+<<<<<<< HEAD
 "$objdump" -R "$vmlinux" |
+=======
+$objdump -R "$vmlinux" |
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	# Only look at relocation lines.
 	grep -E '\<R_' |
 	# These relocations are okay

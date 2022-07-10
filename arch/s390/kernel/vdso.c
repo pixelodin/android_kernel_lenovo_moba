@@ -56,7 +56,11 @@ static vm_fault_t vdso_fault(const struct vm_special_mapping *sm,
 	vdso_pagelist = vdso64_pagelist;
 	vdso_pages = vdso64_pages;
 #ifdef CONFIG_COMPAT
+<<<<<<< HEAD
 	if (is_compat_task()) {
+=======
+	if (vma->vm_mm->context.compat_mm) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		vdso_pagelist = vdso32_pagelist;
 		vdso_pages = vdso32_pages;
 	}
@@ -77,7 +81,11 @@ static int vdso_mremap(const struct vm_special_mapping *sm,
 
 	vdso_pages = vdso64_pages;
 #ifdef CONFIG_COMPAT
+<<<<<<< HEAD
 	if (is_compat_task())
+=======
+	if (vma->vm_mm->context.compat_mm)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		vdso_pages = vdso32_pages;
 #endif
 
@@ -224,7 +232,12 @@ int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
 
 	vdso_pages = vdso64_pages;
 #ifdef CONFIG_COMPAT
+<<<<<<< HEAD
 	if (is_compat_task())
+=======
+	mm->context.compat_mm = is_compat_task();
+	if (mm->context.compat_mm)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		vdso_pages = vdso32_pages;
 #endif
 	/*

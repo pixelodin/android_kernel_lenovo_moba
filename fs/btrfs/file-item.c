@@ -275,7 +275,12 @@ found:
 		csum += count * csum_size;
 		nblocks -= count;
 next:
+<<<<<<< HEAD
 		while (count--) {
+=======
+		while (count > 0) {
+			count--;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			disk_bytenr += fs_info->sectorsize;
 			offset += fs_info->sectorsize;
 			page_bytes_left -= fs_info->sectorsize;
@@ -577,9 +582,15 @@ static noinline void truncate_one_csum(struct btrfs_fs_info *fs_info,
  * range of bytes.
  */
 int btrfs_del_csums(struct btrfs_trans_handle *trans,
+<<<<<<< HEAD
 		    struct btrfs_fs_info *fs_info, u64 bytenr, u64 len)
 {
 	struct btrfs_root *root = fs_info->csum_root;
+=======
+		    struct btrfs_root *root, u64 bytenr, u64 len)
+{
+	struct btrfs_fs_info *fs_info = trans->fs_info;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct btrfs_path *path;
 	struct btrfs_key key;
 	u64 end_byte = bytenr + len;
@@ -589,6 +600,12 @@ int btrfs_del_csums(struct btrfs_trans_handle *trans,
 	u16 csum_size = btrfs_super_csum_size(fs_info->super_copy);
 	int blocksize_bits = fs_info->sb->s_blocksize_bits;
 
+<<<<<<< HEAD
+=======
+	ASSERT(root == fs_info->csum_root ||
+	       root->root_key.objectid == BTRFS_TREE_LOG_OBJECTID);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	path = btrfs_alloc_path();
 	if (!path)
 		return -ENOMEM;

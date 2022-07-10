@@ -49,7 +49,11 @@
 #define BRIDGE_RX_QUEUE_SIZE	8
 #define BRIDGE_RX_BUF_SIZE	2048
 #define BRIDGE_TX_QUEUE_SIZE	8
+<<<<<<< HEAD
 #define BRIDGE_TX_BUF_SIZE	(50 * 1024)
+=======
+#define BRIDGE_TX_BUF_SIZE	2048
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define GS_LOG2_NOTIFY_INTERVAL		5  /* 1 << 5 == 32 msec */
 #define GS_NOTIFY_MAXPACKET		10 /* notification + 2 bytes */
@@ -139,6 +143,10 @@ struct f_cdev_opts {
 	struct f_cdev *port;
 	char *func_name;
 	u8 port_num;
+<<<<<<< HEAD
+=======
+	u8 proto;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 static int major, minors;
@@ -161,8 +169,13 @@ static struct usb_interface_descriptor cser_interface_desc = {
 	/* .bInterfaceNumber = DYNAMIC */
 	.bNumEndpoints =	3,
 	.bInterfaceClass =	USB_CLASS_VENDOR_SPEC,
+<<<<<<< HEAD
 	.bInterfaceSubClass =	0,
 	.bInterfaceProtocol =	0,
+=======
+	.bInterfaceSubClass =	USB_SUBCLASS_VENDOR_SPEC,
+	/* .bInterfaceProtocol = DYNAMIC */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* .iInterface = DYNAMIC */
 };
 
@@ -348,6 +361,26 @@ static inline struct f_cdev *cser_to_port(struct cserial *cser)
 	return container_of(cser, struct f_cdev, port_usb);
 }
 
+<<<<<<< HEAD
+=======
+static unsigned int convert_uart_sigs_to_acm(unsigned int uart_sig)
+{
+	unsigned int acm_sig = 0;
+
+	/* should this needs to be in calling functions ??? */
+	uart_sig &= (TIOCM_RI | TIOCM_CD | TIOCM_DSR);
+
+	if (uart_sig & TIOCM_RI)
+		acm_sig |= ACM_CTRL_RI;
+	if (uart_sig & TIOCM_CD)
+		acm_sig |= ACM_CTRL_DCD;
+	if (uart_sig & TIOCM_DSR)
+		acm_sig |= ACM_CTRL_DSR;
+
+	return acm_sig;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static unsigned int convert_acm_sigs_to_uart(unsigned int acm_sig)
 {
 	unsigned int uart_sig = 0;
@@ -761,6 +794,11 @@ static int usb_cser_bind(struct usb_configuration *c, struct usb_function *f)
 	struct f_cdev *port = func_to_port(f);
 	int status;
 	struct usb_ep *ep;
+<<<<<<< HEAD
+=======
+	struct f_cdev_opts *opts =
+			container_of(f->fi, struct f_cdev_opts, func_inst);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (cser_string_defs[0].id == 0) {
 		status = usb_string_id(c->cdev);
@@ -774,6 +812,10 @@ static int usb_cser_bind(struct usb_configuration *c, struct usb_function *f)
 		goto fail;
 	port->port_usb.data_id = status;
 	cser_interface_desc.bInterfaceNumber = status;
+<<<<<<< HEAD
+=======
+	cser_interface_desc.bInterfaceProtocol = opts->proto;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	status = -ENODEV;
 	ep = usb_ep_autoconfig(cdev->gadget, &cser_fs_in_desc);
@@ -932,7 +974,14 @@ static void usb_cser_start_rx(struct f_cdev *port)
 		if (ret) {
 			pr_err("port(%d):%pK usb ep(%s) queue failed\n",
 					port->port_num, port, ep->name);
+<<<<<<< HEAD
 			list_add(&req->list, pool);
+=======
+			if (port->is_connected)
+				list_add(&req->list, &port->read_pool);
+			else
+				usb_cser_free_req(port->port_usb.out, req);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			break;
 		}
 	}
@@ -1357,6 +1406,15 @@ static int f_cdev_tiocmget(struct f_cdev *port)
 
 	if (cser->serial_state & TIOCM_RI)
 		result |= TIOCM_RI;
+<<<<<<< HEAD
+=======
+
+	if (cser->serial_state & TIOCM_DSR)
+		result |= TIOCM_DSR;
+
+	if (cser->serial_state & TIOCM_CTS)
+		result |= TIOCM_CTS;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return result;
 }
 
@@ -1397,6 +1455,27 @@ static int f_cdev_tiocmset(struct f_cdev *port,
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	if (set & TIOCM_DSR)
+		cser->serial_state |= TIOCM_DSR;
+
+	if (clear & TIOCM_DSR)
+		cser->serial_state &= ~TIOCM_DSR;
+
+	if (set & TIOCM_CTS) {
+		if (cser->send_break) {
+			cser->serial_state |= TIOCM_CTS;
+			status = cser->send_break(cser, 0);
+		}
+	}
+	if (clear & TIOCM_CTS) {
+		if (cser->send_break) {
+			cser->serial_state &= ~TIOCM_CTS;
+			status = cser->send_break(cser, 1);
+		}
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return status;
 }
 
@@ -1447,7 +1526,13 @@ static void usb_cser_notify_modem(void *fport, int ctrl_bits)
 {
 	int temp;
 	struct f_cdev *port = fport;
+<<<<<<< HEAD
 
+=======
+	struct cserial *cser;
+
+	cser = &port->port_usb;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!port) {
 		pr_err("port is null\n");
 		return;
@@ -1463,6 +1548,20 @@ static void usb_cser_notify_modem(void *fport, int ctrl_bits)
 	port->cbits_to_modem = temp;
 	port->cbits_updated = true;
 
+<<<<<<< HEAD
+=======
+	 /* if DTR is high, update latest modem info to laptop */
+	if (port->cbits_to_modem & TIOCM_DTR) {
+		unsigned int result;
+		unsigned int cbits_to_laptop;
+
+		result = f_cdev_tiocmget(port);
+		cbits_to_laptop = convert_uart_sigs_to_acm(result);
+		if (cser->send_modem_ctrl_bits)
+			cser->send_modem_ctrl_bits(cser, cbits_to_laptop);
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	wake_up(&port->read_wq);
 }
 
@@ -1512,8 +1611,15 @@ int usb_cser_connect(struct f_cdev *port)
 
 void usb_cser_disconnect(struct f_cdev *port)
 {
+<<<<<<< HEAD
 	unsigned long flags;
 
+=======
+	struct cserial *cser;
+	unsigned long flags;
+
+	cser = &port->port_usb;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	usb_cser_stop_io(port);
 
 	/* lower DTR to modem */
@@ -1521,6 +1627,10 @@ void usb_cser_disconnect(struct f_cdev *port)
 
 	spin_lock_irqsave(&port->port_lock, flags);
 	port->is_connected = false;
+<<<<<<< HEAD
+=======
+	cser->notify_modem = NULL;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	port->nbytes_from_host = port->nbytes_to_host = 0;
 	port->nbytes_to_port_bridge = 0;
 	spin_unlock_irqrestore(&port->port_lock, flags);
@@ -1948,6 +2058,12 @@ static int cser_set_inst_name(struct usb_function_instance *f, const char *name)
 		port->port_usb.send_modem_ctrl_bits = dun_cser_send_ctrl_bits;
 		port->port_usb.disconnect = dun_cser_disconnect;
 		port->port_usb.send_break = dun_cser_send_break;
+<<<<<<< HEAD
+=======
+		opts->proto = 0x40;
+	} else {
+		opts->proto = 0x60;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	return 0;

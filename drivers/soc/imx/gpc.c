@@ -69,7 +69,11 @@ static int imx6_pm_domain_power_off(struct generic_pm_domain *genpd)
 	u32 val;
 
 	/* Read ISO and ISO2SW power down delays */
+<<<<<<< HEAD
 	regmap_read(pd->regmap, pd->reg_offs + GPC_PGC_PUPSCR_OFFS, &val);
+=======
+	regmap_read(pd->regmap, pd->reg_offs + GPC_PGC_PDNSCR_OFFS, &val);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	iso = val & 0x3f;
 	iso2sw = (val >> 8) & 0x3f;
 

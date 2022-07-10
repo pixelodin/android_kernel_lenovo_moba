@@ -251,7 +251,11 @@ lldpad_app_wait_set()
 {
 	local dev=$1; shift
 
+<<<<<<< HEAD
 	while lldptool -t -i $dev -V APP -c app | grep -q pending; do
+=======
+	while lldptool -t -i $dev -V APP -c app | grep -Eq "pending|unknown"; do
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		echo "$dev: waiting for lldpad to push pending APP updates"
 		sleep 5
 	done

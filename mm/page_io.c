@@ -22,6 +22,10 @@
 #include <linux/writeback.h>
 #include <linux/frontswap.h>
 #include <linux/blkdev.h>
+<<<<<<< HEAD
+=======
+#include <linux/psi.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/uio.h>
 #include <linux/sched/task.h>
 #include <asm/pgtable.h>
@@ -357,10 +361,25 @@ int swap_readpage(struct page *page, bool synchronous)
 	struct swap_info_struct *sis = page_swap_info(page);
 	blk_qc_t qc;
 	struct gendisk *disk;
+<<<<<<< HEAD
+=======
+	unsigned long pflags;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	VM_BUG_ON_PAGE(!PageSwapCache(page) && !synchronous, page);
 	VM_BUG_ON_PAGE(!PageLocked(page), page);
 	VM_BUG_ON_PAGE(PageUptodate(page), page);
+<<<<<<< HEAD
+=======
+
+	/*
+	 * Count submission time as memory stall. When the device is congested,
+	 * or the submitting cgroup IO-throttled, submission can be a
+	 * significant part of overall IO time.
+	 */
+	psi_memstall_enter(&pflags);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (frontswap_load(page) == 0) {
 		SetPageUptodate(page);
 		unlock_page(page);
@@ -374,7 +393,11 @@ int swap_readpage(struct page *page, bool synchronous)
 		ret = mapping->a_ops->readpage(swap_file, page);
 		if (!ret)
 			count_vm_event(PSWPIN);
+<<<<<<< HEAD
 		return ret;
+=======
+		goto out;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	ret = bdev_read_page(sis->bdev, swap_page_sector(page), page);
@@ -385,7 +408,11 @@ int swap_readpage(struct page *page, bool synchronous)
 		}
 
 		count_vm_event(PSWPIN);
+<<<<<<< HEAD
 		return 0;
+=======
+		goto out;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	ret = 0;
@@ -418,6 +445,10 @@ int swap_readpage(struct page *page, bool synchronous)
 	bio_put(bio);
 
 out:
+<<<<<<< HEAD
+=======
+	psi_memstall_leave(&pflags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return ret;
 }
 

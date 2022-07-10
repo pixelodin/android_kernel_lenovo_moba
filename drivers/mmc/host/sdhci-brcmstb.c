@@ -55,7 +55,13 @@ static int sdhci_brcmstb_probe(struct platform_device *pdev)
 	}
 
 	sdhci_get_of_property(pdev);
+<<<<<<< HEAD
 	mmc_of_parse(host->mmc);
+=======
+	res = mmc_of_parse(host->mmc);
+	if (res)
+		goto err;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/*
 	 * Supply the existing CAPS, but clear the UHS modes. This

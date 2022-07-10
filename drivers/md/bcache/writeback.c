@@ -781,7 +781,11 @@ void bch_cached_dev_writeback_init(struct cached_dev *dc)
 	bch_keybuf_init(&dc->writeback_keys);
 
 	dc->writeback_metadata		= true;
+<<<<<<< HEAD
 	dc->writeback_running		= true;
+=======
+	dc->writeback_running		= false;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	dc->writeback_percent		= 10;
 	dc->writeback_delay		= 30;
 	atomic_long_set(&dc->writeback_rate.rate, 1024);
@@ -810,6 +814,10 @@ int bch_cached_dev_writeback_start(struct cached_dev *dc)
 		destroy_workqueue(dc->writeback_write_wq);
 		return PTR_ERR(dc->writeback_thread);
 	}
+<<<<<<< HEAD
+=======
+	dc->writeback_running = true;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	WARN_ON(test_and_set_bit(BCACHE_DEV_WB_RUNNING, &dc->disk.flags));
 	schedule_delayed_work(&dc->writeback_rate_update,

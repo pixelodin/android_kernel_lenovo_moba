@@ -320,10 +320,15 @@ reiserfs_inherit_default_acl(struct reiserfs_transaction_handle *th,
 	 * would be useless since permissions are ignored, and a pain because
 	 * it introduces locking cycles
 	 */
+<<<<<<< HEAD
 	if (IS_PRIVATE(dir)) {
 		inode->i_flags |= S_PRIVATE;
 		goto apply_umask;
 	}
+=======
+	if (IS_PRIVATE(inode))
+		goto apply_umask;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	err = posix_acl_create(dir, &inode->i_mode, &default_acl, &acl);
 	if (err)

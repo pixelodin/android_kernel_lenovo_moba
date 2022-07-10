@@ -893,6 +893,7 @@ struct btrfs_fs_info {
 	struct list_head delayed_iputs;
 	struct mutex cleaner_delayed_iput_mutex;
 
+<<<<<<< HEAD
 	/* this protects tree_mod_seq_list */
 	spinlock_t tree_mod_seq_lock;
 	atomic64_t tree_mod_seq;
@@ -901,6 +902,14 @@ struct btrfs_fs_info {
 	/* this protects tree_mod_log */
 	rwlock_t tree_mod_log_lock;
 	struct rb_root tree_mod_log;
+=======
+	atomic64_t tree_mod_seq;
+
+	/* this protects tree_mod_log and tree_mod_seq_list */
+	rwlock_t tree_mod_log_lock;
+	struct rb_root tree_mod_log;
+	struct list_head tree_mod_seq_list;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	atomic_t async_delalloc_pages;
 
@@ -2747,8 +2756,12 @@ int btrfs_subvolume_reserve_metadata(struct btrfs_root *root,
 				     int nitems, bool use_global_rsv);
 void btrfs_subvolume_release_metadata(struct btrfs_fs_info *fs_info,
 				      struct btrfs_block_rsv *rsv);
+<<<<<<< HEAD
 void btrfs_delalloc_release_extents(struct btrfs_inode *inode, u64 num_bytes,
 				    bool qgroup_free);
+=======
+void btrfs_delalloc_release_extents(struct btrfs_inode *inode, u64 num_bytes);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 int btrfs_delalloc_reserve_metadata(struct btrfs_inode *inode, u64 num_bytes);
 void btrfs_delalloc_release_metadata(struct btrfs_inode *inode, u64 num_bytes,
@@ -3102,7 +3115,11 @@ int btrfs_find_name_in_ext_backref(struct extent_buffer *leaf, int slot,
 /* file-item.c */
 struct btrfs_dio_private;
 int btrfs_del_csums(struct btrfs_trans_handle *trans,
+<<<<<<< HEAD
 		    struct btrfs_fs_info *fs_info, u64 bytenr, u64 len);
+=======
+		    struct btrfs_root *root, u64 bytenr, u64 len);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 blk_status_t btrfs_lookup_bio_sums(struct inode *inode, struct bio *bio, u32 *dst);
 blk_status_t btrfs_lookup_bio_sums_dio(struct inode *inode, struct bio *bio,
 			      u64 logical_offset);
@@ -3178,6 +3195,12 @@ void btrfs_destroy_inode(struct inode *inode);
 int btrfs_drop_inode(struct inode *inode);
 int __init btrfs_init_cachep(void);
 void __cold btrfs_destroy_cachep(void);
+<<<<<<< HEAD
+=======
+struct inode *btrfs_iget_path(struct super_block *s, struct btrfs_key *location,
+			      struct btrfs_root *root, int *new,
+			      struct btrfs_path *path);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct inode *btrfs_iget(struct super_block *s, struct btrfs_key *location,
 			 struct btrfs_root *root, int *was_new);
 struct extent_map *btrfs_get_extent(struct btrfs_inode *inode,

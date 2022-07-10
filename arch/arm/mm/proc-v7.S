@@ -18,6 +18,10 @@
 #include <asm/pgtable-hwdef.h>
 #include <asm/pgtable.h>
 #include <asm/memory.h>
+<<<<<<< HEAD
+=======
+#include <asm/cache.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #include "proc-macros.S"
 
@@ -548,10 +552,17 @@ __v7_setup_stack_ptr:
 ENDPROC(__v7_setup)
 
 	.bss
+<<<<<<< HEAD
 	.align	2
 __v7_setup_stack:
 	.space	4 * 7				@ 7 registers
 
+=======
+	.align	L1_CACHE_SHIFT
+__v7_setup_stack:
+	.space	4 * 7				@ 7 registers
+	.align	L1_CACHE_SHIFT
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	__INITDATA
 
 	.weak cpu_v7_bugs_init

@@ -375,6 +375,10 @@ static void __init of_unittest_parse_phandle_with_args(void)
 	for (i = 0; i < 8; i++) {
 		bool passed = true;
 
+<<<<<<< HEAD
+=======
+		memset(&args, 0, sizeof(args));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		rc = of_parse_phandle_with_args(np, "phandle-list",
 						"#phandle-cells", i, &args);
 
@@ -428,6 +432,10 @@ static void __init of_unittest_parse_phandle_with_args(void)
 	}
 
 	/* Check for missing list property */
+<<<<<<< HEAD
+=======
+	memset(&args, 0, sizeof(args));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rc = of_parse_phandle_with_args(np, "phandle-list-missing",
 					"#phandle-cells", 0, &args);
 	unittest(rc == -ENOENT, "expected:%i got:%i\n", -ENOENT, rc);
@@ -436,6 +444,10 @@ static void __init of_unittest_parse_phandle_with_args(void)
 	unittest(rc == -ENOENT, "expected:%i got:%i\n", -ENOENT, rc);
 
 	/* Check for missing cells property */
+<<<<<<< HEAD
+=======
+	memset(&args, 0, sizeof(args));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rc = of_parse_phandle_with_args(np, "phandle-list",
 					"#phandle-cells-missing", 0, &args);
 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
@@ -444,6 +456,10 @@ static void __init of_unittest_parse_phandle_with_args(void)
 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
 
 	/* Check for bad phandle in list */
+<<<<<<< HEAD
+=======
+	memset(&args, 0, sizeof(args));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rc = of_parse_phandle_with_args(np, "phandle-list-bad-phandle",
 					"#phandle-cells", 0, &args);
 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
@@ -452,6 +468,10 @@ static void __init of_unittest_parse_phandle_with_args(void)
 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
 
 	/* Check for incorrectly formed argument list */
+<<<<<<< HEAD
+=======
+	memset(&args, 0, sizeof(args));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rc = of_parse_phandle_with_args(np, "phandle-list-bad-args",
 					"#phandle-cells", 1, &args);
 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
@@ -502,6 +522,10 @@ static void __init of_unittest_parse_phandle_with_args_map(void)
 	for (i = 0; i < 8; i++) {
 		bool passed = true;
 
+<<<<<<< HEAD
+=======
+		memset(&args, 0, sizeof(args));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		rc = of_parse_phandle_with_args_map(np, "phandle-list",
 						    "phandle", i, &args);
 
@@ -559,21 +583,37 @@ static void __init of_unittest_parse_phandle_with_args_map(void)
 	}
 
 	/* Check for missing list property */
+<<<<<<< HEAD
+=======
+	memset(&args, 0, sizeof(args));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rc = of_parse_phandle_with_args_map(np, "phandle-list-missing",
 					    "phandle", 0, &args);
 	unittest(rc == -ENOENT, "expected:%i got:%i\n", -ENOENT, rc);
 
 	/* Check for missing cells,map,mask property */
+<<<<<<< HEAD
+=======
+	memset(&args, 0, sizeof(args));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rc = of_parse_phandle_with_args_map(np, "phandle-list",
 					    "phandle-missing", 0, &args);
 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
 
 	/* Check for bad phandle in list */
+<<<<<<< HEAD
+=======
+	memset(&args, 0, sizeof(args));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rc = of_parse_phandle_with_args_map(np, "phandle-list-bad-phandle",
 					    "phandle", 0, &args);
 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
 
 	/* Check for incorrectly formed argument list */
+<<<<<<< HEAD
+=======
+	memset(&args, 0, sizeof(args));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rc = of_parse_phandle_with_args_map(np, "phandle-list-bad-args",
 					    "phandle", 1, &args);
 	unittest(rc == -EINVAL, "expected:%i got:%i\n", -EINVAL, rc);
@@ -783,7 +823,11 @@ static void __init of_unittest_parse_interrupts(void)
 	for (i = 0; i < 4; i++) {
 		bool passed = true;
 
+<<<<<<< HEAD
 		args.args_count = 0;
+=======
+		memset(&args, 0, sizeof(args));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		rc = of_irq_parse_one(np, i, &args);
 
 		passed &= !rc;
@@ -804,7 +848,11 @@ static void __init of_unittest_parse_interrupts(void)
 	for (i = 0; i < 4; i++) {
 		bool passed = true;
 
+<<<<<<< HEAD
 		args.args_count = 0;
+=======
+		memset(&args, 0, sizeof(args));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		rc = of_irq_parse_one(np, i, &args);
 
 		/* Test the values from tests-phandle.dtsi */
@@ -860,6 +908,10 @@ static void __init of_unittest_parse_interrupts_extended(void)
 	for (i = 0; i < 7; i++) {
 		bool passed = true;
 
+<<<<<<< HEAD
+=======
+		memset(&args, 0, sizeof(args));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		rc = of_irq_parse_one(np, i, &args);
 
 		/* Test the values from tests-phandle.dtsi */
@@ -1067,13 +1119,18 @@ static void __init of_unittest_platform_populate(void)
  *	of np into dup node (present in live tree) and
  *	updates parent of children of np to dup.
  *
+<<<<<<< HEAD
  *	@np:	node already present in live tree
+=======
+ *	@np:	node whose properties are being added to the live tree
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  *	@dup:	node present in live tree to be updated
  */
 static void update_node_properties(struct device_node *np,
 					struct device_node *dup)
 {
 	struct property *prop;
+<<<<<<< HEAD
 	struct device_node *child;
 
 	for_each_property_of_node(np, prop)
@@ -1081,6 +1138,39 @@ static void update_node_properties(struct device_node *np,
 
 	for_each_child_of_node(np, child)
 		child->parent = dup;
+=======
+	struct property *save_next;
+	struct device_node *child;
+	int ret;
+
+	for_each_child_of_node(np, child)
+		child->parent = dup;
+
+	/*
+	 * "unittest internal error: unable to add testdata property"
+	 *
+	 *    If this message reports a property in node '/__symbols__' then
+	 *    the respective unittest overlay contains a label that has the
+	 *    same name as a label in the live devicetree.  The label will
+	 *    be in the live devicetree only if the devicetree source was
+	 *    compiled with the '-@' option.  If you encounter this error,
+	 *    please consider renaming __all__ of the labels in the unittest
+	 *    overlay dts files with an odd prefix that is unlikely to be
+	 *    used in a real devicetree.
+	 */
+
+	/*
+	 * open code for_each_property_of_node() because of_add_property()
+	 * sets prop->next to NULL
+	 */
+	for (prop = np->properties; prop != NULL; prop = save_next) {
+		save_next = prop->next;
+		ret = of_add_property(dup, prop);
+		if (ret)
+			pr_err("unittest internal error: unable to add testdata property %pOF/%s",
+			       np, prop->name);
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /**
@@ -1089,18 +1179,36 @@ static void update_node_properties(struct device_node *np,
  *
  *	@np:	Node to attach to live tree
  */
+<<<<<<< HEAD
 static int attach_node_and_children(struct device_node *np)
+=======
+static void attach_node_and_children(struct device_node *np)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct device_node *next, *dup, *child;
 	unsigned long flags;
 	const char *full_name;
 
 	full_name = kasprintf(GFP_KERNEL, "%pOF", np);
+<<<<<<< HEAD
+=======
+
+	if (!strcmp(full_name, "/__local_fixups__") ||
+	    !strcmp(full_name, "/__fixups__")) {
+		kfree(full_name);
+		return;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	dup = of_find_node_by_path(full_name);
 	kfree(full_name);
 	if (dup) {
 		update_node_properties(np, dup);
+<<<<<<< HEAD
 		return 0;
+=======
+		return;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	child = np->child;
@@ -1121,8 +1229,11 @@ static int attach_node_and_children(struct device_node *np)
 		attach_node_and_children(child);
 		child = next;
 	}
+<<<<<<< HEAD
 
 	return 0;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /**
@@ -1159,6 +1270,10 @@ static int __init unittest_data_add(void)
 	of_fdt_unflatten_tree(unittest_data, NULL, &unittest_data_node);
 	if (!unittest_data_node) {
 		pr_warn("%s: No tree to attach; not running tests\n", __func__);
+<<<<<<< HEAD
+=======
+		kfree(unittest_data);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -ENODATA;
 	}
 

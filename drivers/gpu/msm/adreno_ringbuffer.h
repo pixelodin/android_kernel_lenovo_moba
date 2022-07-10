@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 /*
+<<<<<<< HEAD
  * Copyright (c) 2002,2007-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2002,2007-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 #ifndef __ADRENO_RINGBUFFER_H
 #define __ADRENO_RINGBUFFER_H
@@ -165,6 +169,12 @@ int adreno_ringbuffer_issue_internal_cmds(struct adreno_ringbuffer *rb,
 void adreno_ringbuffer_submit(struct adreno_ringbuffer *rb,
 		struct adreno_submit_time *time);
 
+<<<<<<< HEAD
+=======
+int adreno_ringbuffer_submit_spin_nosync(struct adreno_ringbuffer *rb,
+		struct adreno_submit_time *time, unsigned int timeout);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 int adreno_ringbuffer_submit_spin(struct adreno_ringbuffer *rb,
 		struct adreno_submit_time *time, unsigned int timeout);
 

@@ -47,11 +47,14 @@ struct ipxhdr {
 /* From af_ipx.c */
 extern int sysctl_ipx_pprop_broadcasting;
 
+<<<<<<< HEAD
 static __inline__ struct ipxhdr *ipx_hdr(struct sk_buff *skb)
 {
 	return (struct ipxhdr *)skb_transport_header(skb);
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct ipx_interface {
 	/* IPX address */
 	__be32			if_netnum;

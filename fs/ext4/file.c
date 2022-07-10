@@ -40,9 +40,16 @@ static ssize_t ext4_dax_read_iter(struct kiocb *iocb, struct iov_iter *to)
 	struct inode *inode = file_inode(iocb->ki_filp);
 	ssize_t ret;
 
+<<<<<<< HEAD
 	if (!inode_trylock_shared(inode)) {
 		if (iocb->ki_flags & IOCB_NOWAIT)
 			return -EAGAIN;
+=======
+	if (iocb->ki_flags & IOCB_NOWAIT) {
+		if (!inode_trylock_shared(inode))
+			return -EAGAIN;
+	} else {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		inode_lock_shared(inode);
 	}
 	/*
@@ -190,9 +197,16 @@ ext4_dax_write_iter(struct kiocb *iocb, struct iov_iter *from)
 	struct inode *inode = file_inode(iocb->ki_filp);
 	ssize_t ret;
 
+<<<<<<< HEAD
 	if (!inode_trylock(inode)) {
 		if (iocb->ki_flags & IOCB_NOWAIT)
 			return -EAGAIN;
+=======
+	if (iocb->ki_flags & IOCB_NOWAIT) {
+		if (!inode_trylock(inode))
+			return -EAGAIN;
+	} else {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		inode_lock(inode);
 	}
 	ret = ext4_write_checks(iocb, from);
@@ -455,6 +469,13 @@ static int ext4_file_open(struct inode * inode, struct file * filp)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
+=======
+	ret = fsverity_file_open(inode, filp);
+	if (ret)
+		return ret;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/*
 	 * Set up the jbd2_inode if we are opening the inode for
 	 * writing and the journal is present

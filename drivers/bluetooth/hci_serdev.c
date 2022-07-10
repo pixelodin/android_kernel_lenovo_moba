@@ -368,6 +368,10 @@ void hci_uart_unregister_device(struct hci_uart *hu)
 {
 	struct hci_dev *hdev = hu->hdev;
 
+<<<<<<< HEAD
+=======
+	clear_bit(HCI_UART_PROTO_READY, &hu->flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	hci_unregister_dev(hdev);
 	hci_free_dev(hdev);
 

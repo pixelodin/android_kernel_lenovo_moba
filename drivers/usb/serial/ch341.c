@@ -589,9 +589,19 @@ static int ch341_tiocmget(struct tty_struct *tty)
 static int ch341_reset_resume(struct usb_serial *serial)
 {
 	struct usb_serial_port *port = serial->port[0];
+<<<<<<< HEAD
 	struct ch341_private *priv = usb_get_serial_port_data(port);
 	int ret;
 
+=======
+	struct ch341_private *priv;
+	int ret;
+
+	priv = usb_get_serial_port_data(port);
+	if (!priv)
+		return 0;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* reconfigure ch341 serial port after bus-reset */
 	ch341_configure(serial->dev, priv);
 

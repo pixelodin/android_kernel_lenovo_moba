@@ -4439,11 +4439,21 @@ static int decode_write_verifier(struct xdr_stream *xdr, struct nfs_write_verifi
 
 static int decode_commit(struct xdr_stream *xdr, struct nfs_commitres *res)
 {
+<<<<<<< HEAD
+=======
+	struct nfs_writeverf *verf = res->verf;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int status;
 
 	status = decode_op_hdr(xdr, OP_COMMIT);
 	if (!status)
+<<<<<<< HEAD
 		status = decode_write_verifier(xdr, &res->verf->verifier);
+=======
+		status = decode_write_verifier(xdr, &verf->verifier);
+	if (!status)
+		verf->committed = NFS_FILE_SYNC;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return status;
 }
 

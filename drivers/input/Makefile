@@ -26,12 +26,18 @@ obj-$(CONFIG_INPUT_TABLET)	+= tablet/
 obj-$(CONFIG_INPUT_TOUCHSCREEN)	+= touchscreen/
 obj-$(CONFIG_INPUT_MISC)	+= misc/
 
+<<<<<<< HEAD
 obj-$(CONFIG_SENSORS_SNT8100FSR)	+= snt8100fsr/
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 obj-$(CONFIG_INPUT_APMPOWER)	+= apm-power.o
 obj-$(CONFIG_INPUT_KEYRESET)	+= keyreset.o
 obj-$(CONFIG_INPUT_KEYCOMBO)	+= keycombo.o
 
 obj-$(CONFIG_RMI4_CORE)		+= rmi4/
+<<<<<<< HEAD
 
 obj-$(CONFIG_INPUT_FINGERPRINT)	+= fingerprint/
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

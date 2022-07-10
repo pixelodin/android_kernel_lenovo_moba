@@ -1089,7 +1089,11 @@ arch_uretprobe_hijack_return_addr(unsigned long trampoline_vaddr, struct pt_regs
 		pr_err("return address clobbered: pid=%d, %%sp=%#lx, %%ip=%#lx\n",
 		       current->pid, regs->sp, regs->ip);
 
+<<<<<<< HEAD
 		force_sig_info(SIGSEGV, SEND_SIG_FORCED, current);
+=======
+		force_sig(SIGSEGV, current);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	return -1;

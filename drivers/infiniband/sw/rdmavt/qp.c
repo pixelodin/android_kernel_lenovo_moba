@@ -58,6 +58,11 @@
 #include "trace.h"
 
 static void rvt_rc_timeout(struct timer_list *t);
+<<<<<<< HEAD
+=======
+static void rvt_reset_qp(struct rvt_dev_info *rdi, struct rvt_qp *qp,
+			 enum ib_qp_type type);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /*
  * Convert the AETH RNR timeout code into the number of microseconds.
@@ -268,11 +273,36 @@ no_qp_table:
 }
 
 /**
+<<<<<<< HEAD
  * free_all_qps - check for QPs still in use
+=======
+ * rvt_free_qp_cb - callback function to reset a qp
+ * @qp: the qp to reset
+ * @v: a 64-bit value
+ *
+ * This function resets the qp and removes it from the
+ * qp hash table.
+ */
+static void rvt_free_qp_cb(struct rvt_qp *qp, u64 v)
+{
+	unsigned int *qp_inuse = (unsigned int *)v;
+	struct rvt_dev_info *rdi = ib_to_rvt(qp->ibqp.device);
+
+	/* Reset the qp and remove it from the qp hash list */
+	rvt_reset_qp(rdi, qp, qp->ibqp.qp_type);
+
+	/* Increment the qp_inuse count */
+	(*qp_inuse)++;
+}
+
+/**
+ * rvt_free_all_qps - check for QPs still in use
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * @rdi: rvt device info structure
  *
  * There should not be any QPs still in use.
  * Free memory for table.
+<<<<<<< HEAD
  */
 static unsigned rvt_free_all_qps(struct rvt_dev_info *rdi)
 {
@@ -302,6 +332,18 @@ static unsigned rvt_free_all_qps(struct rvt_dev_info *rdi)
 	}
 	spin_unlock_irqrestore(ql, flags);
 	synchronize_rcu();
+=======
+ * Return the number of QPs still in use.
+ */
+static unsigned rvt_free_all_qps(struct rvt_dev_info *rdi)
+{
+	unsigned int qp_inuse = 0;
+
+	qp_inuse += rvt_mcast_tree_empty(rdi);
+
+	rvt_qp_iter(rdi, (u64)&qp_inuse, rvt_free_qp_cb);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return qp_inuse;
 }
 
@@ -684,14 +726,23 @@ static void rvt_init_qp(struct rvt_dev_info *rdi, struct rvt_qp *qp,
 }
 
 /**
+<<<<<<< HEAD
  * rvt_reset_qp - initialize the QP state to the reset state
+=======
+ * _rvt_reset_qp - initialize the QP state to the reset state
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * @qp: the QP to reset
  * @type: the QP type
  *
  * r_lock, s_hlock, and s_lock are required to be held by the caller
  */
+<<<<<<< HEAD
 static void rvt_reset_qp(struct rvt_dev_info *rdi, struct rvt_qp *qp,
 			 enum ib_qp_type type)
+=======
+static void _rvt_reset_qp(struct rvt_dev_info *rdi, struct rvt_qp *qp,
+			  enum ib_qp_type type)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	__must_hold(&qp->s_lock)
 	__must_hold(&qp->s_hlock)
 	__must_hold(&qp->r_lock)
@@ -737,6 +788,30 @@ static void rvt_reset_qp(struct rvt_dev_info *rdi, struct rvt_qp *qp,
 	lockdep_assert_held(&qp->s_lock);
 }
 
+<<<<<<< HEAD
+=======
+/**
+ * rvt_reset_qp - initialize the QP state to the reset state
+ * @rdi: the device info
+ * @qp: the QP to reset
+ * @type: the QP type
+ *
+ * This is the wrapper function to acquire the r_lock, s_hlock, and s_lock
+ * before calling _rvt_reset_qp().
+ */
+static void rvt_reset_qp(struct rvt_dev_info *rdi, struct rvt_qp *qp,
+			 enum ib_qp_type type)
+{
+	spin_lock_irq(&qp->r_lock);
+	spin_lock(&qp->s_hlock);
+	spin_lock(&qp->s_lock);
+	_rvt_reset_qp(rdi, qp, type);
+	spin_unlock(&qp->s_lock);
+	spin_unlock(&qp->s_hlock);
+	spin_unlock_irq(&qp->r_lock);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /** rvt_free_qpn - Free a qpn from the bit map
  * @qpt: QP table
  * @qpn: queue pair number to free
@@ -1285,7 +1360,11 @@ int rvt_modify_qp(struct ib_qp *ibqp, struct ib_qp_attr *attr,
 	switch (new_state) {
 	case IB_QPS_RESET:
 		if (qp->state != IB_QPS_RESET)
+<<<<<<< HEAD
 			rvt_reset_qp(rdi, qp, ibqp->qp_type);
+=======
+			_rvt_reset_qp(rdi, qp, ibqp->qp_type);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 
 	case IB_QPS_RTR:
@@ -1434,6 +1513,7 @@ int rvt_destroy_qp(struct ib_qp *ibqp)
 	struct rvt_qp *qp = ibqp_to_rvtqp(ibqp);
 	struct rvt_dev_info *rdi = ib_to_rvt(ibqp->device);
 
+<<<<<<< HEAD
 	spin_lock_irq(&qp->r_lock);
 	spin_lock(&qp->s_hlock);
 	spin_lock(&qp->s_lock);
@@ -1441,6 +1521,9 @@ int rvt_destroy_qp(struct ib_qp *ibqp)
 	spin_unlock(&qp->s_lock);
 	spin_unlock(&qp->s_hlock);
 	spin_unlock_irq(&qp->r_lock);
+=======
+	rvt_reset_qp(rdi, qp, ibqp->qp_type);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	wait_event(qp->wait, !atomic_read(&qp->refcount));
 	/* qpn is now available for use again */

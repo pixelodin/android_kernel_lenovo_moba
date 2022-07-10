@@ -101,8 +101,13 @@ static ssize_t crc_control_write(struct file *file, const char __user *ubuf,
 	if (IS_ERR(source))
 		return PTR_ERR(source);
 
+<<<<<<< HEAD
 	if (source[len] == '\n')
 		source[len] = '\0';
+=======
+	if (source[len - 1] == '\n')
+		source[len - 1] = '\0';
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	spin_lock_irq(&crc->lock);
 

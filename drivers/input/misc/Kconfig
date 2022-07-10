@@ -12,8 +12,11 @@ menuconfig INPUT_MISC
 
 if INPUT_MISC
 
+<<<<<<< HEAD
 source "drivers/input/misc/aw8697/Kconfig"
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 config INPUT_88PM860X_ONKEY
 	tristate "88PM860x ONKEY support"
 	depends on MFD_88PM860X
@@ -119,6 +122,20 @@ config INPUT_E3X0_BUTTON
 	  To compile this driver as a module, choose M here: the
 	  module will be called e3x0_button.
 
+<<<<<<< HEAD
+=======
+config INPUT_HBTP_INPUT
+	tristate "HBTP input driver support"
+	help
+	  This option enables an input driver for the host based touch
+	  processing.
+
+	  Say Y to enable HBTP input driver.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called hbtp_input.
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 config INPUT_PCSPKR
 	tristate "PC Speaker support"
 	depends on PCSPKR_PLATFORM

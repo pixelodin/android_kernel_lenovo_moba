@@ -17,6 +17,10 @@
 #include <linux/firmware.h>
 #include <linux/gcd.h>
 #include <linux/genalloc.h>
+<<<<<<< HEAD
+=======
+#include <linux/idr.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/interrupt.h>
 #include <linux/io.h>
 #include <linux/irq.h>
@@ -2101,6 +2105,7 @@ int coda_decoder_queue_init(void *priv, struct vb2_queue *src_vq,
 	return coda_queue_init(priv, dst_vq);
 }
 
+<<<<<<< HEAD
 static int coda_next_free_instance(struct coda_dev *dev)
 {
 	int idx = ffz(dev->instance_mask);
@@ -2112,6 +2117,8 @@ static int coda_next_free_instance(struct coda_dev *dev)
 	return idx;
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * File operations
  */
@@ -2120,7 +2127,12 @@ static int coda_open(struct file *file)
 {
 	struct video_device *vdev = video_devdata(file);
 	struct coda_dev *dev = video_get_drvdata(vdev);
+<<<<<<< HEAD
 	struct coda_ctx *ctx = NULL;
+=======
+	struct coda_ctx *ctx;
+	unsigned int max = ~0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	char *name;
 	int ret;
 	int idx;
@@ -2129,12 +2141,21 @@ static int coda_open(struct file *file)
 	if (!ctx)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	idx = coda_next_free_instance(dev);
+=======
+	if (dev->devtype->product == CODA_DX6)
+		max = CODADX6_MAX_INSTANCES - 1;
+	idx = ida_alloc_max(&dev->ida, max, GFP_KERNEL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (idx < 0) {
 		ret = idx;
 		goto err_coda_max;
 	}
+<<<<<<< HEAD
 	set_bit(idx, &dev->instance_mask);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	name = kasprintf(GFP_KERNEL, "context%d", idx);
 	if (!name) {
@@ -2243,8 +2264,13 @@ err_clk_per:
 err_pm_get:
 	v4l2_fh_del(&ctx->fh);
 	v4l2_fh_exit(&ctx->fh);
+<<<<<<< HEAD
 	clear_bit(ctx->idx, &dev->instance_mask);
 err_coda_name_init:
+=======
+err_coda_name_init:
+	ida_free(&dev->ida, ctx->idx);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 err_coda_max:
 	kfree(ctx);
 	return ret;
@@ -2286,7 +2312,11 @@ static int coda_release(struct file *file)
 	pm_runtime_put_sync(&dev->plat_dev->dev);
 	v4l2_fh_del(&ctx->fh);
 	v4l2_fh_exit(&ctx->fh);
+<<<<<<< HEAD
 	clear_bit(ctx->idx, &dev->instance_mask);
+=======
+	ida_free(&dev->ida, ctx->idx);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (ctx->ops->release)
 		ctx->ops->release(ctx);
 	debugfs_remove_recursive(ctx->debugfs_entry);
@@ -2747,6 +2777,10 @@ static int coda_probe(struct platform_device *pdev)
 
 	mutex_init(&dev->dev_mutex);
 	mutex_init(&dev->coda_mutex);
+<<<<<<< HEAD
+=======
+	ida_init(&dev->ida);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	dev->debugfs_root = debugfs_create_dir("coda", NULL);
 	if (!dev->debugfs_root)
@@ -2834,6 +2868,10 @@ static int coda_remove(struct platform_device *pdev)
 	coda_free_aux_buf(dev, &dev->tempbuf);
 	coda_free_aux_buf(dev, &dev->workbuf);
 	debugfs_remove_recursive(dev->debugfs_root);
+<<<<<<< HEAD
+=======
+	ida_destroy(&dev->ida);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 }
 

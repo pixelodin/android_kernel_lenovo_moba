@@ -217,6 +217,17 @@ int gpiod_get_direction(struct gpio_desc *desc)
 	chip = gpiod_to_chip(desc);
 	offset = gpio_chip_hwgpio(desc);
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Open drain emulation using input mode may incorrectly report
+	 * input here, fix that up.
+	 */
+	if (test_bit(FLAG_OPEN_DRAIN, &desc->flags) &&
+	    test_bit(FLAG_IS_OUT, &desc->flags))
+		return 0;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!chip->get_direction)
 		return status;
 
@@ -1901,7 +1912,13 @@ static int gpiochip_add_irqchip(struct gpio_chip *gpiochip,
 		type = IRQ_TYPE_NONE;
 	}
 
+<<<<<<< HEAD
 	if (!gpiochip->to_irq)
+=======
+#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
+	if (!gpiochip->to_irq)
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		gpiochip->to_irq = gpiochip_to_irq;
 
 	gpiochip->irq.default_type = type;
@@ -1913,11 +1930,19 @@ static int gpiochip_add_irqchip(struct gpio_chip *gpiochip,
 	else
 		ops = &gpiochip_domain_ops;
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (gpiochip->irq.parent_domain)
 		gpiochip->irq.domain = irq_domain_add_hierarchy(gpiochip->irq.parent_domain,
 								0, gpiochip->ngpio,
 								np, ops, gpiochip);
 	else
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		gpiochip->irq.domain = irq_domain_add_simple(np, gpiochip->ngpio,
 							     gpiochip->irq.first,
 							     ops, gpiochip);
@@ -2548,19 +2573,41 @@ EXPORT_SYMBOL_GPL(gpiochip_free_own_desc);
 int gpiod_direction_input(struct gpio_desc *desc)
 {
 	struct gpio_chip	*chip;
+<<<<<<< HEAD
 	int			status = -EINVAL;
+=======
+	int			status = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	VALIDATE_DESC(desc);
 	chip = desc->gdev->chip;
 
+<<<<<<< HEAD
 	if (!chip->get || !chip->direction_input) {
 		gpiod_warn(desc,
 			"%s: missing get() or direction_input() operations\n",
+=======
+	if (!chip->get && chip->direction_input) {
+		gpiod_warn(desc,
+			"%s: missing get() and direction_input() operations\n",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			__func__);
 		return -EIO;
 	}
 
+<<<<<<< HEAD
 	status = chip->direction_input(chip, gpio_chip_hwgpio(desc));
+=======
+	if (chip->direction_input) {
+		status = chip->direction_input(chip, gpio_chip_hwgpio(desc));
+	} else if (chip->get_direction &&
+		  (chip->get_direction(chip, gpio_chip_hwgpio(desc)) != 1)) {
+		gpiod_warn(desc,
+			"%s: missing direction_input() operation\n",
+			__func__);
+		return -EIO;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (status == 0)
 		clear_bit(FLAG_IS_OUT, &desc->flags);
 
@@ -2582,16 +2629,40 @@ static int gpiod_direction_output_raw_commit(struct gpio_desc *desc, int value)
 {
 	struct gpio_chip *gc = desc->gdev->chip;
 	int val = !!value;
+<<<<<<< HEAD
 	int ret;
 
 	if (!gc->set || !gc->direction_output) {
 		gpiod_warn(desc,
 		       "%s: missing set() or direction_output() operations\n",
+=======
+	int ret = 0;
+
+	if (!gc->set && !gc->direction_output) {
+		gpiod_warn(desc,
+		       "%s: missing set() and direction_output() operations\n",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		       __func__);
 		return -EIO;
 	}
 
+<<<<<<< HEAD
 	ret = gc->direction_output(gc, gpio_chip_hwgpio(desc), val);
+=======
+	if (gc->direction_output) {
+		ret = gc->direction_output(gc, gpio_chip_hwgpio(desc), val);
+	} else {
+		if (gc->get_direction &&
+		    gc->get_direction(gc, gpio_chip_hwgpio(desc))) {
+			gpiod_warn(desc,
+				"%s: missing direction_output() operation\n",
+				__func__);
+			return -EIO;
+		}
+		gc->set(gc, gpio_chip_hwgpio(desc), val);
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!ret)
 		set_bit(FLAG_IS_OUT, &desc->flags);
 	trace_gpio_value(desc_to_gpio(desc), 0, val);
@@ -3736,8 +3807,14 @@ static struct gpio_desc *gpiod_find(struct device *dev, const char *con_id,
 
 		if (chip->ngpio <= p->chip_hwnum) {
 			dev_err(dev,
+<<<<<<< HEAD
 				"requested GPIO %d is out of range [0..%d] for chip %s\n",
 				idx, chip->ngpio, chip->label);
+=======
+				"requested GPIO %u (%u) is out of range [0..%u] for chip %s\n",
+				idx, p->chip_hwnum, chip->ngpio - 1,
+				chip->label);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			return ERR_PTR(-EINVAL);
 		}
 

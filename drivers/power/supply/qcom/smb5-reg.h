@@ -335,6 +335,10 @@ enum {
  ********************************/
 #define TYPE_C_SNK_STATUS_REG			(TYPEC_BASE + 0x06)
 #define DETECTED_SRC_TYPE_MASK			GENMASK(6, 0)
+<<<<<<< HEAD
+=======
+#define SNK_DAM_MASK				GENMASK(6, 4)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define SNK_DAM_500MA_BIT			BIT(6)
 #define SNK_DAM_1500MA_BIT			BIT(5)
 #define SNK_DAM_3000MA_BIT			BIT(4)
@@ -363,10 +367,13 @@ enum {
 #define CC_ORIENTATION_BIT			BIT(1)
 #define CC_ATTACHED_BIT				BIT(0)
 
+<<<<<<< HEAD
 #ifdef CONFIG_PRODUCT_MOBA
 #define TYPE_C_MOBA_ORIENT_STATUS_REG			(TYPEC_BASE + 0x0E)
 #endif
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define LEGACY_CABLE_STATUS_REG			(TYPEC_BASE + 0x0D)
 #define TYPEC_LEGACY_CABLE_STATUS_BIT		BIT(1)
 #define TYPEC_NONCOMP_LEGACY_CABLE_STATUS_BIT	BIT(0)

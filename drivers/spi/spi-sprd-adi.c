@@ -367,6 +367,12 @@ static int sprd_adi_restart_handler(struct notifier_block *this,
 	val |= BIT_WDG_RUN | BIT_WDG_RST;
 	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_CTRL, val);
 
+<<<<<<< HEAD
+=======
+	/* Lock the watchdog */
+	sprd_adi_write(sadi, sadi->slave_pbase + REG_WDG_LOCK, ~WDG_UNLOCK_KEY);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mdelay(1000);
 
 	dev_emerg(sadi->dev, "Unable to restart system\n");

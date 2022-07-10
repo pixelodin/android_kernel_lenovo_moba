@@ -18,6 +18,10 @@ struct block_device;
 struct io_context;
 struct cgroup_subsys_state;
 typedef void (bio_end_io_t) (struct bio *);
+<<<<<<< HEAD
+=======
+struct bio_crypt_ctx;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /*
  * Block error status values.  See block/blk-core:blk_errors for the details.
@@ -182,11 +186,23 @@ struct bio {
 	struct blkcg_gq		*bi_blkg;
 	struct bio_issue	bi_issue;
 #endif
+<<<<<<< HEAD
+=======
+
+#ifdef CONFIG_BLK_INLINE_ENCRYPTION
+	struct bio_crypt_ctx	*bi_crypt_context;
+#if IS_ENABLED(CONFIG_DM_DEFAULT_KEY)
+	bool			bi_skip_dm_default_key;
+#endif
+#endif
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	union {
 #if defined(CONFIG_BLK_DEV_INTEGRITY)
 		struct bio_integrity_payload *bi_integrity; /* data integrity */
 #endif
 	};
+<<<<<<< HEAD
 #ifdef CONFIG_PFK
 	/* Encryption key to use (NULL if none) */
 	const struct blk_encryption_key	*bi_crypt_key;
@@ -194,6 +210,8 @@ struct bio {
 #ifdef CONFIG_DM_DEFAULT_KEY
 	int bi_crypt_skip;
 #endif
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	unsigned short		bi_vcnt;	/* how many bio_vec's */
 
@@ -208,9 +226,13 @@ struct bio {
 	struct bio_vec		*bi_io_vec;	/* the actual vec list */
 
 	struct bio_set		*bi_pool;
+<<<<<<< HEAD
 #ifdef CONFIG_PFK
 	struct inode		*bi_dio_inode;
 #endif
+=======
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/*
 	 * We can inline a number of vecs at the end of the bio, to avoid
 	 * double allocations for a small number of bio_vecs. This member
@@ -229,6 +251,7 @@ struct bio {
 #define BIO_BOUNCED	3	/* bio is a bounce bio */
 #define BIO_USER_MAPPED 4	/* contains user pages */
 #define BIO_NULL_MAPPED 5	/* contains invalid user pages */
+<<<<<<< HEAD
 #define BIO_QUIET	6	/* Make BIO Quiet */
 #define BIO_CHAIN	7	/* chained bio, ->bi_remaining in effect */
 #define BIO_REFFED	8	/* bio has elevated ->bi_cnt */
@@ -237,6 +260,17 @@ struct bio {
 #define BIO_TRACE_COMPLETION 10	/* bio_endio() should trace the final completion
 				 * of this bio. */
 #define BIO_QUEUE_ENTERED 11	/* can use blk_queue_enter_live() */
+=======
+#define BIO_WORKINGSET	6	/* contains userspace workingset pages */
+#define BIO_QUIET	7	/* Make BIO Quiet */
+#define BIO_CHAIN	8	/* chained bio, ->bi_remaining in effect */
+#define BIO_REFFED	9	/* bio has elevated ->bi_cnt */
+#define BIO_THROTTLED	10	/* This bio has already been subjected to
+				 * throttling rules. Don't do it again. */
+#define BIO_TRACE_COMPLETION 11	/* bio_endio() should trace the final completion
+				 * of this bio. */
+#define BIO_QUEUE_ENTERED 12	/* can use blk_queue_enter_live() */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /* See BVEC_POOL_OFFSET below before adding new flags */
 
@@ -339,11 +373,14 @@ enum req_flag_bits {
 	/* for driver use */
 	__REQ_DRV,
 	__REQ_SWAP,		/* swapping request. */
+<<<<<<< HEAD
 	/* Android specific flags */
 	__REQ_NOENCRYPT,	/*
 				 * ok to not encrypt (already encrypted at fs
 				 * level)
 				 */
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	__REQ_NR_BITS,		/* stops here */
 };
 
@@ -362,10 +399,18 @@ enum req_flag_bits {
 #define REQ_RAHEAD		(1ULL << __REQ_RAHEAD)
 #define REQ_BACKGROUND		(1ULL << __REQ_BACKGROUND)
 #define REQ_NOWAIT		(1ULL << __REQ_NOWAIT)
+<<<<<<< HEAD
 #define REQ_NOUNMAP		(1ULL << __REQ_NOUNMAP)
 #define REQ_DRV			(1ULL << __REQ_DRV)
 #define REQ_SWAP		(1ULL << __REQ_SWAP)
 #define REQ_NOENCRYPT		(1ULL << __REQ_NOENCRYPT)
+=======
+
+#define REQ_NOUNMAP		(1ULL << __REQ_NOUNMAP)
+
+#define REQ_DRV			(1ULL << __REQ_DRV)
+#define REQ_SWAP		(1ULL << __REQ_SWAP)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define REQ_FAILFAST_MASK \
 	(REQ_FAILFAST_DEV | REQ_FAILFAST_TRANSPORT | REQ_FAILFAST_DRIVER)

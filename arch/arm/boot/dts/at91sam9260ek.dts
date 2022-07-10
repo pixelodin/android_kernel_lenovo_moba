@@ -127,7 +127,11 @@
 
 			spi0: spi@fffc8000 {
 				cs-gpios = <0>, <&pioC 11 0>, <0>, <0>;
+<<<<<<< HEAD
 				mtd_dataflash@0 {
+=======
+				mtd_dataflash@1 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 					compatible = "atmel,at45", "atmel,dataflash";
 					spi-max-frequency = <50000000>;
 					reg = <1>;

@@ -1140,7 +1140,11 @@ int a6xx_gmu_probe(struct a6xx_gpu *a6xx_gpu, struct device_node *node)
 
 	gmu->dev = &pdev->dev;
 
+<<<<<<< HEAD
 	of_dma_configure(gmu->dev, node, false);
+=======
+	of_dma_configure(gmu->dev, node, true);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Fow now, don't do anything fancy until we get our feet under us */
 	gmu->idle_level = GMU_IDLE_STATE_ACTIVE;

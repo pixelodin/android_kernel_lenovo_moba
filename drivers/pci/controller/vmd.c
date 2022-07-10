@@ -818,12 +818,19 @@ static void vmd_remove(struct pci_dev *dev)
 {
 	struct vmd_dev *vmd = pci_get_drvdata(dev);
 
+<<<<<<< HEAD
 	vmd_detach_resources(vmd);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	sysfs_remove_link(&vmd->dev->dev.kobj, "domain");
 	pci_stop_root_bus(vmd->bus);
 	pci_remove_root_bus(vmd->bus);
 	vmd_cleanup_srcu(vmd);
 	vmd_teardown_dma_ops(vmd);
+<<<<<<< HEAD
+=======
+	vmd_detach_resources(vmd);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	irq_domain_remove(vmd->irq_domain);
 }
 

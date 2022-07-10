@@ -253,8 +253,12 @@ end:
 	return err;
 }
 
+<<<<<<< HEAD
 static unsigned int
 map_data_channels(struct snd_bebob *bebob, struct amdtp_stream *s)
+=======
+static int map_data_channels(struct snd_bebob *bebob, struct amdtp_stream *s)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	unsigned int sec, sections, ch, channels;
 	unsigned int pcm, midi, location;

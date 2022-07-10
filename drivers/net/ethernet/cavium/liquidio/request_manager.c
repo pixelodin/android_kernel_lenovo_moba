@@ -123,6 +123,10 @@ int octeon_init_instr_queue(struct octeon_device *oct,
 	iq->do_auto_flush = 1;
 	iq->db_timeout = (u32)conf->db_timeout;
 	atomic_set(&iq->instr_pending, 0);
+<<<<<<< HEAD
+=======
+	iq->pkts_processed = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Initialize the spinlock for this instruction queue */
 	spin_lock_init(&iq->lock);
@@ -497,6 +501,10 @@ octeon_flush_iq(struct octeon_device *oct, struct octeon_instr_queue *iq,
 				lio_process_iq_request_list(oct, iq, 0);
 
 		if (inst_processed) {
+<<<<<<< HEAD
+=======
+			iq->pkts_processed += inst_processed;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			atomic_sub(inst_processed, &iq->instr_pending);
 			iq->stats.instr_processed += inst_processed;
 		}

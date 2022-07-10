@@ -29,4 +29,8 @@ obj-$(CONFIG_CORESIGHT_HWEVENT) += coresight-hwevent.o
 obj-$(CONFIG_CORESIGHT_DUMMY) += coresight-dummy.o
 obj-$(CONFIG_CORESIGHT_REMOTE_ETM) += coresight-remote-etm.o
 obj-$(CONFIG_CORESIGHT_CSR) += coresight-csr.o
+<<<<<<< HEAD
 obj-$(CONFIG_CORESIGHT_TGU) += coresight-tgu.o
+=======
+obj-$(CONFIG_CORESIGHT_TGU) += coresight-tgu.o apss_tgu.o
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

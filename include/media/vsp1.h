@@ -46,7 +46,11 @@ int vsp1_du_setup_lif(struct device *dev, unsigned int pipe_index,
 /**
  * struct vsp1_du_atomic_config - VSP atomic configuration parameters
  * @pixelformat: plane pixel format (V4L2 4CC)
+<<<<<<< HEAD
  * @pitch: line pitch in bytes, for all planes
+=======
+ * @pitch: line pitch in bytes for the first plane
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * @mem: DMA memory address for each plane of the frame buffer
  * @src: source rectangle in the frame buffer (integer coordinates)
  * @dst: destination rectangle on the display (integer coordinates)

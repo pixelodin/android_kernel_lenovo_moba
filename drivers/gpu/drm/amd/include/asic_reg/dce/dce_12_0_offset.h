@@ -7376,6 +7376,11 @@
 #define mmCRTC4_CRTC_DRR_CONTROL                                                                       0x0f3e
 #define mmCRTC4_CRTC_DRR_CONTROL_BASE_IDX                                                              2
 
+<<<<<<< HEAD
+=======
+#define mmDCHUBBUB_SDPIF_MMIO_CNTRL_0                                                                  0x395d
+#define mmDCHUBBUB_SDPIF_MMIO_CNTRL_0_BASE_IDX                                                         2
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 // addressBlock: dce_dc_fmt4_dispdec
 // base address: 0x2000

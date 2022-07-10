@@ -3109,8 +3109,14 @@ static int intel_pmu_hw_config(struct perf_event *event)
 	if (x86_pmu.version < 3)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (perf_paranoid_cpu() && !capable(CAP_SYS_ADMIN))
 		return -EACCES;
+=======
+	ret = perf_allow_cpu(&event->attr);
+	if (ret)
+		return ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	event->hw.config |= ARCH_PERFMON_EVENTSEL_ANY;
 

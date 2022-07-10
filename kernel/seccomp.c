@@ -383,8 +383,13 @@ static struct seccomp_filter *seccomp_prepare_filter(struct sock_fprog *fprog)
 	 * behavior of privileged children.
 	 */
 	if (!task_no_new_privs(current) &&
+<<<<<<< HEAD
 	    security_capable_noaudit(current_cred(), current_user_ns(),
 				     CAP_SYS_ADMIN) != 0)
+=======
+	    security_capable(current_cred(), current_user_ns(),
+				     CAP_SYS_ADMIN, CAP_OPT_NOAUDIT) != 0)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return ERR_PTR(-EACCES);
 
 	/* Allocate a new seccomp_filter */

@@ -1,6 +1,10 @@
 /*
  * Copyright (c) 2015, Sony Mobile Communications AB.
+<<<<<<< HEAD
  * Copyright (c) 2012-2013, 2018-2019 The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2012-2013, 2018-2020 The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -161,7 +165,11 @@ struct qcom_smp2p {
 	struct regmap *ipc_regmap;
 	int ipc_offset;
 	int ipc_bit;
+<<<<<<< HEAD
 	struct wakeup_source ws;
+=======
+	struct wakeup_source *ws;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	struct mbox_client mbox_client;
 	struct mbox_chan *mbox_chan;
@@ -303,7 +311,11 @@ static irqreturn_t qcom_smp2p_isr(int irq, void *data)
 {
 	struct qcom_smp2p *smp2p = data;
 
+<<<<<<< HEAD
 	__pm_stay_awake(&smp2p->ws);
+=======
+	__pm_stay_awake(smp2p->ws);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return IRQ_WAKE_THREAD;
 }
 
@@ -351,7 +363,11 @@ static irqreturn_t qcom_smp2p_intr(int irq, void *data)
 	}
 
 out:
+<<<<<<< HEAD
 	__pm_relax(&smp2p->ws);
+=======
+	__pm_relax(smp2p->ws);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return IRQ_HANDLED;
 }
 
@@ -648,7 +664,16 @@ static int qcom_smp2p_probe(struct platform_device *pdev)
 			list_add(&entry->node, &smp2p->outbound);
 		}
 	}
+<<<<<<< HEAD
 	wakeup_source_init(&smp2p->ws, "smp2p");
+=======
+
+	smp2p->ws = wakeup_source_register(&pdev->dev, "smp2p");
+	if (!smp2p->ws) {
+		ret = -ENOMEM;
+		goto unwind_interfaces;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Kick the outgoing edge after allocating entries */
 	qcom_smp2p_kick(smp2p);
@@ -659,12 +684,22 @@ static int qcom_smp2p_probe(struct platform_device *pdev)
 					"smp2p", (void *)smp2p);
 	if (ret) {
 		dev_err(&pdev->dev, "failed to request interrupt\n");
+<<<<<<< HEAD
 		goto unwind_interfaces;
+=======
+		goto unreg_ws;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	enable_irq_wake(smp2p->irq);
 
 	return 0;
 
+<<<<<<< HEAD
+=======
+unreg_ws:
+	wakeup_source_unregister(smp2p->ws);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 unwind_interfaces:
 	list_for_each_entry(entry, &smp2p->inbound, node)
 		irq_domain_remove(entry->domain);
@@ -689,6 +724,11 @@ static int qcom_smp2p_remove(struct platform_device *pdev)
 	struct qcom_smp2p *smp2p = platform_get_drvdata(pdev);
 	struct smp2p_entry *entry;
 
+<<<<<<< HEAD
+=======
+	wakeup_source_unregister(smp2p->ws);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	list_for_each_entry(entry, &smp2p->inbound, node)
 		irq_domain_remove(entry->domain);
 

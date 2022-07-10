@@ -24,6 +24,10 @@
 #include <linux/i2c.h>
 #include <linux/interrupt.h>
 #include <linux/module.h>
+<<<<<<< HEAD
+=======
+#include <linux/platform_device.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/regulator/consumer.h>
 #include <linux/slab.h>
 
@@ -34,7 +38,11 @@ struct cht_int33fe_data {
 	struct i2c_client *fusb302;
 	struct i2c_client *pi3usb30532;
 	/* Contain a list-head must be per device */
+<<<<<<< HEAD
 	struct device_connection connections[5];
+=======
+	struct device_connection connections[4];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 /*
@@ -88,9 +96,15 @@ static const struct property_entry fusb302_props[] = {
 	{ }
 };
 
+<<<<<<< HEAD
 static int cht_int33fe_probe(struct i2c_client *client)
 {
 	struct device *dev = &client->dev;
+=======
+static int cht_int33fe_probe(struct platform_device *pdev)
+{
+	struct device *dev = &pdev->dev;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct i2c_board_info board_info;
 	struct cht_int33fe_data *data;
 	struct i2c_client *max17047;
@@ -175,6 +189,7 @@ static int cht_int33fe_probe(struct i2c_client *client)
 	}
 
 	data->connections[0].endpoint[0] = "port0";
+<<<<<<< HEAD
 	data->connections[0].endpoint[1] = "i2c-pi3usb30532";
 	data->connections[0].id = "typec-switch";
 	data->connections[1].endpoint[0] = "port0";
@@ -186,6 +201,16 @@ static int cht_int33fe_probe(struct i2c_client *client)
 	data->connections[3].endpoint[0] = "i2c-fusb302";
 	data->connections[3].endpoint[1] = "intel_xhci_usb_sw-role-switch";
 	data->connections[3].id = "usb-role-switch";
+=======
+	data->connections[0].endpoint[1] = "i2c-pi3usb30532-switch";
+	data->connections[0].id = "orientation-switch";
+	data->connections[1].endpoint[0] = "port0";
+	data->connections[1].endpoint[1] = "i2c-pi3usb30532-mux";
+	data->connections[1].id = "mode-switch";
+	data->connections[2].endpoint[0] = "i2c-fusb302";
+	data->connections[2].endpoint[1] = "intel_xhci_usb_sw-role-switch";
+	data->connections[2].id = "usb-role-switch";
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	device_connections_add(data->connections);
 
@@ -207,7 +232,11 @@ static int cht_int33fe_probe(struct i2c_client *client)
 	if (!data->pi3usb30532)
 		goto out_unregister_fusb302;
 
+<<<<<<< HEAD
 	i2c_set_clientdata(client, data);
+=======
+	platform_set_drvdata(pdev, data);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return 0;
 
@@ -223,9 +252,15 @@ out_unregister_max17047:
 	return -EPROBE_DEFER; /* Wait for the i2c-adapter to load */
 }
 
+<<<<<<< HEAD
 static int cht_int33fe_remove(struct i2c_client *i2c)
 {
 	struct cht_int33fe_data *data = i2c_get_clientdata(i2c);
+=======
+static int cht_int33fe_remove(struct platform_device *pdev)
+{
+	struct cht_int33fe_data *data = platform_get_drvdata(pdev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	i2c_unregister_device(data->pi3usb30532);
 	i2c_unregister_device(data->fusb302);
@@ -237,22 +272,30 @@ static int cht_int33fe_remove(struct i2c_client *i2c)
 	return 0;
 }
 
+<<<<<<< HEAD
 static const struct i2c_device_id cht_int33fe_i2c_id[] = {
 	{ }
 };
 MODULE_DEVICE_TABLE(i2c, cht_int33fe_i2c_id);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static const struct acpi_device_id cht_int33fe_acpi_ids[] = {
 	{ "INT33FE", },
 	{ }
 };
 MODULE_DEVICE_TABLE(acpi, cht_int33fe_acpi_ids);
 
+<<<<<<< HEAD
 static struct i2c_driver cht_int33fe_driver = {
+=======
+static struct platform_driver cht_int33fe_driver = {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.driver	= {
 		.name = "Intel Cherry Trail ACPI INT33FE driver",
 		.acpi_match_table = ACPI_PTR(cht_int33fe_acpi_ids),
 	},
+<<<<<<< HEAD
 	.probe_new = cht_int33fe_probe,
 	.remove = cht_int33fe_remove,
 	.id_table = cht_int33fe_i2c_id,
@@ -260,6 +303,13 @@ static struct i2c_driver cht_int33fe_driver = {
 };
 
 module_i2c_driver(cht_int33fe_driver);
+=======
+	.probe = cht_int33fe_probe,
+	.remove = cht_int33fe_remove,
+};
+
+module_platform_driver(cht_int33fe_driver);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 MODULE_DESCRIPTION("Intel Cherry Trail ACPI INT33FE pseudo device driver");
 MODULE_AUTHOR("Hans de Goede <hdegoede@redhat.com>");

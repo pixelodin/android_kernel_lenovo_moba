@@ -16,6 +16,10 @@
 #include <linux/of_device.h>
 #include <linux/platform_device.h>
 #include <linux/pm_runtime.h>
+<<<<<<< HEAD
+=======
+#include <linux/slab.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #include <dt-bindings/clock/exynos5433.h>
 
@@ -5527,6 +5531,11 @@ static int __init exynos5433_cmu_probe(struct platform_device *pdev)
 
 	data->clk_save = samsung_clk_alloc_reg_dump(info->clk_regs,
 						    info->nr_clk_regs);
+<<<<<<< HEAD
+=======
+	if (!data->clk_save)
+		return -ENOMEM;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	data->nr_clk_save = info->nr_clk_regs;
 	data->clk_suspend = info->suspend_regs;
 	data->nr_clk_suspend = info->nr_suspend_regs;
@@ -5535,12 +5544,28 @@ static int __init exynos5433_cmu_probe(struct platform_device *pdev)
 	if (data->nr_pclks > 0) {
 		data->pclks = devm_kcalloc(dev, sizeof(struct clk *),
 					   data->nr_pclks, GFP_KERNEL);
+<<<<<<< HEAD
 
 		for (i = 0; i < data->nr_pclks; i++) {
 			struct clk *clk = of_clk_get(dev->of_node, i);
 
 			if (IS_ERR(clk))
 				return PTR_ERR(clk);
+=======
+		if (!data->pclks) {
+			kfree(data->clk_save);
+			return -ENOMEM;
+		}
+		for (i = 0; i < data->nr_pclks; i++) {
+			struct clk *clk = of_clk_get(dev->of_node, i);
+
+			if (IS_ERR(clk)) {
+				kfree(data->clk_save);
+				while (--i >= 0)
+					clk_put(data->pclks[i]);
+				return PTR_ERR(clk);
+			}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			data->pclks[i] = clk;
 		}
 	}
@@ -5630,7 +5655,11 @@ static const struct of_device_id exynos5433_cmu_of_match[] = {
 static const struct dev_pm_ops exynos5433_cmu_pm_ops = {
 	SET_RUNTIME_PM_OPS(exynos5433_cmu_suspend, exynos5433_cmu_resume,
 			   NULL)
+<<<<<<< HEAD
 	SET_LATE_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+=======
+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				     pm_runtime_force_resume)
 };
 

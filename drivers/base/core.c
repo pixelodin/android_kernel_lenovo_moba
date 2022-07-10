@@ -44,6 +44,13 @@ early_param("sysfs.deprecated", sysfs_deprecated_setup);
 #endif
 
 /* Device links support. */
+<<<<<<< HEAD
+=======
+static LIST_HEAD(wait_for_suppliers);
+static DEFINE_MUTEX(wfs_lock);
+static LIST_HEAD(deferred_sync);
+static unsigned int defer_sync_state_count = 1;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #ifdef CONFIG_SRCU
 static DEFINE_MUTEX(device_links_lock);
@@ -114,6 +121,12 @@ static int device_is_dependent(struct device *dev, void *target)
 		return ret;
 
 	list_for_each_entry(link, &dev->links.consumers, s_node) {
+<<<<<<< HEAD
+=======
+		if (link->flags == (DL_FLAG_SYNC_STATE_ONLY | DL_FLAG_MANAGED))
+			continue;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (link->consumer == target)
 			return 1;
 
@@ -124,6 +137,53 @@ static int device_is_dependent(struct device *dev, void *target)
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static void device_link_init_status(struct device_link *link,
+				    struct device *consumer,
+				    struct device *supplier)
+{
+	switch (supplier->links.status) {
+	case DL_DEV_PROBING:
+		switch (consumer->links.status) {
+		case DL_DEV_PROBING:
+			/*
+			 * A consumer driver can create a link to a supplier
+			 * that has not completed its probing yet as long as it
+			 * knows that the supplier is already functional (for
+			 * example, it has just acquired some resources from the
+			 * supplier).
+			 */
+			link->status = DL_STATE_CONSUMER_PROBE;
+			break;
+		default:
+			link->status = DL_STATE_DORMANT;
+			break;
+		}
+		break;
+	case DL_DEV_DRIVER_BOUND:
+		switch (consumer->links.status) {
+		case DL_DEV_PROBING:
+			link->status = DL_STATE_CONSUMER_PROBE;
+			break;
+		case DL_DEV_DRIVER_BOUND:
+			link->status = DL_STATE_ACTIVE;
+			break;
+		default:
+			link->status = DL_STATE_AVAILABLE;
+			break;
+		}
+		break;
+	case DL_DEV_UNBINDING:
+		link->status = DL_STATE_SUPPLIER_UNBIND;
+		break;
+	default:
+		link->status = DL_STATE_DORMANT;
+		break;
+	}
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int device_reorder_to_tail(struct device *dev, void *not_used)
 {
 	struct device_link *link;
@@ -139,8 +199,16 @@ static int device_reorder_to_tail(struct device *dev, void *not_used)
 		device_pm_move_last(dev);
 
 	device_for_each_child(dev, NULL, device_reorder_to_tail);
+<<<<<<< HEAD
 	list_for_each_entry(link, &dev->links.consumers, s_node)
 		device_reorder_to_tail(link->consumer, NULL);
+=======
+	list_for_each_entry(link, &dev->links.consumers, s_node) {
+		if (link->flags == (DL_FLAG_SYNC_STATE_ONLY | DL_FLAG_MANAGED))
+			continue;
+		device_reorder_to_tail(link->consumer, NULL);
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return 0;
 }
@@ -165,6 +233,17 @@ void device_pm_move_to_tail(struct device *dev)
 	device_links_read_unlock(idx);
 }
 
+<<<<<<< HEAD
+=======
+#define DL_MANAGED_LINK_FLAGS (DL_FLAG_AUTOREMOVE_CONSUMER | \
+			       DL_FLAG_AUTOREMOVE_SUPPLIER | \
+			       DL_FLAG_AUTOPROBE_CONSUMER  | \
+			       DL_FLAG_SYNC_STATE_ONLY)
+
+#define DL_ADD_VALID_FLAGS (DL_MANAGED_LINK_FLAGS | DL_FLAG_STATELESS | \
+			    DL_FLAG_PM_RUNTIME | DL_FLAG_RPM_ACTIVE)
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /**
  * device_link_add - Create a link between two devices.
  * @consumer: Consumer end of the link.
@@ -179,10 +258,45 @@ void device_pm_move_to_tail(struct device *dev)
  * of the link.  If DL_FLAG_PM_RUNTIME is not set, DL_FLAG_RPM_ACTIVE will be
  * ignored.
  *
+<<<<<<< HEAD
  * If the DL_FLAG_AUTOREMOVE_CONSUMER is set, the link will be removed
  * automatically when the consumer device driver unbinds from it.
  * The combination of both DL_FLAG_AUTOREMOVE_CONSUMER and DL_FLAG_STATELESS
  * set is invalid and will cause NULL to be returned.
+=======
+ * If DL_FLAG_STATELESS is set in @flags, the caller of this function is
+ * expected to release the link returned by it directly with the help of either
+ * device_link_del() or device_link_remove().
+ *
+ * If that flag is not set, however, the caller of this function is handing the
+ * management of the link over to the driver core entirely and its return value
+ * can only be used to check whether or not the link is present.  In that case,
+ * the DL_FLAG_AUTOREMOVE_CONSUMER and DL_FLAG_AUTOREMOVE_SUPPLIER device link
+ * flags can be used to indicate to the driver core when the link can be safely
+ * deleted.  Namely, setting one of them in @flags indicates to the driver core
+ * that the link is not going to be used (by the given caller of this function)
+ * after unbinding the consumer or supplier driver, respectively, from its
+ * device, so the link can be deleted at that point.  If none of them is set,
+ * the link will be maintained until one of the devices pointed to by it (either
+ * the consumer or the supplier) is unregistered.
+ *
+ * Also, if DL_FLAG_STATELESS, DL_FLAG_AUTOREMOVE_CONSUMER and
+ * DL_FLAG_AUTOREMOVE_SUPPLIER are not set in @flags (that is, a persistent
+ * managed device link is being added), the DL_FLAG_AUTOPROBE_CONSUMER flag can
+ * be used to request the driver core to automaticall probe for a consmer
+ * driver after successfully binding a driver to the supplier device.
+ *
+ * The combination of DL_FLAG_STATELESS and one of DL_FLAG_AUTOREMOVE_CONSUMER,
+ * DL_FLAG_AUTOREMOVE_SUPPLIER, or DL_FLAG_AUTOPROBE_CONSUMER set in @flags at
+ * the same time is invalid and will cause NULL to be returned upfront.
+ * However, if a device link between the given @consumer and @supplier pair
+ * exists already when this function is called for them, the existing link will
+ * be returned regardless of its current type and status (the link's flags may
+ * be modified then).  The caller of this function is then expected to treat
+ * the link as though it has just been created, so (in particular) if
+ * DL_FLAG_STATELESS was passed in @flags, the link needs to be released
+ * explicitly when not needed any more (as stated above).
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  *
  * A side effect of the link creation is re-ordering of dpm_list and the
  * devices_kset list by moving the consumer device and all devices depending
@@ -198,35 +312,132 @@ struct device_link *device_link_add(struct device *consumer,
 {
 	struct device_link *link;
 
+<<<<<<< HEAD
 	if (!consumer || !supplier ||
 	    ((flags & DL_FLAG_STATELESS) &&
 	     (flags & DL_FLAG_AUTOREMOVE_CONSUMER)))
 		return NULL;
 
+=======
+	if (!consumer || !supplier || flags & ~DL_ADD_VALID_FLAGS ||
+	    (flags & DL_FLAG_STATELESS && flags & DL_MANAGED_LINK_FLAGS) ||
+	    (flags & DL_FLAG_SYNC_STATE_ONLY &&
+	     flags != DL_FLAG_SYNC_STATE_ONLY) ||
+	    (flags & DL_FLAG_AUTOPROBE_CONSUMER &&
+	     flags & (DL_FLAG_AUTOREMOVE_CONSUMER |
+		      DL_FLAG_AUTOREMOVE_SUPPLIER)))
+		return NULL;
+
+	if (flags & DL_FLAG_PM_RUNTIME && flags & DL_FLAG_RPM_ACTIVE) {
+		if (pm_runtime_get_sync(supplier) < 0) {
+			pm_runtime_put_noidle(supplier);
+			return NULL;
+		}
+	}
+
+	if (!(flags & DL_FLAG_STATELESS))
+		flags |= DL_FLAG_MANAGED;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	device_links_write_lock();
 	device_pm_lock();
 
 	/*
 	 * If the supplier has not been fully registered yet or there is a
+<<<<<<< HEAD
 	 * reverse dependency between the consumer and the supplier already in
 	 * the graph, return NULL.
 	 */
 	if (!device_pm_initialized(supplier)
 	    || device_is_dependent(consumer, supplier)) {
+=======
+	 * reverse (non-SYNC_STATE_ONLY) dependency between the consumer and
+	 * the supplier already in the graph, return NULL. If the link is a
+	 * SYNC_STATE_ONLY link, we don't check for reverse dependencies
+	 * because it only affects sync_state() callbacks.
+	 */
+	if (!device_pm_initialized(supplier)
+	    || (!(flags & DL_FLAG_SYNC_STATE_ONLY) &&
+		  device_is_dependent(consumer, supplier))) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		link = NULL;
 		goto out;
 	}
 
+<<<<<<< HEAD
 	list_for_each_entry(link, &supplier->links.consumers, s_node)
 		if (link->consumer == consumer) {
 			kref_get(&link->kref);
 			goto out;
 		}
 
+=======
+	/*
+	 * DL_FLAG_AUTOREMOVE_SUPPLIER indicates that the link will be needed
+	 * longer than for DL_FLAG_AUTOREMOVE_CONSUMER and setting them both
+	 * together doesn't make sense, so prefer DL_FLAG_AUTOREMOVE_SUPPLIER.
+	 */
+	if (flags & DL_FLAG_AUTOREMOVE_SUPPLIER)
+		flags &= ~DL_FLAG_AUTOREMOVE_CONSUMER;
+
+	list_for_each_entry(link, &supplier->links.consumers, s_node) {
+		if (link->consumer != consumer)
+			continue;
+
+		if (flags & DL_FLAG_PM_RUNTIME) {
+			if (!(link->flags & DL_FLAG_PM_RUNTIME)) {
+				pm_runtime_new_link(consumer);
+				link->flags |= DL_FLAG_PM_RUNTIME;
+			}
+			if (flags & DL_FLAG_RPM_ACTIVE)
+				refcount_inc(&link->rpm_active);
+		}
+
+		if (flags & DL_FLAG_STATELESS) {
+			kref_get(&link->kref);
+			if (link->flags & DL_FLAG_SYNC_STATE_ONLY &&
+			    !(link->flags & DL_FLAG_STATELESS)) {
+				link->flags |= DL_FLAG_STATELESS;
+				goto reorder;
+			} else {
+				goto out;
+			}
+		}
+
+		/*
+		 * If the life time of the link following from the new flags is
+		 * longer than indicated by the flags of the existing link,
+		 * update the existing link to stay around longer.
+		 */
+		if (flags & DL_FLAG_AUTOREMOVE_SUPPLIER) {
+			if (link->flags & DL_FLAG_AUTOREMOVE_CONSUMER) {
+				link->flags &= ~DL_FLAG_AUTOREMOVE_CONSUMER;
+				link->flags |= DL_FLAG_AUTOREMOVE_SUPPLIER;
+			}
+		} else if (!(flags & DL_FLAG_AUTOREMOVE_CONSUMER)) {
+			link->flags &= ~(DL_FLAG_AUTOREMOVE_CONSUMER |
+					 DL_FLAG_AUTOREMOVE_SUPPLIER);
+		}
+		if (!(link->flags & DL_FLAG_MANAGED)) {
+			kref_get(&link->kref);
+			link->flags |= DL_FLAG_MANAGED;
+			device_link_init_status(link, consumer, supplier);
+		}
+		if (link->flags & DL_FLAG_SYNC_STATE_ONLY &&
+		    !(flags & DL_FLAG_SYNC_STATE_ONLY)) {
+			link->flags &= ~DL_FLAG_SYNC_STATE_ONLY;
+			goto reorder;
+		}
+
+		goto out;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	link = kzalloc(sizeof(*link), GFP_KERNEL);
 	if (!link)
 		goto out;
 
+<<<<<<< HEAD
 	if (flags & DL_FLAG_PM_RUNTIME) {
 		if (flags & DL_FLAG_RPM_ACTIVE) {
 			if (pm_runtime_get_sync(supplier) < 0) {
@@ -246,6 +457,17 @@ struct device_link *device_link_add(struct device *consumer,
 		if (consumer->links.status == DL_DEV_PROBING)
 			pm_runtime_get_noresume(supplier);
 	}
+=======
+	refcount_set(&link->rpm_active, 1);
+
+	if (flags & DL_FLAG_PM_RUNTIME) {
+		if (flags & DL_FLAG_RPM_ACTIVE)
+			refcount_inc(&link->rpm_active);
+
+		pm_runtime_new_link(consumer);
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	get_device(supplier);
 	link->supplier = supplier;
 	INIT_LIST_HEAD(&link->s_node);
@@ -256,6 +478,7 @@ struct device_link *device_link_add(struct device *consumer,
 	kref_init(&link->kref);
 
 	/* Determine the initial link state. */
+<<<<<<< HEAD
 	if (flags & DL_FLAG_STATELESS) {
 		link->status = DL_STATE_NONE;
 	} else {
@@ -290,6 +513,28 @@ struct device_link *device_link_add(struct device *consumer,
 		}
 	}
 
+=======
+	if (flags & DL_FLAG_STATELESS)
+		link->status = DL_STATE_NONE;
+	else
+		device_link_init_status(link, consumer, supplier);
+
+	/*
+	 * Some callers expect the link creation during consumer driver probe to
+	 * resume the supplier even without DL_FLAG_RPM_ACTIVE.
+	 */
+	if (link->status == DL_STATE_CONSUMER_PROBE &&
+	    flags & DL_FLAG_PM_RUNTIME)
+		pm_runtime_resume(supplier);
+
+	if (flags & DL_FLAG_SYNC_STATE_ONLY) {
+		dev_dbg(consumer,
+			"Linked as a sync state only consumer to %s\n",
+			dev_name(supplier));
+		goto out;
+	}
+reorder:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/*
 	 * Move the consumer and all of the devices depending on it to the end
 	 * of dpm_list and the devices_kset list.
@@ -307,12 +552,95 @@ struct device_link *device_link_add(struct device *consumer,
  out:
 	device_pm_unlock();
 	device_links_write_unlock();
+<<<<<<< HEAD
+=======
+
+	if ((flags & DL_FLAG_PM_RUNTIME && flags & DL_FLAG_RPM_ACTIVE) && !link)
+		pm_runtime_put(supplier);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return link;
 }
 EXPORT_SYMBOL_GPL(device_link_add);
 
+<<<<<<< HEAD
 static void device_link_free(struct device_link *link)
 {
+=======
+/**
+ * device_link_wait_for_supplier - Add device to wait_for_suppliers list
+ * @consumer: Consumer device
+ *
+ * Marks the @consumer device as waiting for suppliers to become available by
+ * adding it to the wait_for_suppliers list. The consumer device will never be
+ * probed until it's removed from the wait_for_suppliers list.
+ *
+ * The caller is responsible for adding the links to the supplier devices once
+ * they are available and removing the @consumer device from the
+ * wait_for_suppliers list once links to all the suppliers have been created.
+ *
+ * This function is NOT meant to be called from the probe function of the
+ * consumer but rather from code that creates/adds the consumer device.
+ */
+static void device_link_wait_for_supplier(struct device *consumer,
+					  bool need_for_probe)
+{
+	mutex_lock(&wfs_lock);
+	list_add_tail(&consumer->links.needs_suppliers, &wait_for_suppliers);
+	consumer->links.need_for_probe = need_for_probe;
+	mutex_unlock(&wfs_lock);
+}
+
+static void device_link_wait_for_mandatory_supplier(struct device *consumer)
+{
+	device_link_wait_for_supplier(consumer, true);
+}
+
+static void device_link_wait_for_optional_supplier(struct device *consumer)
+{
+	device_link_wait_for_supplier(consumer, false);
+}
+
+/**
+ * device_link_add_missing_supplier_links - Add links from consumer devices to
+ *					    supplier devices, leaving any
+ *					    consumer with inactive suppliers on
+ *					    the wait_for_suppliers list
+ *
+ * Loops through all consumers waiting on suppliers and tries to add all their
+ * supplier links. If that succeeds, the consumer device is removed from
+ * wait_for_suppliers list. Otherwise, they are left in the wait_for_suppliers
+ * list.  Devices left on the wait_for_suppliers list will not be probed.
+ *
+ * The fwnode add_links callback is expected to return 0 if it has found and
+ * added all the supplier links for the consumer device. It should return an
+ * error if it isn't able to do so.
+ *
+ * The caller of device_link_wait_for_supplier() is expected to call this once
+ * it's aware of potential suppliers becoming available.
+ */
+static void device_link_add_missing_supplier_links(void)
+{
+	struct device *dev, *tmp;
+
+	mutex_lock(&wfs_lock);
+	list_for_each_entry_safe(dev, tmp, &wait_for_suppliers,
+				 links.needs_suppliers) {
+		int ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
+		if (!ret)
+			list_del_init(&dev->links.needs_suppliers);
+		else if (ret != -ENODEV)
+			dev->links.need_for_probe = false;
+	}
+	mutex_unlock(&wfs_lock);
+}
+
+static void device_link_free(struct device_link *link)
+{
+	while (refcount_dec_not_one(&link->rpm_active))
+		pm_runtime_put(link->supplier);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	put_device(link->consumer);
 	put_device(link->supplier);
 	kfree(link);
@@ -355,8 +683,21 @@ static void __device_link_del(struct kref *kref)
 }
 #endif /* !CONFIG_SRCU */
 
+<<<<<<< HEAD
 /**
  * device_link_del - Delete a link between two devices.
+=======
+static void device_link_put_kref(struct device_link *link)
+{
+	if (link->flags & DL_FLAG_STATELESS)
+		kref_put(&link->kref, __device_link_del);
+	else
+		WARN(1, "Unable to drop a managed device link reference\n");
+}
+
+/**
+ * device_link_del - Delete a stateless link between two devices.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * @link: Device link to delete.
  *
  * The caller must ensure proper synchronization of this function with runtime
@@ -368,14 +709,22 @@ void device_link_del(struct device_link *link)
 {
 	device_links_write_lock();
 	device_pm_lock();
+<<<<<<< HEAD
 	kref_put(&link->kref, __device_link_del);
+=======
+	device_link_put_kref(link);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	device_pm_unlock();
 	device_links_write_unlock();
 }
 EXPORT_SYMBOL_GPL(device_link_del);
 
 /**
+<<<<<<< HEAD
  * device_link_remove - remove a link between two devices.
+=======
+ * device_link_remove - Delete a stateless link between two devices.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * @consumer: Consumer end of the link.
  * @supplier: Supplier end of the link.
  *
@@ -394,7 +743,11 @@ void device_link_remove(void *consumer, struct device *supplier)
 
 	list_for_each_entry(link, &supplier->links.consumers, s_node) {
 		if (link->consumer == consumer) {
+<<<<<<< HEAD
 			kref_put(&link->kref, __device_link_del);
+=======
+			device_link_put_kref(link);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			break;
 		}
 	}
@@ -427,17 +780,41 @@ static void device_links_missing_supplier(struct device *dev)
  * mark the link as "consumer probe in progress" to make the supplier removal
  * wait for us to complete (or bad things may happen).
  *
+<<<<<<< HEAD
  * Links with the DL_FLAG_STATELESS flag set are ignored.
+=======
+ * Links without the DL_FLAG_MANAGED flag set are ignored.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 int device_links_check_suppliers(struct device *dev)
 {
 	struct device_link *link;
 	int ret = 0;
 
+<<<<<<< HEAD
 	device_links_write_lock();
 
 	list_for_each_entry(link, &dev->links.suppliers, c_node) {
 		if (link->flags & DL_FLAG_STATELESS)
+=======
+	/*
+	 * Device waiting for supplier to become available is not allowed to
+	 * probe.
+	 */
+	mutex_lock(&wfs_lock);
+	if (!list_empty(&dev->links.needs_suppliers) &&
+	    dev->links.need_for_probe) {
+		mutex_unlock(&wfs_lock);
+		return -EPROBE_DEFER;
+	}
+	mutex_unlock(&wfs_lock);
+
+	device_links_write_lock();
+
+	list_for_each_entry(link, &dev->links.suppliers, c_node) {
+		if (!(link->flags & DL_FLAG_MANAGED) ||
+		    link->flags & DL_FLAG_SYNC_STATE_ONLY)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			continue;
 
 		if (link->status != DL_STATE_AVAILABLE) {
@@ -454,6 +831,137 @@ int device_links_check_suppliers(struct device *dev)
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * __device_links_queue_sync_state - Queue a device for sync_state() callback
+ * @dev: Device to call sync_state() on
+ * @list: List head to queue the @dev on
+ *
+ * Queues a device for a sync_state() callback when the device links write lock
+ * isn't held. This allows the sync_state() execution flow to use device links
+ * APIs.  The caller must ensure this function is called with
+ * device_links_write_lock() held.
+ *
+ * This function does a get_device() to make sure the device is not freed while
+ * on this list.
+ *
+ * So the caller must also ensure that device_links_flush_sync_list() is called
+ * as soon as the caller releases device_links_write_lock().  This is necessary
+ * to make sure the sync_state() is called in a timely fashion and the
+ * put_device() is called on this device.
+ */
+static void __device_links_queue_sync_state(struct device *dev,
+					    struct list_head *list)
+{
+	struct device_link *link;
+
+	if (dev->state_synced)
+		return;
+
+	list_for_each_entry(link, &dev->links.consumers, s_node) {
+		if (!(link->flags & DL_FLAG_MANAGED))
+			continue;
+		if (link->status != DL_STATE_ACTIVE)
+			return;
+	}
+
+	/*
+	 * Set the flag here to avoid adding the same device to a list more
+	 * than once. This can happen if new consumers get added to the device
+	 * and probed before the list is flushed.
+	 */
+	dev->state_synced = true;
+
+	if (WARN_ON(!list_empty(&dev->links.defer_sync)))
+		return;
+
+	get_device(dev);
+	list_add_tail(&dev->links.defer_sync, list);
+}
+
+/**
+ * device_links_flush_sync_list - Call sync_state() on a list of devices
+ * @list: List of devices to call sync_state() on
+ * @dont_lock_dev: Device for which lock is already held by the caller
+ *
+ * Calls sync_state() on all the devices that have been queued for it. This
+ * function is used in conjunction with __device_links_queue_sync_state(). The
+ * @dont_lock_dev parameter is useful when this function is called from a
+ * context where a device lock is already held.
+ */
+static void device_links_flush_sync_list(struct list_head *list,
+					 struct device *dont_lock_dev)
+{
+	struct device *dev, *tmp;
+
+	list_for_each_entry_safe(dev, tmp, list, links.defer_sync) {
+		list_del_init(&dev->links.defer_sync);
+
+		if (dev != dont_lock_dev)
+			device_lock(dev);
+
+		if (dev->bus->sync_state)
+			dev->bus->sync_state(dev);
+		else if (dev->driver && dev->driver->sync_state)
+			dev->driver->sync_state(dev);
+
+		if (dev != dont_lock_dev)
+			device_unlock(dev);
+
+		put_device(dev);
+	}
+}
+
+void device_links_supplier_sync_state_pause(void)
+{
+	device_links_write_lock();
+	defer_sync_state_count++;
+	device_links_write_unlock();
+}
+
+void device_links_supplier_sync_state_resume(void)
+{
+	struct device *dev, *tmp;
+	LIST_HEAD(sync_list);
+
+	device_links_write_lock();
+	if (!defer_sync_state_count) {
+		WARN(true, "Unmatched sync_state pause/resume!");
+		goto out;
+	}
+	defer_sync_state_count--;
+	if (defer_sync_state_count)
+		goto out;
+
+	list_for_each_entry_safe(dev, tmp, &deferred_sync, links.defer_sync) {
+		/*
+		 * Delete from deferred_sync list before queuing it to
+		 * sync_list because defer_sync is used for both lists.
+		 */
+		list_del_init(&dev->links.defer_sync);
+		__device_links_queue_sync_state(dev, &sync_list);
+	}
+out:
+	device_links_write_unlock();
+
+	device_links_flush_sync_list(&sync_list, NULL);
+}
+
+static int sync_state_resume_initcall(void)
+{
+	device_links_supplier_sync_state_resume();
+	return 0;
+}
+late_initcall(sync_state_resume_initcall);
+
+static void __device_links_supplier_defer_sync(struct device *sup)
+{
+	if (list_empty(&sup->links.defer_sync))
+		list_add_tail(&sup->links.defer_sync, &deferred_sync);
+}
+
+/**
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * device_links_driver_bound - Update device links after probing its driver.
  * @dev: Device to update the links for.
  *
@@ -462,33 +970,100 @@ int device_links_check_suppliers(struct device *dev)
  *
  * Also change the status of @dev's links to suppliers to "active".
  *
+<<<<<<< HEAD
  * Links with the DL_FLAG_STATELESS flag set are ignored.
+=======
+ * Links without the DL_FLAG_MANAGED flag set are ignored.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 void device_links_driver_bound(struct device *dev)
 {
 	struct device_link *link;
+<<<<<<< HEAD
+=======
+	LIST_HEAD(sync_list);
+
+	/*
+	 * If a device probes successfully, it's expected to have created all
+	 * the device links it needs to or make new device links as it needs
+	 * them. So, it no longer needs to wait on any suppliers.
+	 */
+	mutex_lock(&wfs_lock);
+	list_del_init(&dev->links.needs_suppliers);
+	mutex_unlock(&wfs_lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	device_links_write_lock();
 
 	list_for_each_entry(link, &dev->links.consumers, s_node) {
+<<<<<<< HEAD
 		if (link->flags & DL_FLAG_STATELESS)
+=======
+		if (!(link->flags & DL_FLAG_MANAGED))
+			continue;
+
+		/*
+		 * Links created during consumer probe may be in the "consumer
+		 * probe" state to start with if the supplier is still probing
+		 * when they are created and they may become "active" if the
+		 * consumer probe returns first.  Skip them here.
+		 */
+		if (link->status == DL_STATE_CONSUMER_PROBE ||
+		    link->status == DL_STATE_ACTIVE)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			continue;
 
 		WARN_ON(link->status != DL_STATE_DORMANT);
 		WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
+<<<<<<< HEAD
 	}
 
 	list_for_each_entry(link, &dev->links.suppliers, c_node) {
 		if (link->flags & DL_FLAG_STATELESS)
+=======
+
+		if (link->flags & DL_FLAG_AUTOPROBE_CONSUMER)
+			driver_deferred_probe_add(link->consumer);
+	}
+
+	if (defer_sync_state_count)
+		__device_links_supplier_defer_sync(dev);
+	else
+		__device_links_queue_sync_state(dev, &sync_list);
+
+	list_for_each_entry(link, &dev->links.suppliers, c_node) {
+		if (!(link->flags & DL_FLAG_MANAGED))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			continue;
 
 		WARN_ON(link->status != DL_STATE_CONSUMER_PROBE);
 		WRITE_ONCE(link->status, DL_STATE_ACTIVE);
+<<<<<<< HEAD
+=======
+
+		if (defer_sync_state_count)
+			__device_links_supplier_defer_sync(link->supplier);
+		else
+			__device_links_queue_sync_state(link->supplier,
+							&sync_list);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	dev->links.status = DL_DEV_DRIVER_BOUND;
 
 	device_links_write_unlock();
+<<<<<<< HEAD
+=======
+
+	device_links_flush_sync_list(&sync_list, dev);
+}
+
+static void device_link_drop_managed(struct device_link *link)
+{
+	link->flags &= ~DL_FLAG_MANAGED;
+	WRITE_ONCE(link->status, DL_STATE_NONE);
+	kref_put(&link->kref, __device_link_del);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /**
@@ -501,29 +1076,80 @@ void device_links_driver_bound(struct device *dev)
  * unless they already are in the "supplier unbind in progress" state in which
  * case they need not be updated.
  *
+<<<<<<< HEAD
  * Links with the DL_FLAG_STATELESS flag set are ignored.
+=======
+ * Links without the DL_FLAG_MANAGED flag set are ignored.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 static void __device_links_no_driver(struct device *dev)
 {
 	struct device_link *link, *ln;
 
 	list_for_each_entry_safe_reverse(link, ln, &dev->links.suppliers, c_node) {
+<<<<<<< HEAD
 		if (link->flags & DL_FLAG_STATELESS)
 			continue;
 
 		if (link->flags & DL_FLAG_AUTOREMOVE_CONSUMER)
 			kref_put(&link->kref, __device_link_del);
 		else if (link->status != DL_STATE_SUPPLIER_UNBIND)
+=======
+		if (!(link->flags & DL_FLAG_MANAGED))
+			continue;
+
+		if (link->flags & DL_FLAG_AUTOREMOVE_CONSUMER)
+			device_link_drop_managed(link);
+		else if (link->status == DL_STATE_CONSUMER_PROBE ||
+			 link->status == DL_STATE_ACTIVE)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			WRITE_ONCE(link->status, DL_STATE_AVAILABLE);
 	}
 
 	dev->links.status = DL_DEV_NO_DRIVER;
 }
 
+<<<<<<< HEAD
 void device_links_no_driver(struct device *dev)
 {
 	device_links_write_lock();
 	__device_links_no_driver(dev);
+=======
+/**
+ * device_links_no_driver - Update links after failing driver probe.
+ * @dev: Device whose driver has just failed to probe.
+ *
+ * Clean up leftover links to consumers for @dev and invoke
+ * %__device_links_no_driver() to update links to suppliers for it as
+ * appropriate.
+ *
+ * Links without the DL_FLAG_MANAGED flag set are ignored.
+ */
+void device_links_no_driver(struct device *dev)
+{
+	struct device_link *link;
+
+	device_links_write_lock();
+
+	list_for_each_entry(link, &dev->links.consumers, s_node) {
+		if (!(link->flags & DL_FLAG_MANAGED))
+			continue;
+
+		/*
+		 * The probe has failed, so if the status of the link is
+		 * "consumer probe" or "active", it must have been added by
+		 * a probing consumer while this device was still probing.
+		 * Change its state to "dormant", as it represents a valid
+		 * relationship, but it is not functionally meaningful.
+		 */
+		if (link->status == DL_STATE_CONSUMER_PROBE ||
+		    link->status == DL_STATE_ACTIVE)
+			WRITE_ONCE(link->status, DL_STATE_DORMANT);
+	}
+
+	__device_links_no_driver(dev);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	device_links_write_unlock();
 }
 
@@ -535,6 +1161,7 @@ void device_links_no_driver(struct device *dev)
  * invoke %__device_links_no_driver() to update links to suppliers for it as
  * appropriate.
  *
+<<<<<<< HEAD
  * Links with the DL_FLAG_STATELESS flag set are ignored.
  */
 void device_links_driver_cleanup(struct device *dev)
@@ -545,6 +1172,18 @@ void device_links_driver_cleanup(struct device *dev)
 
 	list_for_each_entry(link, &dev->links.consumers, s_node) {
 		if (link->flags & DL_FLAG_STATELESS)
+=======
+ * Links without the DL_FLAG_MANAGED flag set are ignored.
+ */
+void device_links_driver_cleanup(struct device *dev)
+{
+	struct device_link *link, *ln;
+
+	device_links_write_lock();
+
+	list_for_each_entry_safe(link, ln, &dev->links.consumers, s_node) {
+		if (!(link->flags & DL_FLAG_MANAGED))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			continue;
 
 		WARN_ON(link->flags & DL_FLAG_AUTOREMOVE_CONSUMER);
@@ -557,11 +1196,19 @@ void device_links_driver_cleanup(struct device *dev)
 		 */
 		if (link->status == DL_STATE_SUPPLIER_UNBIND &&
 		    link->flags & DL_FLAG_AUTOREMOVE_SUPPLIER)
+<<<<<<< HEAD
 			kref_put(&link->kref, __device_link_del);
+=======
+			device_link_drop_managed(link);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		WRITE_ONCE(link->status, DL_STATE_DORMANT);
 	}
 
+<<<<<<< HEAD
+=======
+	list_del_init(&dev->links.defer_sync);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	__device_links_no_driver(dev);
 
 	device_links_write_unlock();
@@ -579,7 +1226,11 @@ void device_links_driver_cleanup(struct device *dev)
  *
  * Return 'false' if there are no probing or active consumers.
  *
+<<<<<<< HEAD
  * Links with the DL_FLAG_STATELESS flag set are ignored.
+=======
+ * Links without the DL_FLAG_MANAGED flag set are ignored.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 bool device_links_busy(struct device *dev)
 {
@@ -589,7 +1240,11 @@ bool device_links_busy(struct device *dev)
 	device_links_write_lock();
 
 	list_for_each_entry(link, &dev->links.consumers, s_node) {
+<<<<<<< HEAD
 		if (link->flags & DL_FLAG_STATELESS)
+=======
+		if (!(link->flags & DL_FLAG_MANAGED))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			continue;
 
 		if (link->status == DL_STATE_CONSUMER_PROBE
@@ -619,7 +1274,11 @@ bool device_links_busy(struct device *dev)
  * driver to unbind and start over (the consumer will not re-probe as we have
  * changed the state of the link already).
  *
+<<<<<<< HEAD
  * Links with the DL_FLAG_STATELESS flag set are ignored.
+=======
+ * Links without the DL_FLAG_MANAGED flag set are ignored.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 void device_links_unbind_consumers(struct device *dev)
 {
@@ -631,7 +1290,12 @@ void device_links_unbind_consumers(struct device *dev)
 	list_for_each_entry(link, &dev->links.consumers, s_node) {
 		enum device_link_state status;
 
+<<<<<<< HEAD
 		if (link->flags & DL_FLAG_STATELESS)
+=======
+		if (!(link->flags & DL_FLAG_MANAGED) ||
+		    link->flags & DL_FLAG_SYNC_STATE_ONLY)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			continue;
 
 		status = link->status;
@@ -667,6 +1331,13 @@ static void device_links_purge(struct device *dev)
 {
 	struct device_link *link, *ln;
 
+<<<<<<< HEAD
+=======
+	mutex_lock(&wfs_lock);
+	list_del(&dev->links.needs_suppliers);
+	mutex_unlock(&wfs_lock);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/*
 	 * Delete all of the remaining links from this device to any other
 	 * devices (either consumers or suppliers).
@@ -1507,6 +2178,11 @@ void device_initialize(struct device *dev)
 #endif
 	INIT_LIST_HEAD(&dev->links.consumers);
 	INIT_LIST_HEAD(&dev->links.suppliers);
+<<<<<<< HEAD
+=======
+	INIT_LIST_HEAD(&dev->links.needs_suppliers);
+	INIT_LIST_HEAD(&dev->links.defer_sync);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	dev->links.status = DL_DEV_NO_DRIVER;
 }
 EXPORT_SYMBOL_GPL(device_initialize);
@@ -1890,7 +2566,11 @@ int device_add(struct device *dev)
 	struct device *parent;
 	struct kobject *kobj;
 	struct class_interface *class_intf;
+<<<<<<< HEAD
 	int error = -EINVAL;
+=======
+	int error = -EINVAL, fw_ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct kobject *glue_dir = NULL;
 
 	dev = get_device(dev);
@@ -1987,6 +2667,35 @@ int device_add(struct device *dev)
 					     BUS_NOTIFY_ADD_DEVICE, dev);
 
 	kobject_uevent(&dev->kobj, KOBJ_ADD);
+<<<<<<< HEAD
+=======
+
+	if (dev->fwnode && !dev->fwnode->dev)
+		dev->fwnode->dev = dev;
+
+	/*
+	 * Check if any of the other devices (consumers) have been waiting for
+	 * this device (supplier) to be added so that they can create a device
+	 * link to it.
+	 *
+	 * This needs to happen after device_pm_add() because device_link_add()
+	 * requires the supplier be registered before it's called.
+	 *
+	 * But this also needs to happe before bus_probe_device() to make sure
+	 * waiting consumers can link to it before the driver is bound to the
+	 * device and the driver sync_state callback is called for this device.
+	 */
+	device_link_add_missing_supplier_links();
+
+	if (fwnode_has_op(dev->fwnode, add_links)) {
+		fw_ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
+		if (fw_ret == -ENODEV)
+			device_link_wait_for_mandatory_supplier(dev);
+		else if (fw_ret)
+			device_link_wait_for_optional_supplier(dev);
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	bus_probe_device(dev);
 	if (parent)
 		klist_add_tail(&dev->p->knode_parent,
@@ -2129,6 +2838,12 @@ void device_del(struct device *dev)
 	kill_device(dev);
 	device_unlock(dev);
 
+<<<<<<< HEAD
+=======
+	if (dev->fwnode && dev->fwnode->dev == dev)
+		dev->fwnode->dev = NULL;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Notify clients of device removal.  This call must come
 	 * before dpm_sysfs_remove().
 	 */

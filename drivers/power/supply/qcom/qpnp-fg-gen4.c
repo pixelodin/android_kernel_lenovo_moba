@@ -818,6 +818,7 @@ static int fg_gen4_get_battery_temp(struct fg_dev *fg, int *val)
 	 */
 	*val = sign_extend32(buf, 9) * 100 / 40;
 
+<<<<<<< HEAD
 	if (*val <= 100)
 		*val = *val - 15;
 	else if (*val <= 110)
@@ -848,6 +849,8 @@ static int fg_gen4_get_battery_temp(struct fg_dev *fg, int *val)
 	if (*val > 580)
 		pr_err("read BATT_TEMP buf=0x%04X, temp=%d\n", buf, *val);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 }
 
@@ -4601,6 +4604,12 @@ static int fg_psy_get_property(struct power_supply *psy,
 	case POWER_SUPPLY_PROP_TIME_TO_FULL_AVG:
 		rc = ttf_get_time_to_full(chip->ttf, &pval->intval);
 		break;
+<<<<<<< HEAD
+=======
+	case POWER_SUPPLY_PROP_TIME_TO_FULL_NOW:
+		rc = ttf_get_time_to_full(chip->ttf, &pval->intval);
+		break;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	case POWER_SUPPLY_PROP_TIME_TO_EMPTY_AVG:
 		rc = ttf_get_time_to_empty(chip->ttf, &pval->intval);
 		break;
@@ -4785,6 +4794,10 @@ static enum power_supply_property fg_psy_props[] = {
 	POWER_SUPPLY_PROP_DEBUG_BATTERY,
 	POWER_SUPPLY_PROP_CONSTANT_CHARGE_VOLTAGE,
 	POWER_SUPPLY_PROP_TIME_TO_FULL_AVG,
+<<<<<<< HEAD
+=======
+	POWER_SUPPLY_PROP_TIME_TO_FULL_NOW,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	POWER_SUPPLY_PROP_TIME_TO_EMPTY_AVG,
 	POWER_SUPPLY_PROP_CC_STEP,
 	POWER_SUPPLY_PROP_CC_STEP_SEL,
@@ -6403,12 +6416,16 @@ static int fg_gen4_probe(struct platform_device *pdev)
 	/* Keep MEM_ATTN_IRQ disabled until we require it */
 	vote(chip->mem_attn_irq_en_votable, MEM_ATTN_IRQ_VOTER, false, 0);
 
+<<<<<<< HEAD
 	rc = fg_debugfs_create(fg);
 	if (rc < 0) {
 		dev_err(fg->dev, "Error in creating debugfs entries, rc:%d\n",
 			rc);
 		goto exit;
 	}
+=======
+	fg_debugfs_create(fg);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	rc = sysfs_create_groups(&fg->dev->kobj, fg_groups);
 	if (rc < 0) {

@@ -8,6 +8,10 @@
 
 #include <linux/netdevice.h>
 #include <linux/skbuff.h>
+<<<<<<< HEAD
+=======
+#include <linux/timer.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define MAX_MQ_NUM 16
 #define MAX_CLIENT_NUM 2
@@ -26,6 +30,11 @@
 extern int dfc_mode;
 extern int dfc_qmap;
 
+<<<<<<< HEAD
+=======
+struct qos_info;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct rmnet_bearer_map {
 	struct list_head list;
 	u8 bearer_id;
@@ -44,6 +53,14 @@ struct rmnet_bearer_map {
 	u32 ack_txid;
 	u32 mq_idx;
 	u32 ack_mq_idx;
+<<<<<<< HEAD
+=======
+	struct qos_info *qos;
+	struct timer_list watchdog;
+	bool watchdog_started;
+	bool watchdog_quit;
+	u32 watchdog_expire_cnt;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct rmnet_flow_map {
@@ -69,11 +86,19 @@ struct qos_info {
 	struct list_head list;
 	u8 mux_id;
 	struct net_device *real_dev;
+<<<<<<< HEAD
+=======
+	struct net_device *vnd_dev;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct list_head flow_head;
 	struct list_head bearer_head;
 	struct mq_map mq[MAX_MQ_NUM];
 	u32 tran_num;
 	spinlock_t qos_lock;
+<<<<<<< HEAD
+=======
+	struct rmnet_bearer_map *removed_bearer;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct qmi_info {
@@ -144,6 +169,14 @@ void dfc_qmap_send_ack(struct qos_info *qos, u8 bearer_id, u16 seq, u8 type);
 
 struct rmnet_bearer_map *qmi_rmnet_get_bearer_noref(struct qos_info *qos_info,
 						    u8 bearer_id);
+<<<<<<< HEAD
+=======
+
+void qmi_rmnet_watchdog_add(struct rmnet_bearer_map *bearer);
+
+void qmi_rmnet_watchdog_remove(struct rmnet_bearer_map *bearer);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #else
 static inline struct rmnet_flow_map *
 qmi_rmnet_get_flow_map(struct qos_info *qos_info,
@@ -187,6 +220,13 @@ dfc_qmap_client_init(void *port, int index, struct svc_info *psvc,
 static inline void dfc_qmap_client_exit(void *dfc_data)
 {
 }
+<<<<<<< HEAD
+=======
+
+static inline void qmi_rmnet_watchdog_remove(struct rmnet_bearer_map *bearer)
+{
+}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif
 
 #ifdef CONFIG_QCOM_QMI_POWER_COLLAPSE

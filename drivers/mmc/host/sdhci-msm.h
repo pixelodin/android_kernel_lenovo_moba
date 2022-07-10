@@ -104,6 +104,11 @@ struct sdhci_msm_slot_reg_data {
 	struct sdhci_msm_reg_data *vdd_data;
 	 /* keeps VDD IO regulator info */
 	struct sdhci_msm_reg_data *vdd_io_data;
+<<<<<<< HEAD
+=======
+	 /* Keeps VDD IO parent regulator info*/
+	struct sdhci_msm_reg_data *vdd_io_bias_data;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct sdhci_msm_gpio {
@@ -205,6 +210,10 @@ struct sdhci_msm_pltfm_data {
 	u32 *sup_clk_table;
 	unsigned char sup_clk_cnt;
 	int sdiowakeup_irq;
+<<<<<<< HEAD
+=======
+	int testbus_trigger_irq;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct sdhci_msm_pm_qos_data pm_qos_data;
 	u32 *bus_clk_table;
 	unsigned char bus_clk_cnt;
@@ -264,6 +273,7 @@ struct sdhci_msm_debug_data {
 	struct sdhci_host copy_host;
 };
 
+<<<<<<< HEAD
 struct sdhci_msm_ice_data {
 	struct qcom_ice_variant_ops *vops;
 	struct platform_device *pdev;
@@ -275,6 +285,11 @@ struct sdhci_msm_host {
 	void __iomem *core_mem;    /* MSM SDCC mapped address */
 	void __iomem *cryptoio;    /* ICE HCI mapped address */
 	bool ice_hci_support;
+=======
+struct sdhci_msm_host {
+	struct platform_device	*pdev;
+	void __iomem *core_mem;    /* MSM SDCC mapped address */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int	pwr_irq;	/* power irq */
 	struct clk	 *clk;     /* main SD/MMC bus clock */
 	struct clk	 *pclk;    /* SDHC peripheral bus clock */
@@ -294,6 +309,10 @@ struct sdhci_msm_host {
 	struct completion pwr_irq_completion;
 	struct sdhci_msm_bus_vote msm_bus_vote;
 	struct device_attribute	polling;
+<<<<<<< HEAD
+=======
+	struct device_attribute mask_and_match;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u32 clk_rate; /* Keeps track of current clock rate that is set */
 	bool tuning_done;
 	bool calibration_done;
@@ -325,7 +344,10 @@ struct sdhci_msm_host {
 	int soc_min_rev;
 	struct workqueue_struct *pm_qos_wq;
 	struct sdhci_msm_dll_hsr *dll_hsr;
+<<<<<<< HEAD
 	struct sdhci_msm_ice_data ice;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u32 ice_clk_rate;
 	bool debug_mode_enabled;
 	bool reg_store;

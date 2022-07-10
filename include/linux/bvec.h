@@ -44,7 +44,10 @@ struct bvec_iter {
 
 	unsigned int            bi_bvec_done;	/* number of bytes completed in
 						   current bvec */
+<<<<<<< HEAD
 	u64			bi_dun;		/* DUN setting for bio */
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 /*

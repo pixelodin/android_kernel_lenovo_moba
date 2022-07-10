@@ -3,6 +3,10 @@
  *
  * Copyright (C) 2012-2016 Synaptics Incorporated. All rights reserved.
  *
+<<<<<<< HEAD
+=======
+ * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * Copyright (C) 2012 Alexandra Chin <alexandra.chin@tw.synaptics.com>
  * Copyright (C) 2012 Scott Lin <scott.lin@tw.synaptics.com>
  *
@@ -42,6 +46,7 @@
 #include <linux/platform_device.h>
 #include <linux/input/synaptics_dsx.h>
 #include "synaptics_dsx_core.h"
+<<<<<<< HEAD
 #include <linux/seq_file.h>
 #include <asm/uaccess.h>
 
@@ -50,6 +55,11 @@
 #define RAWDATA_TEST_CSV_FILE "/sdcard/tpdata/RawdataTest.csv"
 #define TOUCH_KEY_NUM 0
 
+=======
+
+#define SYSFS_FOLDER_NAME "f54"
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define GET_REPORT_TIMEOUT_S 3
 #define CALIBRATION_TIMEOUT_S 10
 #define COMMAND_TIMEOUT_100MS 20
@@ -194,7 +204,10 @@
 #define CONTROL_156_SIZE 1
 #define CONTROL_157_158_SIZE 2
 #define CONTROL_163_SIZE 1
+<<<<<<< HEAD
 #define CONTROL_164_SIZE 1
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define CONTROL_165_SIZE 1
 #define CONTROL_166_SIZE 1
 #define CONTROL_167_SIZE 1
@@ -214,6 +227,7 @@
 #define CONTROL_186_SIZE 1
 #define CONTROL_187_SIZE 1
 #define CONTROL_188_SIZE 1
+<<<<<<< HEAD
 #define CONTROL_189_SIZE 1
 #define CONTROL_190_SIZE 1
 #define CONTROL_191_SIZE 1
@@ -288,46 +302,78 @@
 #define check_bit(var,pos) ((var) & (1<<(pos)))
 
 #define concat(a, b) a##b
+=======
+
+#define HIGH_RESISTANCE_DATA_SIZE 6
+#define FULL_RAW_CAP_MIN_MAX_DATA_SIZE 4
+#define TRX_OPEN_SHORT_DATA_SIZE 7
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define attrify(propname) (&dev_attr_##propname.attr)
 
 #define show_prototype(propname)\
+<<<<<<< HEAD
 static ssize_t concat(test_sysfs, _##propname##_show)(\
+=======
+static ssize_t propname##_show(\
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device *dev,\
 		struct device_attribute *attr,\
 		char *buf);\
 \
 static struct device_attribute dev_attr_##propname =\
+<<<<<<< HEAD
 		__ATTR(propname, S_IRUGO,\
 		concat(test_sysfs, _##propname##_show),\
 		synaptics_rmi4_store_error);
 
 #define store_prototype(propname)\
 static ssize_t concat(test_sysfs, _##propname##_store)(\
+=======
+		__ATTR_RO(propname)
+
+#define store_prototype(propname)\
+static ssize_t propname##_store(\
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device *dev,\
 		struct device_attribute *attr,\
 		const char *buf, size_t count);\
 \
 static struct device_attribute dev_attr_##propname =\
+<<<<<<< HEAD
 		__ATTR(propname, (S_IWUSR | S_IWGRP),\
 		synaptics_rmi4_show_error,\
 		concat(test_sysfs, _##propname##_store));
 
 #define show_store_prototype(propname)\
 static ssize_t concat(test_sysfs, _##propname##_show)(\
+=======
+		__ATTR_WO(propname)
+
+#define show_store_prototype(propname)\
+static ssize_t propname##_show(\
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device *dev,\
 		struct device_attribute *attr,\
 		char *buf);\
 \
+<<<<<<< HEAD
 static ssize_t concat(test_sysfs, _##propname##_store)(\
+=======
+static ssize_t propname##_store(\
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device *dev,\
 		struct device_attribute *attr,\
 		const char *buf, size_t count);\
 \
 static struct device_attribute dev_attr_##propname =\
+<<<<<<< HEAD
 		__ATTR(propname, (S_IRUGO | S_IWUSR | S_IWGRP),\
 		concat(test_sysfs, _##propname##_show),\
 		concat(test_sysfs, _##propname##_store));
+=======
+		__ATTR_RW(propname)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define disable_cbc(ctrl_num)\
 do {\
@@ -382,9 +428,12 @@ enum f54_report_types {
 	F54_AMP_FULL_RAW_CAP = 78,
 	F54_AMP_RAW_ADC = 83,
 	F54_FULL_RAW_CAP_TDDI = 92,
+<<<<<<< HEAD
 	F54_NOISE_TDDI = 94,
 	F54_EE_SHORT_TDDI = 95,
 	F54_TEST_100_TYPE = 100,
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	INVALID_REPORT_TYPE = -1,
 };
 
@@ -742,7 +791,11 @@ struct f54_query_40 {
 		struct {
 			unsigned char has_ctrl169:1;
 			unsigned char has_ctrl163_query41:1;
+<<<<<<< HEAD
 			unsigned char has_ctrl164:1;
+=======
+			unsigned char f54_query40_b2:1;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			unsigned char has_ctrl165_query42:1;
 			unsigned char has_ctrl166:1;
 			unsigned char has_ctrl167:1;
@@ -806,9 +859,13 @@ struct f54_query_49 {
 			unsigned char f54_query49_b0__1:2;
 			unsigned char has_ctrl188:1;
 			unsigned char has_data31:1;
+<<<<<<< HEAD
 			unsigned char has_data32:1;
 			unsigned char has_ctrl189:1;
 			unsigned char has_ctrl190:1;
+=======
+			unsigned char f54_query49_b4__6:3;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			unsigned char has_query50:1;
 		} __packed;
 		unsigned char data[1];
@@ -818,11 +875,15 @@ struct f54_query_49 {
 struct f54_query_50 {
 	union {
 		struct {
+<<<<<<< HEAD
 			unsigned char has_ctrl191:1;
 			unsigned char has_ctrl192:1;
 			unsigned char f54_query50_b2__4:3;
 			unsigned char has_ctrl194:1;
 			unsigned char has_ctrl195:1;
+=======
+			unsigned char f54_query50_b0__6:7;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			unsigned char has_query51:1;
 		} __packed;
 		unsigned char data[1];
@@ -905,6 +966,7 @@ struct f54_query_61 {
 	};
 };
 
+<<<<<<< HEAD
 struct f54_query_62 {
 	union {
 		struct {
@@ -923,6 +985,8 @@ struct f54_query_63 {
 	};
 };
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct f54_query_64 {
 	union {
 		struct {
@@ -942,8 +1006,12 @@ struct f54_query_64 {
 struct f54_query_65 {
 	union {
 		struct {
+<<<<<<< HEAD
 			unsigned char has_ctrl225:1;
 			unsigned char f54_query_65_b1:1;
+=======
+			unsigned char f54_query_65_b0__1:2;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			unsigned char has_ctrl101_sub2:1;
 			unsigned char f54_query_65_b3__4:2;
 			unsigned char has_query66_ctrl231:1;
@@ -1088,6 +1156,7 @@ struct f54_control_88 {
 	};
 };
 
+<<<<<<< HEAD
 struct f54_control_91 {
 	union {
 		struct {
@@ -1130,6 +1199,8 @@ struct f54_control_99 {
 	};
 };
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct f54_control_110 {
 	union {
 		struct {
@@ -1167,6 +1238,7 @@ struct f54_control_149 {
 	};
 };
 
+<<<<<<< HEAD
 struct f54_control_182 {
 	union {
 		struct {
@@ -1182,6 +1254,8 @@ struct f54_control_182 {
 	};
 };
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct f54_control_188 {
 	union {
 		struct {
@@ -1199,6 +1273,7 @@ struct f54_control_188 {
 	};
 };
 
+<<<<<<< HEAD
 struct f54_control_225 {
 	union {
 		struct {
@@ -1213,12 +1288,15 @@ struct f54_control_225 {
 };
 
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct f54_control {
 	struct f54_control_7 *reg_7;
 	struct f54_control_41 *reg_41;
 	struct f54_control_57 *reg_57;
 	struct f54_control_86 *reg_86;
 	struct f54_control_88 *reg_88;
+<<<<<<< HEAD
 	struct f54_control_91 *reg_91;
 	struct f54_control_96 *reg_96;
 	struct f54_control_99 *reg_99;
@@ -1227,6 +1305,11 @@ struct f54_control {
 	struct f54_control_182 *reg_182;
 	struct f54_control_188 *reg_188;
 	struct f54_control_225 *reg_225;
+=======
+	struct f54_control_110 *reg_110;
+	struct f54_control_149 *reg_149;
+	struct f54_control_188 *reg_188;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct synaptics_rmi4_f54_handle {
@@ -1237,9 +1320,12 @@ struct synaptics_rmi4_f54_handle {
 	unsigned char intr_reg_num;
 	unsigned char tx_assigned;
 	unsigned char rx_assigned;
+<<<<<<< HEAD
 	unsigned char swap_sensor_side;
 	unsigned char left_mux_size;
 	unsigned char right_mux_size;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	unsigned char *report_data;
 	unsigned short query_base_addr;
 	unsigned short control_base_addr;
@@ -1278,8 +1364,11 @@ struct synaptics_rmi4_f54_handle {
 	struct f54_query_57 query_57;
 	struct f54_query_58 query_58;
 	struct f54_query_61 query_61;
+<<<<<<< HEAD
 	struct f54_query_62 query_62;
 	struct f54_query_63 query_63;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct f54_query_64 query_64;
 	struct f54_query_65 query_65;
 	struct f54_query_67 query_67;
@@ -1472,7 +1561,10 @@ struct synaptics_rmi4_f55_handle {
 	unsigned char afe_mux_offset;
 	unsigned char force_tx_offset;
 	unsigned char force_rx_offset;
+<<<<<<< HEAD
 	unsigned char assigned_max_pin;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	unsigned char *tx_assignment;
 	unsigned char *rx_assignment;
 	unsigned char *force_tx_assignment;
@@ -1481,7 +1573,10 @@ struct synaptics_rmi4_f55_handle {
 	unsigned short control_base_addr;
 	unsigned short data_base_addr;
 	unsigned short command_base_addr;
+<<<<<<< HEAD
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct f55_query query;
 	struct f55_query_3 query_3;
 	struct f55_query_5 query_5;
@@ -1592,6 +1687,7 @@ struct synaptics_rmi4_f21_handle {
 	unsigned short command_base_addr;
 };
 
+<<<<<<< HEAD
 show_prototype(mmi_test)
 show_prototype(num_of_mapped_tx)
 show_prototype(num_of_mapped_rx)
@@ -1621,6 +1717,31 @@ show_store_prototype(ex_trx_short)
 
 static struct attribute *attrs[] = {
 	attrify(mmi_test),
+=======
+show_prototype(num_of_mapped_tx);
+show_prototype(num_of_mapped_rx);
+show_prototype(tx_mapping);
+show_prototype(rx_mapping);
+show_prototype(num_of_mapped_force_tx);
+show_prototype(num_of_mapped_force_rx);
+show_prototype(force_tx_mapping);
+show_prototype(force_rx_mapping);
+show_prototype(report_size);
+show_prototype(status);
+
+store_prototype(do_preparation);
+store_prototype(force_cal);
+store_prototype(get_report);
+store_prototype(resume_touch);
+store_prototype(do_afe_calibration);
+
+show_store_prototype(report_type);
+show_store_prototype(fifoindex);
+show_store_prototype(no_auto_cal);
+show_store_prototype(read_report);
+
+static struct attribute *attrs[] = {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	attrify(num_of_mapped_tx),
 	attrify(num_of_mapped_rx),
 	attrify(tx_mapping),
@@ -1640,12 +1761,15 @@ static struct attribute *attrs[] = {
 	attrify(fifoindex),
 	attrify(no_auto_cal),
 	attrify(read_report),
+<<<<<<< HEAD
 	/* testing + */
     attrify(tddi_noise),
     attrify(tddi_ee_short),
     attrify(tddi_amp_elec_open),
 	attrify(ex_trx_short),
 	/* testing - */
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	NULL,
 };
 
@@ -1660,7 +1784,11 @@ static ssize_t test_sysfs_data_read(struct file *data_file,
 static struct bin_attribute test_report_data = {
 	.attr = {
 		.name = "report_data",
+<<<<<<< HEAD
 		.mode = S_IRUGO,
+=======
+		.mode = 0444,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	.size = 0,
 	.read = test_sysfs_data_read,
@@ -1670,12 +1798,15 @@ static struct synaptics_rmi4_f54_handle *f54;
 static struct synaptics_rmi4_f55_handle *f55;
 static struct synaptics_rmi4_f21_handle *f21;
 
+<<<<<<< HEAD
 static int g_test_fail_cnt;
 
 // a global flag to indicate the failure of report image reading
 // 1 = fail to read image
 static bool g_flag_readrt_err;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 DECLARE_COMPLETION(test_remove_complete);
 
 static bool test_report_type_valid(enum f54_report_types report_type)
@@ -1708,11 +1839,15 @@ static bool test_report_type_valid(enum f54_report_types report_type)
 	case F54_AMP_FULL_RAW_CAP:
 	case F54_AMP_RAW_ADC:
 	case F54_FULL_RAW_CAP_TDDI:
+<<<<<<< HEAD
 	case F54_NOISE_TDDI:
 	case F54_EE_SHORT_TDDI:
 	case F54_TEST_100_TYPE:
 		return true;
 		break;
+=======
+		return true;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	default:
 		f54->report_type = INVALID_REPORT_TYPE;
 		f54->report_size = 0;
@@ -1740,6 +1875,7 @@ static void test_set_report_size(void)
 	case F54_AMP_FULL_RAW_CAP:
 	case F54_AMP_RAW_ADC:
 	case F54_FULL_RAW_CAP_TDDI:
+<<<<<<< HEAD
 	case F54_NOISE_TDDI:
 	case F54_TEST_100_TYPE:
 		f54->report_size = 2 * tx * rx;
@@ -1747,6 +1883,10 @@ static void test_set_report_size(void)
 	case F54_EE_SHORT_TDDI:
             f54->report_size = 2 * 2 * tx * rx;
             break;
+=======
+		f54->report_size = 2 * tx * rx;
+		break;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	case F54_HIGH_RESISTANCE:
 		f54->report_size = HIGH_RESISTANCE_DATA_SIZE;
 		break;
@@ -1795,23 +1935,35 @@ static void test_set_report_size(void)
 	case F54_TRX_OPENS:
 	case F54_TRX_TO_GND_SHORTS:
 	case F54_TRX_SHORTS:
+<<<<<<< HEAD
 		f54->report_size = (f55->assigned_max_pin + 7)/8;
+=======
+		f54->report_size = TRX_OPEN_SHORT_DATA_SIZE;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 	case F54_ABS_RAW_CAP:
 	case F54_ABS_DELTA_CAP:
 	case F54_ABS_HYBRID_DELTA_CAP:
 	case F54_ABS_HYBRID_RAW_CAP:
+<<<<<<< HEAD
 		if (f21) {
 			tx += f21->tx_assigned;
 			rx += f21->rx_assigned;
 		}
+=======
+		tx += f21->tx_assigned;
+		rx += f21->rx_assigned;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		f54->report_size = 4 * (tx + rx);
 		break;
 	default:
 		f54->report_size = 0;
 	}
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int test_set_interrupt(bool set)
@@ -1975,8 +2127,11 @@ static int test_do_preparation(void)
 	case F54_ABS_HYBRID_DELTA_CAP:
 	case F54_ABS_HYBRID_RAW_CAP:
 	case F54_FULL_RAW_CAP_TDDI:
+<<<<<<< HEAD
     case F54_NOISE_TDDI:
     case F54_EE_SHORT_TDDI:
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 	case F54_AMP_RAW_ADC:
 		if (f54->query_49.has_ctrl188) {
@@ -2233,8 +2388,11 @@ static void test_timeout_work(struct work_struct *work)
 
 exit:
 	mutex_unlock(&f54->status_mutex);
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static enum hrtimer_restart test_get_report_timeout(struct hrtimer *timer)
@@ -2244,19 +2402,31 @@ static enum hrtimer_restart test_get_report_timeout(struct hrtimer *timer)
 	return HRTIMER_NORESTART;
 }
 
+<<<<<<< HEAD
 static ssize_t test_sysfs_num_of_mapped_tx_show(struct device *dev,
+=======
+static ssize_t num_of_mapped_tx_show(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, char *buf)
 {
 	return snprintf(buf, PAGE_SIZE, "%u\n", f54->tx_assigned);
 }
 
+<<<<<<< HEAD
 static ssize_t test_sysfs_num_of_mapped_rx_show(struct device *dev,
+=======
+static ssize_t num_of_mapped_rx_show(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, char *buf)
 {
 	return snprintf(buf, PAGE_SIZE, "%u\n", f54->rx_assigned);
 }
 
+<<<<<<< HEAD
 static ssize_t test_sysfs_tx_mapping_show(struct device *dev,
+=======
+static ssize_t tx_mapping_show(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, char *buf)
 {
 	int cnt;
@@ -2286,7 +2456,11 @@ static ssize_t test_sysfs_tx_mapping_show(struct device *dev,
 	return count;
 }
 
+<<<<<<< HEAD
 static ssize_t test_sysfs_rx_mapping_show(struct device *dev,
+=======
+static ssize_t rx_mapping_show(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, char *buf)
 {
 	int cnt;
@@ -2316,19 +2490,31 @@ static ssize_t test_sysfs_rx_mapping_show(struct device *dev,
 	return count;
 }
 
+<<<<<<< HEAD
 static ssize_t test_sysfs_num_of_mapped_force_tx_show(struct device *dev,
+=======
+static ssize_t num_of_mapped_force_tx_show(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, char *buf)
 {
 	return snprintf(buf, PAGE_SIZE, "%u\n", f21->tx_assigned);
 }
 
+<<<<<<< HEAD
 static ssize_t test_sysfs_num_of_mapped_force_rx_show(struct device *dev,
+=======
+static ssize_t num_of_mapped_force_rx_show(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, char *buf)
 {
 	return snprintf(buf, PAGE_SIZE, "%u\n", f21->rx_assigned);
 }
 
+<<<<<<< HEAD
 static ssize_t test_sysfs_force_tx_mapping_show(struct device *dev,
+=======
+static ssize_t force_tx_mapping_show(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, char *buf)
 {
 	int cnt;
@@ -2376,7 +2562,11 @@ static ssize_t test_sysfs_force_tx_mapping_show(struct device *dev,
 	return count;
 }
 
+<<<<<<< HEAD
 static ssize_t test_sysfs_force_rx_mapping_show(struct device *dev,
+=======
+static ssize_t force_rx_mapping_show(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, char *buf)
 {
 	int cnt;
@@ -2424,13 +2614,21 @@ static ssize_t test_sysfs_force_rx_mapping_show(struct device *dev,
 	return count;
 }
 
+<<<<<<< HEAD
 static ssize_t test_sysfs_report_size_show(struct device *dev,
+=======
+static ssize_t report_size_show(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, char *buf)
 {
 	return snprintf(buf, PAGE_SIZE, "%u\n", f54->report_size);
 }
 
+<<<<<<< HEAD
 static ssize_t test_sysfs_status_show(struct device *dev,
+=======
+static ssize_t status_show(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, char *buf)
 {
 	int retval;
@@ -2444,7 +2642,11 @@ static ssize_t test_sysfs_status_show(struct device *dev,
 	return retval;
 }
 
+<<<<<<< HEAD
 static ssize_t test_sysfs_do_preparation_store(struct device *dev,
+=======
+static ssize_t do_preparation_store(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, const char *buf, size_t count)
 {
 	int retval;
@@ -2480,7 +2682,11 @@ exit:
 	return retval;
 }
 
+<<<<<<< HEAD
 static ssize_t test_sysfs_force_cal_store(struct device *dev,
+=======
+static ssize_t force_cal_store(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, const char *buf, size_t count)
 {
 	int retval;
@@ -2516,6 +2722,7 @@ exit:
 	return retval;
 }
 
+<<<<<<< HEAD
 
 #ifdef F54_POLLING_GET_REPORT
 static ssize_t test_sysfs_get_report_polling(void)
@@ -2591,6 +2798,9 @@ static ssize_t test_sysfs_get_report_polling(void)
 
 
 static ssize_t test_sysfs_get_report_store(struct device *dev,
+=======
+static ssize_t get_report_store(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, const char *buf, size_t count)
 {
 	int retval;
@@ -2634,6 +2844,7 @@ static ssize_t test_sysfs_get_report_store(struct device *dev,
 		goto exit;
 	}
 
+<<<<<<< HEAD
 #ifdef F54_POLLING_GET_REPORT
 
 	retval = test_sysfs_get_report_polling();
@@ -2646,6 +2857,8 @@ static ssize_t test_sysfs_get_report_store(struct device *dev,
 
 #else
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	f54->status = STATUS_BUSY;
 	f54->report_size = 0;
 	f54->data_pos = 0;
@@ -2656,15 +2869,22 @@ static ssize_t test_sysfs_get_report_store(struct device *dev,
 
 	retval = count;
 
+<<<<<<< HEAD
 #endif
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 exit:
 	mutex_unlock(&f54->status_mutex);
 
 	return retval;
 }
 
+<<<<<<< HEAD
 static ssize_t test_sysfs_resume_touch_store(struct device *dev,
+=======
+static ssize_t resume_touch_store(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, const char *buf, size_t count)
 {
 	int retval;
@@ -2719,8 +2939,11 @@ static ssize_t test_sysfs_resume_touch_store(struct device *dev,
 	case F54_ABS_HYBRID_DELTA_CAP:
 	case F54_ABS_HYBRID_RAW_CAP:
 	case F54_FULL_RAW_CAP_TDDI:
+<<<<<<< HEAD
 	case F54_NOISE_TDDI:
 	case F54_EE_SHORT_TDDI:
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 	case F54_AMP_RAW_ADC:
 		if (f54->query_49.has_ctrl188) {
@@ -2754,7 +2977,11 @@ static ssize_t test_sysfs_resume_touch_store(struct device *dev,
 	return count;
 }
 
+<<<<<<< HEAD
 static ssize_t test_sysfs_do_afe_calibration_store(struct device *dev,
+=======
+static ssize_t do_afe_calibration_store(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, const char *buf, size_t count)
 {
 	int retval;
@@ -2783,13 +3010,21 @@ static ssize_t test_sysfs_do_afe_calibration_store(struct device *dev,
 		return count;
 }
 
+<<<<<<< HEAD
 static ssize_t test_sysfs_report_type_show(struct device *dev,
+=======
+static ssize_t report_type_show(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, char *buf)
 {
 	return snprintf(buf, PAGE_SIZE, "%u\n", f54->report_type);
 }
 
+<<<<<<< HEAD
 static ssize_t test_sysfs_report_type_store(struct device *dev,
+=======
+static ssize_t report_type_store(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, const char *buf, size_t count)
 {
 	int retval;
@@ -2836,7 +3071,11 @@ exit:
 	return retval;
 }
 
+<<<<<<< HEAD
 static ssize_t test_sysfs_fifoindex_show(struct device *dev,
+=======
+static ssize_t fifoindex_show(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, char *buf)
 {
 	int retval;
@@ -2859,7 +3098,11 @@ static ssize_t test_sysfs_fifoindex_show(struct device *dev,
 	return snprintf(buf, PAGE_SIZE, "%u\n", f54->fifoindex);
 }
 
+<<<<<<< HEAD
 static ssize_t test_sysfs_fifoindex_store(struct device *dev,
+=======
+static ssize_t fifoindex_store(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, const char *buf, size_t count)
 {
 	int retval;
@@ -2889,13 +3132,21 @@ static ssize_t test_sysfs_fifoindex_store(struct device *dev,
 	return count;
 }
 
+<<<<<<< HEAD
 static ssize_t test_sysfs_no_auto_cal_show(struct device *dev,
+=======
+static ssize_t no_auto_cal_show(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, char *buf)
 {
 	return snprintf(buf, PAGE_SIZE, "%u\n", f54->no_auto_cal);
 }
 
+<<<<<<< HEAD
 static ssize_t test_sysfs_no_auto_cal_store(struct device *dev,
+=======
+static ssize_t no_auto_cal_store(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, const char *buf, size_t count)
 {
 	int retval;
@@ -2942,6 +3193,7 @@ static ssize_t test_sysfs_no_auto_cal_store(struct device *dev,
 	return count;
 }
 
+<<<<<<< HEAD
 static int test_save_data_to_csv(short *data, int x_ch, int y_ch, const char *file_path, int offset)
 {
 	int32_t x = 0;
@@ -3041,6 +3293,9 @@ static int test_save_data_to_csv(short *data, int x_ch, int y_ch, const char *fi
 }
 
 static ssize_t test_sysfs_read_report_show(struct device *dev,
+=======
+static ssize_t read_report_show(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, char *buf)
 {
 	unsigned int ii;
@@ -3055,6 +3310,7 @@ static ssize_t test_sysfs_read_report_show(struct device *dev,
 	unsigned short *report_data_u16;
 	unsigned int *report_data_u32;
 
+<<<<<<< HEAD
 	if ((f54->status != STATUS_IDLE) || (!f54->report_data)) {
 		cnt = snprintf(buf, PAGE_SIZE - count, "Error: can't output f54 report data\n");
 		count += cnt;
@@ -3062,6 +3318,8 @@ static ssize_t test_sysfs_read_report_show(struct device *dev,
 		return count;
 	}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	switch (f54->report_type) {
 	case F54_8BIT_IMAGE:
 		report_data_8 = (char *)f54->report_data;
@@ -3103,7 +3361,10 @@ static ssize_t test_sysfs_read_report_show(struct device *dev,
 	case F54_SENSOR_SPEED:
 	case F54_AMP_FULL_RAW_CAP:
 	case F54_FULL_RAW_CAP_TDDI:
+<<<<<<< HEAD
     case F54_NOISE_TDDI:
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		report_data_16 = (short *)f54->report_data;
 		cnt = snprintf(buf, PAGE_SIZE - count, "tx = %d\nrx = %d\n",
 				tx_num, rx_num);
@@ -3125,6 +3386,7 @@ static ssize_t test_sysfs_read_report_show(struct device *dev,
 			count += cnt;
 		}
 		break;
+<<<<<<< HEAD
 	case F54_EE_SHORT_TDDI:
 		report_data_16 = (short *)f54->report_data;
 		cnt = snprintf(buf, PAGE_SIZE - count, "tx = %d\nrx = %d\n",
@@ -3164,6 +3426,8 @@ static ssize_t test_sysfs_read_report_show(struct device *dev,
 			count += cnt;
 		}
 		break;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	case F54_HIGH_RESISTANCE:
 	case F54_FULL_RAW_CAP_MIN_MAX:
 		report_data_16 = (short *)f54->report_data;
@@ -3177,10 +3441,15 @@ static ssize_t test_sysfs_read_report_show(struct device *dev,
 		break;
 	case F54_ABS_RAW_CAP:
 	case F54_ABS_HYBRID_RAW_CAP:
+<<<<<<< HEAD
 		if (f21) {
 			tx_num += f21->tx_assigned;
 			rx_num += f21->rx_assigned;
 		}
+=======
+		tx_num += f21->tx_assigned;
+		rx_num += f21->rx_assigned;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		report_data_u32 = (unsigned int *)f54->report_data;
 		cnt = snprintf(buf, PAGE_SIZE - count, "rx ");
 		buf += cnt;
@@ -3236,10 +3505,15 @@ static ssize_t test_sysfs_read_report_show(struct device *dev,
 		break;
 	case F54_ABS_DELTA_CAP:
 	case F54_ABS_HYBRID_DELTA_CAP:
+<<<<<<< HEAD
 		if (f21) {
 			tx_num += f21->tx_assigned;
 			rx_num += f21->rx_assigned;
 		}
+=======
+		tx_num += f21->tx_assigned;
+		rx_num += f21->rx_assigned;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		report_data_32 = (int *)f54->report_data;
 		cnt = snprintf(buf, PAGE_SIZE - count, "rx ");
 		buf += cnt;
@@ -3305,6 +3579,7 @@ static ssize_t test_sysfs_read_report_show(struct device *dev,
 	snprintf(buf, PAGE_SIZE - count, "\n");
 	count++;
 
+<<<<<<< HEAD
 	kfree(f54->report_data);
 	f54->data_buffer_size = 0;
 
@@ -3312,6 +3587,12 @@ static ssize_t test_sysfs_read_report_show(struct device *dev,
 }
 
 static ssize_t test_sysfs_read_report_store(struct device *dev,
+=======
+	return count;
+}
+
+static ssize_t read_report_store(struct device *dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct device_attribute *attr, const char *buf, size_t count)
 {
 	int retval;
@@ -3320,6 +3601,7 @@ static ssize_t test_sysfs_read_report_store(struct device *dev,
 	const char cmd[] = {'1', 0};
 	struct synaptics_rmi4_data *rmi4_data = f54->rmi4_data;
 
+<<<<<<< HEAD
 	retval = test_sysfs_report_type_store(dev, attr, buf, count);
 	if (retval < 0)
 		goto exit;
@@ -3329,6 +3611,17 @@ static ssize_t test_sysfs_read_report_store(struct device *dev,
 		goto exit;
 
 	retval = test_sysfs_get_report_store(dev, attr, cmd, 1);
+=======
+	retval = report_type_store(dev, attr, buf, count);
+	if (retval < 0)
+		goto exit;
+
+	retval = do_preparation_store(dev, attr, cmd, 1);
+	if (retval < 0)
+		goto exit;
+
+	retval = get_report_store(dev, attr, cmd, 1);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (retval < 0)
 		goto exit;
 
@@ -3348,7 +3641,11 @@ static ssize_t test_sysfs_read_report_store(struct device *dev,
 		goto exit;
 	}
 
+<<<<<<< HEAD
 	retval = test_sysfs_resume_touch_store(dev, attr, cmd, 1);
+=======
+	retval = resume_touch_store(dev, attr, cmd, 1);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (retval < 0)
 		goto exit;
 
@@ -3360,6 +3657,7 @@ exit:
 	return retval;
 }
 
+<<<<<<< HEAD
 
 /* testing + */
 
@@ -4689,6 +4987,8 @@ static ssize_t test_sysfs_ex_trx_short_show(struct device *dev,
 /* testing - */
 
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static ssize_t test_sysfs_data_read(struct file *data_file,
 		struct kobject *kobj, struct bin_attribute *attributes,
 		char *buf, loff_t pos, size_t count)
@@ -4812,8 +5112,11 @@ exit:
 		f54->report_size = 0;
 
 	f54->status = retval;
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void test_remove_sysfs(void)
@@ -4821,8 +5124,11 @@ static void test_remove_sysfs(void)
 	sysfs_remove_group(f54->sysfs_dir, &attr_group);
 	sysfs_remove_bin_file(f54->sysfs_dir, &test_report_data);
 	kobject_put(f54->sysfs_dir);
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int test_set_sysfs(void)
@@ -4877,6 +5183,7 @@ static void test_free_control_mem(void)
 	kfree(control.reg_57);
 	kfree(control.reg_86);
 	kfree(control.reg_88);
+<<<<<<< HEAD
     kfree(control.reg_91);
 	kfree(control.reg_96);
 	kfree(control.reg_99);
@@ -4887,6 +5194,11 @@ static void test_free_control_mem(void)
 	kfree(control.reg_225);
 
 	return;
+=======
+	kfree(control.reg_110);
+	kfree(control.reg_149);
+	kfree(control.reg_188);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void test_set_data(void)
@@ -5004,8 +5316,11 @@ static void test_set_data(void)
 		f54->data_31.address = reg_addr;
 		reg_addr++;
 	}
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int test_set_controls(void)
@@ -5279,6 +5594,7 @@ static int test_set_controls(void)
 		reg_addr += CONTROL_90_SIZE;
 
 	/* control 91 */
+<<<<<<< HEAD
 	if (f54->query_21.has_ctrl91) {
 		control->reg_91 = kzalloc(sizeof(*(control->reg_91)),
 				GFP_KERNEL);
@@ -5287,6 +5603,10 @@ static int test_set_controls(void)
 		control->reg_91->address = reg_addr;
 		reg_addr += CONTROL_91_SIZE;
 	}
+=======
+	if (f54->query_21.has_ctrl91)
+		reg_addr += CONTROL_91_SIZE;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* control 92 */
 	if (f54->query_16.has_ctrl92)
@@ -5305,6 +5625,7 @@ static int test_set_controls(void)
 		reg_addr += CONTROL_95_SIZE;
 
 	/* control 96 */
+<<<<<<< HEAD
 	if (f54->query_21.has_ctrl96) {
 		control->reg_96 = kzalloc(sizeof(*(control->reg_96)),
 				GFP_KERNEL);
@@ -5313,6 +5634,10 @@ static int test_set_controls(void)
 		control->reg_96->address = reg_addr;
 		reg_addr += CONTROL_96_SIZE;
 	}
+=======
+	if (f54->query_21.has_ctrl96)
+		reg_addr += CONTROL_96_SIZE;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* control 97 */
 	if (f54->query_21.has_ctrl97)
@@ -5323,6 +5648,7 @@ static int test_set_controls(void)
 		reg_addr += CONTROL_98_SIZE;
 
 	/* control 99 */
+<<<<<<< HEAD
 	if (f54->query.touch_controller_family == 2) {
 		control->reg_99 = kzalloc(sizeof(*(control->reg_99)),
 				GFP_KERNEL);
@@ -5332,6 +5658,11 @@ static int test_set_controls(void)
 		reg_addr += CONTROL_99_SIZE;
     }
     
+=======
+	if (f54->query.touch_controller_family == 2)
+		reg_addr += CONTROL_99_SIZE;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* control 100 */
 	if (f54->query_16.has_ctrl100)
 		reg_addr += CONTROL_100_SIZE;
@@ -5643,6 +5974,7 @@ static int test_set_controls(void)
 	/* controls 180 to 181 reserved */
 
 	/* control 182 */
+<<<<<<< HEAD
 	if (f54->query_47.has_ctrl182) {
 		control->reg_182 = kzalloc(sizeof(*(control->reg_182)),
 				GFP_KERNEL);
@@ -5651,6 +5983,10 @@ static int test_set_controls(void)
 		control->reg_182->address = reg_addr;
 		reg_addr += CONTROL_182_SIZE;
 	}
+=======
+	if (f54->query_47.has_ctrl182)
+		reg_addr += CONTROL_182_SIZE;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* control 183 */
 	if (f54->query_47.has_ctrl183)
@@ -5680,6 +6016,7 @@ static int test_set_controls(void)
 		reg_addr += CONTROL_188_SIZE;
 	}
 
+<<<<<<< HEAD
 	/* control 189 */
 	if (f54->query_49.has_ctrl189)
 		reg_addr += CONTROL_189_SIZE;
@@ -5754,6 +6091,8 @@ static int test_set_controls(void)
 		reg_addr += CONTROL_225_SIZE;
 	}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 
 exit_no_mem:
@@ -6032,7 +6371,10 @@ static int test_set_queries(void)
 		offset += 1;
 	}
 
+<<<<<<< HEAD
 	/* queries 44 45 */
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (f54->query_43.has_ctrl172_query44_query45)
 		offset += 2;
 
@@ -6243,8 +6585,11 @@ static void test_f54_set_regs(struct synaptics_rmi4_data *rmi4_data,
 			ii++) {
 		f54->intr_mask |= 1 << ii;
 	}
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int test_f55_set_controls(void)
@@ -6585,25 +6930,47 @@ static void test_f55_init(struct synaptics_rmi4_data *rmi4_data)
 	unsigned char ii;
 	unsigned char rx_electrodes;
 	unsigned char tx_electrodes;
+<<<<<<< HEAD
 	struct f55_control_43 ctrl_43;
+=======
+	struct f55_control_43 *ctrl_43 = NULL;
+
+	ctrl_43 = kzalloc(sizeof(*ctrl_43), GFP_KERNEL);
+	if (!ctrl_43) {
+		retval = -ENOMEM;
+		goto exit;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	retval = test_f55_set_queries();
 	if (retval < 0) {
 		dev_err(rmi4_data->pdev->dev.parent,
 				"%s: Failed to read F55 query registers\n",
 				__func__);
+<<<<<<< HEAD
 		return;
 	}
 
 	if (!f55->query.has_sensor_assignment)
 		return;
+=======
+		goto exit;
+	}
+
+	if (!f55->query.has_sensor_assignment)
+		goto exit;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	retval = test_f55_set_controls();
 	if (retval < 0) {
 		dev_err(rmi4_data->pdev->dev.parent,
 				"%s: Failed to set up F55 control registers\n",
 				__func__);
+<<<<<<< HEAD
 		return;
+=======
+		goto exit;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	tx_electrodes = f55->query.num_of_tx_electrodes;
@@ -6620,7 +6987,11 @@ static void test_f55_init(struct synaptics_rmi4_data *rmi4_data)
 		dev_err(rmi4_data->pdev->dev.parent,
 				"%s: Failed to read F55 tx assignment\n",
 				__func__);
+<<<<<<< HEAD
 		return;
+=======
+		goto exit;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	retval = synaptics_rmi4_reg_read(rmi4_data,
@@ -6631,6 +7002,7 @@ static void test_f55_init(struct synaptics_rmi4_data *rmi4_data)
 		dev_err(rmi4_data->pdev->dev.parent,
 				"%s: Failed to read F55 rx assignment\n",
 				__func__);
+<<<<<<< HEAD
 		return;
 	}
 
@@ -6642,14 +7014,28 @@ static void test_f55_init(struct synaptics_rmi4_data *rmi4_data)
 			f54->tx_assigned++;
 			f55->assigned_max_pin = max(f55->assigned_max_pin, f55->tx_assignment[ii]);
 		}
+=======
+		goto exit;
+	}
+
+	f54->tx_assigned = 0;
+	for (ii = 0; ii < tx_electrodes; ii++) {
+		if (f55->tx_assignment[ii] != 0xff)
+			f54->tx_assigned++;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	f54->rx_assigned = 0;
 	for (ii = 0; ii < rx_electrodes; ii++) {
+<<<<<<< HEAD
 		if (f55->rx_assignment[ii] != 0xff) {
 			f54->rx_assigned++;
 			f55->assigned_max_pin = max(f55->assigned_max_pin, f55->rx_assignment[ii]);
 		}
+=======
+		if (f55->rx_assignment[ii] != 0xff)
+			f54->rx_assigned++;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	if (f55->amp_sensor) {
@@ -6660,12 +7046,18 @@ static void test_f55_init(struct synaptics_rmi4_data *rmi4_data)
 	if (f55->extended_amp) {
 		retval = synaptics_rmi4_reg_read(rmi4_data,
 				f55->control_base_addr + f55->afe_mux_offset,
+<<<<<<< HEAD
 				ctrl_43.data,
 				sizeof(ctrl_43.data));
+=======
+				ctrl_43->data,
+				sizeof(ctrl_43->data));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (retval < 0) {
 			dev_err(rmi4_data->pdev->dev.parent,
 					"%s: Failed to read F55 AFE mux sizes\n",
 					__func__);
+<<<<<<< HEAD
 			return;
 		}
 
@@ -6675,6 +7067,13 @@ static void test_f55_init(struct synaptics_rmi4_data *rmi4_data)
         f54->swap_sensor_side = ctrl_43.swap_sensor_side;
         f54->left_mux_size = ctrl_43.afe_l_mux_size;
         f54->right_mux_size = ctrl_43.afe_r_mux_size;
+=======
+			goto exit;
+		}
+
+		f54->tx_assigned = ctrl_43->afe_l_mux_size +
+				ctrl_43->afe_r_mux_size;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	/* force mapping */
@@ -6690,7 +7089,11 @@ static void test_f55_init(struct synaptics_rmi4_data *rmi4_data)
 			dev_err(rmi4_data->pdev->dev.parent,
 					"%s: Failed to read F55 force tx assignment\n",
 					__func__);
+<<<<<<< HEAD
 			return;
+=======
+			goto exit;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 
 		retval = synaptics_rmi4_reg_read(rmi4_data,
@@ -6701,7 +7104,11 @@ static void test_f55_init(struct synaptics_rmi4_data *rmi4_data)
 			dev_err(rmi4_data->pdev->dev.parent,
 					"%s: Failed to read F55 force rx assignment\n",
 					__func__);
+<<<<<<< HEAD
 			return;
+=======
+			goto exit;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 
 		for (ii = 0; ii < tx_electrodes; ii++) {
@@ -6715,6 +7122,11 @@ static void test_f55_init(struct synaptics_rmi4_data *rmi4_data)
 		}
 	}
 
+<<<<<<< HEAD
+=======
+exit:
+	kfree(ctrl_43);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return;
 }
 
@@ -6734,8 +7146,11 @@ static void test_f55_set_regs(struct synaptics_rmi4_data *rmi4_data,
 	f55->control_base_addr = fd->ctrl_base_addr | (page << 8);
 	f55->data_base_addr = fd->data_base_addr | (page << 8);
 	f55->command_base_addr = fd->cmd_base_addr | (page << 8);
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void test_f21_init(struct synaptics_rmi4_data *rmi4_data)
@@ -6879,8 +7294,11 @@ exit:
 	kfree(query_2);
 	kfree(query_5);
 	kfree(query_11);
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void test_f21_set_regs(struct synaptics_rmi4_data *rmi4_data,
@@ -6899,8 +7317,11 @@ static void test_f21_set_regs(struct synaptics_rmi4_data *rmi4_data,
 	f21->control_base_addr = fd->ctrl_base_addr | (page << 8);
 	f21->data_base_addr = fd->data_base_addr | (page << 8);
 	f21->command_base_addr = fd->cmd_base_addr | (page << 8);
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int test_scan_pdt(void)
@@ -6911,7 +7332,10 @@ static int test_scan_pdt(void)
 	unsigned short addr;
 	bool f54found = false;
 	bool f55found = false;
+<<<<<<< HEAD
 	struct synaptics_rmi4_fn_desc rmi_fd;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct synaptics_rmi4_data *rmi4_data = f54->rmi4_data;
 
 	for (page = 0; page < PAGES_TO_SERVICE; page++) {
@@ -6920,13 +7344,19 @@ static int test_scan_pdt(void)
 
 			retval = synaptics_rmi4_reg_read(rmi4_data,
 					addr,
+<<<<<<< HEAD
 					(unsigned char *)&rmi_fd,
 					sizeof(rmi_fd));
+=======
+					(unsigned char *)&rmi4_data->rmi_fd,
+					sizeof(rmi4_data->rmi_fd));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			if (retval < 0)
 				return retval;
 
 			addr &= ~(MASK_8BIT << 8);
 
+<<<<<<< HEAD
 			if (!rmi_fd.fn_number)
 				break;
 
@@ -6934,16 +7364,34 @@ static int test_scan_pdt(void)
 			case SYNAPTICS_RMI4_F54:
 				test_f54_set_regs(rmi4_data,
 						&rmi_fd, intr_count, page);
+=======
+			if (!rmi4_data->rmi_fd.fn_number)
+				break;
+
+			switch (rmi4_data->rmi_fd.fn_number) {
+			case SYNAPTICS_RMI4_F54:
+				test_f54_set_regs(rmi4_data,
+						&rmi4_data->rmi_fd, intr_count,
+						page);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				f54found = true;
 				break;
 			case SYNAPTICS_RMI4_F55:
 				test_f55_set_regs(rmi4_data,
+<<<<<<< HEAD
 						&rmi_fd, page);
+=======
+						&rmi4_data->rmi_fd, page);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				f55found = true;
 				break;
 			case SYNAPTICS_RMI4_F21:
 				test_f21_set_regs(rmi4_data,
+<<<<<<< HEAD
 						&rmi_fd, page);
+=======
+						&rmi4_data->rmi_fd, page);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				break;
 			default:
 				break;
@@ -6952,7 +7400,11 @@ static int test_scan_pdt(void)
 			if (f54found && f55found)
 				goto pdt_done;
 
+<<<<<<< HEAD
 			intr_count += rmi_fd.intr_src_count;
+=======
+			intr_count += rmi4_data->rmi_fd.intr_src_count;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 	}
 
@@ -7125,8 +7577,11 @@ static void synaptics_rmi4_test_remove(struct synaptics_rmi4_data *rmi4_data)
 
 exit:
 	complete(&test_remove_complete);
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void synaptics_rmi4_test_reset(struct synaptics_rmi4_data *rmi4_data)
@@ -7246,8 +7701,11 @@ static void __exit rmi4_test_module_exit(void)
 	synaptics_rmi4_new_function(&test_module, false);
 
 	wait_for_completion(&test_remove_complete);
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 module_init(rmi4_test_module_init);

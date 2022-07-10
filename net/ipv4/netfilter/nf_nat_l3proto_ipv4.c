@@ -241,7 +241,11 @@ int nf_nat_icmp_reply_translation(struct sk_buff *skb,
 }
 EXPORT_SYMBOL_GPL(nf_nat_icmp_reply_translation);
 
+<<<<<<< HEAD
 static unsigned int
+=======
+unsigned int
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 nf_nat_ipv4_fn(void *priv, struct sk_buff *skb,
 	       const struct nf_hook_state *state)
 {

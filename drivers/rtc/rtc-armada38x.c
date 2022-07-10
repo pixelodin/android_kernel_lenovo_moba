@@ -514,7 +514,10 @@ MODULE_DEVICE_TABLE(of, armada38x_rtc_of_match_table);
 
 static __init int armada38x_rtc_probe(struct platform_device *pdev)
 {
+<<<<<<< HEAD
 	const struct rtc_class_ops *ops;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct resource *res;
 	struct armada38x_rtc *rtc;
 	const struct of_device_id *match;
@@ -551,6 +554,14 @@ static __init int armada38x_rtc_probe(struct platform_device *pdev)
 		dev_err(&pdev->dev, "no irq\n");
 		return rtc->irq;
 	}
+<<<<<<< HEAD
+=======
+
+	rtc->rtc_dev = devm_rtc_allocate_device(&pdev->dev);
+	if (IS_ERR(rtc->rtc_dev))
+		return PTR_ERR(rtc->rtc_dev);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (devm_request_irq(&pdev->dev, rtc->irq, armada38x_rtc_alarm_irq,
 				0, pdev->name, rtc) < 0) {
 		dev_warn(&pdev->dev, "Interrupt not available.\n");
@@ -560,12 +571,17 @@ static __init int armada38x_rtc_probe(struct platform_device *pdev)
 
 	if (rtc->irq != -1) {
 		device_init_wakeup(&pdev->dev, 1);
+<<<<<<< HEAD
 		ops = &armada38x_rtc_ops;
+=======
+		rtc->rtc_dev->ops = &armada38x_rtc_ops;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	} else {
 		/*
 		 * If there is no interrupt available then we can't
 		 * use the alarm
 		 */
+<<<<<<< HEAD
 		ops = &armada38x_rtc_ops_noirq;
 	}
 	rtc->data = (struct armada38x_rtc_data *)match->data;
@@ -582,6 +598,20 @@ static __init int armada38x_rtc_probe(struct platform_device *pdev)
 		return ret;
 	}
 	return 0;
+=======
+		rtc->rtc_dev->ops = &armada38x_rtc_ops_noirq;
+	}
+	rtc->data = (struct armada38x_rtc_data *)match->data;
+
+	/* Update RTC-MBUS bridge timing parameters */
+	rtc->data->update_mbus_timing(rtc);
+
+	ret = rtc_register_device(rtc->rtc_dev);
+	if (ret)
+		dev_err(&pdev->dev, "Failed to register RTC device: %d\n", ret);
+
+	return ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 #ifdef CONFIG_PM_SLEEP

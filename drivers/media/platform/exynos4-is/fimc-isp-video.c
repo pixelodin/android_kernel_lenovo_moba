@@ -316,7 +316,11 @@ static int isp_video_release(struct file *file)
 		ivc->streaming = 0;
 	}
 
+<<<<<<< HEAD
 	vb2_fop_release(file);
+=======
+	_vb2_fop_release(file, NULL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (v4l2_fh_is_singular_file(file)) {
 		fimc_pipeline_call(&ivc->ve, close);

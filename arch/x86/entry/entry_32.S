@@ -245,6 +245,7 @@
 .Lend_\@:
 .endm
 
+<<<<<<< HEAD
 /*
  * This is a sneaky trick to help the unwinder find pt_regs on the stack.  The
  * frame pointer is replaced with an encoded pointer to pt_regs.  The encoding
@@ -261,6 +262,8 @@
 #endif
 .endm
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 .macro RESTORE_INT_REGS
 	popl	%ebx
 	popl	%ecx

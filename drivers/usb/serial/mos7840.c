@@ -118,11 +118,21 @@
 /* This driver also supports
  * ATEN UC2324 device using Moschip MCS7840
  * ATEN UC2322 device using Moschip MCS7820
+<<<<<<< HEAD
+=======
+ * MOXA UPort 2210 device using Moschip MCS7820
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 #define USB_VENDOR_ID_ATENINTL		0x0557
 #define ATENINTL_DEVICE_ID_UC2324	0x2011
 #define ATENINTL_DEVICE_ID_UC2322	0x7820
 
+<<<<<<< HEAD
+=======
+#define USB_VENDOR_ID_MOXA		0x110a
+#define MOXA_DEVICE_ID_2210		0x2210
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* Interrupt Routine Defines    */
 
 #define SERIAL_IIR_RLS      0x06
@@ -193,6 +203,10 @@ static const struct usb_device_id id_table[] = {
 	{USB_DEVICE(USB_VENDOR_ID_BANDB, BANDB_DEVICE_ID_USOPTL2_4)},
 	{USB_DEVICE(USB_VENDOR_ID_ATENINTL, ATENINTL_DEVICE_ID_UC2324)},
 	{USB_DEVICE(USB_VENDOR_ID_ATENINTL, ATENINTL_DEVICE_ID_UC2322)},
+<<<<<<< HEAD
+=======
+	{USB_DEVICE(USB_VENDOR_ID_MOXA, MOXA_DEVICE_ID_2210)},
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	{}			/* terminating entry */
 };
 MODULE_DEVICE_TABLE(usb, id_table);
@@ -2053,6 +2067,10 @@ static int mos7840_probe(struct usb_serial *serial,
 				const struct usb_device_id *id)
 {
 	u16 product = le16_to_cpu(serial->dev->descriptor.idProduct);
+<<<<<<< HEAD
+=======
+	u16 vid = le16_to_cpu(serial->dev->descriptor.idVendor);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u8 *buf;
 	int device_type;
 
@@ -2062,6 +2080,14 @@ static int mos7840_probe(struct usb_serial *serial,
 		goto out;
 	}
 
+<<<<<<< HEAD
+=======
+	if (vid == USB_VENDOR_ID_MOXA && product == MOXA_DEVICE_ID_2210) {
+		device_type = MOSCHIP_DEVICE_ID_7820;
+		goto out;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	buf = kzalloc(VENDOR_READ_LENGTH, GFP_KERNEL);
 	if (!buf)
 		return -ENOMEM;
@@ -2314,11 +2340,14 @@ out:
 			goto error;
 		} else
 			dev_dbg(&port->dev, "ZLP_REG5 Writing success status%d\n", status);
+<<<<<<< HEAD
 
 		/* setting configuration feature to one */
 		usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
 				0x03, 0x00, 0x01, 0x00, NULL, 0x00,
 				MOS_WDR_TIMEOUT);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	return 0;
 error:

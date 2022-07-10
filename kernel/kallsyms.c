@@ -173,7 +173,10 @@ unsigned long kallsyms_lookup_name(const char *name)
 	}
 	return module_kallsyms_lookup_name(name);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(kallsyms_lookup_name);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 int kallsyms_on_each_symbol(int (*fn)(void *, const char *, struct module *,
 				      unsigned long),
@@ -192,7 +195,10 @@ int kallsyms_on_each_symbol(int (*fn)(void *, const char *, struct module *,
 	}
 	return module_kallsyms_on_each_symbol(fn, data);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(kallsyms_on_each_symbol);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 static unsigned long get_symbol_pos(unsigned long addr,
 				    unsigned long *symbolsize,
@@ -280,6 +286,15 @@ static inline void cleanup_symbol_name(char *s)
 {
 	char *res;
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_THINLTO
+	/* Filter out hashes from static functions */
+	res = strrchr(s, '$');
+	if (res)
+		*res = '\0';
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	res = strrchr(s, '.');
 	if (res && !strcmp(res, ".cfi"))
 		*res = '\0';

@@ -1397,7 +1397,11 @@ static int sunxi_nfc_hw_ecc_write_page_dma(struct mtd_info *mtd,
 	sunxi_nfc_randomizer_enable(mtd);
 
 	writel((NAND_CMD_RNDIN << 8) | NAND_CMD_PAGEPROG,
+<<<<<<< HEAD
 	       nfc->regs + NFC_REG_RCMD_SET);
+=======
+	       nfc->regs + NFC_REG_WCMD_SET);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	dma_async_issue_pending(nfc->dmac);
 

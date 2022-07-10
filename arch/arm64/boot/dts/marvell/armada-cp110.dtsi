@@ -359,10 +359,17 @@
 
 		CP110_LABEL(nand_controller): nand@720000 {
 			/*
+<<<<<<< HEAD
 			* Due to the limitation of the pins available
 			* this controller is only usable on the CPM
 			* for A7K and on the CPS for A8K.
 			*/
+=======
+			 * Due to the limitation of the pins available
+			 * this controller is only usable on the CPM
+			 * for A7K and on the CPS for A8K.
+			 */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			compatible = "marvell,armada-8k-nand-controller",
 				"marvell,armada370-nand-controller";
 			reg = <0x720000 0x54>;

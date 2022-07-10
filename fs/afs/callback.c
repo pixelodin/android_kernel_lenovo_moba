@@ -221,6 +221,7 @@ void afs_break_callback(struct afs_vnode *vnode)
 		vnode->cb_break++;
 		afs_clear_permits(vnode);
 
+<<<<<<< HEAD
 		spin_lock(&vnode->lock);
 
 		_debug("break callback");
@@ -229,6 +230,10 @@ void afs_break_callback(struct afs_vnode *vnode)
 		    !list_empty(&vnode->pending_locks))
 			afs_lock_may_be_available(vnode);
 		spin_unlock(&vnode->lock);
+=======
+		if (vnode->lock_state == AFS_VNODE_LOCK_WAITING_FOR_CB)
+			afs_lock_may_be_available(vnode);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	write_sequnlock(&vnode->cb_lock);

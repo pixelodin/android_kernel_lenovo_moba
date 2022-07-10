@@ -325,8 +325,18 @@ int l2tp_session_register(struct l2tp_session *session,
 
 		spin_lock_bh(&pn->l2tp_session_hlist_lock);
 
+<<<<<<< HEAD
 		hlist_for_each_entry(session_walk, g_head, global_hlist)
 			if (session_walk->session_id == session->session_id) {
+=======
+		/* IP encap expects session IDs to be globally unique, while
+		 * UDP encap doesn't.
+		 */
+		hlist_for_each_entry(session_walk, g_head, global_hlist)
+			if (session_walk->session_id == session->session_id &&
+			    (session_walk->tunnel->encap == L2TP_ENCAPTYPE_IP ||
+			     tunnel->encap == L2TP_ENCAPTYPE_IP)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				err = -EEXIST;
 				goto err_tlock_pnlock;
 			}
@@ -1735,7 +1745,12 @@ static __net_exit void l2tp_exit_net(struct net *net)
 	}
 	rcu_read_unlock_bh();
 
+<<<<<<< HEAD
 	flush_workqueue(l2tp_wq);
+=======
+	if (l2tp_wq)
+		flush_workqueue(l2tp_wq);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rcu_barrier();
 
 	for (hash = 0; hash < L2TP_HASH_SIZE_2; hash++)

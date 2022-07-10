@@ -35,6 +35,10 @@
 #include <linux/udp.h>
 #include <net/udp.h>
 #include "en.h"
+<<<<<<< HEAD
+=======
+#include "en/port.h"
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 enum {
 	MLX5E_ST_LINK_STATE,
@@ -80,13 +84,18 @@ static int mlx5e_test_link_state(struct mlx5e_priv *priv)
 
 static int mlx5e_test_link_speed(struct mlx5e_priv *priv)
 {
+<<<<<<< HEAD
 	u32 out[MLX5_ST_SZ_DW(ptys_reg)];
 	u32 eth_proto_oper;
 	int i;
+=======
+	u32 speed;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!netif_carrier_ok(priv->netdev))
 		return 1;
 
+<<<<<<< HEAD
 	if (mlx5_query_port_ptys(priv->mdev, out, sizeof(out), MLX5_PTYS_EN, 1))
 		return 1;
 
@@ -96,6 +105,9 @@ static int mlx5e_test_link_speed(struct mlx5e_priv *priv)
 			return 0;
 	}
 	return 1;
+=======
+	return mlx5e_port_linkspeed(priv->mdev, &speed);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 struct mlx5ehdr {

@@ -359,20 +359,39 @@ static int xive_spapr_populate_irq_data(u32 hw_irq, struct xive_irq_data *data)
 	data->esb_shift = esb_shift;
 	data->trig_page = trig_page;
 
+<<<<<<< HEAD
+=======
+	data->hw_irq = hw_irq;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/*
 	 * No chip-id for the sPAPR backend. This has an impact how we
 	 * pick a target. See xive_pick_irq_target().
 	 */
 	data->src_chip = XIVE_INVALID_CHIP_ID;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * When the H_INT_ESB flag is set, the H_INT_ESB hcall should
+	 * be used for interrupt management. Skip the remapping of the
+	 * ESB pages which are not available.
+	 */
+	if (data->flags & XIVE_IRQ_FLAG_H_INT_ESB)
+		return 0;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	data->eoi_mmio = ioremap(data->eoi_page, 1u << data->esb_shift);
 	if (!data->eoi_mmio) {
 		pr_err("Failed to map EOI page for irq 0x%x\n", hw_irq);
 		return -ENOMEM;
 	}
 
+<<<<<<< HEAD
 	data->hw_irq = hw_irq;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Full function page supports trigger */
 	if (flags & XIVE_SRC_TRIGGER) {
 		data->trig_mmio = data->eoi_mmio;

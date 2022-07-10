@@ -360,7 +360,11 @@ static int max77686_rtc_read_time(struct device *dev, struct rtc_time *tm)
 
 out:
 	mutex_unlock(&info->lock);
+<<<<<<< HEAD
 	return 0;
+=======
+	return ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int max77686_rtc_set_time(struct device *dev, struct rtc_time *tm)

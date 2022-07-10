@@ -443,7 +443,11 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
 	}
 
 	/* Handle multiple unicast addresses */
+<<<<<<< HEAD
 	if (netdev_uc_count(dev) > GMAC_MAX_PERFECT_ADDRESSES) {
+=======
+	if (netdev_uc_count(dev) > hw->unicast_filter_entries) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/* Switch to promiscuous mode if more than 128 addrs
 		 * are required
 		 */

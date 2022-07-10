@@ -218,6 +218,12 @@ static int xsk_generic_xmit(struct sock *sk, struct msghdr *m,
 
 	mutex_lock(&xs->mutex);
 
+<<<<<<< HEAD
+=======
+	if (xs->queue_id >= xs->dev->real_num_tx_queues)
+		goto out;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	while (xskq_peek_desc(xs->tx, &desc)) {
 		char *buffer;
 		u64 addr;
@@ -228,12 +234,15 @@ static int xsk_generic_xmit(struct sock *sk, struct msghdr *m,
 			goto out;
 		}
 
+<<<<<<< HEAD
 		if (xskq_reserve_addr(xs->umem->cq))
 			goto out;
 
 		if (xs->queue_id >= xs->dev->real_num_tx_queues)
 			goto out;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		len = desc.len;
 		skb = sock_alloc_send_skb(sk, len, 1, &err);
 		if (unlikely(!skb)) {
@@ -245,7 +254,11 @@ static int xsk_generic_xmit(struct sock *sk, struct msghdr *m,
 		addr = desc.addr;
 		buffer = xdp_umem_get_data(xs->umem, addr);
 		err = skb_store_bits(skb, 0, buffer, len);
+<<<<<<< HEAD
 		if (unlikely(err)) {
+=======
+		if (unlikely(err) || xskq_reserve_addr(xs->umem->cq)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			kfree_skb(skb);
 			goto out;
 		}
@@ -323,7 +336,11 @@ static int xsk_init_queue(u32 entries, struct xsk_queue **queue,
 
 	/* Make sure queue is ready before it can be seen by others */
 	smp_wmb();
+<<<<<<< HEAD
 	*queue = q;
+=======
+	WRITE_ONCE(*queue, q);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 }
 
@@ -343,12 +360,27 @@ static int xsk_release(struct socket *sock)
 	local_bh_enable();
 
 	if (xs->dev) {
+<<<<<<< HEAD
 		/* Wait for driver to stop using the xdp socket. */
 		synchronize_net();
 		dev_put(xs->dev);
 		xs->dev = NULL;
 	}
 
+=======
+		struct net_device *dev = xs->dev;
+
+		/* Wait for driver to stop using the xdp socket. */
+		xdp_del_sk_umem(xs->umem, xs);
+		xs->dev = NULL;
+		synchronize_net();
+		dev_put(dev);
+	}
+
+	xskq_destroy(xs->rx);
+	xskq_destroy(xs->tx);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	sock_orphan(sk);
 	sock->sk = NULL;
 
@@ -451,7 +483,11 @@ static int xsk_bind(struct socket *sock, struct sockaddr *addr, int addr_len)
 		}
 
 		xdp_get_umem(umem_xs->umem);
+<<<<<<< HEAD
 		xs->umem = umem_xs->umem;
+=======
+		WRITE_ONCE(xs->umem, umem_xs->umem);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		sockfd_put(sock);
 	} else if (!xs->umem || !xdp_umem_validate_queues(xs->umem)) {
 		err = -EINVAL;
@@ -531,7 +567,11 @@ static int xsk_setsockopt(struct socket *sock, int level, int optname,
 
 		/* Make sure umem is ready before it can be seen by others */
 		smp_wmb();
+<<<<<<< HEAD
 		xs->umem = umem;
+=======
+		WRITE_ONCE(xs->umem, umem);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		mutex_unlock(&xs->mutex);
 		return 0;
 	}
@@ -655,6 +695,11 @@ static int xsk_mmap(struct file *file, struct socket *sock,
 		if (!umem)
 			return -EINVAL;
 
+<<<<<<< HEAD
+=======
+		/* Matches the smp_wmb() in XDP_UMEM_REG */
+		smp_rmb();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (offset == XDP_UMEM_PGOFF_FILL_RING)
 			q = READ_ONCE(umem->fq);
 		else if (offset == XDP_UMEM_PGOFF_COMPLETION_RING)
@@ -664,6 +709,11 @@ static int xsk_mmap(struct file *file, struct socket *sock,
 	if (!q)
 		return -EINVAL;
 
+<<<<<<< HEAD
+=======
+	/* Matches the smp_wmb() in xsk_init_queue */
+	smp_rmb();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	qpg = virt_to_head_page(q->ring);
 	if (size > (PAGE_SIZE << compound_order(qpg)))
 		return -EINVAL;
@@ -707,9 +757,12 @@ static void xsk_destruct(struct sock *sk)
 	if (!sock_flag(sk, SOCK_DEAD))
 		return;
 
+<<<<<<< HEAD
 	xskq_destroy(xs->rx);
 	xskq_destroy(xs->tx);
 	xdp_del_sk_umem(xs->umem, xs);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	xdp_put_umem(xs->umem);
 
 	sk_refcnt_debug_dec(sk);

@@ -31,6 +31,11 @@ struct bnxt_coredump {
 	u16		total_segs;
 };
 
+<<<<<<< HEAD
+=======
+#define BNXT_COREDUMP_BUF_LEN(len) ((len) - sizeof(struct bnxt_coredump_record))
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct bnxt_hwrm_dbg_dma_info {
 	void *dest_buf;
 	int dest_buf_size;
@@ -38,6 +43,11 @@ struct bnxt_hwrm_dbg_dma_info {
 	u16 seq_off;
 	u16 data_len_off;
 	u16 segs;
+<<<<<<< HEAD
+=======
+	u32 seg_start;
+	u32 buf_len;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct hwrm_dbg_cmn_input {

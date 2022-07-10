@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #define CREATE_TRACE_POINTS
@@ -277,7 +281,12 @@ struct dentry *msm_cvp_debugfs_init_core(struct msm_cvp_core *core,
 
 	snprintf(debugfs_name, MAX_DEBUGFS_NAME, "core%d", core->id);
 	dir = debugfs_create_dir(debugfs_name, parent);
+<<<<<<< HEAD
 	if (!dir) {
+=======
+	if (IS_ERR_OR_NULL(dir)) {
+		dir = NULL;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		dprintk(CVP_ERR, "Failed to create debugfs for msm_cvp\n");
 		goto failed_create_dir;
 	}
@@ -423,7 +432,12 @@ struct dentry *msm_cvp_debugfs_init_inst(struct msm_cvp_inst *inst,
 	idata->inst = inst;
 
 	dir = debugfs_create_dir(debugfs_name, parent);
+<<<<<<< HEAD
 	if (!dir) {
+=======
+	if (IS_ERR_OR_NULL(dir)) {
+		dir = NULL;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		dprintk(CVP_ERR, "Failed to create debugfs for msm_cvp\n");
 		goto failed_create_dir;
 	}

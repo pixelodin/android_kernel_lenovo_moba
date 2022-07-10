@@ -21,6 +21,10 @@
 #include <linux/spinlock.h>
 #include <linux/io.h>
 #include <linux/gpio/driver.h>
+<<<<<<< HEAD
+=======
+#include <linux/gpio/consumer.h> /* GPIO descriptor enum */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/interrupt.h>
 #include <linux/irqdomain.h>
 #include <linux/platform_device.h>

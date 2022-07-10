@@ -49,6 +49,13 @@
 #define DCMD_RESP_TIMEOUT	msecs_to_jiffies(2500)
 #define CTL_DONE_TIMEOUT	msecs_to_jiffies(2500)
 
+<<<<<<< HEAD
+=======
+/* watermark expressed in number of words */
+#define DEFAULT_F2_WATERMARK    0x8
+#define CY_4373_F2_WATERMARK    0x40
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #ifdef DEBUG
 
 #define BRCMF_TRAP_INFO_SIZE	80
@@ -138,6 +145,11 @@ struct rte_console {
 /* 1: isolate internal sdio signals, put external pads in tri-state; requires
  * sdio bus power cycle to clear (rev 9) */
 #define SBSDIO_DEVCTL_PADS_ISO		0x08
+<<<<<<< HEAD
+=======
+/* 1: enable F2 Watermark */
+#define SBSDIO_DEVCTL_F2WM_ENAB		0x10
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* Force SD->SB reset mapping (rev 11) */
 #define SBSDIO_DEVCTL_SB_RST_CTL	0x30
 /*   Determined by CoreControl bit */
@@ -1928,6 +1940,10 @@ static uint brcmf_sdio_readframes(struct brcmf_sdio *bus, uint maxframes)
 					       BRCMF_SDIO_FT_NORMAL)) {
 				rd->len = 0;
 				brcmu_pkt_buf_free_skb(pkt);
+<<<<<<< HEAD
+=======
+				continue;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			}
 			bus->sdcnt.rx_readahead_cnt++;
 			if (rd->len != roundup(rd_new.len, 16)) {
@@ -3125,9 +3141,18 @@ static int brcmf_debugfs_sdio_count_read(struct seq_file *seq, void *data)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void brcmf_sdio_debugfs_create(struct brcmf_sdio *bus)
 {
 	struct brcmf_pub *drvr = bus->sdiodev->bus_if->drvr;
+=======
+static void brcmf_sdio_debugfs_create(struct device *dev)
+{
+	struct brcmf_bus *bus_if = dev_get_drvdata(dev);
+	struct brcmf_pub *drvr = bus_if->drvr;
+	struct brcmf_sdio_dev *sdiodev = bus_if->bus_priv.sdio;
+	struct brcmf_sdio *bus = sdiodev->bus;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct dentry *dentry = brcmf_debugfs_get_devdir(drvr);
 
 	if (IS_ERR_OR_NULL(dentry))
@@ -3147,7 +3172,11 @@ static int brcmf_sdio_checkdied(struct brcmf_sdio *bus)
 	return 0;
 }
 
+<<<<<<< HEAD
 static void brcmf_sdio_debugfs_create(struct brcmf_sdio *bus)
+=======
+static void brcmf_sdio_debugfs_create(struct device *dev)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 }
 #endif /* DEBUG */
@@ -3432,8 +3461,11 @@ static int brcmf_sdio_bus_preinit(struct device *dev)
 	if (bus->rxbuf)
 		bus->rxblen = value;
 
+<<<<<<< HEAD
 	brcmf_sdio_debugfs_create(bus);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* the commands below use the terms tx and rx from
 	 * a device perspective, ie. bus:txglom affects the
 	 * bus transfers from device to host.
@@ -4044,6 +4076,10 @@ static const struct brcmf_bus_ops brcmf_sdio_bus_ops = {
 	.get_ramsize = brcmf_sdio_bus_get_ramsize,
 	.get_memdump = brcmf_sdio_bus_get_memdump,
 	.get_fwname = brcmf_sdio_get_fwname,
+<<<<<<< HEAD
+=======
+	.debugfs_create = brcmf_sdio_debugfs_create
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 #define BRCMF_SDIO_FW_CODE	0
@@ -4060,6 +4096,10 @@ static void brcmf_sdio_firmware_callback(struct device *dev, int err,
 	void *nvram;
 	u32 nvram_len;
 	u8 saveclk;
+<<<<<<< HEAD
+=======
+	u8 devctl;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	brcmf_dbg(TRACE, "Enter: dev=%s, err=%d\n", dev_name(dev), err);
 
@@ -4115,8 +4155,31 @@ static void brcmf_sdio_firmware_callback(struct device *dev, int err,
 		brcmf_sdiod_writel(sdiod, core->base + SD_REG(hostintmask),
 				   bus->hostintmask, NULL);
 
+<<<<<<< HEAD
 
 		brcmf_sdiod_writeb(sdiod, SBSDIO_WATERMARK, 8, &err);
+=======
+		switch (sdiod->func1->device) {
+		case SDIO_DEVICE_ID_CYPRESS_4373:
+			brcmf_dbg(INFO, "set F2 watermark to 0x%x*4 bytes\n",
+				  CY_4373_F2_WATERMARK);
+			brcmf_sdiod_writeb(sdiod, SBSDIO_WATERMARK,
+					   CY_4373_F2_WATERMARK, &err);
+			devctl = brcmf_sdiod_readb(sdiod, SBSDIO_DEVICE_CTL,
+						   &err);
+			devctl |= SBSDIO_DEVCTL_F2WM_ENAB;
+			brcmf_sdiod_writeb(sdiod, SBSDIO_DEVICE_CTL, devctl,
+					   &err);
+			brcmf_sdiod_writeb(sdiod, SBSDIO_FUNC1_MESBUSYCTRL,
+					   CY_4373_F2_WATERMARK |
+					   SBSDIO_MESBUSYCTRL_ENAB, &err);
+			break;
+		default:
+			brcmf_sdiod_writeb(sdiod, SBSDIO_WATERMARK,
+					   DEFAULT_F2_WATERMARK, &err);
+			break;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	} else {
 		/* Disable F2 again */
 		sdio_disable_func(sdiod->func2);

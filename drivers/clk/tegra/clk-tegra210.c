@@ -2603,7 +2603,11 @@ static struct tegra210_domain_mbist_war tegra210_pg_mbist_war[] = {
 	[TEGRA_POWERGATE_MPE] = {
 		.handle_lvl2_ovr = tegra210_generic_mbist_war,
 		.lvl2_offset = LVL2_CLK_GATE_OVRE,
+<<<<<<< HEAD
 		.lvl2_mask = BIT(2),
+=======
+		.lvl2_mask = BIT(29),
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	[TEGRA_POWERGATE_SOR] = {
 		.handle_lvl2_ovr = tegra210_generic_mbist_war,
@@ -2654,14 +2658,22 @@ static struct tegra210_domain_mbist_war tegra210_pg_mbist_war[] = {
 		.num_clks = ARRAY_SIZE(nvdec_slcg_clkids),
 		.clk_init_data = nvdec_slcg_clkids,
 		.handle_lvl2_ovr = tegra210_generic_mbist_war,
+<<<<<<< HEAD
 		.lvl2_offset = LVL2_CLK_GATE_OVRC,
+=======
+		.lvl2_offset = LVL2_CLK_GATE_OVRE,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.lvl2_mask = BIT(9) | BIT(31),
 	},
 	[TEGRA_POWERGATE_NVJPG] = {
 		.num_clks = ARRAY_SIZE(nvjpg_slcg_clkids),
 		.clk_init_data = nvjpg_slcg_clkids,
 		.handle_lvl2_ovr = tegra210_generic_mbist_war,
+<<<<<<< HEAD
 		.lvl2_offset = LVL2_CLK_GATE_OVRC,
+=======
+		.lvl2_offset = LVL2_CLK_GATE_OVRE,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.lvl2_mask = BIT(9) | BIT(31),
 	},
 	[TEGRA_POWERGATE_AUD] = {

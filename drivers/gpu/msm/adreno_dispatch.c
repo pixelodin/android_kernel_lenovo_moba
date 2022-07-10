@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2013-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2013-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include <linux/slab.h>
@@ -2260,12 +2264,21 @@ static int dispatcher_do_fault(struct adreno_device *adreno_dev)
 		ret = adreno_reset(device, fault);
 
 	mutex_unlock(&device->mutex);
+<<<<<<< HEAD
 	/* if any other fault got in until reset then ignore */
 	atomic_set(&dispatcher->fault, 0);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* If adreno_reset() fails then what hope do we have for the future? */
 	BUG_ON(ret);
 
+<<<<<<< HEAD
+=======
+	/* if any other fault got in until reset then ignore */
+	atomic_set(&dispatcher->fault, 0);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* recover all the dispatch_q's starting with the one that hung */
 	if (dispatch_q)
 		recover_dispatch_q(device, dispatch_q, fault, base);

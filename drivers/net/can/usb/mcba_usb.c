@@ -887,9 +887,14 @@ static void mcba_usb_disconnect(struct usb_interface *intf)
 	netdev_info(priv->netdev, "device disconnected\n");
 
 	unregister_candev(priv->netdev);
+<<<<<<< HEAD
 	free_candev(priv->netdev);
 
 	mcba_urb_unlink(priv);
+=======
+	mcba_urb_unlink(priv);
+	free_candev(priv->netdev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static struct usb_driver mcba_usb_driver = {

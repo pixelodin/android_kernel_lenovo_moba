@@ -3264,7 +3264,11 @@ static void qla24xx_async_gpsc_sp_done(void *s, int res)
 	fcport->flags &= ~(FCF_ASYNC_SENT | FCF_ASYNC_ACTIVE);
 
 	if (res == QLA_FUNCTION_TIMEOUT)
+<<<<<<< HEAD
 		return;
+=======
+		goto done;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (res == (DID_ERROR << 16)) {
 		/* entry status error */
@@ -3277,7 +3281,11 @@ static void qla24xx_async_gpsc_sp_done(void *s, int res)
 			ql_dbg(ql_dbg_disc, vha, 0x2019,
 			    "GPSC command unsupported, disabling query.\n");
 			ha->flags.gpsc_supported = 0;
+<<<<<<< HEAD
 			res = QLA_SUCCESS;
+=======
+			goto done;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 	} else {
 		switch (be16_to_cpu(ct_rsp->rsp.gpsc.speed)) {
@@ -3310,7 +3318,10 @@ static void qla24xx_async_gpsc_sp_done(void *s, int res)
 		    be16_to_cpu(ct_rsp->rsp.gpsc.speeds),
 		    be16_to_cpu(ct_rsp->rsp.gpsc.speed));
 	}
+<<<<<<< HEAD
 done:
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	memset(&ea, 0, sizeof(ea));
 	ea.event = FCME_GPSC_DONE;
 	ea.rc = res;
@@ -3318,6 +3329,10 @@ done:
 	ea.sp = sp;
 	qla2x00_fcport_event_handler(vha, &ea);
 
+<<<<<<< HEAD
+=======
+done:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	sp->free(sp);
 }
 
@@ -3902,9 +3917,16 @@ void qla24xx_async_gnnft_done(scsi_qla_host_t *vha, srb_t *sp)
 	fc_port_t *fcport;
 	u32 i, rc;
 	bool found;
+<<<<<<< HEAD
 	struct fab_scan_rp *rp;
 	unsigned long flags;
 	u8 recheck = 0;
+=======
+	struct fab_scan_rp *rp, *trp;
+	unsigned long flags;
+	u8 recheck = 0;
+	u16 dup = 0, dup_cnt = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	ql_dbg(ql_dbg_disc, vha, 0xffff,
 	    "%s enter\n", __func__);
@@ -3935,6 +3957,10 @@ void qla24xx_async_gnnft_done(scsi_qla_host_t *vha, srb_t *sp)
 
 	for (i = 0; i < vha->hw->max_fibre_devices; i++) {
 		u64 wwn;
+<<<<<<< HEAD
+=======
+		int k;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		rp = &vha->scan.l[i];
 		found = false;
@@ -3943,6 +3969,23 @@ void qla24xx_async_gnnft_done(scsi_qla_host_t *vha, srb_t *sp)
 		if (wwn == 0)
 			continue;
 
+<<<<<<< HEAD
+=======
+		/* Remove duplicate NPORT ID entries from switch data base */
+		for (k = i + 1; k < vha->hw->max_fibre_devices; k++) {
+			trp = &vha->scan.l[k];
+			if (rp->id.b24 == trp->id.b24) {
+				dup = 1;
+				dup_cnt++;
+				ql_dbg(ql_dbg_disc + ql_dbg_verbose,
+				    vha, 0xffff,
+				    "Detected duplicate NPORT ID from switch data base: ID %06x WWN %8phN WWN %8phN\n",
+				    rp->id.b24, rp->port_name, trp->port_name);
+				memset(trp, 0, sizeof(*trp));
+			}
+		}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (!memcmp(rp->port_name, vha->port_name, WWN_SIZE))
 			continue;
 
@@ -3982,6 +4025,15 @@ void qla24xx_async_gnnft_done(scsi_qla_host_t *vha, srb_t *sp)
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	if (dup) {
+		ql_log(ql_log_warn, vha, 0xffff,
+		    "Detected %d duplicate NPORT ID(s) from switch data base\n",
+		    dup_cnt);
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/*
 	 * Logout all previous fabric dev marked lost, except FCP2 devices.
 	 */

@@ -20,7 +20,11 @@
 	};
 
 	chosen {
+<<<<<<< HEAD
 		bootargs = "console=ttyS0,115200n8";
+=======
+		bootargs = "console=ttyS0,115200n8 root=/dev/mtdblock2 rw rootfstype=squashfs,jffs2 rootwait";
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		stdout-path = &uart0;
 	};
 
@@ -138,6 +142,7 @@
 			/* 16MB of flash */
 			reg = <0x30000000 0x01000000>;
 
+<<<<<<< HEAD
 			partition@0 {
 				label = "RedBoot";
 				reg = <0x00000000 0x00120000>;
@@ -169,6 +174,12 @@
 				label = "FIS directory";
 				reg = <0x00fe0000 0x00020000>;
 				read-only;
+=======
+			partitions {
+				compatible = "redboot-fis";
+				/* Eraseblock at 0xfe0000 */
+				fis-index-block = <0x1fc>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			};
 		};
 

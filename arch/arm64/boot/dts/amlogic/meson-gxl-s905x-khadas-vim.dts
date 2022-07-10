@@ -33,11 +33,17 @@
 
 	gpio-keys-polled {
 		compatible = "gpio-keys-polled";
+<<<<<<< HEAD
 		#address-cells = <1>;
 		#size-cells = <0>;
 		poll-interval = <100>;
 
 		button@0 {
+=======
+		poll-interval = <100>;
+
+		power-button {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			label = "power";
 			linux,code = <KEY_POWER>;
 			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_LOW>;
@@ -78,6 +84,10 @@
 	status = "okay";
 	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
 	pinctrl-names = "default";
+<<<<<<< HEAD
+=======
+	hdmi-supply = <&hdmi_5v>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 &hdmi_tx_tmds_port {
@@ -112,7 +122,11 @@
 	linux,rc-map-name = "rc-geekbox";
 };
 
+<<<<<<< HEAD
 &pinctrl_aobus {
+=======
+&gpio_ao {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	gpio-line-names = "UART TX",
 			  "UART RX",
 			  "Power Key In",
@@ -127,7 +141,11 @@
 			  "";
 };
 
+<<<<<<< HEAD
 &pinctrl_periphs {
+=======
+&gpio {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	gpio-line-names = /* Bank GPIOZ */
 			  "", "", "", "", "", "", "",
 			  "", "", "", "", "", "", "",

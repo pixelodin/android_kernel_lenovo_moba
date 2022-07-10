@@ -989,7 +989,12 @@ void diag_cntl_process_read_data(struct diagfwd_info *p_info, void *buf,
 
 	while (read_len + header_len < len) {
 		ctrl_pkt = (struct diag_ctrl_pkt_header_t *)ptr;
+<<<<<<< HEAD
 		if ((read_len + header_len + ctrl_pkt->len) > len)
+=======
+		if (((size_t)read_len + (size_t)ctrl_pkt->len +
+			header_len) > len)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			return;
 		switch (ctrl_pkt->pkt_id) {
 		case DIAG_CTRL_MSG_REG:

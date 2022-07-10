@@ -190,8 +190,13 @@ static inline bool zcrypt_card_compare(struct zcrypt_card *zc,
 	weight += atomic_read(&zc->load);
 	pref_weight += atomic_read(&pref_zc->load);
 	if (weight == pref_weight)
+<<<<<<< HEAD
 		return atomic_read(&zc->card->total_request_count) >
 			atomic_read(&pref_zc->card->total_request_count);
+=======
+		return atomic64_read(&zc->card->total_request_count) >
+			atomic64_read(&pref_zc->card->total_request_count);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return weight > pref_weight;
 }
 
@@ -719,11 +724,19 @@ static void zcrypt_qdepth_mask(char qdepth[], size_t max_adapters)
 	spin_unlock(&zcrypt_list_lock);
 }
 
+<<<<<<< HEAD
 static void zcrypt_perdev_reqcnt(int reqcnt[], size_t max_adapters)
+=======
+static void zcrypt_perdev_reqcnt(u32 reqcnt[], size_t max_adapters)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct zcrypt_card *zc;
 	struct zcrypt_queue *zq;
 	int card;
+<<<<<<< HEAD
+=======
+	u64 cnt;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	memset(reqcnt, 0, sizeof(int) * max_adapters);
 	spin_lock(&zcrypt_list_lock);
@@ -735,8 +748,14 @@ static void zcrypt_perdev_reqcnt(int reqcnt[], size_t max_adapters)
 			    || card >= max_adapters)
 				continue;
 			spin_lock(&zq->queue->lock);
+<<<<<<< HEAD
 			reqcnt[card] = zq->queue->total_request_count;
 			spin_unlock(&zq->queue->lock);
+=======
+			cnt = zq->queue->total_request_count;
+			spin_unlock(&zq->queue->lock);
+			reqcnt[card] = (cnt < UINT_MAX) ? (u32) cnt : UINT_MAX;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 	}
 	local_bh_enable();
@@ -907,9 +926,15 @@ static long zcrypt_unlocked_ioctl(struct file *filp, unsigned int cmd,
 		return 0;
 	}
 	case ZCRYPT_PERDEV_REQCNT: {
+<<<<<<< HEAD
 		int *reqcnt;
 
 		reqcnt = kcalloc(AP_DEVICES, sizeof(int), GFP_KERNEL);
+=======
+		u32 *reqcnt;
+
+		reqcnt = kcalloc(AP_DEVICES, sizeof(u32), GFP_KERNEL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (!reqcnt)
 			return -ENOMEM;
 		zcrypt_perdev_reqcnt(reqcnt, AP_DEVICES);
@@ -966,7 +991,11 @@ static long zcrypt_unlocked_ioctl(struct file *filp, unsigned int cmd,
 	}
 	case Z90STAT_PERDEV_REQCNT: {
 		/* the old ioctl supports only 64 adapters */
+<<<<<<< HEAD
 		int reqcnt[MAX_ZDEV_CARDIDS];
+=======
+		u32 reqcnt[MAX_ZDEV_CARDIDS];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		zcrypt_perdev_reqcnt(reqcnt, MAX_ZDEV_CARDIDS);
 		if (copy_to_user((int __user *) arg, reqcnt, sizeof(reqcnt)))

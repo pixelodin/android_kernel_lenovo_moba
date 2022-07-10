@@ -678,6 +678,11 @@ static long __get_user_pages(struct task_struct *tsk, struct mm_struct *mm,
 	if (!nr_pages)
 		return 0;
 
+<<<<<<< HEAD
+=======
+	start = untagged_addr(start);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	VM_BUG_ON(!!pages != !!(gup_flags & FOLL_GET));
 
 	/*
@@ -832,6 +837,11 @@ int fixup_user_fault(struct task_struct *tsk, struct mm_struct *mm,
 	struct vm_area_struct *vma;
 	vm_fault_t ret, major = 0;
 
+<<<<<<< HEAD
+=======
+	address = untagged_addr(address);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (unlocked)
 		fault_flags |= FAULT_FLAG_ALLOW_RETRY;
 

@@ -276,6 +276,11 @@ static void ubifs_i_callback(struct rcu_head *head)
 {
 	struct inode *inode = container_of(head, struct inode, i_rcu);
 	struct ubifs_inode *ui = ubifs_inode(inode);
+<<<<<<< HEAD
+=======
+
+	fscrypt_free_inode(inode);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	kmem_cache_free(ubifs_inode_slab, ui);
 }
 
@@ -334,6 +339,19 @@ static int ubifs_write_inode(struct inode *inode, struct writeback_control *wbc)
 	return err;
 }
 
+<<<<<<< HEAD
+=======
+static int ubifs_drop_inode(struct inode *inode)
+{
+	int drop = generic_drop_inode(inode);
+
+	if (!drop)
+		drop = fscrypt_drop_inode(inode);
+
+	return drop;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static void ubifs_evict_inode(struct inode *inode)
 {
 	int err;
@@ -1923,6 +1941,10 @@ const struct super_operations ubifs_super_operations = {
 	.destroy_inode = ubifs_destroy_inode,
 	.put_super     = ubifs_put_super,
 	.write_inode   = ubifs_write_inode,
+<<<<<<< HEAD
+=======
+	.drop_inode    = ubifs_drop_inode,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.evict_inode   = ubifs_evict_inode,
 	.statfs        = ubifs_statfs,
 	.dirty_inode   = ubifs_dirty_inode,

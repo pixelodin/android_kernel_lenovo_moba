@@ -44,7 +44,11 @@ module_param(record_size, ulong, 0400);
 MODULE_PARM_DESC(record_size,
 		"size of each dump done on oops/panic");
 
+<<<<<<< HEAD
 static ulong ramoops_console_size = 256*1024UL;
+=======
+static ulong ramoops_console_size = MIN_MEM_SIZE;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 module_param_named(console_size, ramoops_console_size, ulong, 0400);
 MODULE_PARM_DESC(console_size, "size of kernel console log");
 
@@ -56,12 +60,20 @@ static ulong ramoops_pmsg_size = MIN_MEM_SIZE;
 module_param_named(pmsg_size, ramoops_pmsg_size, ulong, 0400);
 MODULE_PARM_DESC(pmsg_size, "size of user space message log");
 
+<<<<<<< HEAD
 static unsigned long long mem_address = 0xb0000000;
+=======
+static unsigned long long mem_address;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 module_param_hw(mem_address, ullong, other, 0400);
 MODULE_PARM_DESC(mem_address,
 		"start of reserved RAM used to store oops/panic logs");
 
+<<<<<<< HEAD
 static ulong mem_size = 0x100000;
+=======
+static ulong mem_size;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 module_param(mem_size, ulong, 0400);
 MODULE_PARM_DESC(mem_size,
 		"size of reserved RAM used to store oops/panic logs");
@@ -301,6 +313,10 @@ static ssize_t ramoops_pstore_read(struct pstore_record *record)
 					  GFP_KERNEL);
 			if (!tmp_prz)
 				return -ENOMEM;
+<<<<<<< HEAD
+=======
+			prz = tmp_prz;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			free_prz = true;
 
 			while (cxt->ftrace_read_cnt < cxt->max_ftrace_cnt) {
@@ -323,7 +339,10 @@ static ssize_t ramoops_pstore_read(struct pstore_record *record)
 					goto out;
 			}
 			record->id = 0;
+<<<<<<< HEAD
 			prz = tmp_prz;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 	}
 
@@ -437,6 +456,20 @@ static int notrace ramoops_pstore_write(struct pstore_record *record)
 
 	prz = cxt->dprzs[cxt->dump_write_cnt];
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Since this is a new crash dump, we need to reset the buffer in
+	 * case it still has an old dump present. Without this, the new dump
+	 * will get appended, which would seriously confuse anything trying
+	 * to check dump file contents. Specifically, ramoops_read_kmsg_hdr()
+	 * expects to find a dump header in the beginning of buffer data, so
+	 * we must to reset the buffer values, in order to ensure that the
+	 * header will be written to the beginning of the buffer.
+	 */
+	persistent_ram_zap(prz);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Build header and append record contents. */
 	hlen = ramoops_write_kmsg_hdr(prz, record);
 	size = record->size;

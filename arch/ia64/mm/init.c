@@ -661,6 +661,7 @@ int arch_add_memory(int nid, u64 start, u64 size, struct vmem_altmap *altmap,
 	return ret;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_MEMORY_HOTREMOVE
 int arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
 {
@@ -679,3 +680,14 @@ int arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
 }
 #endif
 #endif
+=======
+void arch_remove_memory(int nid, u64 start, u64 size,
+			struct vmem_altmap *altmap)
+{
+	unsigned long start_pfn = start >> PAGE_SHIFT;
+	unsigned long nr_pages = size >> PAGE_SHIFT;
+
+	__remove_pages(start_pfn, nr_pages, altmap);
+}
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

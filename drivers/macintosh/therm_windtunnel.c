@@ -300,9 +300,17 @@ static int control_loop(void *dummy)
 /*	i2c probing and setup						*/
 /************************************************************************/
 
+<<<<<<< HEAD
 static int
 do_attach( struct i2c_adapter *adapter )
 {
+=======
+static void do_attach(struct i2c_adapter *adapter)
+{
+	struct i2c_board_info info = { };
+	struct device_node *np;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* scan 0x48-0x4f (DS1775) and 0x2c-2x2f (ADM1030) */
 	static const unsigned short scan_ds1775[] = {
 		0x48, 0x49, 0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f,
@@ -313,6 +321,7 @@ do_attach( struct i2c_adapter *adapter )
 		I2C_CLIENT_END
 	};
 
+<<<<<<< HEAD
 	if( strncmp(adapter->name, "uni-n", 5) )
 		return 0;
 
@@ -332,6 +341,26 @@ do_attach( struct i2c_adapter *adapter )
 		}
 	}
 	return 0;
+=======
+	if (x.running || strncmp(adapter->name, "uni-n", 5))
+		return;
+
+	np = of_find_compatible_node(adapter->dev.of_node, NULL, "MAC,ds1775");
+	if (np) {
+		of_node_put(np);
+	} else {
+		strlcpy(info.type, "MAC,ds1775", I2C_NAME_SIZE);
+		i2c_new_probed_device(adapter, &info, scan_ds1775, NULL);
+	}
+
+	np = of_find_compatible_node(adapter->dev.of_node, NULL, "MAC,adm1030");
+	if (np) {
+		of_node_put(np);
+	} else {
+		strlcpy(info.type, "MAC,adm1030", I2C_NAME_SIZE);
+		i2c_new_probed_device(adapter, &info, scan_adm1030, NULL);
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int
@@ -404,8 +433,13 @@ out:
 enum chip { ds1775, adm1030 };
 
 static const struct i2c_device_id therm_windtunnel_id[] = {
+<<<<<<< HEAD
 	{ "therm_ds1775", ds1775 },
 	{ "therm_adm1030", adm1030 },
+=======
+	{ "MAC,ds1775", ds1775 },
+	{ "MAC,adm1030", adm1030 },
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	{ }
 };
 MODULE_DEVICE_TABLE(i2c, therm_windtunnel_id);
@@ -414,6 +448,10 @@ static int
 do_probe(struct i2c_client *cl, const struct i2c_device_id *id)
 {
 	struct i2c_adapter *adapter = cl->adapter;
+<<<<<<< HEAD
+=======
+	int ret = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if( !i2c_check_functionality(adapter, I2C_FUNC_SMBUS_WORD_DATA
 				     | I2C_FUNC_SMBUS_WRITE_BYTE) )
@@ -421,11 +459,27 @@ do_probe(struct i2c_client *cl, const struct i2c_device_id *id)
 
 	switch (id->driver_data) {
 	case adm1030:
+<<<<<<< HEAD
 		return attach_fan( cl );
 	case ds1775:
 		return attach_thermostat(cl);
 	}
 	return 0;
+=======
+		ret = attach_fan(cl);
+		break;
+	case ds1775:
+		ret = attach_thermostat(cl);
+		break;
+	}
+
+	if (!x.running && x.thermostat && x.fan) {
+		x.running = 1;
+		x.poll_task = kthread_run(control_loop, NULL, "g4fand");
+	}
+
+	return ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static struct i2c_driver g4fan_driver = {

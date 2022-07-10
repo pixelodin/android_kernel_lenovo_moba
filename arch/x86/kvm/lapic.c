@@ -633,9 +633,17 @@ static inline bool pv_eoi_enabled(struct kvm_vcpu *vcpu)
 static bool pv_eoi_get_pending(struct kvm_vcpu *vcpu)
 {
 	u8 val;
+<<<<<<< HEAD
 	if (pv_eoi_get_user(vcpu, &val) < 0)
 		apic_debug("Can't read EOI MSR value: 0x%llx\n",
 			   (unsigned long long)vcpu->arch.pv_eoi.msr_val);
+=======
+	if (pv_eoi_get_user(vcpu, &val) < 0) {
+		apic_debug("Can't read EOI MSR value: 0x%llx\n",
+			   (unsigned long long)vcpu->arch.pv_eoi.msr_val);
+		return false;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return val & 0x1;
 }
 
@@ -1060,11 +1068,16 @@ static int __apic_accept_irq(struct kvm_lapic *apic, int delivery_mode,
 				apic_clear_vector(vector, apic->regs + APIC_TMR);
 		}
 
+<<<<<<< HEAD
 		if (vcpu->arch.apicv_active)
 			kvm_x86_ops->deliver_posted_interrupt(vcpu, vector);
 		else {
 			kvm_lapic_set_irr(vector, apic);
 
+=======
+		if (kvm_x86_ops->deliver_posted_interrupt(vcpu, vector)) {
+			kvm_lapic_set_irr(vector, apic);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			kvm_make_request(KVM_REQ_EVENT, vcpu);
 			kvm_vcpu_kick(vcpu);
 		}
@@ -1862,6 +1875,7 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
 	case APIC_LVTTHMR:
 	case APIC_LVTPC:
 	case APIC_LVT1:
+<<<<<<< HEAD
 	case APIC_LVTERR:
 		/* TODO: Check vector */
 		if (!kvm_apic_sw_enabled(apic))
@@ -1871,6 +1885,22 @@ int kvm_lapic_reg_write(struct kvm_lapic *apic, u32 reg, u32 val)
 		kvm_lapic_set_reg(apic, reg, val);
 
 		break;
+=======
+	case APIC_LVTERR: {
+		/* TODO: Check vector */
+		size_t size;
+		u32 index;
+
+		if (!kvm_apic_sw_enabled(apic))
+			val |= APIC_LVT_MASKED;
+		size = ARRAY_SIZE(apic_lvt_mask);
+		index = array_index_nospec(
+				(reg - APIC_LVTT) >> 4, size);
+		val &= apic_lvt_mask[index];
+		kvm_lapic_set_reg(apic, reg, val);
+		break;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	case APIC_LVTT:
 		if (!kvm_apic_sw_enabled(apic))

@@ -144,9 +144,17 @@ SYSCALL_DEFINE2(gettimeofday, struct timeval __user *, tv,
 		struct timezone __user *, tz)
 {
 	if (likely(tv != NULL)) {
+<<<<<<< HEAD
 		struct timeval ktv;
 		do_gettimeofday(&ktv);
 		if (copy_to_user(tv, &ktv, sizeof(ktv)))
+=======
+		struct timespec64 ts;
+
+		ktime_get_real_ts64(&ts);
+		if (put_user(ts.tv_sec, &tv->tv_sec) ||
+		    put_user(ts.tv_nsec / 1000, &tv->tv_usec))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			return -EFAULT;
 	}
 	if (unlikely(tz != NULL)) {
@@ -227,10 +235,18 @@ COMPAT_SYSCALL_DEFINE2(gettimeofday, struct compat_timeval __user *, tv,
 		       struct timezone __user *, tz)
 {
 	if (tv) {
+<<<<<<< HEAD
 		struct timeval ktv;
 
 		do_gettimeofday(&ktv);
 		if (compat_put_timeval(&ktv, tv))
+=======
+		struct timespec64 ts;
+
+		ktime_get_real_ts64(&ts);
+		if (put_user(ts.tv_sec, &tv->tv_sec) ||
+		    put_user(ts.tv_nsec / 1000, &tv->tv_usec))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			return -EFAULT;
 	}
 	if (tz) {

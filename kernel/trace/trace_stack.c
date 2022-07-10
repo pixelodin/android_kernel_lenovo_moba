@@ -196,6 +196,14 @@ check_stack(unsigned long ip, unsigned long *stack)
 	local_irq_restore(flags);
 }
 
+<<<<<<< HEAD
+=======
+/* Some archs may not define MCOUNT_INSN_SIZE */
+#ifndef MCOUNT_INSN_SIZE
+# define MCOUNT_INSN_SIZE 0
+#endif
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static void
 stack_trace_call(unsigned long ip, unsigned long parent_ip,
 		 struct ftrace_ops *op, struct pt_regs *pt_regs)

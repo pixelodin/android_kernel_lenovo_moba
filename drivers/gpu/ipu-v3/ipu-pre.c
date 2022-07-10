@@ -106,6 +106,10 @@ struct ipu_pre {
 	void			*buffer_virt;
 	bool			in_use;
 	unsigned int		safe_window_end;
+<<<<<<< HEAD
+=======
+	unsigned int		last_bufaddr;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 static DEFINE_MUTEX(ipu_pre_list_mutex);
@@ -185,6 +189,10 @@ void ipu_pre_configure(struct ipu_pre *pre, unsigned int width,
 
 	writel(bufaddr, pre->regs + IPU_PRE_CUR_BUF);
 	writel(bufaddr, pre->regs + IPU_PRE_NEXT_BUF);
+<<<<<<< HEAD
+=======
+	pre->last_bufaddr = bufaddr;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	val = IPU_PRE_PREF_ENG_CTRL_INPUT_PIXEL_FORMAT(0) |
 	      IPU_PRE_PREF_ENG_CTRL_INPUT_ACTIVE_BPP(active_bpp) |
@@ -242,7 +250,15 @@ void ipu_pre_update(struct ipu_pre *pre, unsigned int bufaddr)
 	unsigned short current_yblock;
 	u32 val;
 
+<<<<<<< HEAD
 	writel(bufaddr, pre->regs + IPU_PRE_NEXT_BUF);
+=======
+	if (bufaddr == pre->last_bufaddr)
+		return;
+
+	writel(bufaddr, pre->regs + IPU_PRE_NEXT_BUF);
+	pre->last_bufaddr = bufaddr;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	do {
 		if (time_after(jiffies, timeout)) {

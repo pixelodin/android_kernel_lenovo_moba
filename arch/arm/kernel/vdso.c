@@ -104,6 +104,11 @@ static bool __init cntvct_functional(void)
 	 */
 	np = of_find_compatible_node(NULL, NULL, "arm,armv7-timer");
 	if (!np)
+<<<<<<< HEAD
+=======
+		np = of_find_compatible_node(NULL, NULL, "arm,armv8-timer");
+	if (!np)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto out_put;
 
 	if (of_property_read_bool(np, "arm,cpu-registers-not-fw-configured"))
@@ -205,7 +210,10 @@ static int __init vdso_init(void)
 	}
 
 	text_pages = (vdso_end - vdso_start) >> PAGE_SHIFT;
+<<<<<<< HEAD
 	pr_debug("vdso: %i text pages at base %p\n", text_pages, vdso_start);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Allocate the VDSO text pagelist */
 	vdso_text_pagelist = kcalloc(text_pages, sizeof(struct page *),

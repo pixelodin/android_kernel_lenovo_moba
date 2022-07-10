@@ -320,7 +320,11 @@ static void line6_data_received(struct urb *urb)
 				line6_midibuf_read(mb, line6->buffer_message,
 						LINE6_MIDI_MESSAGE_MAXLEN);
 
+<<<<<<< HEAD
 			if (done == 0)
+=======
+			if (done <= 0)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				break;
 
 			line6->message_length = done;

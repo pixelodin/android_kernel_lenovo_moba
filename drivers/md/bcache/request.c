@@ -391,6 +391,7 @@ static bool check_should_bypass(struct cached_dev *dc, struct bio *bio)
 		goto skip;
 
 	/*
+<<<<<<< HEAD
 	 * Flag for bypass if the IO is for read-ahead or background,
 	 * unless the read-ahead request is for metadata
 	 * (eg, for gfs2 or xfs).
@@ -398,6 +399,22 @@ static bool check_should_bypass(struct cached_dev *dc, struct bio *bio)
 	if (bio->bi_opf & (REQ_RAHEAD|REQ_BACKGROUND) &&
 	    !(bio->bi_opf & (REQ_META|REQ_PRIO)))
 		goto skip;
+=======
+	 * If the bio is for read-ahead or background IO, bypass it or
+	 * not depends on the following situations,
+	 * - If the IO is for meta data, always cache it and no bypass
+	 * - If the IO is not meta data, check dc->cache_reada_policy,
+	 *      BCH_CACHE_READA_ALL: cache it and not bypass
+	 *      BCH_CACHE_READA_META_ONLY: not cache it and bypass
+	 * That is, read-ahead request for metadata always get cached
+	 * (eg, for gfs2 or xfs).
+	 */
+	if ((bio->bi_opf & (REQ_RAHEAD|REQ_BACKGROUND))) {
+		if (!(bio->bi_opf & (REQ_META|REQ_PRIO)) &&
+		    (dc->cache_readahead_policy != BCH_CACHE_READA_ALL))
+			goto skip;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (bio->bi_iter.bi_sector & (c->sb.block_size - 1) ||
 	    bio_sectors(bio) & (c->sb.block_size - 1)) {

@@ -22,9 +22,15 @@ struct btf_header {
 };
 
 /* Max # of type identifier */
+<<<<<<< HEAD
 #define BTF_MAX_TYPE	0x0000ffff
 /* Max offset into the string section */
 #define BTF_MAX_NAME_OFFSET	0x0000ffff
+=======
+#define BTF_MAX_TYPE	0x000fffff
+/* Max offset into the string section */
+#define BTF_MAX_NAME_OFFSET	0x00ffffff
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* Max # of struct/union/enum members or func args */
 #define BTF_MAX_VLEN	0xffff
 

@@ -1446,7 +1446,11 @@ struct ib_srq *bnxt_re_create_srq(struct ib_pd *ib_pd,
 			dev_err(rdev_to_dev(rdev), "SRQ copy to udata failed!");
 			bnxt_qplib_destroy_srq(&rdev->qplib_res,
 					       &srq->qplib_srq);
+<<<<<<< HEAD
 			goto exit;
+=======
+			goto fail;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 	}
 	if (nq)
@@ -2664,6 +2668,10 @@ struct ib_cq *bnxt_re_create_cq(struct ib_device *ibdev,
 	nq->budget++;
 
 	atomic_inc(&rdev->cq_count);
+<<<<<<< HEAD
+=======
+	spin_lock_init(&cq->cq_lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (context) {
 		struct bnxt_re_cq_resp resp;
@@ -3368,8 +3376,15 @@ int bnxt_re_dereg_mr(struct ib_mr *ib_mr)
 	int rc;
 
 	rc = bnxt_qplib_free_mrw(&rdev->qplib_res, &mr->qplib_mr);
+<<<<<<< HEAD
 	if (rc)
 		dev_err(rdev_to_dev(rdev), "Dereg MR failed: %#x\n", rc);
+=======
+	if (rc) {
+		dev_err(rdev_to_dev(rdev), "Dereg MR failed: %#x\n", rc);
+		return rc;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (mr->pages) {
 		rc = bnxt_qplib_free_fast_reg_page_list(&rdev->qplib_res,

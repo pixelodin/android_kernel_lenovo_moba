@@ -95,12 +95,19 @@ static void dmabuf_gem_object_free(struct kref *kref)
 			dmabuf_obj = container_of(pos,
 					struct intel_vgpu_dmabuf_obj, list);
 			if (dmabuf_obj == obj) {
+<<<<<<< HEAD
+=======
+				list_del(pos);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				intel_gvt_hypervisor_put_vfio_device(vgpu);
 				idr_remove(&vgpu->object_idr,
 					   dmabuf_obj->dmabuf_id);
 				kfree(dmabuf_obj->info);
 				kfree(dmabuf_obj);
+<<<<<<< HEAD
 				list_del(pos);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				break;
 			}
 		}

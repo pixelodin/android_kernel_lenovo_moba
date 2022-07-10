@@ -148,8 +148,13 @@ static int tracing_map_cmp_atomic64(void *val_a, void *val_b)
 #define DEFINE_TRACING_MAP_CMP_FN(type)					\
 static int tracing_map_cmp_##type(void *val_a, void *val_b)		\
 {									\
+<<<<<<< HEAD
 	type a = *(type *)val_a;					\
 	type b = *(type *)val_b;					\
+=======
+	type a = (type)(*(u64 *)val_a);					\
+	type b = (type)(*(u64 *)val_b);					\
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 									\
 	return (a > b) ? 1 : ((a < b) ? -1 : 0);			\
 }

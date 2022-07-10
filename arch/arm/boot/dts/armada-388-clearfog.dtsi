@@ -48,7 +48,11 @@
 					     &clearfog_sdhci_cd_pins>;
 				pinctrl-names = "default";
 				status = "okay";
+<<<<<<< HEAD
 				vmmc = <&reg_3p3v>;
+=======
+				vmmc-supply = <&reg_3p3v>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				wp-inverted;
 			};
 

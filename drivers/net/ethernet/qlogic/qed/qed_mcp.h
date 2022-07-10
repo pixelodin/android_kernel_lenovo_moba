@@ -322,14 +322,23 @@ int qed_mcp_get_mbi_ver(struct qed_hwfn *p_hwfn,
  * @brief Get media type value of the port.
  *
  * @param cdev      - qed dev pointer
+<<<<<<< HEAD
+=======
+ * @param p_ptt
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * @param mfw_ver    - media type value
  *
  * @return int -
  *      0 - Operation was successul.
  *      -EBUSY - Operation failed
  */
+<<<<<<< HEAD
 int qed_mcp_get_media_type(struct qed_dev      *cdev,
 			   u32                  *media_type);
+=======
+int qed_mcp_get_media_type(struct qed_hwfn *p_hwfn,
+			   struct qed_ptt *p_ptt, u32 *media_type);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /**
  * @brief General function for sending commands to the MCP

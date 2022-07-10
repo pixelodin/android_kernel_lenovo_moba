@@ -1906,6 +1906,13 @@ int sta_info_move_state(struct sta_info *sta,
 			ieee80211_check_fast_xmit(sta);
 			ieee80211_check_fast_rx(sta);
 		}
+<<<<<<< HEAD
+=======
+		if (sta->sdata->vif.type == NL80211_IFTYPE_AP_VLAN ||
+		    sta->sdata->vif.type == NL80211_IFTYPE_AP)
+			cfg80211_send_layer2_update(sta->sdata->dev,
+						    sta->sta.addr);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 	default:
 		break;
@@ -2356,7 +2363,12 @@ unsigned long ieee80211_sta_last_active(struct sta_info *sta)
 {
 	struct ieee80211_sta_rx_stats *stats = sta_get_last_rx_stats(sta);
 
+<<<<<<< HEAD
 	if (time_after(stats->last_rx, sta->status_stats.last_ack))
+=======
+	if (!sta->status_stats.last_ack ||
+	    time_after(stats->last_rx, sta->status_stats.last_ack))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return stats->last_rx;
 	return sta->status_stats.last_ack;
 }

@@ -266,6 +266,14 @@
 #define DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS	BIT(28)
 #define DWC3_GUCTL1_DEV_L1_EXIT_BY_HW	BIT(24)
 #define DWC3_GUCTL1_IP_GAP_ADD_ON(n)	(n << 21)
+<<<<<<< HEAD
+=======
+
+#define DWC3_GUCTL1_PARKMODE_DISABLE_SS		BIT(17)
+#define DWC3_GUCTL1_PARKMODE_DISABLE_HS		BIT(16)
+#define DWC3_GUCTL1_PARKMODE_DISABLE_FSLS	BIT(15)
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define DWC3_GUCTL1_L1_SUSP_THRLD_EN_FOR_HOST	BIT(8)
 
 /* Global Status Register */
@@ -703,9 +711,15 @@ struct dwc3_ep_events {
 /**
  * struct dwc3_ep - device side endpoint representation
  * @endpoint: usb endpoint
+<<<<<<< HEAD
  * @pending_list: list of pending requests for this endpoint
  * @started_list: list of started requests on this endpoint
  * @wait_end_transfer: wait_queue_head_t for waiting on End Transfer complete
+=======
+ * @cancelled_list: list of cancelled requests for this endpoint
+ * @pending_list: list of pending requests for this endpoint
+ * @started_list: list of started requests on this endpoint
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * @lock: spinlock for endpoint request queue traversal
  * @regs: pointer to first endpoint register
  * @trb_dma_pool: dma pool used to get aligned trb memory pool
@@ -733,11 +747,18 @@ struct dwc3_ep_events {
  */
 struct dwc3_ep {
 	struct usb_ep		endpoint;
+<<<<<<< HEAD
 	struct list_head	pending_list;
 	struct list_head	started_list;
 
 	wait_queue_head_t	wait_end_transfer;
 
+=======
+	struct list_head	cancelled_list;
+	struct list_head	pending_list;
+	struct list_head	started_list;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	spinlock_t		lock;
 	void __iomem		*regs;
 
@@ -826,6 +847,16 @@ enum dwc3_link_state {
 	DWC3_LINK_STATE_MASK		= 0x0f,
 };
 
+<<<<<<< HEAD
+=======
+enum gadget_state {
+	DWC3_GADGET_INACTIVE,
+	DWC3_GADGET_SOFT_CONN,
+	DWC3_GADGET_CABLE_CONN,
+	DWC3_GADGET_ACTIVE,
+};
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* TRB Length, PCM and Status */
 #define DWC3_TRB_SIZE_MASK	(0x00ffffff)
 #define DWC3_TRB_SIZE_LENGTH(n)	((n) & DWC3_TRB_SIZE_MASK)
@@ -927,11 +958,20 @@ struct dwc3_hwparams {
  * @epnum: endpoint number to which this request refers
  * @trb: pointer to struct dwc3_trb
  * @trb_dma: DMA address of @trb
+<<<<<<< HEAD
  * @unaligned: true for OUT endpoints with length not divisible by maxp
  * @direction: IN or OUT direction flag
  * @mapped: true when request has been dma-mapped
  * @started: request is started
  * @zero: wants a ZLP
+=======
+ * @num_trbs: number of TRBs used by this request
+ * @needs_extra_trb: true when request needs one extra TRB (either due to ZLP
+ *	or unaligned OUT)
+ * @direction: IN or OUT direction flag
+ * @mapped: true when request has been dma-mapped
+ * @started: request is started
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 struct dwc3_request {
 	struct usb_request	request;
@@ -947,11 +987,20 @@ struct dwc3_request {
 	struct dwc3_trb		*trb;
 	dma_addr_t		trb_dma;
 
+<<<<<<< HEAD
 	unsigned		unaligned:1;
 	unsigned		direction:1;
 	unsigned		mapped:1;
 	unsigned		started:1;
 	unsigned		zero:1;
+=======
+	unsigned		num_trbs;
+
+	unsigned		needs_extra_trb:1;
+	unsigned		direction:1;
+	unsigned		mapped:1;
+	unsigned		started:1;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 /*
@@ -1124,6 +1173,10 @@ struct dwc3_scratchpad_array {
  * @bh_completion_time: time taken for taklet completion
  * @bh_handled_evt_cnt: no. of events handled by tasklet per interrupt
  * @bh_dbg_index: index for capturing bh_completion_time and bh_handled_evt_cnt
+<<<<<<< HEAD
+=======
+ * @last_run_stop: timestamp denoting the last run_stop update
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 struct dwc3 {
 	struct work_struct	drd_work;
@@ -1341,6 +1394,10 @@ struct dwc3 {
 	unsigned int		irq_event_count[MAX_INTR_STATS];
 	unsigned int		irq_dbg_index;
 
+<<<<<<< HEAD
+=======
+	enum gadget_state	gadget_state;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Indicate if the gadget was powered by the otg driver */
 	unsigned int		vbus_active:1;
 	/* Indicate if software connect was issued by the usb_gadget_driver */
@@ -1358,6 +1415,10 @@ struct dwc3 {
 	u32			gen2_tx_de_emph1;
 	u32			gen2_tx_de_emph2;
 	u32			gen2_tx_de_emph3;
+<<<<<<< HEAD
+=======
+	ktime_t			last_run_stop;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 #define INCRX_BURST_MODE 0

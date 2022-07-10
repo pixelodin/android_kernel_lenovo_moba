@@ -88,7 +88,11 @@
 	status = "okay";
 	clock-frequency = <100000>;
 
+<<<<<<< HEAD
 	adxl345: adxl345@0 {
+=======
+	adxl345: adxl345@53 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		compatible = "adi,adxl345";
 		reg = <0x53>;
 

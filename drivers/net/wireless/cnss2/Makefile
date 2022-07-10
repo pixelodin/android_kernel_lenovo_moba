@@ -8,5 +8,9 @@ cnss2-y += bus.o
 cnss2-y += debug.o
 cnss2-y += pci.o
 cnss2-y += power.o
+<<<<<<< HEAD
 cnss2-$(CONFIG_CNSS2_DEBUG) += genl.o
+=======
+cnss2-y += genl.o
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 cnss2-$(CONFIG_CNSS2_QMI) += qmi.o coexistence_service_v01.o ip_multimedia_subsystem_private_service_v01.o

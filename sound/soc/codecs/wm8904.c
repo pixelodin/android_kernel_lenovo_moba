@@ -1902,6 +1902,10 @@ static int wm8904_set_bias_level(struct snd_soc_component *component,
 		snd_soc_component_update_bits(component, WM8904_BIAS_CONTROL_0,
 				    WM8904_BIAS_ENA, 0);
 
+<<<<<<< HEAD
+=======
+		snd_soc_component_write(component, WM8904_SW_RESET_AND_ID, 0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		regcache_cache_only(wm8904->regmap, true);
 		regcache_mark_dirty(wm8904->regmap);
 

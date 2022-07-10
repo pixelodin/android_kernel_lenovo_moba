@@ -196,6 +196,10 @@ static int rxrpc_bind(struct socket *sock, struct sockaddr *saddr, int len)
 service_in_use:
 	write_unlock(&local->services_lock);
 	rxrpc_unuse_local(local);
+<<<<<<< HEAD
+=======
+	rxrpc_put_local(local);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = -EADDRINUSE;
 error_unlock:
 	release_sock(&rx->sk);
@@ -869,7 +873,10 @@ static void rxrpc_sock_destructor(struct sock *sk)
 static int rxrpc_release_sock(struct sock *sk)
 {
 	struct rxrpc_sock *rx = rxrpc_sk(sk);
+<<<<<<< HEAD
 	struct rxrpc_net *rxnet = rxrpc_net(sock_net(&rx->sk));
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	_enter("%p{%d,%d}", sk, sk->sk_state, refcount_read(&sk->sk_refcnt));
 
@@ -905,10 +912,16 @@ static int rxrpc_release_sock(struct sock *sk)
 	rxrpc_release_calls_on_socket(rx);
 	flush_workqueue(rxrpc_workqueue);
 	rxrpc_purge_queue(&sk->sk_receive_queue);
+<<<<<<< HEAD
 	rxrpc_queue_work(&rxnet->service_conn_reaper);
 	rxrpc_queue_work(&rxnet->client_conn_reaper);
 
 	rxrpc_unuse_local(rx->local);
+=======
+
+	rxrpc_unuse_local(rx->local);
+	rxrpc_put_local(rx->local);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rx->local = NULL;
 	key_put(rx->key);
 	rx->key = NULL;

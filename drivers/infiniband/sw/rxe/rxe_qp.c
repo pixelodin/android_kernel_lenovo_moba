@@ -34,6 +34,10 @@
 #include <linux/skbuff.h>
 #include <linux/delay.h>
 #include <linux/sched.h>
+<<<<<<< HEAD
+=======
+#include <linux/vmalloc.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #include "rxe.h"
 #include "rxe_loc.h"
@@ -247,7 +251,11 @@ static int rxe_qp_init_req(struct rxe_dev *rxe, struct rxe_qp *qp,
 			   &qp->sq.queue->ip);
 
 	if (err) {
+<<<<<<< HEAD
 		kvfree(qp->sq.queue->buf);
+=======
+		vfree(qp->sq.queue->buf);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		kfree(qp->sq.queue);
 		return err;
 	}
@@ -300,7 +308,11 @@ static int rxe_qp_init_resp(struct rxe_dev *rxe, struct rxe_qp *qp,
 				   qp->rq.queue->buf, qp->rq.queue->buf_size,
 				   &qp->rq.queue->ip);
 		if (err) {
+<<<<<<< HEAD
 			kvfree(qp->rq.queue->buf);
+=======
+			vfree(qp->rq.queue->buf);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			kfree(qp->rq.queue);
 			return err;
 		}

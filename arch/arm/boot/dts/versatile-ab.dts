@@ -373,7 +373,11 @@
 			clock-names = "apb_pclk";
 		};
 
+<<<<<<< HEAD
 		ssp@101f4000 {
+=======
+		spi@101f4000 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			compatible = "arm,pl022", "arm,primecell";
 			reg = <0x101f4000 0x1000>;
 			interrupts = <11>;

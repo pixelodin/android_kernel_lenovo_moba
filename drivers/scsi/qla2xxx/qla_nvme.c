@@ -474,6 +474,7 @@ static int qla_nvme_post_cmd(struct nvme_fc_local_port *lport,
 	int rval = -ENODEV;
 	srb_t *sp;
 	struct qla_qpair *qpair = hw_queue_handle;
+<<<<<<< HEAD
 	struct nvme_private *priv;
 	struct qla_nvme_rport *qla_rport = rport->private;
 
@@ -489,6 +490,12 @@ static int qla_nvme_post_cmd(struct nvme_fc_local_port *lport,
 		ql_log(ql_log_warn, NULL, 0x210e, "No fcport ptr\n");
 		return rval;
 	}
+=======
+	struct nvme_private *priv = fd->private;
+	struct qla_nvme_rport *qla_rport = rport->private;
+
+	fcport = qla_rport->fcport;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	vha = fcport->vha;
 
@@ -517,6 +524,10 @@ static int qla_nvme_post_cmd(struct nvme_fc_local_port *lport,
 	sp->name = "nvme_cmd";
 	sp->done = qla_nvme_sp_done;
 	sp->qpair = qpair;
+<<<<<<< HEAD
+=======
+	sp->vha = vha;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	nvme = &sp->u.iocb_cmd;
 	nvme->u.nvme.desc = fd;
 
@@ -564,12 +575,20 @@ static void qla_nvme_remoteport_delete(struct nvme_fc_remote_port *rport)
 		schedule_work(&fcport->free_work);
 	}
 
+<<<<<<< HEAD
 	fcport->nvme_flag &= ~(NVME_FLAG_REGISTERED | NVME_FLAG_DELETING);
+=======
+	fcport->nvme_flag &= ~NVME_FLAG_DELETING;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ql_log(ql_log_info, fcport->vha, 0x2110,
 	    "remoteport_delete of %p completed.\n", fcport);
 }
 
 static struct nvme_fc_port_template qla_nvme_fc_transport = {
+<<<<<<< HEAD
+=======
+	.module	= THIS_MODULE,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.localport_delete = qla_nvme_localport_delete,
 	.remoteport_delete = qla_nvme_remoteport_delete,
 	.create_queue   = qla_nvme_alloc_queue,

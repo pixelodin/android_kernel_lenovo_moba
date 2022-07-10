@@ -247,7 +247,11 @@ static u16 vnet_select_queue(struct net_device *dev, struct sk_buff *skb,
 }
 
 /* Wrappers to common functions */
+<<<<<<< HEAD
 static int vnet_start_xmit(struct sk_buff *skb, struct net_device *dev)
+=======
+static netdev_tx_t vnet_start_xmit(struct sk_buff *skb, struct net_device *dev)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	return sunvnet_start_xmit_common(skb, dev, vnet_tx_port_find);
 }

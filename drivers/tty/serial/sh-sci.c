@@ -1359,7 +1359,11 @@ fail:
 		dmaengine_terminate_async(chan);
 	for (i = 0; i < 2; i++)
 		s->cookie_rx[i] = -EINVAL;
+<<<<<<< HEAD
 	s->active_rx = -EINVAL;
+=======
+	s->active_rx = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	s->chan_rx = NULL;
 	sci_start_rx(port);
 	if (!port_lock_held)

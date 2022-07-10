@@ -4135,9 +4135,15 @@ static void arcmsr_hardware_reset(struct AdapterControlBlock *acb)
 		pci_read_config_byte(acb->pdev, i, &value[i]);
 	}
 	/* hardware reset signal */
+<<<<<<< HEAD
 	if ((acb->dev_id == 0x1680)) {
 		writel(ARCMSR_ARC1680_BUS_RESET, &pmuA->reserved1[0]);
 	} else if ((acb->dev_id == 0x1880)) {
+=======
+	if (acb->dev_id == 0x1680) {
+		writel(ARCMSR_ARC1680_BUS_RESET, &pmuA->reserved1[0]);
+	} else if (acb->dev_id == 0x1880) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		do {
 			count++;
 			writel(0xF, &pmuC->write_sequence);
@@ -4161,7 +4167,11 @@ static void arcmsr_hardware_reset(struct AdapterControlBlock *acb)
 		} while (((readl(&pmuE->host_diagnostic_3xxx) &
 			ARCMSR_ARC1884_DiagWrite_ENABLE) == 0) && (count < 5));
 		writel(ARCMSR_ARC188X_RESET_ADAPTER, &pmuE->host_diagnostic_3xxx);
+<<<<<<< HEAD
 	} else if ((acb->dev_id == 0x1214)) {
+=======
+	} else if (acb->dev_id == 0x1214) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		writel(0x20, pmuD->reset_request);
 	} else {
 		pci_write_config_byte(acb->pdev, 0x84, 0x20);

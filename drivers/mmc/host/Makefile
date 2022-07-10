@@ -87,12 +87,20 @@ obj-$(CONFIG_MMC_SDHCI_OF_DWCMSHC)	+= sdhci-of-dwcmshc.o
 obj-$(CONFIG_MMC_SDHCI_BCM_KONA)	+= sdhci-bcm-kona.o
 obj-$(CONFIG_MMC_SDHCI_IPROC)		+= sdhci-iproc.o
 obj-$(CONFIG_MMC_SDHCI_MSM)		+= sdhci-msm.o
+<<<<<<< HEAD
 obj-$(CONFIG_MMC_SDHCI_MSM_ICE)		+= sdhci-msm-ice.o
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 obj-$(CONFIG_MMC_SDHCI_ST)		+= sdhci-st.o
 obj-$(CONFIG_MMC_SDHCI_MICROCHIP_PIC32)	+= sdhci-pic32.o
 obj-$(CONFIG_MMC_SDHCI_BRCMSTB)		+= sdhci-brcmstb.o
 obj-$(CONFIG_MMC_SDHCI_OMAP)		+= sdhci-omap.o
 obj-$(CONFIG_MMC_CQHCI)			+= cqhci.o
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_MMC_CQHCI_CRYPTO)		+= cqhci-crypto.o
+obj-$(CONFIG_MMC_CQHCI_CRYPTO_QTI)	+= cqhci-crypto-qti.o
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 ifeq ($(CONFIG_CB710_DEBUG),y)
 	CFLAGS-cb710-mmc	+= -DDEBUG

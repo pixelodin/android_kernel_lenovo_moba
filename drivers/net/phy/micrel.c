@@ -977,6 +977,10 @@ static struct phy_driver ksphy_driver[] = {
 	.driver_data	= &ksz9021_type,
 	.probe		= kszphy_probe,
 	.config_init	= ksz9031_config_init,
+<<<<<<< HEAD
+=======
+	.soft_reset	= genphy_soft_reset,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.read_status	= ksz9031_read_status,
 	.ack_interrupt	= kszphy_ack_interrupt,
 	.config_intr	= kszphy_config_intr,

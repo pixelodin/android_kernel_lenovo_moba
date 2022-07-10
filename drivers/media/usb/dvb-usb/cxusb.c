@@ -457,7 +457,12 @@ static int cxusb_rc_query(struct dvb_usb_device *d)
 {
 	u8 ircode[4];
 
+<<<<<<< HEAD
 	cxusb_ctrl_msg(d, CMD_GET_IR_CODE, NULL, 0, ircode, 4);
+=======
+	if (cxusb_ctrl_msg(d, CMD_GET_IR_CODE, NULL, 0, ircode, 4) < 0)
+		return 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (ircode[2] || ircode[3])
 		rc_keydown(d->rc_dev, RC_PROTO_NEC,

@@ -118,6 +118,10 @@ struct dw_spi {
 	size_t			len;
 	void			*tx;
 	void			*tx_end;
+<<<<<<< HEAD
+=======
+	spinlock_t		buf_lock;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	void			*rx;
 	void			*rx_end;
 	int			dma_mapped;

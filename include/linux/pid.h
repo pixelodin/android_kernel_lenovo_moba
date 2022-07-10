@@ -3,6 +3,10 @@
 #define _LINUX_PID_H
 
 #include <linux/rculist.h>
+<<<<<<< HEAD
+=======
+#include <linux/wait.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 enum pid_type
 {
@@ -60,12 +64,22 @@ struct pid
 	unsigned int level;
 	/* lists of tasks that use this pid */
 	struct hlist_head tasks[PIDTYPE_MAX];
+<<<<<<< HEAD
+=======
+	/* wait queue for pidfd notifications */
+	wait_queue_head_t wait_pidfd;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct rcu_head rcu;
 	struct upid numbers[1];
 };
 
 extern struct pid init_struct_pid;
 
+<<<<<<< HEAD
+=======
+extern const struct file_operations pidfd_fops;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static inline struct pid *get_pid(struct pid *pid)
 {
 	if (pid)

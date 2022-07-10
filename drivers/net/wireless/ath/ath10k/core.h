@@ -1003,6 +1003,10 @@ struct ath10k {
 
 	struct completion install_key_done;
 
+<<<<<<< HEAD
+=======
+	int last_wmi_vdev_start_status;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct completion vdev_setup_done;
 
 	struct workqueue_struct *workqueue;

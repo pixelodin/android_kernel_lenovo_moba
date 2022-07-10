@@ -185,6 +185,19 @@ static inline bool sctp_chunk_length_valid(struct sctp_chunk *chunk,
 	return true;
 }
 
+<<<<<<< HEAD
+=======
+/* Check for format error in an ABORT chunk */
+static inline bool sctp_err_chunk_valid(struct sctp_chunk *chunk)
+{
+	struct sctp_errhdr *err;
+
+	sctp_walk_errors(err, chunk->chunk_hdr);
+
+	return (void *)err == (void *)chunk->chunk_end;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /**********************************************************
  * These are the state functions for handling chunk events.
  **********************************************************/
@@ -2175,8 +2188,15 @@ enum sctp_disposition sctp_sf_do_5_2_4_dupcook(
 
 	/* Update socket peer label if first association. */
 	if (security_sctp_assoc_request((struct sctp_endpoint *)ep,
+<<<<<<< HEAD
 					chunk->skb))
 		return sctp_sf_pdiscard(net, ep, asoc, type, arg, commands);
+=======
+					chunk->skb)) {
+		sctp_association_free(new_asoc);
+		return sctp_sf_pdiscard(net, ep, asoc, type, arg, commands);
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Set temp so that it won't be added into hashtable */
 	new_asoc->temp = 1;
@@ -2268,6 +2288,12 @@ enum sctp_disposition sctp_sf_shutdown_pending_abort(
 		    sctp_bind_addr_state(&asoc->base.bind_addr, &chunk->dest))
 		return sctp_sf_discard_chunk(net, ep, asoc, type, arg, commands);
 
+<<<<<<< HEAD
+=======
+	if (!sctp_err_chunk_valid(chunk))
+		return sctp_sf_pdiscard(net, ep, asoc, type, arg, commands);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return __sctp_sf_do_9_1_abort(net, ep, asoc, type, arg, commands);
 }
 
@@ -2311,6 +2337,12 @@ enum sctp_disposition sctp_sf_shutdown_sent_abort(
 		    sctp_bind_addr_state(&asoc->base.bind_addr, &chunk->dest))
 		return sctp_sf_discard_chunk(net, ep, asoc, type, arg, commands);
 
+<<<<<<< HEAD
+=======
+	if (!sctp_err_chunk_valid(chunk))
+		return sctp_sf_pdiscard(net, ep, asoc, type, arg, commands);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Stop the T2-shutdown timer. */
 	sctp_add_cmd_sf(commands, SCTP_CMD_TIMER_STOP,
 			SCTP_TO(SCTP_EVENT_TIMEOUT_T2_SHUTDOWN));
@@ -2578,6 +2610,12 @@ enum sctp_disposition sctp_sf_do_9_1_abort(
 		    sctp_bind_addr_state(&asoc->base.bind_addr, &chunk->dest))
 		return sctp_sf_discard_chunk(net, ep, asoc, type, arg, commands);
 
+<<<<<<< HEAD
+=======
+	if (!sctp_err_chunk_valid(chunk))
+		return sctp_sf_pdiscard(net, ep, asoc, type, arg, commands);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return __sctp_sf_do_9_1_abort(net, ep, asoc, type, arg, commands);
 }
 
@@ -2595,6 +2633,7 @@ static enum sctp_disposition __sctp_sf_do_9_1_abort(
 
 	/* See if we have an error cause code in the chunk.  */
 	len = ntohs(chunk->chunk_hdr->length);
+<<<<<<< HEAD
 	if (len >= sizeof(struct sctp_chunkhdr) + sizeof(struct sctp_errhdr)) {
 		struct sctp_errhdr *err;
 
@@ -2605,6 +2644,10 @@ static enum sctp_disposition __sctp_sf_do_9_1_abort(
 
 		error = ((struct sctp_errhdr *)chunk->skb->data)->cause;
 	}
+=======
+	if (len >= sizeof(struct sctp_chunkhdr) + sizeof(struct sctp_errhdr))
+		error = ((struct sctp_errhdr *)chunk->skb->data)->cause;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	sctp_add_cmd_sf(commands, SCTP_CMD_SET_SK_ERR, SCTP_ERROR(ECONNRESET));
 	/* ASSOC_FAILED will DELETE_TCB. */

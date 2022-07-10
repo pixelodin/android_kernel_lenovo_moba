@@ -202,8 +202,13 @@ static const struct uniphier_reset_data uniphier_pro5_sd_reset_data[] = {
 #define UNIPHIER_PERI_RESET_FI2C(id, ch)		\
 	UNIPHIER_RESETX((id), 0x114, 24 + (ch))
 
+<<<<<<< HEAD
 #define UNIPHIER_PERI_RESET_SCSSI(id)			\
 	UNIPHIER_RESETX((id), 0x110, 17)
+=======
+#define UNIPHIER_PERI_RESET_SCSSI(id, ch)		\
+	UNIPHIER_RESETX((id), 0x110, 17 + (ch))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define UNIPHIER_PERI_RESET_MCSSI(id)			\
 	UNIPHIER_RESETX((id), 0x114, 14)
@@ -218,7 +223,11 @@ static const struct uniphier_reset_data uniphier_ld4_peri_reset_data[] = {
 	UNIPHIER_PERI_RESET_I2C(6, 2),
 	UNIPHIER_PERI_RESET_I2C(7, 3),
 	UNIPHIER_PERI_RESET_I2C(8, 4),
+<<<<<<< HEAD
 	UNIPHIER_PERI_RESET_SCSSI(11),
+=======
+	UNIPHIER_PERI_RESET_SCSSI(11, 0),
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	UNIPHIER_RESET_END,
 };
 
@@ -234,8 +243,16 @@ static const struct uniphier_reset_data uniphier_pro4_peri_reset_data[] = {
 	UNIPHIER_PERI_RESET_FI2C(8, 4),
 	UNIPHIER_PERI_RESET_FI2C(9, 5),
 	UNIPHIER_PERI_RESET_FI2C(10, 6),
+<<<<<<< HEAD
 	UNIPHIER_PERI_RESET_SCSSI(11),
 	UNIPHIER_PERI_RESET_MCSSI(12),
+=======
+	UNIPHIER_PERI_RESET_SCSSI(11, 0),
+	UNIPHIER_PERI_RESET_SCSSI(12, 1),
+	UNIPHIER_PERI_RESET_SCSSI(13, 2),
+	UNIPHIER_PERI_RESET_SCSSI(14, 3),
+	UNIPHIER_PERI_RESET_MCSSI(15),
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	UNIPHIER_RESET_END,
 };
 

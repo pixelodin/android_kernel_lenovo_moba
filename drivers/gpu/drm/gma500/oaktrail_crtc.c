@@ -139,6 +139,10 @@ static bool mrst_sdvo_find_best_pll(const struct gma_limit_t *limit,
 	s32 freq_error, min_error = 100000;
 
 	memset(best_clock, 0, sizeof(*best_clock));
+<<<<<<< HEAD
+=======
+	memset(&clock, 0, sizeof(clock));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
 		for (clock.n = limit->n.min; clock.n <= limit->n.max;
@@ -195,6 +199,10 @@ static bool mrst_lvds_find_best_pll(const struct gma_limit_t *limit,
 	int err = target;
 
 	memset(best_clock, 0, sizeof(*best_clock));
+<<<<<<< HEAD
+=======
+	memset(&clock, 0, sizeof(clock));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	for (clock.m = limit->m.min; clock.m <= limit->m.max; clock.m++) {
 		for (clock.p1 = limit->p1.min; clock.p1 <= limit->p1.max;

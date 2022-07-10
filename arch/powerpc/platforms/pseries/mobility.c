@@ -24,6 +24,10 @@
 #include <asm/machdep.h>
 #include <asm/rtas.h>
 #include "pseries.h"
+<<<<<<< HEAD
+=======
+#include "../../kernel/cacheinfo.h"
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 static struct kobject *mobility_kobj;
 
@@ -360,11 +364,26 @@ void post_mobility_fixup(void)
 	 */
 	cpus_read_lock();
 
+<<<<<<< HEAD
+=======
+	/*
+	 * It's common for the destination firmware to replace cache
+	 * nodes.  Release all of the cacheinfo hierarchy's references
+	 * before updating the device tree.
+	 */
+	cacheinfo_teardown();
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rc = pseries_devicetree_update(MIGRATION_SCOPE);
 	if (rc)
 		printk(KERN_ERR "Post-mobility device tree update "
 			"failed: %d\n", rc);
 
+<<<<<<< HEAD
+=======
+	cacheinfo_rebuild();
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	cpus_read_unlock();
 
 	/* Possibly switch to a new RFI flush type */

@@ -501,9 +501,16 @@ static struct dentry *autofs_expire_indirect(struct super_block *sb,
 		 */
 		how &= ~AUTOFS_EXP_LEAVES;
 		found = should_expire(expired, mnt, timeout, how);
+<<<<<<< HEAD
 		if (!found || found != expired)
 			/* Something has changed, continue */
 			goto next;
+=======
+		if (found != expired) { // something has changed, continue
+			dput(found);
+			goto next;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		if (expired != dentry)
 			dput(dentry);

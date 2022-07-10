@@ -32,6 +32,30 @@
 		reg = <0x0 0x80000000 0x0 0x80000000>;
 	};
 
+<<<<<<< HEAD
+=======
+	main_12v0: fixedregulator-main_12v0 {
+		/* main supply */
+		compatible = "regulator-fixed";
+		regulator-name = "main_12v0";
+		regulator-min-microvolt = <12000000>;
+		regulator-max-microvolt = <12000000>;
+		regulator-always-on;
+		regulator-boot-on;
+	};
+
+	evm_5v0: fixedregulator-evm_5v0 {
+		/* Output of TPS54531D */
+		compatible = "regulator-fixed";
+		regulator-name = "evm_5v0";
+		regulator-min-microvolt = <5000000>;
+		regulator-max-microvolt = <5000000>;
+		vin-supply = <&main_12v0>;
+		regulator-always-on;
+		regulator-boot-on;
+	};
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	vdd_3v3: fixedregulator-vdd_3v3 {
 		compatible = "regulator-fixed";
 		regulator-name = "vdd_3v3";
@@ -550,10 +574,13 @@
 	gpios = <&gpio2 8 GPIO_ACTIVE_LOW>;
 };
 
+<<<<<<< HEAD
 &pcie1_ep {
 	gpios = <&gpio2 8 GPIO_ACTIVE_LOW>;
 };
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 &mcasp3 {
 	#sound-dai-cells = <0>;
 	assigned-clocks = <&l4per_clkctrl DRA7_MCASP3_CLKCTRL 24>;

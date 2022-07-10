@@ -162,7 +162,12 @@ void mmc_gpiod_request_cd_irq(struct mmc_host *host)
 			ctx->cd_gpio_isr = mmc_gpio_cd_irqt;
 		ret = devm_request_threaded_irq(host->parent, irq,
 			NULL, ctx->cd_gpio_isr,
+<<<<<<< HEAD
 			IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+=======
+			IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING |
+			IRQF_ONESHOT | IRQF_SHARED,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			ctx->cd_label, host);
 		if (ret < 0)
 			irq = ret;

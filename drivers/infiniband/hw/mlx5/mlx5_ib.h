@@ -139,6 +139,11 @@ struct mlx5_ib_ucontext {
 	u64			lib_caps;
 	DECLARE_BITMAP(dm_pages, MLX5_MAX_MEMIC_PAGES);
 	u16			devx_uid;
+<<<<<<< HEAD
+=======
+	/* For RoCE LAG TX affinity */
+	atomic_t		tx_port_affinity;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 static inline struct mlx5_ib_ucontext *to_mucontext(struct ib_ucontext *ibucontext)
@@ -700,7 +705,11 @@ struct mlx5_roce {
 	rwlock_t		netdev_lock;
 	struct net_device	*netdev;
 	struct notifier_block	nb;
+<<<<<<< HEAD
 	atomic_t		next_port;
+=======
+	atomic_t		tx_port_affinity;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	enum ib_port_state last_port_state;
 	struct mlx5_ib_dev	*dev;
 	u8			native_port_num;

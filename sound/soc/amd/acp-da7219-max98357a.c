@@ -42,7 +42,11 @@
 #include "../codecs/da7219.h"
 #include "../codecs/da7219-aad.h"
 
+<<<<<<< HEAD
 #define CZ_PLAT_CLK 25000000
+=======
+#define CZ_PLAT_CLK 48000000
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define DUAL_CHANNEL		2
 
 static struct snd_soc_jack cz_jack;

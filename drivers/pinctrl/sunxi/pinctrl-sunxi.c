@@ -1042,6 +1042,10 @@ static int sunxi_pinctrl_add_function(struct sunxi_pinctrl *pctl,
 static int sunxi_pinctrl_build_state(struct platform_device *pdev)
 {
 	struct sunxi_pinctrl *pctl = platform_get_drvdata(pdev);
+<<<<<<< HEAD
+=======
+	void *ptr;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int i;
 
 	/*
@@ -1108,6 +1112,7 @@ static int sunxi_pinctrl_build_state(struct platform_device *pdev)
 	}
 
 	/* And now allocated and fill the array for real */
+<<<<<<< HEAD
 	pctl->functions = krealloc(pctl->functions,
 				   pctl->nfunctions * sizeof(*pctl->functions),
 				   GFP_KERNEL);
@@ -1115,6 +1120,17 @@ static int sunxi_pinctrl_build_state(struct platform_device *pdev)
 		kfree(pctl->functions);
 		return -ENOMEM;
 	}
+=======
+	ptr = krealloc(pctl->functions,
+		       pctl->nfunctions * sizeof(*pctl->functions),
+		       GFP_KERNEL);
+	if (!ptr) {
+		kfree(pctl->functions);
+		pctl->functions = NULL;
+		return -ENOMEM;
+	}
+	pctl->functions = ptr;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	for (i = 0; i < pctl->desc->npins; i++) {
 		const struct sunxi_desc_pin *pin = pctl->desc->pins + i;

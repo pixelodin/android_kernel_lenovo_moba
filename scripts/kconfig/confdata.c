@@ -1314,7 +1314,11 @@ bool conf_set_all_new_symbols(enum conf_def_mode mode)
 
 		sym_calc_value(csym);
 		if (mode == def_random)
+<<<<<<< HEAD
 			has_changed = randomize_choice_values(csym);
+=======
+			has_changed |= randomize_choice_values(csym);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		else {
 			set_all_choice_values(csym);
 			has_changed = true;

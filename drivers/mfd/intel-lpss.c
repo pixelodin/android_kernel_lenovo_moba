@@ -545,6 +545,10 @@ module_init(intel_lpss_init);
 
 static void __exit intel_lpss_exit(void)
 {
+<<<<<<< HEAD
+=======
+	ida_destroy(&intel_lpss_devid_ida);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	debugfs_remove(intel_lpss_debugfs);
 }
 module_exit(intel_lpss_exit);

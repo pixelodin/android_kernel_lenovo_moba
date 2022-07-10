@@ -196,10 +196,17 @@ struct pt_regs;
  * macros to work correctly.
  */
 #ifndef SYSCALL_DEFINE0
+<<<<<<< HEAD
 #define SYSCALL_DEFINE0(sname)					\
 	SYSCALL_METADATA(_##sname, 0);				\
 	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused);\
 	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);	\
+=======
+#define SYSCALL_DEFINE0(sname)						\
+	SYSCALL_METADATA(_##sname, 0);					\
+	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused);\
+	ALLOW_ERROR_INJECTION(__x64_sys_##sname, ERRNO);		\
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	asmlinkage long __x64_sys_##sname(const struct pt_regs *__unused)
 #endif
 

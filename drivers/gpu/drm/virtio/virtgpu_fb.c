@@ -27,6 +27,7 @@
 #include <drm/drm_fb_helper.h>
 #include "virtgpu_drv.h"
 
+<<<<<<< HEAD
 #define VIRTIO_GPU_FBCON_POLL_PERIOD (HZ / 60)
 
 struct virtio_gpu_fbdev {
@@ -36,6 +37,8 @@ struct virtio_gpu_fbdev {
 	struct delayed_work            work;
 };
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int virtio_gpu_dirty_update(struct virtio_gpu_framebuffer *fb,
 				   bool store, int x, int y,
 				   int width, int height)
@@ -102,7 +105,11 @@ static int virtio_gpu_dirty_update(struct virtio_gpu_framebuffer *fb,
 
 		offset = (y * fb->base.pitches[0]) + x * bpp;
 
+<<<<<<< HEAD
 		virtio_gpu_cmd_transfer_to_host_2d(vgdev, obj->hw_res_handle,
+=======
+		virtio_gpu_cmd_transfer_to_host_2d(vgdev, obj,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 						   offset,
 						   cpu_to_le32(w),
 						   cpu_to_le32(h),
@@ -157,6 +164,7 @@ int virtio_gpu_surface_dirty(struct virtio_gpu_framebuffer *vgfb,
 				      left, top, right - left, bottom - top);
 	return 0;
 }
+<<<<<<< HEAD
 
 static void virtio_gpu_fb_dirty_work(struct work_struct *work)
 {
@@ -353,3 +361,5 @@ void virtio_gpu_fbdev_fini(struct virtio_gpu_device *vgdev)
 	kfree(vgdev->vgfbdev);
 	vgdev->vgfbdev = NULL;
 }
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

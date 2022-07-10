@@ -844,12 +844,18 @@ static void max310x_wq_proc(struct work_struct *ws)
 
 static unsigned int max310x_tx_empty(struct uart_port *port)
 {
+<<<<<<< HEAD
 	unsigned int lvl, sts;
 
 	lvl = max310x_port_read(port, MAX310X_TXFIFOLVL_REG);
 	sts = max310x_port_read(port, MAX310X_IRQSTS_REG);
 
 	return ((sts & MAX310X_IRQ_TXEMPTY_BIT) && !lvl) ? TIOCSER_TEMT : 0;
+=======
+	u8 lvl = max310x_port_read(port, MAX310X_TXFIFOLVL_REG);
+
+	return lvl ? 0 : TIOCSER_TEMT;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static unsigned int max310x_get_mctrl(struct uart_port *port)

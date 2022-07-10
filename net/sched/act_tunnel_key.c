@@ -137,6 +137,13 @@ static int tunnel_key_copy_opts(const struct nlattr *nla, u8 *dst,
 			if (opt_len < 0)
 				return opt_len;
 			opts_len += opt_len;
+<<<<<<< HEAD
+=======
+			if (opts_len > IP_TUNNEL_OPTS_MAX) {
+				NL_SET_ERR_MSG(extack, "Tunnel options exceeds max size");
+				return -EINVAL;
+			}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			if (dst) {
 				dst_len -= opt_len;
 				dst += opt_len;

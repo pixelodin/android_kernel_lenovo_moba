@@ -744,6 +744,10 @@ int tipc_nametbl_init(struct net *net)
 
 	INIT_LIST_HEAD(&nt->node_scope);
 	INIT_LIST_HEAD(&nt->cluster_scope);
+<<<<<<< HEAD
+=======
+	rwlock_init(&nt->cluster_scope_lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	tn->nametbl = nt;
 	spin_lock_init(&tn->nametbl_lock);
 	return 0;

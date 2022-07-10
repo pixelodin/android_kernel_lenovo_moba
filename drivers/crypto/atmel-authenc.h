@@ -23,7 +23,11 @@
 #ifndef __ATMEL_AUTHENC_H__
 #define __ATMEL_AUTHENC_H__
 
+<<<<<<< HEAD
 #ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
+=======
+#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #include <crypto/authenc.h>
 #include <crypto/hash.h>

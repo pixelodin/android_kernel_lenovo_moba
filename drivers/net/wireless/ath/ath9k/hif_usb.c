@@ -1216,7 +1216,11 @@ err_fw:
 static int send_eject_command(struct usb_interface *interface)
 {
 	struct usb_device *udev = interface_to_usbdev(interface);
+<<<<<<< HEAD
 	struct usb_host_interface *iface_desc = &interface->altsetting[0];
+=======
+	struct usb_host_interface *iface_desc = interface->cur_altsetting;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct usb_endpoint_descriptor *endpoint;
 	unsigned char *cmd;
 	u8 bulk_out_ep;

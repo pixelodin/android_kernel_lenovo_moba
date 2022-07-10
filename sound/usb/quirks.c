@@ -259,6 +259,12 @@ static int create_yamaha_midi_quirk(struct snd_usb_audio *chip,
 					NULL, USB_MS_MIDI_OUT_JACK);
 	if (!injd && !outjd)
 		return -ENODEV;
+<<<<<<< HEAD
+=======
+	if ((injd && !snd_usb_validate_midi_desc(injd)) ||
+	    (outjd && !snd_usb_validate_midi_desc(outjd)))
+		return -ENODEV;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (injd && (injd->bLength < 5 ||
 		     (injd->bJackType != USB_MS_EMBEDDED &&
 		      injd->bJackType != USB_MS_EXTERNAL)))
@@ -516,6 +522,19 @@ static int create_standard_mixer_quirk(struct snd_usb_audio *chip,
 	return snd_usb_create_mixer(chip, quirk->ifnum, 0);
 }
 
+<<<<<<< HEAD
+=======
+
+static int setup_fmt_after_resume_quirk(struct snd_usb_audio *chip,
+				       struct usb_interface *iface,
+				       struct usb_driver *driver,
+				       const struct snd_usb_audio_quirk *quirk)
+{
+	chip->setup_fmt_after_resume_quirk = 1;
+	return 1;	/* Continue with creating streams and mixer */
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * audio-interface quirks
  *
@@ -554,6 +573,10 @@ int snd_usb_create_quirk(struct snd_usb_audio *chip,
 		[QUIRK_AUDIO_EDIROL_UAXX] = create_uaxx_quirk,
 		[QUIRK_AUDIO_ALIGN_TRANSFER] = create_align_transfer_quirk,
 		[QUIRK_AUDIO_STANDARD_MIXER] = create_standard_mixer_quirk,
+<<<<<<< HEAD
+=======
+		[QUIRK_SETUP_FMT_AFTER_RESUME] = setup_fmt_after_resume_quirk,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	};
 
 	if (quirk->type < QUIRK_TYPE_COUNT) {
@@ -1163,10 +1186,18 @@ bool snd_usb_get_sample_rate_quirk(struct snd_usb_audio *chip)
 	case USB_ID(0x04D8, 0xFEEA): /* Benchmark DAC1 Pre */
 	case USB_ID(0x0556, 0x0014): /* Phoenix Audio TMX320VC */
 	case USB_ID(0x05A3, 0x9420): /* ELP HD USB Camera */
+<<<<<<< HEAD
+=======
+	case USB_ID(0x05a7, 0x1020): /* Bose Companion 5 */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	case USB_ID(0x074D, 0x3553): /* Outlaw RR2150 (Micronas UAC3553B) */
 	case USB_ID(0x1395, 0x740a): /* Sennheiser DECT */
 	case USB_ID(0x1901, 0x0191): /* GE B850V3 CP2114 audio interface */
 	case USB_ID(0x21B4, 0x0081): /* AudioQuest DragonFly */
+<<<<<<< HEAD
+=======
+	case USB_ID(0x2912, 0x30c8): /* Audioengine D1 */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return true;
 	}
 
@@ -1343,7 +1374,12 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
 	struct usb_interface *iface;
 
 	/* Playback Designs */
+<<<<<<< HEAD
 	if (USB_ID_VENDOR(chip->usb_id) == 0x23ba) {
+=======
+	if (USB_ID_VENDOR(chip->usb_id) == 0x23ba &&
+	    USB_ID_PRODUCT(chip->usb_id) < 0x0110) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		switch (fp->altsetting) {
 		case 1:
 			fp->dsd_dop = true;
@@ -1360,6 +1396,7 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
 	/* XMOS based USB DACs */
 	switch (chip->usb_id) {
 	case USB_ID(0x1511, 0x0037): /* AURALiC VEGA */
+<<<<<<< HEAD
 	case USB_ID(0x20b1, 0x0002): /* Wyred 4 Sound DAC-2 DSD */
 	case USB_ID(0x20b1, 0x2004): /* Matrix Audio X-SPDIF 2 */
 	case USB_ID(0x20b1, 0x2008): /* Matrix Audio X-Sabre */
@@ -1367,12 +1404,15 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
 	case USB_ID(0x22d9, 0x0416): /* OPPO HA-1 */
 	case USB_ID(0x22d9, 0x0436): /* OPPO Sonica */
 	case USB_ID(0x22d9, 0x0461): /* OPPO UDP-205 */
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	case USB_ID(0x2522, 0x0012): /* LH Labs VI DAC Infinity */
 	case USB_ID(0x2772, 0x0230): /* Pro-Ject Pre Box S2 Digital */
 		if (fp->altsetting == 2)
 			return SNDRV_PCM_FMTBIT_DSD_U32_BE;
 		break;
 
+<<<<<<< HEAD
 	case USB_ID(0x10cb, 0x0103): /* The Bit Opus #3; with fp->dsd_raw */
 	case USB_ID(0x152a, 0x85de): /* SMSL D1 DAC */
 	case USB_ID(0x16d0, 0x09dd): /* Encore mDSD */
@@ -1391,6 +1431,15 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
 	case USB_ID(0x20b1, 0x307b): /* CH Precision C1 DAC */
 	case USB_ID(0x20b1, 0x3086): /* Singxer F-1 converter board */
 	case USB_ID(0x22d9, 0x0426): /* OPPO HA-2 */
+=======
+	case USB_ID(0x0d8c, 0x0316): /* Hegel HD12 DSD */
+	case USB_ID(0x10cb, 0x0103): /* The Bit Opus #3; with fp->dsd_raw */
+	case USB_ID(0x16b0, 0x06b2): /* NuPrime DAC-10 */
+	case USB_ID(0x16d0, 0x09dd): /* Encore mDSD */
+	case USB_ID(0x16d0, 0x0733): /* Furutech ADL Stratos */
+	case USB_ID(0x16d0, 0x09db): /* NuPrime Audio DAC-9 */
+	case USB_ID(0x1db5, 0x0003): /* Bryston BDA3 */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	case USB_ID(0x22e1, 0xca01): /* HDTA Serenade DSD */
 	case USB_ID(0x249c, 0x9326): /* M2Tech Young MkIII */
 	case USB_ID(0x2616, 0x0106): /* PS Audio NuWave DAC */
@@ -1445,9 +1494,19 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
 	 * from XMOS/Thesycon
 	 */
 	switch (USB_ID_VENDOR(chip->usb_id)) {
+<<<<<<< HEAD
 	case 0x20b1:  /* XMOS based devices */
 	case 0x152a:  /* Thesycon devices */
 	case 0x25ce:  /* Mytek devices */
+=======
+	case 0x152a:  /* Thesycon devices */
+	case 0x20b1:  /* XMOS based devices */
+	case 0x22d9:  /* Oppo */
+	case 0x23ba:  /* Playback Designs */
+	case 0x25ce:  /* Mytek devices */
+	case 0x278b:  /* Rotel? */
+	case 0x292b:  /* Gustard/Ess based devices */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	case 0x2ab6:  /* T+A devices */
 	case 0x3842:  /* EVGA */
 	case 0xc502:  /* HiBy devices */

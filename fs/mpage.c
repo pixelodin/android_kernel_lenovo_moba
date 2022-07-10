@@ -39,6 +39,11 @@ EXPORT_TRACEPOINT_SYMBOL(android_fs_datawrite_start);
 EXPORT_TRACEPOINT_SYMBOL(android_fs_datawrite_end);
 EXPORT_TRACEPOINT_SYMBOL(android_fs_dataread_start);
 EXPORT_TRACEPOINT_SYMBOL(android_fs_dataread_end);
+<<<<<<< HEAD
+=======
+EXPORT_TRACEPOINT_SYMBOL(android_fs_fsync_start);
+EXPORT_TRACEPOINT_SYMBOL(android_fs_fsync_end);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /*
  * I/O completion handler for multipage BIOs.

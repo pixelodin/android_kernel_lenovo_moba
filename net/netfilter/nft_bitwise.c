@@ -83,7 +83,11 @@ static int nft_bitwise_init(const struct nft_ctx *ctx,
 			    tb[NFTA_BITWISE_MASK]);
 	if (err < 0)
 		return err;
+<<<<<<< HEAD
 	if (d1.len != priv->len) {
+=======
+	if (d1.type != NFT_DATA_VALUE || d1.len != priv->len) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		err = -EINVAL;
 		goto err1;
 	}
@@ -92,7 +96,11 @@ static int nft_bitwise_init(const struct nft_ctx *ctx,
 			    tb[NFTA_BITWISE_XOR]);
 	if (err < 0)
 		goto err1;
+<<<<<<< HEAD
 	if (d2.len != priv->len) {
+=======
+	if (d2.type != NFT_DATA_VALUE || d2.len != priv->len) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		err = -EINVAL;
 		goto err2;
 	}

@@ -475,6 +475,19 @@ static inline void mminit_validate_memmodel_limits(unsigned long *start_pfn,
 #define NODE_RECLAIM_SOME	0
 #define NODE_RECLAIM_SUCCESS	1
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_NUMA
+extern int node_reclaim(struct pglist_data *, gfp_t, unsigned int);
+#else
+static inline int node_reclaim(struct pglist_data *pgdat, gfp_t mask,
+				unsigned int order)
+{
+	return NODE_RECLAIM_NOSCAN;
+}
+#endif
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 extern int hwpoison_filter(struct page *p);
 
 extern u32 hwpoison_filter_dev_major;

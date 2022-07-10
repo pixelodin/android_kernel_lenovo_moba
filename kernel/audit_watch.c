@@ -366,12 +366,19 @@ static int audit_get_nd(struct audit_watch *watch, struct path *parent)
 	struct dentry *d = kern_path_locked(watch->path, parent);
 	if (IS_ERR(d))
 		return PTR_ERR(d);
+<<<<<<< HEAD
 	inode_unlock(d_backing_inode(parent->dentry));
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (d_is_positive(d)) {
 		/* update watch filter fields */
 		watch->dev = d->d_sb->s_dev;
 		watch->ino = d_backing_inode(d)->i_ino;
 	}
+<<<<<<< HEAD
+=======
+	inode_unlock(d_backing_inode(parent->dentry));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	dput(d);
 	return 0;
 }

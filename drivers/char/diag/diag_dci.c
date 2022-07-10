@@ -3016,6 +3016,11 @@ int diag_dci_register_client(struct diag_dci_reg_tbl_t *reg_entry)
 	int i, err = 0;
 	struct diag_dci_client_tbl *new_entry = NULL;
 	struct diag_dci_buf_peripheral_t *proc_buf = NULL;
+<<<<<<< HEAD
+=======
+	struct pid *pid_struct = NULL;
+	struct task_struct *task_s = NULL;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!reg_entry)
 		return DIAG_DCI_NO_REG;
@@ -3031,6 +3036,7 @@ int diag_dci_register_client(struct diag_dci_reg_tbl_t *reg_entry)
 	if (driver->num_dci_client >= MAX_DCI_CLIENTS)
 		return DIAG_DCI_NO_REG;
 
+<<<<<<< HEAD
 	new_entry = kzalloc(sizeof(struct diag_dci_client_tbl), GFP_KERNEL);
 	if (!new_entry)
 		return DIAG_DCI_NO_REG;
@@ -3039,6 +3045,27 @@ int diag_dci_register_client(struct diag_dci_reg_tbl_t *reg_entry)
 
 	get_task_struct(current);
 	new_entry->client = current;
+=======
+	pid_struct = find_get_pid(current->tgid);
+	if (!pid_struct)
+		return DIAG_DCI_NO_REG;
+	task_s = get_pid_task(pid_struct, PIDTYPE_PID);
+	if (!task_s) {
+		put_pid(pid_struct);
+		return DIAG_DCI_NO_REG;
+	}
+	new_entry = kzalloc(sizeof(struct diag_dci_client_tbl), GFP_KERNEL);
+	if (!new_entry) {
+		put_pid(pid_struct);
+		put_task_struct(task_s);
+		return DIAG_DCI_NO_REG;
+	}
+
+	get_task_struct(task_s);
+
+	mutex_lock(&driver->dci_mutex);
+	new_entry->client = task_s;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	new_entry->tgid = current->tgid;
 	new_entry->client_info.notification_list =
 				reg_entry->notification_list;
@@ -3128,7 +3155,12 @@ int diag_dci_register_client(struct diag_dci_reg_tbl_t *reg_entry)
 		diag_update_proc_vote(DIAG_PROC_DCI, VOTE_UP, reg_entry->token);
 	queue_work(driver->diag_real_time_wq, &driver->diag_real_time_work);
 	mutex_unlock(&driver->dci_mutex);
+<<<<<<< HEAD
 
+=======
+	put_pid(pid_struct);
+	put_task_struct(task_s);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return reg_entry->client_id;
 
 fail_alloc:
@@ -3166,6 +3198,12 @@ fail_alloc:
 		new_entry = NULL;
 	}
 	mutex_unlock(&driver->dci_mutex);
+<<<<<<< HEAD
+=======
+	put_task_struct(task_s);
+	put_task_struct(task_s);
+	put_pid(pid_struct);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return DIAG_DCI_NO_REG;
 }
 

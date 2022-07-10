@@ -263,7 +263,11 @@ enum {
 };
 
 struct dqstats {
+<<<<<<< HEAD
 	int stat[_DQST_DQSTAT_LAST];
+=======
+	unsigned long stat[_DQST_DQSTAT_LAST];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct percpu_counter counter[_DQST_DQSTAT_LAST];
 };
 

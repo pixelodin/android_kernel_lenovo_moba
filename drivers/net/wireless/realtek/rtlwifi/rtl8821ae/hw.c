@@ -3404,6 +3404,7 @@ static void rtl8821ae_update_hal_rate_table(struct ieee80211_hw *hw,
 		 "%x\n", rtl_read_dword(rtlpriv, REG_ARFR0));
 }
 
+<<<<<<< HEAD
 static u8 _rtl8821ae_mrate_idx_to_arfr_id(
 	struct ieee80211_hw *hw, u8 rate_index,
 	enum wireless_mode wirelessmode)
@@ -3473,6 +3474,8 @@ static u8 _rtl8821ae_mrate_idx_to_arfr_id(
 	return ret;
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static u32 _rtl8821ae_rate_to_bitmap_2ssvht(__le16 vht_rate)
 {
 	u8 i, j, tmp_rate;
@@ -3761,7 +3764,11 @@ static void rtl8821ae_update_hal_rate_mask(struct ieee80211_hw *hw,
 		break;
 	}
 
+<<<<<<< HEAD
 	ratr_index = _rtl8821ae_mrate_idx_to_arfr_id(hw, ratr_index, wirelessmode);
+=======
+	ratr_index = rtl_mrate_idx_to_arfr_id(hw, ratr_index, wirelessmode);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	sta_entry->ratr_index = ratr_index;
 	ratr_bitmap = _rtl8821ae_set_ra_vht_ratr_bitmap(hw, wirelessmode,
 							ratr_bitmap);

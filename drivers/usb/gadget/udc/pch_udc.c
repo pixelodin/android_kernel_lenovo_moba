@@ -1520,7 +1520,10 @@ static void pch_udc_free_dma_chain(struct pch_udc_dev *dev,
 		td = phys_to_virt(addr);
 		addr2 = (dma_addr_t)td->next;
 		dma_pool_free(dev->data_requests, td, addr);
+<<<<<<< HEAD
 		td->next = 0x00;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		addr = addr2;
 	}
 	req->chain_len = 1;

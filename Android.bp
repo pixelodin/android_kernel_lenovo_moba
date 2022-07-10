@@ -6,12 +6,21 @@ cc_binary_host {
     },
 }
 
+<<<<<<< HEAD
 gensrcs {
     name: "gen-headers_install.sh",
     srcs: ["scripts/headers_install.sh"],
     tools: ["unifdef"],
     cmd: "sed 's+scripts/unifdef+$(location unifdef)+g' $(in) > $(out)",
     output_extension: "sh",
+=======
+genrule {
+    name: "gen-headers_install.sh",
+    srcs: ["scripts/headers_install.sh"],
+    tools: ["unifdef"],
+    out: ["headers_install.sh"],
+    cmd: "sed 's+scripts/unifdef+$(location unifdef)+g' $(in) > $(out)",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 cc_prebuilt_binary {
@@ -21,6 +30,7 @@ cc_prebuilt_binary {
     srcs: [":gen-headers_install.sh"],
 }
 
+<<<<<<< HEAD
 gensrcs {
     name: "qcom-kernel-includes",
     cmd: "$(location headers_install.sh) `dirname $(out)` `dirname $(in)` `basename $(in)`",
@@ -53,6 +63,27 @@ cc_library_headers {
     name: "qcom_kernel_headers",
     generated_headers: ["qcom-kernel-includes"],
     export_generated_headers: ["qcom-kernel-includes"],
+=======
+// Use the following for verbose output from kernel_headers.py.
+// kernel_headers_verbose = "--verbose "
+// Use the following for minimal output from kernel_headers.py.
+kernel_headers_verbose = ""
+
+build = ["gen_headers_arm.bp", "gen_headers_arm64.bp"]
+
+cc_library_headers {
+    name: "qti_kernel_headers",
+    arch: {
+        arm: {
+            generated_headers: ["qti_generate_kernel_headers_arm"],
+            export_generated_headers: ["qti_generate_kernel_headers_arm"],
+        },
+        arm64: {
+            generated_headers: ["qti_generate_kernel_headers_arm64"],
+            export_generated_headers: ["qti_generate_kernel_headers_arm64"],
+        },
+    },
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
     vendor: true,
     recovery_available: true,
 }

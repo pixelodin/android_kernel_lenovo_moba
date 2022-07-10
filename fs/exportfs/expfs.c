@@ -147,6 +147,10 @@ static struct dentry *reconnect_one(struct vfsmount *mnt,
 	tmp = lookup_one_len_unlocked(nbuf, parent, strlen(nbuf));
 	if (IS_ERR(tmp)) {
 		dprintk("%s: lookup failed: %d\n", __func__, PTR_ERR(tmp));
+<<<<<<< HEAD
+=======
+		err = PTR_ERR(tmp);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto out_err;
 	}
 	if (tmp != dentry) {
@@ -517,6 +521,7 @@ struct dentry *exportfs_decode_fh(struct vfsmount *mnt, struct fid *fid,
 		 * inode is actually connected to the parent.
 		 */
 		err = exportfs_get_name(mnt, target_dir, nbuf, result);
+<<<<<<< HEAD
 		if (!err) {
 			inode_lock(target_dir->d_inode);
 			nresult = lookup_one_len(nbuf, target_dir,
@@ -531,12 +536,38 @@ struct dentry *exportfs_decode_fh(struct vfsmount *mnt, struct fid *fid,
 			}
 		}
 
+=======
+		if (err) {
+			dput(target_dir);
+			goto err_result;
+		}
+
+		inode_lock(target_dir->d_inode);
+		nresult = lookup_one_len(nbuf, target_dir, strlen(nbuf));
+		if (!IS_ERR(nresult)) {
+			if (unlikely(nresult->d_inode != result->d_inode)) {
+				dput(nresult);
+				nresult = ERR_PTR(-ESTALE);
+			}
+		}
+		inode_unlock(target_dir->d_inode);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/*
 		 * At this point we are done with the parent, but it's pinned
 		 * by the child dentry anyway.
 		 */
 		dput(target_dir);
 
+<<<<<<< HEAD
+=======
+		if (IS_ERR(nresult)) {
+			err = PTR_ERR(nresult);
+			goto err_result;
+		}
+		dput(result);
+		result = nresult;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/*
 		 * And finally make sure the dentry is actually acceptable
 		 * to NFSD.

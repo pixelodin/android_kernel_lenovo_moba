@@ -63,6 +63,7 @@ static int report_error_detected(struct pci_dev *dev, void *data)
 	if (!dev->driver ||
 		!dev->driver->err_handler ||
 		!dev->driver->err_handler->error_detected) {
+<<<<<<< HEAD
 		if (result_data->state == pci_channel_io_frozen &&
 			dev->hdr_type != PCI_HEADER_TYPE_BRIDGE) {
 			/*
@@ -87,6 +88,14 @@ static int report_error_detected(struct pci_dev *dev, void *data)
 		 * without recovery.
 		 */
 
+=======
+		/*
+		 * If any device in the subtree does not have an error_detected
+		 * callback, PCI_ERS_RESULT_NO_AER_DRIVER prevents subsequent
+		 * error callbacks of "any" device in the subtree, and will
+		 * exit in the disconnected error state.
+		 */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE)
 			vote = PCI_ERS_RESULT_NO_AER_DRIVER;
 		else
@@ -177,13 +186,18 @@ static pci_ers_result_t default_reset_link(struct pci_dev *dev)
 {
 	int rc;
 
+<<<<<<< HEAD
 	rc = pci_bridge_secondary_bus_reset(dev);
+=======
+	rc = pci_bus_error_reset(dev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pci_printk(KERN_DEBUG, dev, "downstream link has been reset\n");
 	return rc ? PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_RECOVERED;
 }
 
 static pci_ers_result_t reset_link(struct pci_dev *dev, u32 service)
 {
+<<<<<<< HEAD
 	struct pci_dev *udev;
 	pci_ers_result_t status;
 	struct pcie_port_service_driver *driver = NULL;
@@ -206,12 +220,29 @@ static pci_ers_result_t reset_link(struct pci_dev *dev, u32 service)
 	} else {
 		pci_printk(KERN_DEBUG, dev, "no link-reset support at upstream device %s\n",
 			pci_name(udev));
+=======
+	pci_ers_result_t status;
+	struct pcie_port_service_driver *driver = NULL;
+
+	driver = pcie_port_find_service(dev, service);
+	if (driver && driver->reset_link) {
+		status = driver->reset_link(dev);
+	} else if (dev->has_secondary_link) {
+		status = default_reset_link(dev);
+	} else {
+		pci_printk(KERN_DEBUG, dev, "no link-reset support at upstream device %s\n",
+			pci_name(dev));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return PCI_ERS_RESULT_DISCONNECT;
 	}
 
 	if (status != PCI_ERS_RESULT_RECOVERED) {
 		pci_printk(KERN_DEBUG, dev, "link reset at upstream device %s failed\n",
+<<<<<<< HEAD
 			pci_name(udev));
+=======
+			pci_name(dev));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return PCI_ERS_RESULT_DISCONNECT;
 	}
 
@@ -243,6 +274,7 @@ static pci_ers_result_t broadcast_error_message(struct pci_dev *dev,
 	else
 		result_data.result = PCI_ERS_RESULT_RECOVERED;
 
+<<<<<<< HEAD
 	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE) {
 		/*
 		 * If the error is reported by a bridge, we think this error
@@ -268,6 +300,9 @@ static pci_ers_result_t broadcast_error_message(struct pci_dev *dev,
 		cb(dev, &result_data);
 	}
 
+=======
+	pci_walk_bus(dev->subordinate, cb, &result_data);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return result_data.result;
 }
 
@@ -347,6 +382,17 @@ void pcie_do_nonfatal_recovery(struct pci_dev *dev)
 
 	state = pci_channel_io_normal;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Error recovery runs on all subordinates of the first downstream port.
+	 * If the downstream port detected the error, it is cleared at the end.
+	 */
+	if (!(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT ||
+	      pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM))
+		dev = dev->bus->self;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	status = broadcast_error_message(dev,
 			state,
 			"error_detected",
@@ -378,6 +424,11 @@ void pcie_do_nonfatal_recovery(struct pci_dev *dev)
 				"resume",
 				report_resume);
 
+<<<<<<< HEAD
+=======
+	pci_aer_clear_device_status(dev);
+	pci_cleanup_aer_uncorrect_error_status(dev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pci_info(dev, "AER: Device recovery successful\n");
 	return;
 

@@ -409,6 +409,10 @@ static inline void __iomem *ioremap(unsigned long offset, unsigned long size)
 }
 
 #define ioremap_nocache(X,Y)		ioremap((X),(Y))
+<<<<<<< HEAD
+=======
+#define ioremap_uc(X,Y)			ioremap((X),(Y))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define ioremap_wc(X,Y)			ioremap((X),(Y))
 #define ioremap_wt(X,Y)			ioremap((X),(Y))
 

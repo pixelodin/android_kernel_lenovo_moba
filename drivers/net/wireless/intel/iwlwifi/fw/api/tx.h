@@ -747,9 +747,15 @@ enum iwl_mvm_ba_resp_flags {
  * @tfd_cnt: number of TFD-Q elements
  * @ra_tid_cnt: number of RATID-Q elements
  * @tfd: array of TFD queue status updates. See &iwl_mvm_compressed_ba_tfd
+<<<<<<< HEAD
  *	for details.
  * @ra_tid: array of RA-TID queue status updates. For debug purposes only. See
  *	&iwl_mvm_compressed_ba_ratid for more details.
+=======
+ *	for details. Length in @tfd_cnt.
+ * @ra_tid: array of RA-TID queue status updates. For debug purposes only. See
+ *	&iwl_mvm_compressed_ba_ratid for more details. Length in @ra_tid_cnt.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 struct iwl_mvm_compressed_ba_notif {
 	__le32 flags;
@@ -766,7 +772,11 @@ struct iwl_mvm_compressed_ba_notif {
 	__le32 tx_rate;
 	__le16 tfd_cnt;
 	__le16 ra_tid_cnt;
+<<<<<<< HEAD
 	struct iwl_mvm_compressed_ba_tfd tfd[1];
+=======
+	struct iwl_mvm_compressed_ba_tfd tfd[0];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct iwl_mvm_compressed_ba_ratid ra_tid[0];
 } __packed; /* COMPRESSED_BA_RES_API_S_VER_4 */
 

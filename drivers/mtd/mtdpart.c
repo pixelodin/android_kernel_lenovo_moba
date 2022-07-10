@@ -612,10 +612,28 @@ int mtd_add_partition(struct mtd_info *parent, const char *name,
 	list_add(&new->list, &mtd_partitions);
 	mutex_unlock(&mtd_partitions_mutex);
 
+<<<<<<< HEAD
 	add_mtd_device(&new->mtd);
 
 	mtd_add_partition_attrs(new);
 
+=======
+	ret = add_mtd_device(&new->mtd);
+	if (ret)
+		goto err_remove_part;
+
+	mtd_add_partition_attrs(new);
+
+	return 0;
+
+err_remove_part:
+	mutex_lock(&mtd_partitions_mutex);
+	list_del(&new->list);
+	mutex_unlock(&mtd_partitions_mutex);
+
+	free_partition(new);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return ret;
 }
 EXPORT_SYMBOL_GPL(mtd_add_partition);
@@ -706,22 +724,44 @@ int add_mtd_partitions(struct mtd_info *master,
 {
 	struct mtd_part *slave;
 	uint64_t cur_offset = 0;
+<<<<<<< HEAD
 	int i;
+=======
+	int i, ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	printk(KERN_NOTICE "Creating %d MTD partitions on \"%s\":\n", nbparts, master->name);
 
 	for (i = 0; i < nbparts; i++) {
 		slave = allocate_partition(master, parts + i, i, cur_offset);
 		if (IS_ERR(slave)) {
+<<<<<<< HEAD
 			del_mtd_partitions(master);
 			return PTR_ERR(slave);
+=======
+			ret = PTR_ERR(slave);
+			goto err_del_partitions;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 
 		mutex_lock(&mtd_partitions_mutex);
 		list_add(&slave->list, &mtd_partitions);
 		mutex_unlock(&mtd_partitions_mutex);
 
+<<<<<<< HEAD
 		add_mtd_device(&slave->mtd);
+=======
+		ret = add_mtd_device(&slave->mtd);
+		if (ret) {
+			mutex_lock(&mtd_partitions_mutex);
+			list_del(&slave->list);
+			mutex_unlock(&mtd_partitions_mutex);
+
+			free_partition(slave);
+			goto err_del_partitions;
+		}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		mtd_add_partition_attrs(slave);
 		/* Look for subpartitions */
 		parse_mtd_partitions(&slave->mtd, parts[i].types, NULL);
@@ -730,6 +770,14 @@ int add_mtd_partitions(struct mtd_info *master,
 	}
 
 	return 0;
+<<<<<<< HEAD
+=======
+
+err_del_partitions:
+	del_mtd_partitions(master);
+
+	return ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static DEFINE_SPINLOCK(part_parser_lock);

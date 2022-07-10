@@ -1096,6 +1096,7 @@ static int ieee80211_stop_ap(struct wiphy *wiphy, struct net_device *dev)
 	return 0;
 }
 
+<<<<<<< HEAD
 /* Layer 2 Update frame (802.2 Type 1 LLC XID Update response) */
 struct iapp_layer2_update {
 	u8 da[ETH_ALEN];	/* broadcast */
@@ -1140,6 +1141,8 @@ static void ieee80211_send_layer2_update(struct sta_info *sta)
 	netif_rx_ni(skb);
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int sta_apply_auth_flags(struct ieee80211_local *local,
 				struct sta_info *sta,
 				u32 mask, u32 set)
@@ -1454,7 +1457,10 @@ static int ieee80211_add_station(struct wiphy *wiphy, struct net_device *dev,
 	struct sta_info *sta;
 	struct ieee80211_sub_if_data *sdata;
 	int err;
+<<<<<<< HEAD
 	int layer2_update;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (params->vlan) {
 		sdata = IEEE80211_DEV_TO_SUB_IF(params->vlan);
@@ -1498,18 +1504,24 @@ static int ieee80211_add_station(struct wiphy *wiphy, struct net_device *dev,
 	    test_sta_flag(sta, WLAN_STA_ASSOC))
 		rate_control_rate_init(sta);
 
+<<<<<<< HEAD
 	layer2_update = sdata->vif.type == NL80211_IFTYPE_AP_VLAN ||
 		sdata->vif.type == NL80211_IFTYPE_AP;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	err = sta_info_insert_rcu(sta);
 	if (err) {
 		rcu_read_unlock();
 		return err;
 	}
 
+<<<<<<< HEAD
 	if (layer2_update)
 		ieee80211_send_layer2_update(sta);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rcu_read_unlock();
 
 	return 0;
@@ -1607,10 +1619,18 @@ static int ieee80211_change_station(struct wiphy *wiphy,
 		sta->sdata = vlansdata;
 		ieee80211_check_fast_xmit(sta);
 
+<<<<<<< HEAD
 		if (test_sta_flag(sta, WLAN_STA_AUTHORIZED))
 			ieee80211_vif_inc_num_mcast(sta->sdata);
 
 		ieee80211_send_layer2_update(sta);
+=======
+		if (test_sta_flag(sta, WLAN_STA_AUTHORIZED)) {
+			ieee80211_vif_inc_num_mcast(sta->sdata);
+			cfg80211_send_layer2_update(sta->sdata->dev,
+						    sta->sta.addr);
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	err = sta_apply_parameters(local, sta, params);
@@ -2875,6 +2895,31 @@ static int ieee80211_start_radar_detection(struct wiphy *wiphy,
 	return err;
 }
 
+<<<<<<< HEAD
+=======
+static void ieee80211_end_cac(struct wiphy *wiphy,
+			      struct net_device *dev)
+{
+	struct ieee80211_sub_if_data *sdata = IEEE80211_DEV_TO_SUB_IF(dev);
+	struct ieee80211_local *local = sdata->local;
+
+	mutex_lock(&local->mtx);
+	list_for_each_entry(sdata, &local->interfaces, list) {
+		/* it might be waiting for the local->mtx, but then
+		 * by the time it gets it, sdata->wdev.cac_started
+		 * will no longer be true
+		 */
+		cancel_delayed_work(&sdata->dfs_cac_timer_work);
+
+		if (sdata->wdev.cac_started) {
+			ieee80211_vif_release_channel(sdata);
+			sdata->wdev.cac_started = false;
+		}
+	}
+	mutex_unlock(&local->mtx);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static struct cfg80211_beacon_data *
 cfg80211_beacon_dup(struct cfg80211_beacon_data *beacon)
 {
@@ -3898,6 +3943,10 @@ const struct cfg80211_ops mac80211_config_ops = {
 #endif
 	.get_channel = ieee80211_cfg_get_channel,
 	.start_radar_detection = ieee80211_start_radar_detection,
+<<<<<<< HEAD
+=======
+	.end_cac = ieee80211_end_cac,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.channel_switch = ieee80211_channel_switch,
 	.set_qos_map = ieee80211_set_qos_map,
 	.set_ap_chanwidth = ieee80211_set_ap_chanwidth,

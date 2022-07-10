@@ -33,7 +33,11 @@ config DEVFREQ_EVENT_EXYNOS_PPMU
 
 config DEVFREQ_EVENT_ROCKCHIP_DFI
 	tristate "ROCKCHIP DFI DEVFREQ event Driver"
+<<<<<<< HEAD
 	depends on ARCH_ROCKCHIP
+=======
+	depends on ARCH_ROCKCHIP || COMPILE_TEST
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	help
 	  This add the devfreq-event driver for Rockchip SoC. It provides DFI
 	  (DDR Monitor Module) driver to count ddr load.

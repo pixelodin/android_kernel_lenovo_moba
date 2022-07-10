@@ -204,7 +204,11 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		pxa3xx_ohci: usb@4c000000 {
+=======
+		usb0: usb@4c000000 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			compatible = "marvell,pxa-ohci";
 			reg = <0x4c000000 0x10000>;
 			interrupts = <3>;

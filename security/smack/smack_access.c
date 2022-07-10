@@ -640,7 +640,11 @@ bool smack_privileged_cred(int cap, const struct cred *cred)
 	struct smack_known_list_elem *sklep;
 	int rc;
 
+<<<<<<< HEAD
 	rc = cap_capable(cred, &init_user_ns, cap, SECURITY_CAP_AUDIT);
+=======
+	rc = cap_capable(cred, &init_user_ns, cap, CAP_OPT_NONE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (rc)
 		return false;
 

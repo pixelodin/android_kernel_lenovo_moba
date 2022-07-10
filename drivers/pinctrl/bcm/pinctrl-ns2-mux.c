@@ -640,8 +640,13 @@ static int ns2_pinmux_enable(struct pinctrl_dev *pctrl_dev,
 	const struct ns2_pin_function *func;
 	const struct ns2_pin_group *grp;
 
+<<<<<<< HEAD
 	if (grp_select > pinctrl->num_groups ||
 		func_select > pinctrl->num_functions)
+=======
+	if (grp_select >= pinctrl->num_groups ||
+		func_select >= pinctrl->num_functions)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EINVAL;
 
 	func = &pinctrl->functions[func_select];

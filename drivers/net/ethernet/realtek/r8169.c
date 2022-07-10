@@ -1010,6 +1010,13 @@ static int r8168dp_2_mdio_read(struct rtl8169_private *tp, int reg)
 {
 	int value;
 
+<<<<<<< HEAD
+=======
+	/* Work around issue with chip reporting wrong PHY ID */
+	if (reg == MII_PHYSID2)
+		return 0xc912;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	r8168dp_2_mdio_start(tp);
 
 	value = r8169_mdio_read(tp, reg);
@@ -7429,6 +7436,18 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 	int chipset, region, i;
 	int jumbo_max, rc;
 
+<<<<<<< HEAD
+=======
+	/* Some tools for creating an initramfs don't consider softdeps, then
+	 * r8169.ko may be in initramfs, but realtek.ko not. Then the generic
+	 * PHY driver is used that doesn't work with most chip versions.
+	 */
+	if (!driver_find("RTL8201CP Ethernet", &mdio_bus_type)) {
+		dev_err(&pdev->dev, "realtek.ko not loaded, maybe it needs to be added to initramfs?\n");
+		return -ENOENT;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	dev = devm_alloc_etherdev(&pdev->dev, sizeof (*tp));
 	if (!dev)
 		return -ENOMEM;

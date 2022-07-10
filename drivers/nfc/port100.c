@@ -574,7 +574,11 @@ static void port100_tx_update_payload_len(void *_frame, int len)
 {
 	struct port100_frame *frame = _frame;
 
+<<<<<<< HEAD
 	frame->datalen = cpu_to_le16(le16_to_cpu(frame->datalen) + len);
+=======
+	le16_add_cpu(&frame->datalen, len);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static bool port100_rx_frame_is_valid(void *_frame)
@@ -792,7 +796,11 @@ static int port100_send_frame_async(struct port100 *dev, struct sk_buff *out,
 
 	rc = port100_submit_urb_for_ack(dev, GFP_KERNEL);
 	if (rc)
+<<<<<<< HEAD
 		usb_unlink_urb(dev->out_urb);
+=======
+		usb_kill_urb(dev->out_urb);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 exit:
 	mutex_unlock(&dev->out_urb_lock);

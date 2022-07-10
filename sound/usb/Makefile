@@ -16,7 +16,12 @@ snd-usb-audio-objs := 	card.o \
 			power.o \
 			proc.o \
 			quirks.o \
+<<<<<<< HEAD
 			stream.o
+=======
+			stream.o \
+			validate.o
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 snd-usbmidi-lib-objs := midi.o
 

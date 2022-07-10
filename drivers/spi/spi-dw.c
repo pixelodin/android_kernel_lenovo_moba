@@ -179,9 +179,17 @@ static inline u32 rx_max(struct dw_spi *dws)
 
 static void dw_writer(struct dw_spi *dws)
 {
+<<<<<<< HEAD
 	u32 max = tx_max(dws);
 	u16 txw = 0;
 
+=======
+	u32 max;
+	u16 txw = 0;
+
+	spin_lock(&dws->buf_lock);
+	max = tx_max(dws);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	while (max--) {
 		/* Set the tx word if the transfer's original "tx" is not null */
 		if (dws->tx_end - dws->len) {
@@ -193,13 +201,25 @@ static void dw_writer(struct dw_spi *dws)
 		dw_write_io_reg(dws, DW_SPI_DR, txw);
 		dws->tx += dws->n_bytes;
 	}
+<<<<<<< HEAD
+=======
+	spin_unlock(&dws->buf_lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void dw_reader(struct dw_spi *dws)
 {
+<<<<<<< HEAD
 	u32 max = rx_max(dws);
 	u16 rxw;
 
+=======
+	u32 max;
+	u16 rxw;
+
+	spin_lock(&dws->buf_lock);
+	max = rx_max(dws);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	while (max--) {
 		rxw = dw_read_io_reg(dws, DW_SPI_DR);
 		/* Care rx only if the transfer's original "rx" is not null */
@@ -211,6 +231,10 @@ static void dw_reader(struct dw_spi *dws)
 		}
 		dws->rx += dws->n_bytes;
 	}
+<<<<<<< HEAD
+=======
+	spin_unlock(&dws->buf_lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void int_error_stop(struct dw_spi *dws, const char *msg)
@@ -283,18 +307,30 @@ static int dw_spi_transfer_one(struct spi_controller *master,
 {
 	struct dw_spi *dws = spi_controller_get_devdata(master);
 	struct chip_data *chip = spi_get_ctldata(spi);
+<<<<<<< HEAD
+=======
+	unsigned long flags;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u8 imask = 0;
 	u16 txlevel = 0;
 	u32 cr0;
 	int ret;
 
 	dws->dma_mapped = 0;
+<<<<<<< HEAD
 
+=======
+	spin_lock_irqsave(&dws->buf_lock, flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	dws->tx = (void *)transfer->tx_buf;
 	dws->tx_end = dws->tx + transfer->len;
 	dws->rx = transfer->rx_buf;
 	dws->rx_end = dws->rx + transfer->len;
 	dws->len = transfer->len;
+<<<<<<< HEAD
+=======
+	spin_unlock_irqrestore(&dws->buf_lock, flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	spi_enable_chip(dws, 0);
 
@@ -485,6 +521,10 @@ int dw_spi_add_host(struct device *dev, struct dw_spi *dws)
 	dws->type = SSI_MOTO_SPI;
 	dws->dma_inited = 0;
 	dws->dma_addr = (dma_addr_t)(dws->paddr + DW_SPI_DR);
+<<<<<<< HEAD
+=======
+	spin_lock_init(&dws->buf_lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	spi_controller_set_devdata(master, dws);
 

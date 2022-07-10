@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 /*
+<<<<<<< HEAD
  * Copyright (c) 2012-2014,2018-2019 The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2012-2014,2018-2020 The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 #ifndef __KGSL_SYNC_H
 #define __KGSL_SYNC_H
@@ -21,7 +25,11 @@
  */
 struct kgsl_sync_timeline {
 	struct kref kref;
+<<<<<<< HEAD
 	char name[32];
+=======
+	char *name;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	u64 fence_context;
 

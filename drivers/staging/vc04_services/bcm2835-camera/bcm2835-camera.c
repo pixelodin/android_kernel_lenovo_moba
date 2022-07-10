@@ -47,6 +47,10 @@ MODULE_DESCRIPTION("Broadcom 2835 MMAL video capture");
 MODULE_AUTHOR("Vincent Sanders");
 MODULE_LICENSE("GPL");
 MODULE_VERSION(BM2835_MMAL_VERSION);
+<<<<<<< HEAD
+=======
+MODULE_ALIAS("platform:bcm2835-camera");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 int bcm2835_v4l2_debug;
 module_param_named(debug, bcm2835_v4l2_debug, int, 0644);
@@ -1854,6 +1858,15 @@ static int bcm2835_mmal_probe(struct platform_device *pdev)
 	num_cameras = get_num_cameras(instance,
 				      resolutions,
 				      MAX_BCM2835_CAMERAS);
+<<<<<<< HEAD
+=======
+
+	if (num_cameras < 1) {
+		ret = -ENODEV;
+		goto cleanup_mmal;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (num_cameras > MAX_BCM2835_CAMERAS)
 		num_cameras = MAX_BCM2835_CAMERAS;
 
@@ -1953,6 +1966,12 @@ cleanup_gdev:
 	pr_info("%s: error %d while loading driver\n",
 		BM2835_MMAL_MODULE_NAME, ret);
 
+<<<<<<< HEAD
+=======
+cleanup_mmal:
+	vchiq_mmal_finalise(instance);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return ret;
 }
 

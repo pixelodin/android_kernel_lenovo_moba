@@ -41,7 +41,11 @@ struct timestamp_event_queue {
 
 struct ptp_clock {
 	struct posix_clock clock;
+<<<<<<< HEAD
 	struct device *dev;
+=======
+	struct device dev;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct ptp_clock_info *info;
 	dev_t devid;
 	int index; /* index into clocks.map */

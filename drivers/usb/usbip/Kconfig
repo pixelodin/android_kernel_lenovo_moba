@@ -2,6 +2,10 @@ config USBIP_CORE
 	tristate "USB/IP support"
 	depends on NET
 	select USB_COMMON
+<<<<<<< HEAD
+=======
+	select SGL_ALLOC
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	---help---
 	  This enables pushing USB packets over IP to allow remote
 	  machines direct access to USB devices. It provides the

@@ -1660,8 +1660,13 @@ static void end_workqueue_fn(struct btrfs_work *work)
 	bio->bi_status = end_io_wq->status;
 	bio->bi_private = end_io_wq->private;
 	bio->bi_end_io = end_io_wq->end_io;
+<<<<<<< HEAD
 	kmem_cache_free(btrfs_end_io_wq_cache, end_io_wq);
 	bio_endio(bio);
+=======
+	bio_endio(bio);
+	kmem_cache_free(btrfs_end_io_wq_cache, end_io_wq);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int cleaner_kthread(void *arg)
@@ -2031,7 +2036,11 @@ static void free_root_extent_buffers(struct btrfs_root *root)
 }
 
 /* helper to cleanup tree roots */
+<<<<<<< HEAD
 static void free_root_pointers(struct btrfs_fs_info *info, int chunk_root)
+=======
+static void free_root_pointers(struct btrfs_fs_info *info, bool free_chunk_root)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	free_root_extent_buffers(info->tree_root);
 
@@ -2040,7 +2049,11 @@ static void free_root_pointers(struct btrfs_fs_info *info, int chunk_root)
 	free_root_extent_buffers(info->csum_root);
 	free_root_extent_buffers(info->quota_root);
 	free_root_extent_buffers(info->uuid_root);
+<<<<<<< HEAD
 	if (chunk_root)
+=======
+	if (free_chunk_root)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		free_root_extent_buffers(info->chunk_root);
 	free_root_extent_buffers(info->free_space_root);
 }
@@ -2645,7 +2658,10 @@ int open_ctree(struct super_block *sb,
 	spin_lock_init(&fs_info->fs_roots_radix_lock);
 	spin_lock_init(&fs_info->delayed_iput_lock);
 	spin_lock_init(&fs_info->defrag_inodes_lock);
+<<<<<<< HEAD
 	spin_lock_init(&fs_info->tree_mod_seq_lock);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	spin_lock_init(&fs_info->super_lock);
 	spin_lock_init(&fs_info->qgroup_op_lock);
 	spin_lock_init(&fs_info->buffer_lock);
@@ -3118,6 +3134,10 @@ retry_root_backup:
 	/* do not make disk changes in broken FS or nologreplay is given */
 	if (btrfs_super_log_root(disk_super) != 0 &&
 	    !btrfs_test_opt(fs_info, NOLOGREPLAY)) {
+<<<<<<< HEAD
+=======
+		btrfs_info(fs_info, "start tree-log replay");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ret = btrfs_replay_log(fs_info, fs_devices);
 		if (ret) {
 			err = ret;
@@ -3153,6 +3173,10 @@ retry_root_backup:
 	if (IS_ERR(fs_info->fs_root)) {
 		err = PTR_ERR(fs_info->fs_root);
 		btrfs_warn(fs_info, "failed to read fs tree: %d", err);
+<<<<<<< HEAD
+=======
+		fs_info->fs_root = NULL;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto fail_qgroup;
 	}
 
@@ -3274,7 +3298,11 @@ fail_block_groups:
 	btrfs_put_block_group_cache(fs_info);
 
 fail_tree_roots:
+<<<<<<< HEAD
 	free_root_pointers(fs_info, 1);
+=======
+	free_root_pointers(fs_info, true);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	invalidate_inode_pages2(fs_info->btree_inode->i_mapping);
 
 fail_sb_buffer:
@@ -3302,7 +3330,11 @@ recovery_tree_root:
 	if (!btrfs_test_opt(fs_info, USEBACKUPROOT))
 		goto fail_tree_roots;
 
+<<<<<<< HEAD
 	free_root_pointers(fs_info, 0);
+=======
+	free_root_pointers(fs_info, false);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* don't use the log in recovery mode, it won't be valid */
 	btrfs_set_super_log_root(disk_super, 0);
@@ -3984,10 +4016,24 @@ void close_ctree(struct btrfs_fs_info *fs_info)
 	invalidate_inode_pages2(fs_info->btree_inode->i_mapping);
 	btrfs_stop_all_workers(fs_info);
 
+<<<<<<< HEAD
 	btrfs_free_block_groups(fs_info);
 
 	clear_bit(BTRFS_FS_OPEN, &fs_info->flags);
 	free_root_pointers(fs_info, 1);
+=======
+	clear_bit(BTRFS_FS_OPEN, &fs_info->flags);
+	free_root_pointers(fs_info, true);
+
+	/*
+	 * We must free the block groups after dropping the fs_roots as we could
+	 * have had an IO error and have left over tree log blocks that aren't
+	 * cleaned up until the fs roots are freed.  This makes the block group
+	 * accounting appear to be wrong because there's pending reserved bytes,
+	 * so make sure we do the block group cleanup afterwards.
+	 */
+	btrfs_free_block_groups(fs_info);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	iput(fs_info->btree_inode);
 
@@ -4350,6 +4396,11 @@ static int btrfs_destroy_pinned_extent(struct btrfs_fs_info *fs_info,
 	unpin = pinned_extents;
 again:
 	while (1) {
+<<<<<<< HEAD
+=======
+		struct extent_state *cached_state = NULL;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/*
 		 * The btrfs_finish_extent_commit() may get the same range as
 		 * ours between find_first_extent_bit and clear_extent_dirty.
@@ -4358,13 +4409,22 @@ again:
 		 */
 		mutex_lock(&fs_info->unused_bg_unpin_mutex);
 		ret = find_first_extent_bit(unpin, 0, &start, &end,
+<<<<<<< HEAD
 					    EXTENT_DIRTY, NULL);
+=======
+					    EXTENT_DIRTY, &cached_state);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (ret) {
 			mutex_unlock(&fs_info->unused_bg_unpin_mutex);
 			break;
 		}
 
+<<<<<<< HEAD
 		clear_extent_dirty(unpin, start, end);
+=======
+		clear_extent_dirty(unpin, start, end, &cached_state);
+		free_extent_state(cached_state);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		btrfs_error_unpin_extent_range(fs_info, start, end);
 		mutex_unlock(&fs_info->unused_bg_unpin_mutex);
 		cond_resched();
@@ -4458,7 +4518,10 @@ void btrfs_cleanup_one_transaction(struct btrfs_transaction *cur_trans,
 	wake_up(&fs_info->transaction_wait);
 
 	btrfs_destroy_delayed_inodes(fs_info);
+<<<<<<< HEAD
 	btrfs_assert_delayed_root_empty(fs_info);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	btrfs_destroy_marked_extents(fs_info, &cur_trans->dirty_pages,
 				     EXTENT_DIRTY);

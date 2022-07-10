@@ -588,8 +588,19 @@ static void fill_decoder_block(u8 *dst, const s16 *input, int stride)
 	int i, j;
 
 	for (i = 0; i < 8; i++) {
+<<<<<<< HEAD
 		for (j = 0; j < 8; j++)
 			*dst++ = *input++;
+=======
+		for (j = 0; j < 8; j++, input++, dst++) {
+			if (*input < 0)
+				*dst = 0;
+			else if (*input > 255)
+				*dst = 255;
+			else
+				*dst = *input;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		dst += stride - 8;
 	}
 }

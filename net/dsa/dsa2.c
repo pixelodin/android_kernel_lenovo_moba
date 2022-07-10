@@ -49,7 +49,11 @@ static struct dsa_switch_tree *dsa_tree_alloc(int index)
 	dst->index = index;
 
 	INIT_LIST_HEAD(&dst->list);
+<<<<<<< HEAD
 	list_add_tail(&dsa_tree_list, &dst->list);
+=======
+	list_add_tail(&dst->list, &dsa_tree_list);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	kref_init(&dst->refcount);
 

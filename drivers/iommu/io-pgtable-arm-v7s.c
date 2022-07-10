@@ -35,6 +35,10 @@
 #include <linux/atomic.h>
 #include <linux/dma-mapping.h>
 #include <linux/gfp.h>
+<<<<<<< HEAD
+=======
+#include <linux/io-pgtable.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/iommu.h>
 #include <linux/kernel.h>
 #include <linux/kmemleak.h>
@@ -45,8 +49,11 @@
 
 #include <asm/barrier.h>
 
+<<<<<<< HEAD
 #include "io-pgtable.h"
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* Struct accessors */
 #define io_pgtable_to_data(x)						\
 	container_of((x), struct arm_v7s_io_pgtable, iop)

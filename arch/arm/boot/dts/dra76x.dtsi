@@ -81,3 +81,11 @@
 		reg = <0x3fc>;
 	};
 };
+<<<<<<< HEAD
+=======
+
+&mmc3 {
+	/* dra76x is not affected by i887 */
+	max-frequency = <96000000>;
+};
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

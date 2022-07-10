@@ -87,6 +87,12 @@ struct scan_control {
 	/* Can pages be swapped as part of reclaim? */
 	unsigned int may_swap:1;
 
+<<<<<<< HEAD
+=======
+	/* e.g. boosted watermark reclaim leaves slabs alone */
+	unsigned int may_shrinkslab:1;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/*
 	 * Cgroups are not reclaimed below their configured memory.low,
 	 * unless we threaten to OOM. If any cgroups are skipped due to
@@ -135,6 +141,16 @@ struct scan_control {
 	struct vm_area_struct *target_vma;
 };
 
+<<<<<<< HEAD
+=======
+/*
+ * Number of active kswapd threads
+ */
+#define DEF_KSWAPD_THREADS_PER_NODE 1
+int kswapd_threads = DEF_KSWAPD_THREADS_PER_NODE;
+int kswapd_threads_current = DEF_KSWAPD_THREADS_PER_NODE;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #ifdef ARCH_HAS_PREFETCH
 #define prefetch_prev_lru_page(_page, _base, _field)			\
 	do {								\
@@ -1468,6 +1484,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
 			count_memcg_page_event(page, PGLAZYFREED);
 		} else if (!mapping || !__remove_mapping(mapping, page, true))
 			goto keep_locked;
+<<<<<<< HEAD
 		/*
 		 * At this point, we have no other references and there is
 		 * no way to pick any more up (removed from LRU, removed
@@ -1476,6 +1493,10 @@ static unsigned long shrink_page_list(struct list_head *page_list,
 		 * waiting on the page lock, because there are no references.
 		 */
 		__ClearPageLocked(page);
+=======
+
+		unlock_page(page);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 free_it:
 		nr_reclaimed++;
 
@@ -2516,10 +2537,20 @@ out:
 			/*
 			 * Scan types proportional to swappiness and
 			 * their relative recent reclaim efficiency.
+<<<<<<< HEAD
 			 * Make sure we don't miss the last page
 			 * because of a round-off error.
 			 */
 			scan = DIV64_U64_ROUND_UP(scan * fraction[file],
+=======
+			 * Make sure we don't miss the last page on
+			 * the offlined memory cgroups because of a
+			 * round-off error.
+			 */
+			scan = mem_cgroup_online(memcg) ?
+			       div64_u64(scan * fraction[file], denominator) :
+			       DIV64_U64_ROUND_UP(scan * fraction[file],
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 						  denominator);
 			break;
 		case SCAN_FILE:
@@ -3290,6 +3321,10 @@ unsigned long try_to_free_pages(struct zonelist *zonelist, int order,
 		.may_writepage = !laptop_mode,
 		.may_unmap = 1,
 		.may_swap = 1,
+<<<<<<< HEAD
+=======
+		.may_shrinkslab = 1,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	};
 
 	/*
@@ -3334,6 +3369,10 @@ unsigned long mem_cgroup_shrink_node(struct mem_cgroup *memcg,
 		.may_unmap = 1,
 		.reclaim_idx = MAX_NR_ZONES - 1,
 		.may_swap = !noswap,
+<<<<<<< HEAD
+=======
+		.may_shrinkslab = 1,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	};
 	unsigned long lru_pages;
 
@@ -3380,6 +3419,10 @@ unsigned long try_to_free_mem_cgroup_pages(struct mem_cgroup *memcg,
 		.may_writepage = !laptop_mode,
 		.may_unmap = 1,
 		.may_swap = may_swap,
+<<<<<<< HEAD
+=======
+		.may_shrinkslab = 1,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	};
 
 	/*
@@ -4081,21 +4124,97 @@ unsigned long shrink_all_memory(unsigned long nr_to_reclaim)
    restore their cpu bindings. */
 static int kswapd_cpu_online(unsigned int cpu)
 {
+<<<<<<< HEAD
 	int nid;
+=======
+	int nid, hid;
+	int nr_threads = kswapd_threads_current;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	for_each_node_state(nid, N_MEMORY) {
 		pg_data_t *pgdat = NODE_DATA(nid);
 		const struct cpumask *mask;
 
 		mask = cpumask_of_node(pgdat->node_id);
+<<<<<<< HEAD
 
 		if (cpumask_any_and(cpu_online_mask, mask) < nr_cpu_ids)
 			/* One of our CPUs online: restore mask */
 			set_cpus_allowed_ptr(pgdat->kswapd, mask);
+=======
+		if (cpumask_any_and(cpu_online_mask, mask) < nr_cpu_ids) {
+			for (hid = 0; hid < nr_threads; hid++) {
+				/* One of our CPUs online: restore mask */
+				set_cpus_allowed_ptr(pgdat->kswapd[hid], mask);
+			}
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static void update_kswapd_threads_node(int nid)
+{
+	pg_data_t *pgdat;
+	int drop, increase;
+	int last_idx, start_idx, hid;
+	int nr_threads = kswapd_threads_current;
+
+	pgdat = NODE_DATA(nid);
+	last_idx = nr_threads - 1;
+	if (kswapd_threads < nr_threads) {
+		drop = nr_threads - kswapd_threads;
+		for (hid = last_idx; hid > (last_idx - drop); hid--) {
+			if (pgdat->kswapd[hid]) {
+				kthread_stop(pgdat->kswapd[hid]);
+				pgdat->kswapd[hid] = NULL;
+			}
+		}
+	} else {
+		increase = kswapd_threads - nr_threads;
+		start_idx = last_idx + 1;
+		for (hid = start_idx; hid < (start_idx + increase); hid++) {
+			pgdat->kswapd[hid] = kthread_run(kswapd, pgdat,
+						"kswapd%d:%d", nid, hid);
+			if (IS_ERR(pgdat->kswapd[hid])) {
+				pr_err("Failed to start kswapd%d on node %d\n",
+					hid, nid);
+				pgdat->kswapd[hid] = NULL;
+				/*
+				 * We are out of resources. Do not start any
+				 * more threads.
+				 */
+				break;
+			}
+		}
+	}
+}
+
+void update_kswapd_threads(void)
+{
+	int nid;
+
+	if (kswapd_threads_current == kswapd_threads)
+		return;
+
+	/*
+	 * Hold the memory hotplug lock to avoid racing with memory
+	 * hotplug initiated updates
+	 */
+	mem_hotplug_begin();
+	for_each_node_state(nid, N_MEMORY)
+		update_kswapd_threads_node(nid);
+
+	pr_info("kswapd_thread count changed, old:%d new:%d\n",
+		kswapd_threads_current, kswapd_threads);
+	kswapd_threads_current = kswapd_threads;
+	mem_hotplug_done();
+}
+
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * This kswapd start function will be called by init and node-hot-add.
  * On node-hot-add, kswapd will moved to proper cpus if cpus are hot-added.
@@ -4104,6 +4223,7 @@ int kswapd_run(int nid)
 {
 	pg_data_t *pgdat = NODE_DATA(nid);
 	int ret = 0;
+<<<<<<< HEAD
 
 	if (pgdat->kswapd)
 		return 0;
@@ -4116,6 +4236,27 @@ int kswapd_run(int nid)
 		ret = PTR_ERR(pgdat->kswapd);
 		pgdat->kswapd = NULL;
 	}
+=======
+	int hid, nr_threads;
+
+	if (pgdat->kswapd[0])
+		return 0;
+
+	nr_threads = kswapd_threads;
+	for (hid = 0; hid < nr_threads; hid++) {
+		pgdat->kswapd[hid] = kthread_run(kswapd, pgdat, "kswapd%d:%d",
+							nid, hid);
+		if (IS_ERR(pgdat->kswapd[hid])) {
+			/* failure at boot is fatal */
+			BUG_ON(system_state < SYSTEM_RUNNING);
+			pr_err("Failed to start kswapd%d on node %d\n",
+				hid, nid);
+			ret = PTR_ERR(pgdat->kswapd[hid]);
+			pgdat->kswapd[hid] = NULL;
+		}
+	}
+	kswapd_threads_current = nr_threads;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return ret;
 }
 
@@ -4125,11 +4266,24 @@ int kswapd_run(int nid)
  */
 void kswapd_stop(int nid)
 {
+<<<<<<< HEAD
 	struct task_struct *kswapd = NODE_DATA(nid)->kswapd;
 
 	if (kswapd) {
 		kthread_stop(kswapd);
 		NODE_DATA(nid)->kswapd = NULL;
+=======
+	struct task_struct *kswapd;
+	int hid;
+	int nr_threads = kswapd_threads_current;
+
+	for (hid = 0; hid < nr_threads; hid++) {
+		kswapd = NODE_DATA(nid)->kswapd[hid];
+		if (kswapd) {
+			kthread_stop(kswapd);
+			NODE_DATA(nid)->kswapd[hid] = NULL;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 }
 

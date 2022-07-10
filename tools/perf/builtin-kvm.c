@@ -699,14 +699,24 @@ static int process_sample_event(struct perf_tool *tool,
 
 static int cpu_isa_config(struct perf_kvm_stat *kvm)
 {
+<<<<<<< HEAD
 	char buf[64], *cpuid;
+=======
+	char buf[128], *cpuid;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int err;
 
 	if (kvm->live) {
 		err = get_cpuid(buf, sizeof(buf));
 		if (err != 0) {
+<<<<<<< HEAD
 			pr_err("Failed to look up CPU type\n");
 			return err;
+=======
+			pr_err("Failed to look up CPU type: %s\n",
+			       str_error_r(err, buf, sizeof(buf)));
+			return -err;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 		cpuid = buf;
 	} else

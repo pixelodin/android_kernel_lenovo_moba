@@ -20,7 +20,10 @@
 #include <linux/irq.h>
 #include <linux/interrupt.h>
 #include <linux/irqdesc.h>
+<<<<<<< HEAD
 #include <linux/wakeup_reason.h>
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #include "power.h"
 
@@ -77,6 +80,7 @@ static struct wakeup_source deleted_ws = {
 	.lock =  __SPIN_LOCK_UNLOCKED(deleted_ws.lock),
 };
 
+<<<<<<< HEAD
 /**
  * wakeup_source_prepare - Prepare a new wakeup source for initialization.
  * @ws: Wakeup source to prepare.
@@ -93,6 +97,9 @@ void wakeup_source_prepare(struct wakeup_source *ws, const char *name)
 	}
 }
 EXPORT_SYMBOL_GPL(wakeup_source_prepare);
+=======
+static DEFINE_IDA(wakeup_ida);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /**
  * wakeup_source_create - Create a struct wakeup_source object.
@@ -101,6 +108,7 @@ EXPORT_SYMBOL_GPL(wakeup_source_prepare);
 struct wakeup_source *wakeup_source_create(const char *name)
 {
 	struct wakeup_source *ws;
+<<<<<<< HEAD
 
 	ws = kmalloc(sizeof(*ws), GFP_KERNEL);
 	if (!ws)
@@ -127,6 +135,36 @@ void wakeup_source_drop(struct wakeup_source *ws)
 }
 EXPORT_SYMBOL_GPL(wakeup_source_drop);
 
+=======
+	const char *ws_name;
+	int id;
+
+	ws = kzalloc(sizeof(*ws), GFP_KERNEL);
+	if (!ws)
+		goto err_ws;
+
+	ws_name = kstrdup_const(name, GFP_KERNEL);
+	if (!ws_name)
+		goto err_name;
+	ws->name = ws_name;
+
+	id = ida_alloc(&wakeup_ida, GFP_KERNEL);
+	if (id < 0)
+		goto err_id;
+	ws->id = id;
+
+	return ws;
+
+err_id:
+	kfree_const(ws->name);
+err_name:
+	kfree(ws);
+err_ws:
+	return NULL;
+}
+EXPORT_SYMBOL_GPL(wakeup_source_create);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * Record wakeup_source statistics being deleted into a dummy wakeup_source.
  */
@@ -155,6 +193,16 @@ static void wakeup_source_record(struct wakeup_source *ws)
 	spin_unlock_irqrestore(&deleted_ws.lock, flags);
 }
 
+<<<<<<< HEAD
+=======
+static void wakeup_source_free(struct wakeup_source *ws)
+{
+	ida_free(&wakeup_ida, ws->id);
+	kfree_const(ws->name);
+	kfree(ws);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /**
  * wakeup_source_destroy - Destroy a struct wakeup_source object.
  * @ws: Wakeup source to destroy.
@@ -166,10 +214,16 @@ void wakeup_source_destroy(struct wakeup_source *ws)
 	if (!ws)
 		return;
 
+<<<<<<< HEAD
 	wakeup_source_drop(ws);
 	wakeup_source_record(ws);
 	kfree_const(ws->name);
 	kfree(ws);
+=======
+	__pm_relax(ws);
+	wakeup_source_record(ws);
+	wakeup_source_free(ws);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 EXPORT_SYMBOL_GPL(wakeup_source_destroy);
 
@@ -221,6 +275,7 @@ EXPORT_SYMBOL_GPL(wakeup_source_remove);
 
 /**
  * wakeup_source_register - Create wakeup source and add it to the list.
+<<<<<<< HEAD
  * @name: Name of the wakeup source to register.
  */
 struct wakeup_source *wakeup_source_register(const char *name)
@@ -231,6 +286,28 @@ struct wakeup_source *wakeup_source_register(const char *name)
 	if (ws)
 		wakeup_source_add(ws);
 
+=======
+ * @dev: Device this wakeup source is associated with (or NULL if virtual).
+ * @name: Name of the wakeup source to register.
+ */
+struct wakeup_source *wakeup_source_register(struct device *dev,
+					     const char *name)
+{
+	struct wakeup_source *ws;
+	int ret;
+
+	ws = wakeup_source_create(name);
+	if (ws) {
+		if (!dev || device_is_registered(dev)) {
+			ret = wakeup_source_sysfs_add(dev, ws);
+			if (ret) {
+				wakeup_source_free(ws);
+				return NULL;
+			}
+		}
+		wakeup_source_add(ws);
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return ws;
 }
 EXPORT_SYMBOL_GPL(wakeup_source_register);
@@ -243,6 +320,12 @@ void wakeup_source_unregister(struct wakeup_source *ws)
 {
 	if (ws) {
 		wakeup_source_remove(ws);
+<<<<<<< HEAD
+=======
+		if (ws->dev)
+			wakeup_source_sysfs_remove(ws);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		wakeup_source_destroy(ws);
 	}
 }
@@ -286,7 +369,11 @@ int device_wakeup_enable(struct device *dev)
 	if (pm_suspend_target_state != PM_SUSPEND_ON)
 		dev_dbg(dev, "Suspicious %s() during system transition!\n", __func__);
 
+<<<<<<< HEAD
 	ws = wakeup_source_register(dev_name(dev));
+=======
+	ws = wakeup_source_register(dev, dev_name(dev));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!ws)
 		return -ENOMEM;
 
@@ -911,7 +998,11 @@ EXPORT_SYMBOL_GPL(pm_system_wakeup);
 
 void pm_system_cancel_wakeup(void)
 {
+<<<<<<< HEAD
 	atomic_dec(&pm_abort_suspend);
+=======
+	atomic_dec_if_positive(&pm_abort_suspend);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 void pm_wakeup_clear(bool reset)
@@ -940,7 +1031,10 @@ void pm_system_irq_wakeup(unsigned int irq_number)
 		}
 		pm_wakeup_irq = irq_number;
 		pm_system_wakeup();
+<<<<<<< HEAD
 		log_wakeup_reason(pm_wakeup_irq);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 }
 

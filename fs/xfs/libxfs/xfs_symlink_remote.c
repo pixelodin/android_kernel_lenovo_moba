@@ -199,7 +199,14 @@ xfs_symlink_local_to_remote(
 					ifp->if_bytes - 1);
 }
 
+<<<<<<< HEAD
 /* Verify the consistency of an inline symlink. */
+=======
+/*
+ * Verify the in-memory consistency of an inline symlink data fork. This
+ * does not do on-disk format checks.
+ */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 xfs_failaddr_t
 xfs_symlink_shortform_verify(
 	struct xfs_inode	*ip)
@@ -215,9 +222,18 @@ xfs_symlink_shortform_verify(
 	size = ifp->if_bytes;
 	endp = sfp + size;
 
+<<<<<<< HEAD
 	/* Zero length symlinks can exist while we're deleting a remote one. */
 	if (size == 0)
 		return NULL;
+=======
+	/*
+	 * Zero length symlinks should never occur in memory as they are
+	 * never alllowed to exist on disk.
+	 */
+	if (!size)
+		return __this_address;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* No negative sizes or overly long symlink targets. */
 	if (size < 0 || size > XFS_SYMLINK_MAXLEN)

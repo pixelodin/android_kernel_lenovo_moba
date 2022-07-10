@@ -2174,9 +2174,17 @@ static void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
 		vni = tunnel_id_to_key32(info->key.tun_id);
 		ifindex = 0;
 		dst_cache = &info->dst_cache;
+<<<<<<< HEAD
 		if (info->options_len &&
 		    info->key.tun_flags & TUNNEL_VXLAN_OPT)
 			md = ip_tunnel_info_opts(info);
+=======
+		if (info->key.tun_flags & TUNNEL_VXLAN_OPT) {
+			if (info->options_len < sizeof(*md))
+				goto drop;
+			md = ip_tunnel_info_opts(info);
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ttl = info->key.ttl;
 		tos = info->key.tos;
 		label = info->key.label;
@@ -2215,7 +2223,11 @@ static void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
 		ndst = &rt->dst;
 		skb_tunnel_check_pmtu(skb, ndst, VXLAN_HEADROOM);
 
+<<<<<<< HEAD
 		tos = ip_tunnel_ecn_encap(tos, old_iph, skb);
+=======
+		tos = ip_tunnel_ecn_encap(RT_TOS(tos), old_iph, skb);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ttl = ttl ? : ip4_dst_hoplimit(&rt->dst);
 		err = vxlan_build_skb(skb, ndst, sizeof(struct iphdr),
 				      vni, md, flags, udp_sum);
@@ -2252,7 +2264,11 @@ static void vxlan_xmit_one(struct sk_buff *skb, struct net_device *dev,
 
 		skb_tunnel_check_pmtu(skb, ndst, VXLAN6_HEADROOM);
 
+<<<<<<< HEAD
 		tos = ip_tunnel_ecn_encap(tos, old_iph, skb);
+=======
+		tos = ip_tunnel_ecn_encap(RT_TOS(tos), old_iph, skb);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ttl = ttl ? : ip6_dst_hoplimit(ndst);
 		skb_scrub_packet(skb, xnet);
 		err = vxlan_build_skb(skb, ndst, sizeof(struct ipv6hdr),
@@ -3211,6 +3227,10 @@ static int __vxlan_dev_create(struct net *net, struct net_device *dev,
 	struct vxlan_net *vn = net_generic(net, vxlan_net_id);
 	struct vxlan_dev *vxlan = netdev_priv(dev);
 	struct vxlan_fdb *f = NULL;
+<<<<<<< HEAD
+=======
+	bool unregister = false;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int err;
 
 	err = vxlan_dev_configure(net, dev, conf, false, extack);
@@ -3236,12 +3256,20 @@ static int __vxlan_dev_create(struct net *net, struct net_device *dev,
 	err = register_netdevice(dev);
 	if (err)
 		goto errout;
+<<<<<<< HEAD
 
 	err = rtnl_configure_link(dev, NULL);
 	if (err) {
 		unregister_netdevice(dev);
 		goto errout;
 	}
+=======
+	unregister = true;
+
+	err = rtnl_configure_link(dev, NULL);
+	if (err)
+		goto errout;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* notify default fdb entry */
 	if (f)
@@ -3249,9 +3277,22 @@ static int __vxlan_dev_create(struct net *net, struct net_device *dev,
 
 	list_add(&vxlan->next, &vn->vxlan_list);
 	return 0;
+<<<<<<< HEAD
 errout:
 	if (f)
 		vxlan_fdb_destroy(vxlan, f, false);
+=======
+
+errout:
+	/* unregister_netdevice() destroys the default FDB entry with deletion
+	 * notification. But the addition notification was not sent yet, so
+	 * destroy the entry by hand here.
+	 */
+	if (f)
+		vxlan_fdb_destroy(vxlan, f, false);
+	if (unregister)
+		unregister_netdevice(dev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return err;
 }
 
@@ -3487,7 +3528,10 @@ static int vxlan_changelink(struct net_device *dev, struct nlattr *tb[],
 	struct vxlan_rdst *dst = &vxlan->default_dst;
 	struct vxlan_rdst old_dst;
 	struct vxlan_config conf;
+<<<<<<< HEAD
 	struct vxlan_fdb *f = NULL;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int err;
 
 	err = vxlan_nl2conf(tb, data,
@@ -3513,19 +3557,33 @@ static int vxlan_changelink(struct net_device *dev, struct nlattr *tb[],
 					   old_dst.remote_ifindex, 0);
 
 		if (!vxlan_addr_any(&dst->remote_ip)) {
+<<<<<<< HEAD
 			err = vxlan_fdb_create(vxlan, all_zeros_mac,
 					       &dst->remote_ip,
 					       NUD_REACHABLE | NUD_PERMANENT,
+=======
+			err = vxlan_fdb_update(vxlan, all_zeros_mac,
+					       &dst->remote_ip,
+					       NUD_REACHABLE | NUD_PERMANENT,
+					       NLM_F_APPEND | NLM_F_CREATE,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 					       vxlan->cfg.dst_port,
 					       dst->remote_vni,
 					       dst->remote_vni,
 					       dst->remote_ifindex,
+<<<<<<< HEAD
 					       NTF_SELF, &f);
+=======
+					       NTF_SELF);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			if (err) {
 				spin_unlock_bh(&vxlan->hash_lock);
 				return err;
 			}
+<<<<<<< HEAD
 			vxlan_fdb_notify(vxlan, f, first_remote_rtnl(f), RTM_NEWNEIGH);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 		spin_unlock_bh(&vxlan->hash_lock);
 	}

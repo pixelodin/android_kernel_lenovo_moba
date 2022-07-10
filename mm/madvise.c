@@ -812,6 +812,11 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
 	size_t len;
 	struct blk_plug plug;
 
+<<<<<<< HEAD
+=======
+	start = untagged_addr(start);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!madvise_behavior_valid(behavior))
 		return error;
 

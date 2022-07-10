@@ -739,7 +739,11 @@ struct vmbus_channel {
 	u32 ringbuffer_gpadlhandle;
 
 	/* Allocated memory for ring buffer */
+<<<<<<< HEAD
 	void *ringbuffer_pages;
+=======
+	struct page *ringbuffer_page;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u32 ringbuffer_pagecount;
 	struct hv_ring_buffer_info outbound;	/* send to parent */
 	struct hv_ring_buffer_info inbound;	/* receive from parent */

@@ -130,6 +130,11 @@ void cgroup_free(struct task_struct *p);
 int cgroup_init_early(void);
 int cgroup_init(void);
 
+<<<<<<< HEAD
+=======
+int cgroup_parse_float(const char *input, unsigned dec_shift, s64 *v);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * Iteration helpers and macros.
  */

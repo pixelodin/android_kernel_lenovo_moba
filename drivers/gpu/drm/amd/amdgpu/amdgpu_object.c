@@ -428,7 +428,12 @@ static int amdgpu_bo_do_create(struct amdgpu_device *adev,
 		.interruptible = (bp->type != ttm_bo_type_kernel),
 		.no_wait_gpu = false,
 		.resv = bp->resv,
+<<<<<<< HEAD
 		.flags = TTM_OPT_FLAG_ALLOW_RES_EVICT
+=======
+		.flags = bp->type != ttm_bo_type_kernel ?
+			TTM_OPT_FLAG_ALLOW_RES_EVICT : 0
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	};
 	struct amdgpu_bo *bo;
 	unsigned long page_align, size = bp->size;

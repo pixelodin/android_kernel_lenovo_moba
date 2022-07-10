@@ -321,6 +321,10 @@ static int aa_xattrs_match(const struct linux_binprm *bprm,
 
 	if (!bprm || !profile->xattr_count)
 		return 0;
+<<<<<<< HEAD
+=======
+	might_sleep();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* transition from exec match to xattr set */
 	state = aa_dfa_null_transition(profile->xmatch, state);
@@ -365,10 +369,18 @@ out:
 }
 
 /**
+<<<<<<< HEAD
  * __attach_match_ - find an attachment match
  * @bprm - binprm structure of transitioning task
  * @name - to match against  (NOT NULL)
  * @head - profile list to walk  (NOT NULL)
+=======
+ * find_attach - do attachment search for unconfined processes
+ * @bprm - binprm structure of transitioning task
+ * @ns: the current namespace  (NOT NULL)
+ * @head - profile list to walk  (NOT NULL)
+ * @name - to match against  (NOT NULL)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * @info - info message if there was an error (NOT NULL)
  *
  * Do a linear search on the profiles in the list.  There is a matching
@@ -378,12 +390,20 @@ out:
  *
  * Requires: @head not be shared or have appropriate locks held
  *
+<<<<<<< HEAD
  * Returns: profile or NULL if no match found
  */
 static struct aa_profile *__attach_match(const struct linux_binprm *bprm,
 					 const char *name,
 					 struct list_head *head,
 					 const char **info)
+=======
+ * Returns: label or NULL if no match found
+ */
+static struct aa_label *find_attach(const struct linux_binprm *bprm,
+				    struct aa_ns *ns, struct list_head *head,
+				    const char *name, const char **info)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	int candidate_len = 0, candidate_xattrs = 0;
 	bool conflict = false;
@@ -392,6 +412,11 @@ static struct aa_profile *__attach_match(const struct linux_binprm *bprm,
 	AA_BUG(!name);
 	AA_BUG(!head);
 
+<<<<<<< HEAD
+=======
+	rcu_read_lock();
+restart:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	list_for_each_entry_rcu(profile, head, base.list) {
 		if (profile->label.flags & FLAG_NULL &&
 		    &profile->label == ns_unconfined(profile->ns))
@@ -417,16 +442,44 @@ static struct aa_profile *__attach_match(const struct linux_binprm *bprm,
 			perm = dfa_user_allow(profile->xmatch, state);
 			/* any accepting state means a valid match. */
 			if (perm & MAY_EXEC) {
+<<<<<<< HEAD
 				int ret;
+=======
+				int ret = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 				if (count < candidate_len)
 					continue;
 
+<<<<<<< HEAD
 				ret = aa_xattrs_match(bprm, profile, state);
 				/* Fail matching if the xattrs don't match */
 				if (ret < 0)
 					continue;
 
+=======
+				if (bprm && profile->xattr_count) {
+					long rev = READ_ONCE(ns->revision);
+
+					if (!aa_get_profile_not0(profile))
+						goto restart;
+					rcu_read_unlock();
+					ret = aa_xattrs_match(bprm, profile,
+							      state);
+					rcu_read_lock();
+					aa_put_profile(profile);
+					if (rev !=
+					    READ_ONCE(ns->revision))
+						/* policy changed */
+						goto restart;
+					/*
+					 * Fail matching if the xattrs don't
+					 * match
+					 */
+					if (ret < 0)
+						continue;
+				}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				/*
 				 * TODO: allow for more flexible best match
 				 *
@@ -449,11 +502,16 @@ static struct aa_profile *__attach_match(const struct linux_binprm *bprm,
 				candidate_xattrs = ret;
 				conflict = false;
 			}
+<<<<<<< HEAD
 		} else if (!strcmp(profile->base.name, name))
+=======
+		} else if (!strcmp(profile->base.name, name)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			/*
 			 * old exact non-re match, without conditionals such
 			 * as xattrs. no more searching required
 			 */
+<<<<<<< HEAD
 			return profile;
 	}
 
@@ -486,6 +544,25 @@ static struct aa_label *find_attach(const struct linux_binprm *bprm,
 	rcu_read_unlock();
 
 	return profile ? &profile->label : NULL;
+=======
+			candidate = profile;
+			goto out;
+		}
+	}
+
+	if (!candidate || conflict) {
+		if (conflict)
+			*info = "conflicting profile attachments";
+		rcu_read_unlock();
+		return NULL;
+	}
+
+out:
+	candidate = aa_get_newest_profile(candidate);
+	rcu_read_unlock();
+
+	return &candidate->label;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static const char *next_name(int xtype, const char *name)

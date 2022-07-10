@@ -481,7 +481,11 @@ static int cpufreq_get_requested_power(struct thermal_cooling_device *cdev,
 			load = 0;
 
 		total_load += load;
+<<<<<<< HEAD
 		if (trace_thermal_power_cpu_limit_enabled() && load_cpu)
+=======
+		if (load_cpu)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			load_cpu[i] = load;
 
 		i++;

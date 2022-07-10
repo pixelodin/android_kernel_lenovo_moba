@@ -356,6 +356,10 @@ static int afs_test_super(struct super_block *sb, void *data)
 	return (as->net_ns == as1->net_ns &&
 		as->volume &&
 		as->volume->vid == as1->volume->vid &&
+<<<<<<< HEAD
+=======
+		as->cell == as1->cell &&
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		!as->dyn_root);
 }
 
@@ -392,6 +396,10 @@ static int afs_fill_super(struct super_block *sb,
 	/* fill in the superblock */
 	sb->s_blocksize		= PAGE_SIZE;
 	sb->s_blocksize_bits	= PAGE_SHIFT;
+<<<<<<< HEAD
+=======
+	sb->s_maxbytes		= MAX_LFS_FILESIZE;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	sb->s_magic		= AFS_FS_MAGIC;
 	sb->s_op		= &afs_super_ops;
 	if (!as->dyn_root)
@@ -404,7 +412,10 @@ static int afs_fill_super(struct super_block *sb,
 	/* allocate the root inode and dentry */
 	if (as->dyn_root) {
 		inode = afs_iget_pseudo_dir(sb, true);
+<<<<<<< HEAD
 		sb->s_flags	|= SB_RDONLY;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	} else {
 		sprintf(sb->s_id, "%u", as->volume->vid);
 		afs_activate_volume(as->volume);

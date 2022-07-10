@@ -143,7 +143,11 @@ _bpftool_map_update_map_type()
     local type
     type=$(bpftool -jp map show $keyword $ref | \
         command sed -n 's/.*"type": "\(.*\)",$/\1/p')
+<<<<<<< HEAD
     printf $type
+=======
+    [[ -n $type ]] && printf $type
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 _bpftool_map_update_get_id()

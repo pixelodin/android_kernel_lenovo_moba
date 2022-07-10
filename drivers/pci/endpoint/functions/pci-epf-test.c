@@ -175,7 +175,11 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
 		goto err_map_addr;
 	}
 
+<<<<<<< HEAD
 	memcpy(buf, src_addr, reg->size);
+=======
+	memcpy_fromio(buf, src_addr, reg->size);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	crc32 = crc32_le(~0, buf, reg->size);
 	if (crc32 != reg->checksum)
@@ -230,7 +234,11 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
 	get_random_bytes(buf, reg->size);
 	reg->checksum = crc32_le(~0, buf, reg->size);
 
+<<<<<<< HEAD
 	memcpy(dst_addr, buf, reg->size);
+=======
+	memcpy_toio(dst_addr, buf, reg->size);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/*
 	 * wait 1ms inorder for the write to complete. Without this delay L3

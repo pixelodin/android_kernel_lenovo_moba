@@ -572,9 +572,12 @@ static int msm_eud_probe(struct platform_device *pdev)
 		}
 
 		chip->eud_mode_mgr2_phys_base = res->start;
+<<<<<<< HEAD
 
 		if (check_eud_mode_mgr2(chip))
 			enable = 1;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	chip->need_phy_clk_vote = of_property_read_bool(pdev->dev.of_node,
@@ -632,7 +635,10 @@ static int msm_eud_probe(struct platform_device *pdev)
 			if (ret) {
 				dev_err(&pdev->dev,
 				"TCSR scm_io_write failed with rc:%d\n", ret);
+<<<<<<< HEAD
 				goto error;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			}
 		} else {
 			dev_err(chip->dev,
@@ -641,6 +647,12 @@ static int msm_eud_probe(struct platform_device *pdev)
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	if (chip->secure_eud_en && check_eud_mode_mgr2(chip))
+		enable = 1;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = uart_add_one_port(&eud_uart_driver, port);
 	if (!ret) {
 		dev_err(chip->dev, "failed to add uart port!\n");

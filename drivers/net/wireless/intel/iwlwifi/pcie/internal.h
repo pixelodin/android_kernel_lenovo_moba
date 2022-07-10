@@ -102,6 +102,7 @@ struct isr_statistics {
 	u32 unhandled;
 };
 
+<<<<<<< HEAD
 #define IWL_CD_STTS_OPTIMIZED_POS	0
 #define IWL_CD_STTS_OPTIMIZED_MSK	0x01
 #define IWL_CD_STTS_TRANSFER_STATUS_POS	1
@@ -162,6 +163,8 @@ enum iwl_completion_desc_wifi_status {
 	IWL_CD_STTS_REPLAY_ERR,
 };
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define IWL_RX_TD_TYPE_MSK	0xff000000
 #define IWL_RX_TD_SIZE_MSK	0x00ffffff
 #define IWL_RX_TD_SIZE_2K	BIT(11)

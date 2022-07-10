@@ -114,7 +114,11 @@
 			next-level-cache = <&L2_0>;
 			enable-method = "psci";
 			cpu-idle-states = <&CPU_SPC>;
+<<<<<<< HEAD
 			clocks = <&apcs 0>;
+=======
+			clocks = <&apcs>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			operating-points-v2 = <&cpu_opp_table>;
 			#cooling-cells = <2>;
 		};
@@ -126,7 +130,11 @@
 			next-level-cache = <&L2_0>;
 			enable-method = "psci";
 			cpu-idle-states = <&CPU_SPC>;
+<<<<<<< HEAD
 			clocks = <&apcs 0>;
+=======
+			clocks = <&apcs>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			operating-points-v2 = <&cpu_opp_table>;
 			#cooling-cells = <2>;
 		};
@@ -138,7 +146,11 @@
 			next-level-cache = <&L2_0>;
 			enable-method = "psci";
 			cpu-idle-states = <&CPU_SPC>;
+<<<<<<< HEAD
 			clocks = <&apcs 0>;
+=======
+			clocks = <&apcs>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			operating-points-v2 = <&cpu_opp_table>;
 			#cooling-cells = <2>;
 		};
@@ -150,7 +162,11 @@
 			next-level-cache = <&L2_0>;
 			enable-method = "psci";
 			cpu-idle-states = <&CPU_SPC>;
+<<<<<<< HEAD
 			clocks = <&apcs 0>;
+=======
+			clocks = <&apcs>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			operating-points-v2 = <&cpu_opp_table>;
 			#cooling-cells = <2>;
 		};

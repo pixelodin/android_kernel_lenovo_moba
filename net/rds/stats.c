@@ -76,6 +76,11 @@ static const char *const rds_stat_names[] = {
 	"cong_update_received",
 	"cong_send_error",
 	"cong_send_blocked",
+<<<<<<< HEAD
+=======
+	"recv_bytes_added_to_sock",
+	"recv_bytes_freed_fromsock",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 void rds_stats_info_copy(struct rds_info_iterator *iter,

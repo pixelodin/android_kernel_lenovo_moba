@@ -990,13 +990,25 @@ done:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int tcpm_start_drp_toggling(struct tcpc_dev *dev,
 				   enum typec_cc_status cc)
+=======
+static int tcpm_start_toggling(struct tcpc_dev *dev,
+			       enum typec_port_type port_type,
+			       enum typec_cc_status cc)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct fusb302_chip *chip = container_of(dev, struct fusb302_chip,
 						 tcpc_dev);
 	int ret = 0;
 
+<<<<<<< HEAD
+=======
+	if (port_type != TYPEC_PORT_DRP)
+		return -EOPNOTSUPP;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mutex_lock(&chip->lock);
 	ret = fusb302_set_src_current(chip, cc_src_current[cc]);
 	if (ret < 0) {
@@ -1206,7 +1218,11 @@ static void init_tcpc_dev(struct tcpc_dev *fusb302_tcpc_dev)
 	fusb302_tcpc_dev->set_vbus = tcpm_set_vbus;
 	fusb302_tcpc_dev->set_pd_rx = tcpm_set_pd_rx;
 	fusb302_tcpc_dev->set_roles = tcpm_set_roles;
+<<<<<<< HEAD
 	fusb302_tcpc_dev->start_drp_toggling = tcpm_start_drp_toggling;
+=======
+	fusb302_tcpc_dev->start_toggling = tcpm_start_toggling;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	fusb302_tcpc_dev->pd_transmit = tcpm_pd_transmit;
 }
 

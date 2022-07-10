@@ -179,7 +179,10 @@ int hfi1_user_sdma_alloc_queues(struct hfi1_ctxtdata *uctxt,
 	pq = kzalloc(sizeof(*pq), GFP_KERNEL);
 	if (!pq)
 		return -ENOMEM;
+<<<<<<< HEAD
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pq->dd = dd;
 	pq->ctxt = uctxt->ctxt;
 	pq->subctxt = fd->subctxt;
@@ -236,7 +239,11 @@ int hfi1_user_sdma_alloc_queues(struct hfi1_ctxtdata *uctxt,
 		goto pq_mmu_fail;
 	}
 
+<<<<<<< HEAD
 	fd->pq = pq;
+=======
+	rcu_assign_pointer(fd->pq, pq);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	fd->cq = cq;
 
 	return 0;
@@ -264,8 +271,19 @@ int hfi1_user_sdma_free_queues(struct hfi1_filedata *fd,
 
 	trace_hfi1_sdma_user_free_queues(uctxt->dd, uctxt->ctxt, fd->subctxt);
 
+<<<<<<< HEAD
 	pq = fd->pq;
 	if (pq) {
+=======
+	spin_lock(&fd->pq_rcu_lock);
+	pq = srcu_dereference_check(fd->pq, &fd->pq_srcu,
+				    lockdep_is_held(&fd->pq_rcu_lock));
+	if (pq) {
+		rcu_assign_pointer(fd->pq, NULL);
+		spin_unlock(&fd->pq_rcu_lock);
+		synchronize_srcu(&fd->pq_srcu);
+		/* at this point there can be no more new requests */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (pq->handler)
 			hfi1_mmu_rb_unregister(pq->handler);
 		iowait_sdma_drain(&pq->busy);
@@ -277,7 +295,12 @@ int hfi1_user_sdma_free_queues(struct hfi1_filedata *fd,
 		kfree(pq->req_in_use);
 		kmem_cache_destroy(pq->txreq_cache);
 		kfree(pq);
+<<<<<<< HEAD
 		fd->pq = NULL;
+=======
+	} else {
+		spin_unlock(&fd->pq_rcu_lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	if (fd->cq) {
 		vfree(fd->cq->comps);
@@ -321,7 +344,12 @@ int hfi1_user_sdma_process_request(struct hfi1_filedata *fd,
 {
 	int ret = 0, i;
 	struct hfi1_ctxtdata *uctxt = fd->uctxt;
+<<<<<<< HEAD
 	struct hfi1_user_sdma_pkt_q *pq = fd->pq;
+=======
+	struct hfi1_user_sdma_pkt_q *pq =
+		srcu_dereference(fd->pq, &fd->pq_srcu);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct hfi1_user_sdma_comp_q *cq = fd->cq;
 	struct hfi1_devdata *dd = pq->dd;
 	unsigned long idx = 0;
@@ -856,8 +884,15 @@ static int user_sdma_send_pkts(struct user_sdma_request *req, unsigned maxpkts)
 
 				changes = set_txreq_header_ahg(req, tx,
 							       datalen);
+<<<<<<< HEAD
 				if (changes < 0)
 					goto free_tx;
+=======
+				if (changes < 0) {
+					ret = changes;
+					goto free_tx;
+				}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			}
 		} else {
 			ret = sdma_txinit(&tx->txreq, 0, sizeof(req->hdr) +

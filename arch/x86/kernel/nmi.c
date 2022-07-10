@@ -102,18 +102,34 @@ static int __init nmi_warning_debugfs(void)
 }
 fs_initcall(nmi_warning_debugfs);
 
+<<<<<<< HEAD
 static void nmi_max_handler(struct irq_work *w)
 {
 	struct nmiaction *a = container_of(w, struct nmiaction, irq_work);
 	int remainder_ns, decimal_msecs;
 	u64 whole_msecs = READ_ONCE(a->max_duration);
+=======
+static void nmi_check_duration(struct nmiaction *action, u64 duration)
+{
+	u64 whole_msecs = READ_ONCE(action->max_duration);
+	int remainder_ns, decimal_msecs;
+
+	if (duration < nmi_longest_ns || duration < action->max_duration)
+		return;
+
+	action->max_duration = duration;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	remainder_ns = do_div(whole_msecs, (1000 * 1000));
 	decimal_msecs = remainder_ns / 1000;
 
 	printk_ratelimited(KERN_INFO
 		"INFO: NMI handler (%ps) took too long to run: %lld.%03d msecs\n",
+<<<<<<< HEAD
 		a->handler, whole_msecs, decimal_msecs);
+=======
+		action->handler, whole_msecs, decimal_msecs);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int nmi_handle(unsigned int type, struct pt_regs *regs)
@@ -140,11 +156,15 @@ static int nmi_handle(unsigned int type, struct pt_regs *regs)
 		delta = sched_clock() - delta;
 		trace_nmi_handler(a->handler, (int)delta, thishandled);
 
+<<<<<<< HEAD
 		if (delta < nmi_longest_ns || delta < a->max_duration)
 			continue;
 
 		a->max_duration = delta;
 		irq_work_queue(&a->irq_work);
+=======
+		nmi_check_duration(a, delta);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	rcu_read_unlock();
@@ -162,8 +182,11 @@ int __register_nmi_handler(unsigned int type, struct nmiaction *action)
 	if (!action->handler)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	init_irq_work(&action->irq_work, nmi_max_handler);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	raw_spin_lock_irqsave(&desc->lock, flags);
 
 	/*

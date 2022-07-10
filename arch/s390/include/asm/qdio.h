@@ -228,7 +228,11 @@ struct qdio_buffer {
  * @sbal: absolute SBAL address
  */
 struct sl_element {
+<<<<<<< HEAD
 	unsigned long sbal;
+=======
+	u64 sbal;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 } __attribute__ ((packed));
 
 /**

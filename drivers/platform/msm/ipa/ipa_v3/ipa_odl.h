@@ -6,7 +6,11 @@
 #ifndef _IPA3_ODL_H_
 #define _IPA3_ODL_H_
 
+<<<<<<< HEAD
 #define IPA_ODL_AGGR_BYTE_LIMIT (15 * 1024)
+=======
+#define IPA_ODL_AGGR_BYTE_LIMIT 15
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define IPA_ODL_RX_RING_SIZE 192
 #define MAX_QUEUE_TO_ODL 1024
 #define CONFIG_SUCCESS 1

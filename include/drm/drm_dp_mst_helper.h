@@ -339,7 +339,11 @@ struct drm_dp_resource_status_notify {
 
 struct drm_dp_query_payload_ack_reply {
 	u8 port_number;
+<<<<<<< HEAD
 	u8 allocated_pbn;
+=======
+	u16 allocated_pbn;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct drm_dp_sideband_msg_req_body {

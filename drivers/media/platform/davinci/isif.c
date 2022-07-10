@@ -884,9 +884,13 @@ static int isif_set_hw_if_params(struct vpfe_hw_if_param *params)
 static int isif_config_ycbcr(void)
 {
 	struct isif_ycbcr_config *params = &isif_cfg.ycbcr;
+<<<<<<< HEAD
 	struct vpss_pg_frame_size frame_size;
 	u32 modeset = 0, ccdcfg = 0;
 	struct vpss_sync_pol sync;
+=======
+	u32 modeset = 0, ccdcfg = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	dev_dbg(isif_cfg.dev, "\nStarting isif_config_ycbcr...");
 
@@ -974,6 +978,7 @@ static int isif_config_ycbcr(void)
 		/* two fields are interleaved in memory */
 		regw(0x00000249, SDOFST);
 
+<<<<<<< HEAD
 	/* Setup test pattern if enabled */
 	if (isif_cfg.bayer.config_params.test_pat_gen) {
 		sync.ccdpg_hdpol = params->hd_pol;
@@ -981,6 +986,8 @@ static int isif_config_ycbcr(void)
 		dm365_vpss_set_sync_pol(sync);
 		dm365_vpss_set_pg_frame_size(frame_size);
 	}
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 }
 
@@ -1100,7 +1107,12 @@ fail_nobase_res:
 
 	while (i >= 0) {
 		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+<<<<<<< HEAD
 		release_mem_region(res->start, resource_size(res));
+=======
+		if (res)
+			release_mem_region(res->start, resource_size(res));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		i--;
 	}
 	vpfe_unregister_ccdc_device(&isif_hw_dev);

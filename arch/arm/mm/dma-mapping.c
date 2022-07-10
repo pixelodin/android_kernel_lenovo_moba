@@ -1811,7 +1811,11 @@ static int __map_sg_chunk(struct device *dev, struct scatterlist *sg,
 	int ret = 0;
 	unsigned int count;
 	struct scatterlist *s;
+<<<<<<< HEAD
 	int prot;
+=======
+	int prot = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	size = PAGE_ALIGN(size);
 	*handle = ARM_MAPPING_ERROR;
@@ -1820,6 +1824,14 @@ static int __map_sg_chunk(struct device *dev, struct scatterlist *sg,
 	if (iova == ARM_MAPPING_ERROR)
 		return -ENOMEM;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Check for coherency.
+	 */
+	prot |= is_coherent ? IOMMU_CACHE : 0;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	for (count = 0, s = sg; count < (size >> PAGE_SHIFT); s = sg_next(s)) {
 		phys_addr_t phys = page_to_phys(sg_page(s));
 		unsigned int len = PAGE_ALIGN(s->offset + s->length);
@@ -1827,7 +1839,11 @@ static int __map_sg_chunk(struct device *dev, struct scatterlist *sg,
 		if (!is_coherent && (attrs & DMA_ATTR_SKIP_CPU_SYNC) == 0)
 			__dma_page_cpu_to_dev(sg_page(s), s->offset, s->length, dir);
 
+<<<<<<< HEAD
 		prot = __dma_info_to_prot(dir, attrs);
+=======
+		prot |= __dma_info_to_prot(dir, attrs);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		ret = iommu_map(mapping->domain, iova, phys, len, prot);
 		if (ret < 0)
@@ -1931,9 +1947,29 @@ int arm_iommu_map_sg(struct device *dev, struct scatterlist *sg,
 	dma_addr_t iova;
 	int prot = __dma_info_to_prot(dir, attrs);
 	bool coherent;
+<<<<<<< HEAD
 
 	for_each_sg(sg, s, nents, i)
 		total_length += s->length;
+=======
+	/*
+	 * This is used to check if there are any unaligned offset/size
+	 * given in the scatter list.
+	 */
+	bool unaligned_offset_size = false;
+
+	for_each_sg(sg, s, nents, i) {
+		total_length += s->length;
+		if ((s->offset & ~PAGE_MASK) || (s->length & ~PAGE_MASK)) {
+			unaligned_offset_size = true;
+			break;
+		}
+	}
+
+	if (unaligned_offset_size)
+		return __iommu_map_sg(dev, sg, nents, dir, attrs,
+				      is_dma_coherent(dev, attrs, false));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	iova = __alloc_iova(mapping, total_length);
 	if (iova == ARM_MAPPING_ERROR)
@@ -1950,7 +1986,14 @@ int arm_iommu_map_sg(struct device *dev, struct scatterlist *sg,
 
 	for_each_sg(sg, s, nents, i) {
 		s->dma_address = iova + current_offset;
+<<<<<<< HEAD
 		s->dma_length = total_length - current_offset;
+=======
+		if (i == 0)
+			s->dma_length = total_length;
+		else
+			s->dma_length = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		current_offset += s->length;
 	}
 
@@ -2674,7 +2717,10 @@ static bool arm_setup_iommu_dma_ops(struct device *dev, u64 dma_base, u64 size,
 		return false;
 	}
 
+<<<<<<< HEAD
 	kref_get(&mapping->kref);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	to_dma_iommu_mapping(dev) = mapping;
 
 	return true;
@@ -2689,12 +2735,21 @@ static void arm_teardown_iommu_dma_ops(struct device *dev)
 	if (!mapping)
 		return;
 
+<<<<<<< HEAD
+=======
+	iommu_domain_get_attr(mapping->domain, DOMAIN_ATTR_S1_BYPASS,
+			&s1_bypass);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	kref_put(&mapping->kref, arm_iommu_dma_release_mapping);
 	to_dma_iommu_mapping(dev) = NULL;
 
 	/* Let arch_setup_dma_ops() start again from scratch upon re-probe */
+<<<<<<< HEAD
 	iommu_domain_get_attr(mapping->domain, DOMAIN_ATTR_S1_BYPASS,
 			&s1_bypass);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!s1_bypass)
 		set_dma_ops(dev, NULL);
 

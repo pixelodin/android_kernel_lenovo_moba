@@ -9,6 +9,11 @@
 
 #include <linux/interrupt.h>
 
+<<<<<<< HEAD
+=======
+#include <trace/events/sched.h>
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include "walt.h"
 
 int sched_rr_timeslice = RR_TIMESLICE;
@@ -927,9 +932,16 @@ static void dump_throttled_rt_tasks(struct rt_rq *rt_rq)
 		rt_rq, cpu_of(rq_of_rt_rq(rt_rq)));
 
 	pos += snprintf(pos, end - pos,
+<<<<<<< HEAD
 			"rt_period_timer: expires=%lld now=%llu period=%llu\n",
 			hrtimer_get_expires_ns(&rt_b->rt_period_timer),
 			ktime_get_ns(), sched_rt_period(rt_rq));
+=======
+			"rt_period_timer: expires=%lld now=%llu runtime=%llu period=%llu\n",
+			hrtimer_get_expires_ns(&rt_b->rt_period_timer),
+			ktime_get_ns(), sched_rt_runtime(rt_rq),
+			sched_rt_period(rt_rq));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (bitmap_empty(array->bitmap, MAX_RT_PRIO))
 		goto out;
@@ -1794,17 +1806,31 @@ retry:
 		}
 
 		for_each_cpu_and(cpu, lowest_mask, sched_group_span(sg)) {
+<<<<<<< HEAD
+=======
+
+			trace_sched_cpu_util(cpu);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			if (cpu_isolated(cpu))
 				continue;
 
 			if (sched_cpu_high_irqload(cpu))
 				continue;
 
+<<<<<<< HEAD
 			util = cpu_util(cpu);
 
 			if (__cpu_overutilized(cpu, util + tutil))
 				continue;
 
+=======
+			if (__cpu_overutilized(cpu, tutil))
+				continue;
+
+			util = cpu_util(cpu);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			/* Find the least loaded CPU */
 			if (util > best_cpu_util)
 				continue;
@@ -2634,6 +2660,13 @@ const struct sched_class rt_sched_class = {
 #ifdef CONFIG_SCHED_WALT
 	.fixup_walt_sched_stats	= fixup_walt_sched_stats_common,
 #endif
+<<<<<<< HEAD
+=======
+
+#ifdef CONFIG_UCLAMP_TASK
+	.uclamp_enabled		= 1,
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 #ifdef CONFIG_RT_GROUP_SCHED

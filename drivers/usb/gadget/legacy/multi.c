@@ -482,7 +482,11 @@ static struct usb_composite_driver multi_driver = {
 	.name		= "g_multi",
 	.dev		= &device_desc,
 	.strings	= dev_strings,
+<<<<<<< HEAD
 	.max_speed	= USB_SPEED_HIGH,
+=======
+	.max_speed	= USB_SPEED_SUPER,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.bind		= multi_bind,
 	.unbind		= multi_unbind,
 	.needs_serial	= 1,

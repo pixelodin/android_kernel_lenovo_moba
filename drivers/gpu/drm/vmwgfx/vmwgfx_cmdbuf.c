@@ -511,17 +511,25 @@ static void vmw_cmdbuf_work_func(struct work_struct *work)
 		container_of(work, struct vmw_cmdbuf_man, work);
 	struct vmw_cmdbuf_header *entry, *next;
 	uint32_t dummy;
+<<<<<<< HEAD
 	bool restart[SVGA_CB_CONTEXT_MAX];
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	bool send_fence = false;
 	struct list_head restart_head[SVGA_CB_CONTEXT_MAX];
 	int i;
 	struct vmw_cmdbuf_context *ctx;
 	bool global_block = false;
 
+<<<<<<< HEAD
 	for_each_cmdbuf_ctx(man, i, ctx) {
 		INIT_LIST_HEAD(&restart_head[i]);
 		restart[i] = false;
 	}
+=======
+	for_each_cmdbuf_ctx(man, i, ctx)
+		INIT_LIST_HEAD(&restart_head[i]);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	mutex_lock(&man->error_mutex);
 	spin_lock(&man->lock);
@@ -533,7 +541,10 @@ static void vmw_cmdbuf_work_func(struct work_struct *work)
 		const char *cmd_name;
 
 		list_del_init(&entry->list);
+<<<<<<< HEAD
 		restart[entry->cb_context] = true;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		global_block = true;
 
 		if (!vmw_cmd_describe(header, &error_cmd_size, &cmd_name)) {

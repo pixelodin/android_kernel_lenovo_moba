@@ -40,6 +40,10 @@
 #define RC6_6A_MCE_TOGGLE_MASK	0x8000	/* for the body bits */
 #define RC6_6A_LCC_MASK		0xffff0000 /* RC6-6A-32 long customer code mask */
 #define RC6_6A_MCE_CC		0x800f0000 /* MCE customer code */
+<<<<<<< HEAD
+=======
+#define RC6_6A_KATHREIN_CC	0x80460000 /* Kathrein RCU-676 customer code */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #ifndef CHAR_BIT
 #define CHAR_BIT 8	/* Normally in <limits.h> */
 #endif
@@ -242,6 +246,7 @@ again:
 				toggle = 0;
 				break;
 			case 32:
+<<<<<<< HEAD
 				if ((scancode & RC6_6A_LCC_MASK) == RC6_6A_MCE_CC) {
 					protocol = RC_PROTO_RC6_MCE;
 					toggle = !!(scancode & RC6_6A_MCE_TOGGLE_MASK);
@@ -249,6 +254,19 @@ again:
 				} else {
 					protocol = RC_PROTO_RC6_6A_32;
 					toggle = 0;
+=======
+				switch (scancode & RC6_6A_LCC_MASK) {
+				case RC6_6A_MCE_CC:
+				case RC6_6A_KATHREIN_CC:
+					protocol = RC_PROTO_RC6_MCE;
+					toggle = !!(scancode & RC6_6A_MCE_TOGGLE_MASK);
+					scancode &= ~RC6_6A_MCE_TOGGLE_MASK;
+					break;
+				default:
+					protocol = RC_PROTO_RC6_6A_32;
+					toggle = 0;
+					break;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				}
 				break;
 			default:

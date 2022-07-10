@@ -612,7 +612,11 @@ static int xcan_start_xmit_mailbox(struct sk_buff *skb, struct net_device *ndev)
  *
  * Return: NETDEV_TX_OK on success and NETDEV_TX_BUSY when the tx queue is full
  */
+<<<<<<< HEAD
 static int xcan_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+=======
+static netdev_tx_t xcan_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct xcan_priv *priv = netdev_priv(ndev);
 	int ret;

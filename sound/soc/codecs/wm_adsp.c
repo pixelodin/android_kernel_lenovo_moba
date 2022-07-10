@@ -1147,8 +1147,12 @@ static unsigned int wmfw_convert_flags(unsigned int in, unsigned int len)
 	}
 
 	if (in) {
+<<<<<<< HEAD
 		if (in & WMFW_CTL_FLAG_READABLE)
 			out |= rd;
+=======
+		out |= rd;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (in & WMFW_CTL_FLAG_WRITEABLE)
 			out |= wr;
 		if (in & WMFW_CTL_FLAG_VOLATILE)

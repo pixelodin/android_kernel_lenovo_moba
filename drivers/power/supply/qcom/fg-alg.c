@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2018-2020 The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #define pr_fmt(fmt)	"ALG: %s: " fmt, __func__
@@ -714,7 +718,11 @@ void cap_learning_abort(struct cap_learning *cl)
 	pr_debug("Aborting cap_learning\n");
 	cl->active = false;
 	cl->init_cap_uah = 0;
+<<<<<<< HEAD
 	mutex_lock(&cl->lock);
+=======
+	mutex_unlock(&cl->lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /**
@@ -1545,15 +1553,27 @@ int ttf_get_time_to_empty(struct ttf *ttf, int *val)
 		return 0;
 	}
 
+<<<<<<< HEAD
+=======
+	mutex_lock(&ttf->lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rc = ttf_circ_buf_median(&ttf->ibatt, &ibatt_avg);
 	if (rc < 0) {
 		/* try to get instantaneous current */
 		rc = ttf->get_ttf_param(ttf->data, TTF_IBAT, &ibatt_avg);
 		if (rc < 0) {
 			pr_err("failed to get battery current, rc=%d\n", rc);
+<<<<<<< HEAD
 			return rc;
 		}
 	}
+=======
+			mutex_unlock(&ttf->lock);
+			return rc;
+		}
+	}
+	mutex_unlock(&ttf->lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	ibatt_avg /= MILLI_UNIT;
 	/* clamp ibatt_avg to 100mA */

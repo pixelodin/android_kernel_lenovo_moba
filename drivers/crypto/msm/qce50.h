@@ -126,6 +126,13 @@ struct qce_cmdlistptr_ops {
 	struct qce_cmdlist_info f9_kasumi;
 	struct qce_cmdlist_info f9_snow3g;
 	struct qce_cmdlist_info unlock_all_pipes;
+<<<<<<< HEAD
+=======
+	struct qce_cmdlist_info auth_sha384;
+	struct qce_cmdlist_info auth_sha512;
+	struct qce_cmdlist_info auth_sha384_hmac;
+	struct qce_cmdlist_info auth_sha512_hmac;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct qce_ce_cfg_reg_setting {
@@ -170,6 +177,14 @@ struct qce_ce_cfg_reg_setting {
 	uint32_t auth_cfg_aead_sha256_hmac;
 	uint32_t auth_cfg_kasumi;
 	uint32_t auth_cfg_snow3g;
+<<<<<<< HEAD
+=======
+
+	uint32_t auth_cfg_sha384;
+	uint32_t auth_cfg_sha512;
+	uint32_t auth_cfg_hmac_sha384;
+	uint32_t auth_cfg_hmac_sha512;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct ce_bam_info {

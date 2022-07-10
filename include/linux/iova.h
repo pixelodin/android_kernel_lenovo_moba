@@ -166,6 +166,10 @@ void put_iova_domain(struct iova_domain *iovad);
 struct iova *split_and_remove_iova(struct iova_domain *iovad,
 	struct iova *iova, unsigned long pfn_lo, unsigned long pfn_hi);
 void free_cpu_cached_iovas(unsigned int cpu, struct iova_domain *iovad);
+<<<<<<< HEAD
+=======
+void free_global_cached_iovas(struct iova_domain *iovad);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #else
 static inline int iova_cache_get(void)
 {
@@ -273,6 +277,14 @@ static inline void free_cpu_cached_iovas(unsigned int cpu,
 					 struct iova_domain *iovad)
 {
 }
+<<<<<<< HEAD
+=======
+
+static inline void free_global_cached_iovas(struct iova_domain *iovad)
+{
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif
 
 #endif

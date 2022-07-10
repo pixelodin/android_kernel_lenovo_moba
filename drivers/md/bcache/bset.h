@@ -397,7 +397,12 @@ void bch_btree_keys_stats(struct btree_keys *b, struct bset_stats *state);
 
 /* Bkey utility code */
 
+<<<<<<< HEAD
 #define bset_bkey_last(i)	bkey_idx((struct bkey *) (i)->d, (i)->keys)
+=======
+#define bset_bkey_last(i)	bkey_idx((struct bkey *) (i)->d, \
+					 (unsigned int)(i)->keys)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 static inline struct bkey *bset_bkey_idx(struct bset *i, unsigned int idx)
 {

@@ -1,4 +1,5 @@
 /* SPDX-License-Identifier: GPL-2.0 */
+<<<<<<< HEAD
 #ifndef _KER_NFNETLINK_LOG_H
 #define _KER_NFNETLINK_LOG_H
 
@@ -17,3 +18,5 @@ __nfulnl_log_packet(struct net *net,
 
 #endif /* _KER_NFNETLINK_LOG_H */
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

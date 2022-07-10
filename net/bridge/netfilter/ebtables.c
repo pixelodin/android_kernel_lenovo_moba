@@ -1876,7 +1876,11 @@ static int ebt_buf_count(struct ebt_entries_buf_state *state, unsigned int sz)
 }
 
 static int ebt_buf_add(struct ebt_entries_buf_state *state,
+<<<<<<< HEAD
 		       void *data, unsigned int sz)
+=======
+		       const void *data, unsigned int sz)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	if (state->buf_kern_start == NULL)
 		goto count_only;
@@ -1910,7 +1914,11 @@ enum compat_mwt {
 	EBT_COMPAT_TARGET,
 };
 
+<<<<<<< HEAD
 static int compat_mtw_from_user(struct compat_ebt_entry_mwt *mwt,
+=======
+static int compat_mtw_from_user(const struct compat_ebt_entry_mwt *mwt,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				enum compat_mwt compat_mwt,
 				struct ebt_entries_buf_state *state,
 				const unsigned char *base)
@@ -1988,22 +1996,41 @@ static int compat_mtw_from_user(struct compat_ebt_entry_mwt *mwt,
 /* return size of all matches, watchers or target, including necessary
  * alignment and padding.
  */
+<<<<<<< HEAD
 static int ebt_size_mwt(struct compat_ebt_entry_mwt *match32,
 			unsigned int size_left, enum compat_mwt type,
 			struct ebt_entries_buf_state *state, const void *base)
 {
 	int growth = 0;
 	char *buf;
+=======
+static int ebt_size_mwt(const struct compat_ebt_entry_mwt *match32,
+			unsigned int size_left, enum compat_mwt type,
+			struct ebt_entries_buf_state *state, const void *base)
+{
+	const char *buf = (const char *)match32;
+	int growth = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (size_left == 0)
 		return 0;
 
+<<<<<<< HEAD
 	buf = (char *) match32;
 
 	while (size_left >= sizeof(*match32)) {
 		struct ebt_entry_match *match_kern;
 		int ret;
 
+=======
+	do {
+		struct ebt_entry_match *match_kern;
+		int ret;
+
+		if (size_left < sizeof(*match32))
+			return -EINVAL;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		match_kern = (struct ebt_entry_match *) state->buf_kern_start;
 		if (match_kern) {
 			char *tmp;
@@ -2040,22 +2067,35 @@ static int ebt_size_mwt(struct compat_ebt_entry_mwt *match32,
 		if (match_kern)
 			match_kern->match_size = ret;
 
+<<<<<<< HEAD
 		/* rule should have no remaining data after target */
 		if (type == EBT_COMPAT_TARGET && size_left)
 			return -EINVAL;
 
 		match32 = (struct compat_ebt_entry_mwt *) buf;
 	}
+=======
+		match32 = (struct compat_ebt_entry_mwt *) buf;
+	} while (size_left);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return growth;
 }
 
 /* called for all ebt_entry structures. */
+<<<<<<< HEAD
 static int size_entry_mwt(struct ebt_entry *entry, const unsigned char *base,
 			  unsigned int *total,
 			  struct ebt_entries_buf_state *state)
 {
 	unsigned int i, j, startoff, new_offset = 0;
+=======
+static int size_entry_mwt(const struct ebt_entry *entry, const unsigned char *base,
+			  unsigned int *total,
+			  struct ebt_entries_buf_state *state)
+{
+	unsigned int i, j, startoff, next_expected_off, new_offset = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* stores match/watchers/targets & offset of next struct ebt_entry: */
 	unsigned int offsets[4];
 	unsigned int *offsets_update = NULL;
@@ -2141,11 +2181,21 @@ static int size_entry_mwt(struct ebt_entry *entry, const unsigned char *base,
 			return ret;
 	}
 
+<<<<<<< HEAD
 	startoff = state->buf_user_offset - startoff;
 
 	if (WARN_ON(*total < startoff))
 		return -EINVAL;
 	*total -= startoff;
+=======
+	next_expected_off = state->buf_user_offset - startoff;
+	if (next_expected_off != entry->next_offset)
+		return -EINVAL;
+
+	if (*total < entry->next_offset)
+		return -EINVAL;
+	*total -= entry->next_offset;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 }
 
@@ -2166,7 +2216,13 @@ static int compat_copy_entries(unsigned char *data, unsigned int size_user,
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	WARN_ON(size_remaining);
+=======
+	if (size_remaining)
+		return -EINVAL;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return state->buf_kern_offset;
 }
 

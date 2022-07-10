@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0
 #include "symbol.h"
+<<<<<<< HEAD
+=======
+#include <assert.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <errno.h>
 #include <inttypes.h>
 #include <limits.h>
@@ -751,6 +755,11 @@ static int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp
 			}
 
 			after->start = map->end;
+<<<<<<< HEAD
+=======
+			after->pgoff += map->end - pos->start;
+			assert(pos->map_ip(pos, map->end) == after->map_ip(after, map->end));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			__map_groups__insert(pos->groups, after);
 			if (verbose >= 2 && !use_browser)
 				map__fprintf(after, fp);

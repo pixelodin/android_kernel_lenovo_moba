@@ -11,6 +11,10 @@
  * management can be a bitch. See 'mm/memory.c': 'copy_page_range()'
  */
 
+<<<<<<< HEAD
+=======
+#include <linux/anon_inodes.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/slab.h>
 #include <linux/sched/autogroup.h>
 #include <linux/sched/mm.h>
@@ -21,6 +25,10 @@
 #include <linux/sched/task.h>
 #include <linux/sched/task_stack.h>
 #include <linux/sched/cputime.h>
+<<<<<<< HEAD
+=======
+#include <linux/seq_file.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/rtmutex.h>
 #include <linux/init.h>
 #include <linux/unistd.h>
@@ -92,6 +100,10 @@
 #include <linux/livepatch.h>
 #include <linux/thread_info.h>
 #include <linux/cpufreq_times.h>
+<<<<<<< HEAD
+=======
+#include <linux/scs.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #include <asm/pgtable.h>
 #include <asm/pgalloc.h>
@@ -164,10 +176,13 @@ static inline void free_task_struct(struct task_struct *tsk)
 }
 #endif
 
+<<<<<<< HEAD
 void __weak arch_release_thread_stack(unsigned long *stack)
 {
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #ifndef CONFIG_ARCH_THREAD_STACK_ALLOCATOR
 
 /*
@@ -221,6 +236,10 @@ static unsigned long *alloc_thread_stack_node(struct task_struct *tsk, int node)
 		memset(s->addr, 0, THREAD_SIZE);
 
 		tsk->stack_vm_area = s;
+<<<<<<< HEAD
+=======
+		tsk->stack = s->addr;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return s->addr;
 	}
 
@@ -235,14 +254,29 @@ static unsigned long *alloc_thread_stack_node(struct task_struct *tsk, int node)
 	 * free_thread_stack() can be called in interrupt context,
 	 * so cache the vm_struct.
 	 */
+<<<<<<< HEAD
 	if (stack)
 		tsk->stack_vm_area = find_vm_area(stack);
+=======
+	if (stack) {
+		tsk->stack_vm_area = find_vm_area(stack);
+		tsk->stack = stack;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return stack;
 #else
 	struct page *page = alloc_pages_node(node, THREADINFO_GFP,
 					     THREAD_SIZE_ORDER);
 
+<<<<<<< HEAD
 	return page ? page_address(page) : NULL;
+=======
+	if (likely(page)) {
+		tsk->stack = page_address(page);
+		return tsk->stack;
+	}
+	return NULL;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif
 }
 
@@ -273,7 +307,14 @@ static struct kmem_cache *thread_stack_cache;
 static unsigned long *alloc_thread_stack_node(struct task_struct *tsk,
 						  int node)
 {
+<<<<<<< HEAD
 	return kmem_cache_alloc_node(thread_stack_cache, THREADINFO_GFP, node);
+=======
+	unsigned long *stack;
+	stack = kmem_cache_alloc_node(thread_stack_cache, THREADINFO_GFP, node);
+	tsk->stack = stack;
+	return stack;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void free_thread_stack(struct task_struct *tsk)
@@ -377,7 +418,10 @@ static void release_task_stack(struct task_struct *tsk)
 		return;  /* Better to leak the stack than to free prematurely */
 
 	account_kernel_stack(tsk, -1);
+<<<<<<< HEAD
 	arch_release_thread_stack(tsk->stack);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	free_thread_stack(tsk);
 	tsk->stack = NULL;
 #ifdef CONFIG_VMAP_STACK
@@ -396,6 +440,10 @@ void put_task_stack(struct task_struct *tsk)
 void free_task(struct task_struct *tsk)
 {
 	cpufreq_task_times_exit(tsk);
+<<<<<<< HEAD
+=======
+	scs_release(tsk);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #ifndef CONFIG_THREAD_INFO_IN_TASK
 	/*
@@ -807,6 +855,11 @@ void __init fork_init(void)
 			  NULL, free_vm_stack_cache);
 #endif
 
+<<<<<<< HEAD
+=======
+	scs_init();
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	lockdep_init_task(&init_task);
 }
 
@@ -862,6 +915,13 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
 	if (err)
 		goto free_stack;
 
+<<<<<<< HEAD
+=======
+	err = scs_prepare(tsk, node);
+	if (err)
+		goto free_stack;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #ifdef CONFIG_SECCOMP
 	/*
 	 * We must handle setting up seccomp filters once we're under
@@ -1680,6 +1740,87 @@ static __always_inline void delayed_free_task(struct task_struct *tsk)
 		free_task(tsk);
 }
 
+<<<<<<< HEAD
+=======
+static int pidfd_release(struct inode *inode, struct file *file)
+{
+	struct pid *pid = file->private_data;
+
+	file->private_data = NULL;
+	put_pid(pid);
+	return 0;
+}
+
+#ifdef CONFIG_PROC_FS
+static void pidfd_show_fdinfo(struct seq_file *m, struct file *f)
+{
+	struct pid_namespace *ns = proc_pid_ns(file_inode(m->file));
+	struct pid *pid = f->private_data;
+
+	seq_put_decimal_ull(m, "Pid:\t", pid_nr_ns(pid, ns));
+	seq_putc(m, '\n');
+}
+#endif
+
+/*
+ * Poll support for process exit notification.
+ */
+static unsigned int pidfd_poll(struct file *file, struct poll_table_struct *pts)
+{
+	struct task_struct *task;
+	struct pid *pid = file->private_data;
+	int poll_flags = 0;
+
+	poll_wait(file, &pid->wait_pidfd, pts);
+
+	rcu_read_lock();
+	task = pid_task(pid, PIDTYPE_PID);
+	/*
+	 * Inform pollers only when the whole thread group exits.
+	 * If the thread group leader exits before all other threads in the
+	 * group, then poll(2) should block, similar to the wait(2) family.
+	 */
+	if (!task || (task->exit_state && thread_group_empty(task)))
+		poll_flags = POLLIN | POLLRDNORM;
+	rcu_read_unlock();
+
+	return poll_flags;
+}
+
+const struct file_operations pidfd_fops = {
+	.release = pidfd_release,
+	.poll = pidfd_poll,
+#ifdef CONFIG_PROC_FS
+	.show_fdinfo = pidfd_show_fdinfo,
+#endif
+};
+
+/**
+ * pidfd_create() - Create a new pid file descriptor.
+ *
+ * @pid:  struct pid that the pidfd will reference
+ *
+ * This creates a new pid file descriptor with the O_CLOEXEC flag set.
+ *
+ * Note, that this function can only be called after the fd table has
+ * been unshared to avoid leaking the pidfd to the new process.
+ *
+ * Return: On success, a cloexec pidfd is returned.
+ *         On error, a negative errno number will be returned.
+ */
+static int pidfd_create(struct pid *pid)
+{
+	int fd;
+
+	fd = anon_inode_getfd("[pidfd]", &pidfd_fops, get_pid(pid),
+			      O_RDWR | O_CLOEXEC);
+	if (fd < 0)
+		put_pid(pid);
+
+	return fd;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * This creates a new process as a copy of the old one,
  * but does not actually start it yet.
@@ -1692,13 +1833,21 @@ static __latent_entropy struct task_struct *copy_process(
 					unsigned long clone_flags,
 					unsigned long stack_start,
 					unsigned long stack_size,
+<<<<<<< HEAD
+=======
+					int __user *parent_tidptr,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 					int __user *child_tidptr,
 					struct pid *pid,
 					int trace,
 					unsigned long tls,
 					int node)
 {
+<<<<<<< HEAD
 	int retval;
+=======
+	int pidfd = -1, retval;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct task_struct *p;
 	struct multiprocess_signals delayed;
 
@@ -1748,6 +1897,34 @@ static __latent_entropy struct task_struct *copy_process(
 			return ERR_PTR(-EINVAL);
 	}
 
+<<<<<<< HEAD
+=======
+	if (clone_flags & CLONE_PIDFD) {
+		int reserved;
+
+		/*
+		 * - CLONE_PARENT_SETTID is useless for pidfds and also
+		 *   parent_tidptr is used to return pidfds.
+		 * - CLONE_DETACHED is blocked so that we can potentially
+		 *   reuse it later for CLONE_PIDFD.
+		 * - CLONE_THREAD is blocked until someone really needs it.
+		 */
+		if (clone_flags &
+		    (CLONE_DETACHED | CLONE_PARENT_SETTID | CLONE_THREAD))
+			return ERR_PTR(-EINVAL);
+
+		/*
+		 * Verify that parent_tidptr is sane so we can potentially
+		 * reuse it later.
+		 */
+		if (get_user(reserved, parent_tidptr))
+			return ERR_PTR(-EFAULT);
+
+		if (reserved != 0)
+			return ERR_PTR(-EINVAL);
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/*
 	 * Force any signals received before this point to be delivered
 	 * before the fork happens.  Collect up signals sent to multiple
@@ -1954,6 +2131,25 @@ static __latent_entropy struct task_struct *copy_process(
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	/*
+	 * This has to happen after we've potentially unshared the file
+	 * descriptor table (so that the pidfd doesn't leak into the child
+	 * if the fd table isn't shared).
+	 */
+	if (clone_flags & CLONE_PIDFD) {
+		retval = pidfd_create(pid);
+		if (retval < 0)
+			goto bad_fork_free_pid;
+
+		pidfd = retval;
+		retval = put_user(pidfd, parent_tidptr);
+		if (retval)
+			goto bad_fork_put_pidfd;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #ifdef CONFIG_BLOCK
 	p->plug = NULL;
 #endif
@@ -2014,7 +2210,11 @@ static __latent_entropy struct task_struct *copy_process(
 	 */
 	retval = cgroup_can_fork(p);
 	if (retval)
+<<<<<<< HEAD
 		goto bad_fork_free_pid;
+=======
+		goto bad_fork_cgroup_threadgroup_change_end;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/*
 	 * From this point on we must avoid any synchronous user-space
@@ -2129,8 +2329,17 @@ bad_fork_cancel_cgroup:
 	spin_unlock(&current->sighand->siglock);
 	write_unlock_irq(&tasklist_lock);
 	cgroup_cancel_fork(p);
+<<<<<<< HEAD
 bad_fork_free_pid:
 	cgroup_threadgroup_change_end(current);
+=======
+bad_fork_cgroup_threadgroup_change_end:
+	cgroup_threadgroup_change_end(current);
+bad_fork_put_pidfd:
+	if (clone_flags & CLONE_PIDFD)
+		ksys_close(pidfd);
+bad_fork_free_pid:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (pid != &init_struct_pid)
 		free_pid(pid);
 bad_fork_cleanup_thread:
@@ -2197,7 +2406,11 @@ static inline void init_idle_pids(struct task_struct *idle)
 struct task_struct *fork_idle(int cpu)
 {
 	struct task_struct *task;
+<<<<<<< HEAD
 	task = copy_process(CLONE_VM, 0, 0, NULL, &init_struct_pid, 0, 0,
+=======
+	task = copy_process(CLONE_VM, 0, 0, NULL, NULL, &init_struct_pid, 0, 0,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			    cpu_to_node(cpu));
 	if (!IS_ERR(task)) {
 		init_idle_pids(task);
@@ -2244,7 +2457,11 @@ long _do_fork(unsigned long clone_flags,
 			trace = 0;
 	}
 
+<<<<<<< HEAD
 	p = copy_process(clone_flags, stack_start, stack_size,
+=======
+	p = copy_process(clone_flags, stack_start, stack_size, parent_tidptr,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			 child_tidptr, NULL, trace, tls, NUMA_NO_NODE);
 	add_latent_entropy();
 

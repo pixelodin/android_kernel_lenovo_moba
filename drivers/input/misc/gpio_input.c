@@ -302,7 +302,12 @@ int gpio_event_input_func(struct gpio_event_input_devs *input_devs,
 				   input_devs->dev[0]->name,
 				   (input_devs->count > 1) ? "..." : "");
 
+<<<<<<< HEAD
 		ds->ws = wakeup_source_register(wlname);
+=======
+		ds->ws = wakeup_source_register(&input_devs->dev[0]->dev,
+						wlname);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		kfree(wlname);
 		if (!ds->ws) {
 			ret = -ENOMEM;

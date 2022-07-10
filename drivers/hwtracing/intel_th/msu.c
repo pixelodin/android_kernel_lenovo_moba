@@ -491,7 +491,11 @@ static int msc_configure(struct msc *msc)
 	lockdep_assert_held(&msc->buf_mutex);
 
 	if (msc->mode > MSC_MODE_MULTI)
+<<<<<<< HEAD
 		return -ENOTSUPP;
+=======
+		return -EINVAL;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (msc->mode == MSC_MODE_MULTI)
 		msc_buffer_clear_hw_header(msc);
@@ -942,7 +946,11 @@ static int msc_buffer_alloc(struct msc *msc, unsigned long *nr_pages,
 	} else if (msc->mode == MSC_MODE_MULTI) {
 		ret = msc_buffer_multi_alloc(msc, nr_pages, nr_wins);
 	} else {
+<<<<<<< HEAD
 		ret = -ENOTSUPP;
+=======
+		ret = -EINVAL;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	if (!ret) {
@@ -1165,7 +1173,11 @@ static ssize_t intel_th_msc_read(struct file *file, char __user *buf,
 		if (ret >= 0)
 			*ppos = iter->offset;
 	} else {
+<<<<<<< HEAD
 		ret = -ENOTSUPP;
+=======
+		ret = -EINVAL;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 put_count:

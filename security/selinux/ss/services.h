@@ -8,7 +8,11 @@
 #define _SS_SERVICES_H_
 
 #include "policydb.h"
+<<<<<<< HEAD
 #include "sidtab.h"
+=======
+#include "context.h"
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /* Mapping for a single class */
 struct selinux_mapping {
@@ -24,7 +28,11 @@ struct selinux_map {
 };
 
 struct selinux_ss {
+<<<<<<< HEAD
 	struct sidtab sidtab;
+=======
+	struct sidtab *sidtab;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct policydb policydb;
 	rwlock_t policy_rwlock;
 	u32 latest_granting;
@@ -39,4 +47,9 @@ void services_compute_xperms_drivers(struct extended_perms *xperms,
 void services_compute_xperms_decision(struct extended_perms_decision *xpermd,
 					struct avtab_node *node);
 
+<<<<<<< HEAD
+=======
+int context_add_hash(struct policydb *policydb, struct context *context);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif	/* _SS_SERVICES_H_ */

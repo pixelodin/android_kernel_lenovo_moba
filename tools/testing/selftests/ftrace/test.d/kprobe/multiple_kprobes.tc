@@ -25,9 +25,15 @@ while read i; do
   test $N -eq 256 && break
 done
 
+<<<<<<< HEAD
 L=`wc -l kprobe_events`
 if [ $L -ne $N ]; then
   echo "The number of kprobes events ($L) is not $N"
+=======
+L=`cat kprobe_events | wc -l`
+if [ $L -ne 256 ]; then
+  echo "The number of kprobes events ($L) is not 256"
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
   exit_fail
 fi
 

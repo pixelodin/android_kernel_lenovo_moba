@@ -816,7 +816,11 @@
 			clock-names = "apb", "ir";
 			resets = <&r_ccu RST_APB0_IR>;
 			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+<<<<<<< HEAD
 			reg = <0x01f02000 0x40>;
+=======
+			reg = <0x01f02000 0x400>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			status = "disabled";
 		};
 

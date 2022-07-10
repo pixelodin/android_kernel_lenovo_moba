@@ -11,6 +11,7 @@
 /* This flag indicates that copy_len field in nf_loginfo is set */
 #define NF_LOG_F_COPY_LEN	0x1
 
+<<<<<<< HEAD
 #define NF_LOG_ALL			0x00 /* copy all (default) */
 #define NF_LOG_NETWORK_ONLY		0x01 /* only copy ip header */
 #define NF_LOG_NETWORK_TRANSPORT	0x02 /* copy ip plus transport header*/
@@ -18,6 +19,8 @@
 #define NF_LOG_TRANSPORT_APP	0x04 /* copy transport headerplus app data */
 #define NF_LOG_APP_ONLY		0x05 /* only copy app data */
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 enum nf_log_type {
 	NF_LOG_TYPE_LOG		= 0,
 	NF_LOG_TYPE_ULOG,

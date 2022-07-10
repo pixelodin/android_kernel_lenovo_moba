@@ -1349,24 +1349,39 @@ static void set_console_size(struct port *port, u16 rows, u16 cols)
 	port->cons.ws.ws_col = cols;
 }
 
+<<<<<<< HEAD
 static unsigned int fill_queue(struct virtqueue *vq, spinlock_t *lock)
 {
 	struct port_buffer *buf;
 	unsigned int nr_added_bufs;
+=======
+static int fill_queue(struct virtqueue *vq, spinlock_t *lock)
+{
+	struct port_buffer *buf;
+	int nr_added_bufs;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int ret;
 
 	nr_added_bufs = 0;
 	do {
 		buf = alloc_buf(vq->vdev, PAGE_SIZE, 0);
 		if (!buf)
+<<<<<<< HEAD
 			break;
+=======
+			return -ENOMEM;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		spin_lock_irq(lock);
 		ret = add_inbuf(vq, buf);
 		if (ret < 0) {
 			spin_unlock_irq(lock);
 			free_buf(buf, true);
+<<<<<<< HEAD
 			break;
+=======
+			return ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 		nr_added_bufs++;
 		spin_unlock_irq(lock);
@@ -1386,7 +1401,10 @@ static int add_port(struct ports_device *portdev, u32 id)
 	char debugfs_name[16];
 	struct port *port;
 	dev_t devt;
+<<<<<<< HEAD
 	unsigned int nr_added_bufs;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int err;
 
 	port = kmalloc(sizeof(*port), GFP_KERNEL);
@@ -1445,11 +1463,21 @@ static int add_port(struct ports_device *portdev, u32 id)
 	spin_lock_init(&port->outvq_lock);
 	init_waitqueue_head(&port->waitqueue);
 
+<<<<<<< HEAD
 	/* Fill the in_vq with buffers so the host can send us data. */
 	nr_added_bufs = fill_queue(port->in_vq, &port->inbuf_lock);
 	if (!nr_added_bufs) {
 		dev_err(port->dev, "Error allocating inbufs\n");
 		err = -ENOMEM;
+=======
+	/* We can safely ignore ENOSPC because it means
+	 * the queue already has buffers. Buffers are removed
+	 * only by virtcons_remove(), not by unplug_port()
+	 */
+	err = fill_queue(port->in_vq, &port->inbuf_lock);
+	if (err < 0 && err != -ENOSPC) {
+		dev_err(port->dev, "Error allocating inbufs\n");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto free_device;
 	}
 
@@ -2083,6 +2111,7 @@ static int virtcons_probe(struct virtio_device *vdev)
 	INIT_WORK(&portdev->control_work, &control_work_handler);
 
 	if (multiport) {
+<<<<<<< HEAD
 		unsigned int nr_added_bufs;
 
 		spin_lock_init(&portdev->c_ivq_lock);
@@ -2091,6 +2120,13 @@ static int virtcons_probe(struct virtio_device *vdev)
 		nr_added_bufs = fill_queue(portdev->c_ivq,
 					   &portdev->c_ivq_lock);
 		if (!nr_added_bufs) {
+=======
+		spin_lock_init(&portdev->c_ivq_lock);
+		spin_lock_init(&portdev->c_ovq_lock);
+
+		err = fill_queue(portdev->c_ivq, &portdev->c_ivq_lock);
+		if (err < 0) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			dev_err(&vdev->dev,
 				"Error allocating buffers for control queue\n");
 			/*
@@ -2101,7 +2137,11 @@ static int virtcons_probe(struct virtio_device *vdev)
 					   VIRTIO_CONSOLE_DEVICE_READY, 0);
 			/* Device was functional: we need full cleanup. */
 			virtcons_remove(vdev);
+<<<<<<< HEAD
 			return -ENOMEM;
+=======
+			return err;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 	} else {
 		/*

@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 /*
+<<<<<<< HEAD
  * Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #ifndef _UAPI_MSM_KGSL_H
@@ -462,7 +466,14 @@ struct kgsl_context_property_fault {
 #define KGSL_PERFCOUNTER_GROUP_CP_PWR 0x21
 #define KGSL_PERFCOUNTER_GROUP_GPMU_PWR 0x22
 #define KGSL_PERFCOUNTER_GROUP_ALWAYSON_PWR 0x23
+<<<<<<< HEAD
 #define KGSL_PERFCOUNTER_GROUP_MAX 0x24
+=======
+#define KGSL_PERFCOUNTER_GROUP_GLC 0x24
+#define KGSL_PERFCOUNTER_GROUP_FCHE 0x25
+#define KGSL_PERFCOUNTER_GROUP_MHUB 0x26
+#define KGSL_PERFCOUNTER_GROUP_MAX 0x27
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define KGSL_PERFCOUNTER_NOT_USED 0xFFFFFFFF
 #define KGSL_PERFCOUNTER_BROKEN 0xFFFFFFFE

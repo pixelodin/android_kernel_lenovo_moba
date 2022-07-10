@@ -972,7 +972,11 @@ static int cqspi_direct_read_execute(struct spi_nor *nor, u_char *buf,
 		return 0;
 	}
 
+<<<<<<< HEAD
 	dma_dst = dma_map_single(nor->dev, buf, len, DMA_DEV_TO_MEM);
+=======
+	dma_dst = dma_map_single(nor->dev, buf, len, DMA_FROM_DEVICE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (dma_mapping_error(nor->dev, dma_dst)) {
 		dev_err(nor->dev, "dma mapping failed\n");
 		return -ENOMEM;
@@ -1007,7 +1011,11 @@ static int cqspi_direct_read_execute(struct spi_nor *nor, u_char *buf,
 	}
 
 err_unmap:
+<<<<<<< HEAD
 	dma_unmap_single(nor->dev, dma_dst, len, DMA_DEV_TO_MEM);
+=======
+	dma_unmap_single(nor->dev, dma_dst, len, DMA_FROM_DEVICE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return ret;
 }

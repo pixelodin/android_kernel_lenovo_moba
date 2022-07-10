@@ -33,10 +33,13 @@
  * space. Unused/unknown fields will not appear in sysfs.
  */
 
+<<<<<<< HEAD
 #ifdef CONFIG_PRODUCT_MOBA
 #define USE_TI_FG
 #endif
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 enum {
 	POWER_SUPPLY_STATUS_UNKNOWN = 0,
 	POWER_SUPPLY_STATUS_CHARGING,
@@ -365,6 +368,10 @@ enum power_supply_property {
 	POWER_SUPPLY_PROP_CP_ILIM,
 	POWER_SUPPLY_PROP_IRQ_STATUS,
 	POWER_SUPPLY_PROP_PARALLEL_OUTPUT_MODE,
+<<<<<<< HEAD
+=======
+	POWER_SUPPLY_PROP_FG_TYPE,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	POWER_SUPPLY_PROP_CHARGER_STATUS,
 	/* Local extensions of type int64_t */
 	POWER_SUPPLY_PROP_CHARGE_COUNTER_EXT,
@@ -378,6 +385,7 @@ enum power_supply_property {
 	 * MODEL_NAME and SERIAL_NUMBER. Don't add below SERIAL_NUMBER.
 	 */
 	POWER_SUPPLY_PROP_SERIAL_NUMBER,
+<<<<<<< HEAD
 #ifdef CONFIG_PRODUCT_MOBA
 	POWER_SUPPLY_PROP_TI_FAULT_STATUS,
 	POWER_SUPPLY_PROP_TI_REG_STATUS,
@@ -443,6 +451,8 @@ enum power_supply_property {
 	POWER_SUPPLY_PROP_SEC_PD_TYPE,
 	POWER_SUPPLY_PROP_FC_LIMIT_CURRENT,
 #endif
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 enum power_supply_type {
@@ -466,6 +476,7 @@ enum power_supply_type {
 	POWER_SUPPLY_TYPE_BMS,			/* Battery Monitor System */
 	POWER_SUPPLY_TYPE_PARALLEL,		/* Parallel Path */
 	POWER_SUPPLY_TYPE_MAIN,			/* Main Path */
+<<<<<<< HEAD
 	POWER_SUPPLY_TYPE_UFP,			/* Type-C UFP */
 	POWER_SUPPLY_TYPE_DFP,			/* Type-C DFP */
 	POWER_SUPPLY_TYPE_CHARGE_PUMP,		/* Charge Pump */
@@ -495,6 +506,14 @@ extern u8 g_chg_en_dev;
 extern u8 first_typec_attached;
 #endif
 
+=======
+	POWER_SUPPLY_TYPE_WIPOWER,		/* Wipower */
+	POWER_SUPPLY_TYPE_UFP,			/* Type-C UFP */
+	POWER_SUPPLY_TYPE_DFP,			/* Type-C DFP */
+	POWER_SUPPLY_TYPE_CHARGE_PUMP,		/* Charge Pump */
+};
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 enum power_supply_usb_type {
 	POWER_SUPPLY_USB_TYPE_UNKNOWN = 0,
 	POWER_SUPPLY_USB_TYPE_SDP,		/* Standard Downstream Port */
@@ -630,6 +649,7 @@ struct power_supply {
 #ifdef CONFIG_THERMAL
 	struct thermal_zone_device *tzd;
 	struct thermal_cooling_device *tcd;
+<<<<<<< HEAD
 #ifdef CONFIG_PRODUCT_MOBA
 	struct thermal_zone_device *tzd_display_rate;
 	struct thermal_cooling_device *tcd_display_rate;
@@ -640,6 +660,8 @@ struct power_supply {
 	struct thermal_zone_device *tzd_camera;
 	struct thermal_cooling_device *tcd_camera;
 #endif
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif
 
 #ifdef CONFIG_LEDS_TRIGGERS

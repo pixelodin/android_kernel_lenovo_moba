@@ -44,7 +44,11 @@
  */
 int setup_cgroup_environment(void)
 {
+<<<<<<< HEAD
 	char cgroup_workdir[PATH_MAX + 1];
+=======
+	char cgroup_workdir[PATH_MAX - 24];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	format_cgroup_path(cgroup_workdir, "");
 

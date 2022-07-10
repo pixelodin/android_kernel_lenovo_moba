@@ -2604,9 +2604,18 @@ static int alloc_intel_hdmi(struct hda_codec *codec)
 /* parse and post-process for Intel codecs */
 static int parse_intel_hdmi(struct hda_codec *codec)
 {
+<<<<<<< HEAD
 	int err;
 
 	err = hdmi_parse_codec(codec);
+=======
+	int err, retries = 3;
+
+	do {
+		err = hdmi_parse_codec(codec);
+	} while (err < 0 && retries--);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (err < 0) {
 		generic_spec_free(codec);
 		return err;

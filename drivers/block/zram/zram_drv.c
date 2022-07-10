@@ -424,13 +424,23 @@ static void reset_bdev(struct zram *zram)
 static ssize_t backing_dev_show(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {
+<<<<<<< HEAD
 	struct zram *zram = dev_to_zram(dev);
 	struct file *file = zram->backing_dev;
+=======
+	struct file *file;
+	struct zram *zram = dev_to_zram(dev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	char *p;
 	ssize_t ret;
 
 	down_read(&zram->init_lock);
+<<<<<<< HEAD
 	if (!zram->backing_dev) {
+=======
+	file = zram->backing_dev;
+	if (!file) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		memcpy(buf, "none\n", 5);
 		up_read(&zram->init_lock);
 		return 5;

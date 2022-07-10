@@ -28,7 +28,11 @@
 #include "internal.h"
 
 static const struct nla_policy mpls_iptunnel_policy[MPLS_IPTUNNEL_MAX + 1] = {
+<<<<<<< HEAD
 	[MPLS_IPTUNNEL_DST]	= { .type = NLA_U32 },
+=======
+	[MPLS_IPTUNNEL_DST]	= { .len = sizeof(u32) },
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	[MPLS_IPTUNNEL_TTL]	= { .type = NLA_U8 },
 };
 

@@ -41,22 +41,28 @@ static void bcm_sf2_imp_setup(struct dsa_switch *ds, int port)
 	unsigned int i;
 	u32 reg, offset;
 
+<<<<<<< HEAD
 	if (priv->type == BCM7445_DEVICE_ID)
 		offset = CORE_STS_OVERRIDE_IMP;
 	else
 		offset = CORE_STS_OVERRIDE_IMP2;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Enable the port memories */
 	reg = core_readl(priv, CORE_MEM_PSM_VDD_CTRL);
 	reg &= ~P_TXQ_PSM_VDD(port);
 	core_writel(priv, reg, CORE_MEM_PSM_VDD_CTRL);
 
+<<<<<<< HEAD
 	/* Enable Broadcast, Multicast, Unicast forwarding to IMP port */
 	reg = core_readl(priv, CORE_IMP_CTL);
 	reg |= (RX_BCST_EN | RX_MCST_EN | RX_UCST_EN);
 	reg &= ~(RX_DIS | TX_DIS);
 	core_writel(priv, reg, CORE_IMP_CTL);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Enable forwarding */
 	core_writel(priv, SW_FWDG_EN, CORE_SWMODE);
 
@@ -75,10 +81,35 @@ static void bcm_sf2_imp_setup(struct dsa_switch *ds, int port)
 
 	b53_brcm_hdr_setup(ds, port);
 
+<<<<<<< HEAD
 	/* Force link status for IMP port */
 	reg = core_readl(priv, offset);
 	reg |= (MII_SW_OR | LINK_STS);
 	core_writel(priv, reg, offset);
+=======
+	if (port == 8) {
+		if (priv->type == BCM7445_DEVICE_ID)
+			offset = CORE_STS_OVERRIDE_IMP;
+		else
+			offset = CORE_STS_OVERRIDE_IMP2;
+
+		/* Force link status for IMP port */
+		reg = core_readl(priv, offset);
+		reg |= (MII_SW_OR | LINK_STS);
+		reg &= ~GMII_SPEED_UP_2G;
+		core_writel(priv, reg, offset);
+
+		/* Enable Broadcast, Multicast, Unicast forwarding to IMP port */
+		reg = core_readl(priv, CORE_IMP_CTL);
+		reg |= (RX_BCST_EN | RX_MCST_EN | RX_UCST_EN);
+		reg &= ~(RX_DIS | TX_DIS);
+		core_writel(priv, reg, CORE_IMP_CTL);
+	} else {
+		reg = core_readl(priv, CORE_G_PCTL_PORT(port));
+		reg &= ~(RX_DIS | TX_DIS);
+		core_writel(priv, reg, CORE_G_PCTL_PORT(port));
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void bcm_sf2_gphy_enable_set(struct dsa_switch *ds, bool enable)
@@ -303,11 +334,18 @@ static int bcm_sf2_sw_mdio_write(struct mii_bus *bus, int addr, int regnum,
 	 * send them to our master MDIO bus controller
 	 */
 	if (addr == BRCM_PSEUDO_PHY_ADDR && priv->indir_phy_mask & BIT(addr))
+<<<<<<< HEAD
 		bcm_sf2_sw_indir_rw(priv, 0, addr, regnum, val);
 	else
 		mdiobus_write_nested(priv->master_mii_bus, addr, regnum, val);
 
 	return 0;
+=======
+		return bcm_sf2_sw_indir_rw(priv, 0, addr, regnum, val);
+	else
+		return mdiobus_write_nested(priv->master_mii_bus, addr,
+				regnum, val);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static irqreturn_t bcm_sf2_switch_0_isr(int irq, void *dev_id)
@@ -1093,12 +1131,22 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
 		return ret;
 	}
 
+<<<<<<< HEAD
+=======
+	bcm_sf2_gphy_enable_set(priv->dev->ds, true);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = bcm_sf2_mdio_register(ds);
 	if (ret) {
 		pr_err("failed to register MDIO bus\n");
 		return ret;
 	}
 
+<<<<<<< HEAD
+=======
+	bcm_sf2_gphy_enable_set(priv->dev->ds, false);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = bcm_sf2_cfp_rst(priv);
 	if (ret) {
 		pr_err("failed to reset CFP\n");

@@ -22,6 +22,10 @@
 	compatible = "armadeus,imx51-apf51", "fsl,imx51";
 
 	memory@90000000 {
+<<<<<<< HEAD
+=======
+		device_type = "memory";
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		reg = <0x90000000 0x20000000>;
 	};
 

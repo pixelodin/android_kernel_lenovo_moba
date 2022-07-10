@@ -94,7 +94,11 @@ static int create_strip_zones(struct mddev *mddev, struct r0conf **private_conf)
 	char b[BDEVNAME_SIZE];
 	char b2[BDEVNAME_SIZE];
 	struct r0conf *conf = kzalloc(sizeof(*conf), GFP_KERNEL);
+<<<<<<< HEAD
 	unsigned short blksize = 512;
+=======
+	unsigned blksize = 512;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	*private_conf = ERR_PTR(-ENOMEM);
 	if (!conf)
@@ -580,10 +584,16 @@ static bool raid0_make_request(struct mddev *mddev, struct bio *bio)
 	unsigned chunk_sects;
 	unsigned sectors;
 
+<<<<<<< HEAD
 	if (unlikely(bio->bi_opf & REQ_PREFLUSH)) {
 		md_flush_request(mddev, bio);
 		return true;
 	}
+=======
+	if (unlikely(bio->bi_opf & REQ_PREFLUSH)
+	    && md_flush_request(mddev, bio))
+		return true;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (unlikely((bio_op(bio) == REQ_OP_DISCARD))) {
 		raid0_handle_discard(mddev, bio);
@@ -620,7 +630,11 @@ static bool raid0_make_request(struct mddev *mddev, struct bio *bio)
 		tmp_dev = map_sector(mddev, zone, sector, &sector);
 		break;
 	default:
+<<<<<<< HEAD
 		WARN("md/raid0:%s: Invalid layout\n", mdname(mddev));
+=======
+		WARN(1, "md/raid0:%s: Invalid layout\n", mdname(mddev));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		bio_io_error(bio);
 		return true;
 	}

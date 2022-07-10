@@ -25,7 +25,11 @@ static inline void __noreturn cpu_soft_restart(unsigned long entry,
 
 	unsigned long el2_switch = !is_kernel_in_hyp_mode() &&
 		is_hyp_mode_available();
+<<<<<<< HEAD
 	restart = (void *)__pa_symbol(__cpu_soft_restart);
+=======
+	restart = (void *)__pa_function(__cpu_soft_restart);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	cpu_install_idmap();
 	restart(el2_switch, entry, arg0, arg1, arg2);

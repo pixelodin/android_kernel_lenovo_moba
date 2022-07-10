@@ -13,3 +13,7 @@ ext4-y	:= balloc.o bitmap.o block_validity.o dir.o ext4_jbd2.o extents.o \
 
 ext4-$(CONFIG_EXT4_FS_POSIX_ACL)	+= acl.o
 ext4-$(CONFIG_EXT4_FS_SECURITY)		+= xattr_security.o
+<<<<<<< HEAD
+=======
+ext4-$(CONFIG_FS_VERITY)		+= verity.o
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

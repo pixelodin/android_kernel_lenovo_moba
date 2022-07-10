@@ -868,7 +868,10 @@ static int omap_dm_timer_probe(struct platform_device *pdev)
 	timer->pdev = pdev;
 
 	pm_runtime_enable(dev);
+<<<<<<< HEAD
 	pm_runtime_irq_safe(dev);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!timer->reserved) {
 		ret = pm_runtime_get_sync(dev);

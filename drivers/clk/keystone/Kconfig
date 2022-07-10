@@ -7,7 +7,11 @@ config COMMON_CLK_KEYSTONE
 
 config TI_SCI_CLK
 	tristate "TI System Control Interface clock drivers"
+<<<<<<< HEAD
 	depends on (ARCH_KEYSTONE || COMPILE_TEST) && OF
+=======
+	depends on (ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST) && OF
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	depends on TI_SCI_PROTOCOL
 	default ARCH_KEYSTONE
 	---help---

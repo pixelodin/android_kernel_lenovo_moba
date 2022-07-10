@@ -313,9 +313,22 @@ static const struct i2c_device_id wf_ad7417_id[] = {
 };
 MODULE_DEVICE_TABLE(i2c, wf_ad7417_id);
 
+<<<<<<< HEAD
 static struct i2c_driver wf_ad7417_driver = {
 	.driver = {
 		.name	= "wf_ad7417",
+=======
+static const struct of_device_id wf_ad7417_of_id[] = {
+	{ .compatible = "ad7417", },
+	{ }
+};
+MODULE_DEVICE_TABLE(of, wf_ad7417_of_id);
+
+static struct i2c_driver wf_ad7417_driver = {
+	.driver = {
+		.name	= "wf_ad7417",
+		.of_match_table = wf_ad7417_of_id,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	.probe		= wf_ad7417_probe,
 	.remove		= wf_ad7417_remove,

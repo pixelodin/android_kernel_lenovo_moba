@@ -28,6 +28,7 @@ static struct rcar_sysc_area r8a77990_areas[] __initdata = {
 	{ "3dg-b",	0x100, 1, R8A77990_PD_3DG_B,	R8A77990_PD_3DG_A },
 };
 
+<<<<<<< HEAD
 static void __init rcar_sysc_fix_parent(struct rcar_sysc_area *areas,
 					unsigned int num_areas, u8 id,
 					int new_parent)
@@ -41,6 +42,8 @@ static void __init rcar_sysc_fix_parent(struct rcar_sysc_area *areas,
 		}
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* Fixups for R-Car E3 ES1.0 revision */
 static const struct soc_device_attribute r8a77990[] __initconst = {
 	{ .soc_id = "r8a77990", .revision = "ES1.0" },
@@ -50,12 +53,19 @@ static const struct soc_device_attribute r8a77990[] __initconst = {
 static int __init r8a77990_sysc_init(void)
 {
 	if (soc_device_match(r8a77990)) {
+<<<<<<< HEAD
 		rcar_sysc_fix_parent(r8a77990_areas,
 				     ARRAY_SIZE(r8a77990_areas),
 				     R8A77990_PD_3DG_A, R8A77990_PD_3DG_B);
 		rcar_sysc_fix_parent(r8a77990_areas,
 				     ARRAY_SIZE(r8a77990_areas),
 				     R8A77990_PD_3DG_B, R8A77990_PD_ALWAYS_ON);
+=======
+		/* Fix incorrect 3DG hierarchy */
+		swap(r8a77990_areas[7], r8a77990_areas[8]);
+		r8a77990_areas[7].parent = R8A77990_PD_ALWAYS_ON;
+		r8a77990_areas[8].parent = R8A77990_PD_3DG_B;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	return 0;

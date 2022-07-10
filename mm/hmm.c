@@ -997,14 +997,20 @@ static void hmm_devmem_release(void *data)
 	struct hmm_devmem *devmem = data;
 	struct resource *resource = devmem->resource;
 	unsigned long start_pfn, npages;
+<<<<<<< HEAD
 	struct zone *zone;
 	struct page *page;
+=======
+	struct page *page;
+	int nid;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* pages are dead and unused, undo the arch mapping */
 	start_pfn = (resource->start & ~(PA_SECTION_SIZE - 1)) >> PAGE_SHIFT;
 	npages = ALIGN(resource_size(resource), PA_SECTION_SIZE) >> PAGE_SHIFT;
 
 	page = pfn_to_page(start_pfn);
+<<<<<<< HEAD
 	zone = page_zone(page);
 
 	mem_hotplug_begin();
@@ -1012,6 +1018,15 @@ static void hmm_devmem_release(void *data)
 		__remove_pages(zone, start_pfn, npages, NULL);
 	else
 		arch_remove_memory(start_pfn << PAGE_SHIFT,
+=======
+	nid = page_to_nid(page);
+
+	mem_hotplug_begin();
+	if (resource->desc == IORES_DESC_DEVICE_PRIVATE_MEMORY)
+		__remove_pages(start_pfn, npages, NULL);
+	else
+		arch_remove_memory(nid, start_pfn << PAGE_SHIFT,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				   npages << PAGE_SHIFT, NULL);
 	mem_hotplug_done();
 

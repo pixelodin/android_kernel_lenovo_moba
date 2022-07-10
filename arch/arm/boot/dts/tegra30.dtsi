@@ -896,7 +896,11 @@
 		nvidia,elastic-limit = <16>;
 		nvidia,term-range-adj = <6>;
 		nvidia,xcvr-setup = <51>;
+<<<<<<< HEAD
 		nvidia.xcvr-setup-use-fuses;
+=======
+		nvidia,xcvr-setup-use-fuses;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		nvidia,xcvr-lsfslew = <1>;
 		nvidia,xcvr-lsrslew = <1>;
 		nvidia,xcvr-hsslew = <32>;
@@ -933,7 +937,11 @@
 		nvidia,elastic-limit = <16>;
 		nvidia,term-range-adj = <6>;
 		nvidia,xcvr-setup = <51>;
+<<<<<<< HEAD
 		nvidia.xcvr-setup-use-fuses;
+=======
+		nvidia,xcvr-setup-use-fuses;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		nvidia,xcvr-lsfslew = <2>;
 		nvidia,xcvr-lsrslew = <2>;
 		nvidia,xcvr-hsslew = <32>;
@@ -969,7 +977,11 @@
 		nvidia,elastic-limit = <16>;
 		nvidia,term-range-adj = <6>;
 		nvidia,xcvr-setup = <51>;
+<<<<<<< HEAD
 		nvidia.xcvr-setup-use-fuses;
+=======
+		nvidia,xcvr-setup-use-fuses;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		nvidia,xcvr-lsfslew = <2>;
 		nvidia,xcvr-lsrslew = <2>;
 		nvidia,xcvr-hsslew = <32>;

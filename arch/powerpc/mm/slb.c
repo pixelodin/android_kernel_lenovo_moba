@@ -355,7 +355,11 @@ void slb_initialize(void)
 #endif
 	}
 
+<<<<<<< HEAD
 	get_paca()->stab_rr = SLB_NUM_BOLTED;
+=======
+	get_paca()->stab_rr = SLB_NUM_BOLTED - 1;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	lflags = SLB_VSID_KERNEL | linear_llp;
 	vflags = SLB_VSID_KERNEL | vmalloc_llp;

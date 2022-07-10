@@ -1462,6 +1462,10 @@ static int qed_get_link_data(struct qed_hwfn *hwfn,
 }
 
 static void qed_fill_link(struct qed_hwfn *hwfn,
+<<<<<<< HEAD
+=======
+			  struct qed_ptt *ptt,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			  struct qed_link_output *if_link)
 {
 	struct qed_mcp_link_params params;
@@ -1542,7 +1546,11 @@ static void qed_fill_link(struct qed_hwfn *hwfn,
 
 	/* TODO - fill duplex properly */
 	if_link->duplex = DUPLEX_FULL;
+<<<<<<< HEAD
 	qed_mcp_get_media_type(hwfn->cdev, &media_type);
+=======
+	qed_mcp_get_media_type(hwfn, ptt, &media_type);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if_link->port = qed_get_port_type(media_type);
 
 	if_link->autoneg = params.speed.autoneg;
@@ -1598,21 +1606,48 @@ static void qed_fill_link(struct qed_hwfn *hwfn,
 static void qed_get_current_link(struct qed_dev *cdev,
 				 struct qed_link_output *if_link)
 {
+<<<<<<< HEAD
 	int i;
 
 	qed_fill_link(&cdev->hwfns[0], if_link);
+=======
+	struct qed_hwfn *hwfn;
+	struct qed_ptt *ptt;
+	int i;
+
+	hwfn = &cdev->hwfns[0];
+	if (IS_PF(cdev)) {
+		ptt = qed_ptt_acquire(hwfn);
+		if (ptt) {
+			qed_fill_link(hwfn, ptt, if_link);
+			qed_ptt_release(hwfn, ptt);
+		} else {
+			DP_NOTICE(hwfn, "Failed to fill link; No PTT\n");
+		}
+	} else {
+		qed_fill_link(hwfn, NULL, if_link);
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	for_each_hwfn(cdev, i)
 		qed_inform_vf_link_state(&cdev->hwfns[i]);
 }
 
+<<<<<<< HEAD
 void qed_link_update(struct qed_hwfn *hwfn)
+=======
+void qed_link_update(struct qed_hwfn *hwfn, struct qed_ptt *ptt)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	void *cookie = hwfn->cdev->ops_cookie;
 	struct qed_common_cb_ops *op = hwfn->cdev->protocol_ops.common;
 	struct qed_link_output if_link;
 
+<<<<<<< HEAD
 	qed_fill_link(hwfn, &if_link);
+=======
+	qed_fill_link(hwfn, ptt, &if_link);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	qed_inform_vf_link_state(hwfn);
 
 	if (IS_LEAD_HWFN(hwfn) && cookie)

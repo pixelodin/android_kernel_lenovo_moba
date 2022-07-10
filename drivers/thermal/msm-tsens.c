@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2017-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2017-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include <linux/err.h>
@@ -273,7 +277,11 @@ static void tsens_therm_fwk_notify(struct work_struct *work)
 			}
 			TSENS_DBG(tmdev, "Calling trip_temp for sensor %d\n",
 					i);
+<<<<<<< HEAD
 			of_thermal_handle_trip_temp(tmdev->sensor[i].tzd, temp);
+=======
+			of_thermal_handle_trip(tmdev->sensor[i].tzd);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 	}
 	if (tmdev->min_temp_sensor_id != MIN_TEMP_DEF_OFFSET) {
@@ -284,7 +292,11 @@ static void tsens_therm_fwk_notify(struct work_struct *work)
 			return;
 		}
 		TSENS_DBG(tmdev, "Calling trip_temp for sensor %d\n", i);
+<<<<<<< HEAD
 		of_thermal_handle_trip_temp(tmdev->min_temp.tzd, temp);
+=======
+		of_thermal_handle_trip(tmdev->min_temp.tzd);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 }
 

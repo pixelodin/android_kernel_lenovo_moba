@@ -140,7 +140,11 @@
 &external_mdio {
 	ext_rgmii_phy: ethernet-phy@1 {
 		compatible = "ethernet-phy-ieee802.3-c22";
+<<<<<<< HEAD
 		reg = <0>;
+=======
+		reg = <1>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	};
 };
 

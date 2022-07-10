@@ -198,6 +198,10 @@ static void *map_seq_next(struct seq_file *m, void *v, loff_t *pos)
 	void *key = map_iter(m)->key;
 	void *prev_key;
 
+<<<<<<< HEAD
+=======
+	(*pos)++;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (map_iter(m)->done)
 		return NULL;
 
@@ -210,8 +214,11 @@ static void *map_seq_next(struct seq_file *m, void *v, loff_t *pos)
 		map_iter(m)->done = true;
 		return NULL;
 	}
+<<<<<<< HEAD
 
 	++(*pos);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return key;
 }
 

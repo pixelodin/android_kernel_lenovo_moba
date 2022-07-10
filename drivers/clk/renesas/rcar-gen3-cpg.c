@@ -361,7 +361,11 @@ static struct clk * __init cpg_sd_clk_register(const struct cpg_core_clk *core,
 	struct sd_clock *clock;
 	struct clk *clk;
 	unsigned int i;
+<<<<<<< HEAD
 	u32 sd_fc;
+=======
+	u32 val;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	clock = kzalloc(sizeof(*clock), GFP_KERNEL);
 	if (!clock)
@@ -378,6 +382,7 @@ static struct clk * __init cpg_sd_clk_register(const struct cpg_core_clk *core,
 	clock->div_table = cpg_sd_div_table;
 	clock->div_num = ARRAY_SIZE(cpg_sd_div_table);
 
+<<<<<<< HEAD
 	sd_fc = readl(clock->csn.reg) & CPG_SD_FC_MASK;
 	for (i = 0; i < clock->div_num; i++)
 		if (sd_fc == (clock->div_table[i].val & CPG_SD_FC_MASK))
@@ -389,6 +394,11 @@ static struct clk * __init cpg_sd_clk_register(const struct cpg_core_clk *core,
 	}
 
 	clock->cur_div_idx = i;
+=======
+	val = readl(clock->csn.reg) & ~CPG_SD_FC_MASK;
+	val |= CPG_SD_STP_MASK | (clock->div_table[0].val & CPG_SD_FC_MASK);
+	writel(val, clock->csn.reg);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	clock->div_max = clock->div_table[0].div;
 	clock->div_min = clock->div_max;

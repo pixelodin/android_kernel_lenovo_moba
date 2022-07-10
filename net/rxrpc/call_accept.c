@@ -88,7 +88,11 @@ static int rxrpc_service_prealloc_one(struct rxrpc_sock *rx,
 		smp_store_release(&b->conn_backlog_head,
 				  (head + 1) & (size - 1));
 
+<<<<<<< HEAD
 		trace_rxrpc_conn(conn, rxrpc_conn_new_service,
+=======
+		trace_rxrpc_conn(conn->debug_id, rxrpc_conn_new_service,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				 atomic_read(&conn->usage), here);
 	}
 

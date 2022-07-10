@@ -28,9 +28,15 @@
 #include "unipro.h"
 #include "ufs-qcom.h"
 #include "ufshci.h"
+<<<<<<< HEAD
 #include "ufs-qcom-ice.h"
 #include "ufs-qcom-debugfs.h"
 #include "ufs_quirks.h"
+=======
+#include "ufs-qcom-debugfs.h"
+#include "ufs_quirks.h"
+#include "ufshcd-crypto-qti.h"
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define MAX_PROP_SIZE		   32
 #define VDDP_REF_CLK_MIN_UV        1200000
@@ -408,6 +414,7 @@ static int ufs_qcom_hce_enable_notify(struct ufs_hba *hba,
 		 * is initialized.
 		 */
 		err = ufs_qcom_enable_lane_clks(host);
+<<<<<<< HEAD
 		if (!err && host->ice.pdev) {
 			err = ufs_qcom_ice_init(host);
 			if (err) {
@@ -417,6 +424,8 @@ static int ufs_qcom_hce_enable_notify(struct ufs_hba *hba,
 			}
 		}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 	case POST_CHANGE:
 		/* check if UFS PHY moved from DISABLED to HIBERN8 */
@@ -847,11 +856,18 @@ static int ufs_qcom_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op)
 		if (host->vddp_ref_clk && ufs_qcom_is_link_off(hba))
 			ret = ufs_qcom_disable_vreg(hba->dev,
 					host->vddp_ref_clk);
+<<<<<<< HEAD
+=======
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (host->vccq_parent && !hba->auto_bkops_enabled)
 			ufs_qcom_config_vreg(hba->dev,
 					host->vccq_parent, false);
 
+<<<<<<< HEAD
 		ufs_qcom_ice_suspend(host);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (ufs_qcom_is_link_off(hba)) {
 			/* Assert PHY soft reset */
 			ufs_qcom_assert_reset(hba);
@@ -891,6 +907,7 @@ static int ufs_qcom_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
 	if (err)
 		goto out;
 
+<<<<<<< HEAD
 	err = ufs_qcom_ice_resume(host);
 	if (err) {
 		dev_err(hba->dev, "%s: ufs_qcom_ice_resume failed, err = %d\n",
@@ -898,6 +915,8 @@ static int ufs_qcom_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
 		goto out;
 	}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	hba->is_sys_suspended = false;
 
 out:
@@ -937,6 +956,7 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_SCSI_UFS_QCOM_ICE
 static int ufs_qcom_crypto_req_setup(struct ufs_hba *hba,
 	struct ufshcd_lrb *lrbp, u8 *cc_index, bool *enable, u64 *dun)
@@ -1035,6 +1055,8 @@ static int ufs_qcom_crypto_engine_get_status(struct ufs_hba *hba, u32 *status)
 #define ufs_qcom_crypto_engine_get_status	NULL
 #endif /* CONFIG_SCSI_UFS_QCOM_ICE */
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct ufs_qcom_dev_params {
 	u32 pwm_rx_gear;	/* pwm rx gear to work in */
 	u32 pwm_tx_gear;	/* pwm tx gear to work in */
@@ -1574,6 +1596,15 @@ static void ufs_qcom_advertise_quirks(struct ufs_hba *hba)
 
 	if (host->disable_lpm)
 		hba->quirks |= UFSHCD_QUIRK_BROKEN_AUTO_HIBERN8;
+<<<<<<< HEAD
+=======
+	/*
+	 * Inline crypto is currently broken with ufs-qcom at least because the
+	 * device tree doesn't include the crypto registers.  There are likely
+	 * to be other issues that will need to be addressed too.
+	 */
+	//hba->quirks |= UFSHCD_QUIRK_BROKEN_CRYPTO;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void ufs_qcom_set_caps(struct ufs_hba *hba)
@@ -1642,6 +1673,7 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
 		if (ufshcd_is_hs_mode(&hba->pwr_info))
 			ufs_qcom_dev_ref_clk_ctrl(host, true);
 
+<<<<<<< HEAD
 		err = ufs_qcom_ice_resume(host);
 		if (err)
 			goto out;
@@ -1650,6 +1682,9 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
 		if (err)
 			goto out;
 
+=======
+	} else if (!on && (status == PRE_CHANGE)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/*
 		 * If auto hibern8 is enabled then the link will already
 		 * be in hibern8 state and the ref clock can be gated.
@@ -1748,6 +1783,12 @@ static void __ufs_qcom_pm_qos_req_end(struct ufs_qcom_host *host, int req_cpu)
 
 	group = &host->pm_qos.groups[ufs_qcom_cpu_to_group(host, req_cpu)];
 
+<<<<<<< HEAD
+=======
+	if (group->active_reqs <= 0)
+		pr_err_ratelimited("ufshcd-qcom: active req coount is negative: %d\n",
+					group->active_reqs);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (--group->active_reqs)
 		return;
 	group->state = PM_QOS_REQ_UNVOTE;
@@ -2227,6 +2268,7 @@ static int ufs_qcom_init(struct ufs_hba *hba)
 
 	/* Make a two way bind between the qcom host and the hba */
 	host->hba = hba;
+<<<<<<< HEAD
 	spin_lock_init(&host->ice_work_lock);
 
 	ufshcd_set_variant(hba, host);
@@ -2257,6 +2299,11 @@ static int ufs_qcom_init(struct ufs_hba *hba)
 		hba->host->inlinecrypt_support = 1;
 	}
 
+=======
+
+	ufshcd_set_variant(hba, host);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	host->generic_phy = devm_phy_get(dev, "ufsphy");
 
 	if (host->generic_phy == ERR_PTR(-EPROBE_DEFER)) {
@@ -2281,6 +2328,15 @@ static int ufs_qcom_init(struct ufs_hba *hba)
 	/* restore the secure configuration */
 	ufs_qcom_update_sec_cfg(hba, true);
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Set the vendor specific ops needed for ICE.
+	 * Default implementation if the ops are not set.
+	 */
+	ufshcd_crypto_qti_set_vops(hba);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	err = ufs_qcom_bus_register(host);
 	if (err)
 		goto out_variant_clear;
@@ -2832,7 +2888,10 @@ static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba, bool no_sleep)
 	usleep_range(1000, 1100);
 	ufs_qcom_phy_dbg_register_dump(phy);
 	usleep_range(1000, 1100);
+<<<<<<< HEAD
 	ufs_qcom_ice_print_regs(host);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static u32 ufs_qcom_get_user_cap_mode(struct ufs_hba *hba)
@@ -2869,6 +2928,7 @@ static struct ufs_hba_variant_ops ufs_hba_qcom_vops = {
 	.get_user_cap_mode	= ufs_qcom_get_user_cap_mode,
 };
 
+<<<<<<< HEAD
 static struct ufs_hba_crypto_variant_ops ufs_hba_crypto_variant_ops = {
 	.crypto_req_setup	= ufs_qcom_crypto_req_setup,
 	.crypto_engine_cfg_start	= ufs_qcom_crytpo_engine_cfg_start,
@@ -2877,6 +2937,8 @@ static struct ufs_hba_crypto_variant_ops ufs_hba_crypto_variant_ops = {
 	.crypto_engine_get_status = ufs_qcom_crypto_engine_get_status,
 };
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static struct ufs_hba_pm_qos_variant_ops ufs_hba_pm_qos_variant_ops = {
 	.req_start	= ufs_qcom_pm_qos_req_start,
 	.req_end	= ufs_qcom_pm_qos_req_end,
@@ -2885,7 +2947,10 @@ static struct ufs_hba_pm_qos_variant_ops ufs_hba_pm_qos_variant_ops = {
 static struct ufs_hba_variant ufs_hba_qcom_variant = {
 	.name		= "qcom",
 	.vops		= &ufs_hba_qcom_vops,
+<<<<<<< HEAD
 	.crypto_vops	= &ufs_hba_crypto_variant_ops,
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.pm_qos_vops	= &ufs_hba_pm_qos_variant_ops,
 };
 

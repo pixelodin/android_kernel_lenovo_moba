@@ -721,7 +721,10 @@ static int sti_hda_bind(struct device *dev, struct device *master, void *data)
 	return 0;
 
 err_sysfs:
+<<<<<<< HEAD
 	drm_bridge_remove(bridge);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return -EINVAL;
 }
 

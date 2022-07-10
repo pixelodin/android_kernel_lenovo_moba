@@ -2433,6 +2433,7 @@ static ssize_t charge_full_store(struct ab8500_fg *di, const char *buf,
 				 size_t count)
 {
 	unsigned long charge_full;
+<<<<<<< HEAD
 	ssize_t ret;
 
 	ret = kstrtoul(buf, 10, &charge_full);
@@ -2444,6 +2445,16 @@ static ssize_t charge_full_store(struct ab8500_fg *di, const char *buf,
 		ret = count;
 	}
 	return ret;
+=======
+	int ret;
+
+	ret = kstrtoul(buf, 10, &charge_full);
+	if (ret)
+		return ret;
+
+	di->bat_cap.max_mah = (int) charge_full;
+	return count;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static ssize_t charge_now_show(struct ab8500_fg *di, char *buf)
@@ -2455,6 +2466,7 @@ static ssize_t charge_now_store(struct ab8500_fg *di, const char *buf,
 				 size_t count)
 {
 	unsigned long charge_now;
+<<<<<<< HEAD
 	ssize_t ret;
 
 	ret = kstrtoul(buf, 10, &charge_now);
@@ -2469,6 +2481,18 @@ static ssize_t charge_now_store(struct ab8500_fg *di, const char *buf,
 		queue_delayed_work(di->fg_wq, &di->fg_periodic_work, 0);
 	}
 	return ret;
+=======
+	int ret;
+
+	ret = kstrtoul(buf, 10, &charge_now);
+	if (ret)
+		return ret;
+
+	di->bat_cap.user_mah = (int) charge_now;
+	di->flags.user_cap = true;
+	queue_delayed_work(di->fg_wq, &di->fg_periodic_work, 0);
+	return count;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static struct ab8500_fg_sysfs_entry charge_full_attr =

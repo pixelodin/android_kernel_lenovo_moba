@@ -76,7 +76,11 @@ flowtable and add one rule to your forward chain.
 
         table inet x {
 		flowtable f {
+<<<<<<< HEAD
 			hook ingress priority 0 devices = { eth0, eth1 };
+=======
+			hook ingress priority 0; devices = { eth0, eth1 };
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
                 chain y {
                         type filter hook forward priority 0; policy accept;

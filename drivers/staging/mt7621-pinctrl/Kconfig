@@ -2,3 +2,7 @@ config PINCTRL_RT2880
 	bool "RT2800 pinctrl driver for RALINK/Mediatek SOCs"
 	depends on RALINK
 	select PINMUX
+<<<<<<< HEAD
+=======
+	select GENERIC_PINCONF
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

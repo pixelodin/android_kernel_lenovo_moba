@@ -100,7 +100,11 @@
 
 						rootfs@800000 {
 							label = "rootfs";
+<<<<<<< HEAD
 							reg = <0x800000 0x1f800000>;
+=======
+							reg = <0x800000 0x0f800000>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 						};
 					};
 				};

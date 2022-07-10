@@ -761,6 +761,7 @@ static bool swiotlb_free_buffer(struct device *dev, size_t size,
 	return true;
 }
 
+<<<<<<< HEAD
 static void
 swiotlb_full(struct device *dev, size_t size, enum dma_data_direction dir,
 	     int do_panic)
@@ -789,6 +790,8 @@ swiotlb_full(struct device *dev, size_t size, enum dma_data_direction dir,
 		panic("DMA: Random memory could be DMA read\n");
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * Map a single buffer of the indicated size for DMA in streaming mode.  The
  * physical address to use is returned.
@@ -817,10 +820,15 @@ dma_addr_t swiotlb_map_page(struct device *dev, struct page *page,
 
 	/* Oh well, have to allocate and map a bounce buffer. */
 	map = map_single(dev, phys, size, dir, attrs);
+<<<<<<< HEAD
 	if (map == SWIOTLB_MAP_ERROR) {
 		swiotlb_full(dev, size, dir, 1);
 		return __phys_to_dma(dev, io_tlb_overflow_buffer);
 	}
+=======
+	if (map == SWIOTLB_MAP_ERROR)
+		return __phys_to_dma(dev, io_tlb_overflow_buffer);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	dev_addr = __phys_to_dma(dev, map);
 
@@ -954,7 +962,10 @@ swiotlb_map_sg_attrs(struct device *hwdev, struct scatterlist *sgl, int nelems,
 			if (map == SWIOTLB_MAP_ERROR) {
 				/* Don't panic here, we expect map_sg users
 				   to do proper error handling. */
+<<<<<<< HEAD
 				swiotlb_full(hwdev, sg->length, dir, 0);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				attrs |= DMA_ATTR_SKIP_CPU_SYNC;
 				swiotlb_unmap_sg_attrs(hwdev, sgl, i, dir,
 						       attrs);

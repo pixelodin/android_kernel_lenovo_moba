@@ -126,6 +126,10 @@ parameter is applicable::
 	NET	Appropriate network support is enabled.
 	NUMA	NUMA support is enabled.
 	NFS	Appropriate NFS support is enabled.
+<<<<<<< HEAD
+=======
+	OF	Devicetree is enabled.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	OSS	OSS sound support is enabled.
 	PV_OPS	A paravirtualized kernel is enabled.
 	PARIDE	The ParIDE (parallel port IDE) subsystem is enabled.

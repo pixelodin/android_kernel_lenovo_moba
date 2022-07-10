@@ -350,7 +350,14 @@ static enum bp_state reserve_additional_memory(void)
 	 * callers drop the mutex before trying again.
 	 */
 	mutex_unlock(&balloon_mutex);
+<<<<<<< HEAD
 	rc = add_memory_resource(nid, resource, memhp_auto_online);
+=======
+	/* add_memory_resource() requires the device_hotplug lock */
+	lock_device_hotplug();
+	rc = add_memory_resource(nid, resource, memhp_auto_online);
+	unlock_device_hotplug();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mutex_lock(&balloon_mutex);
 
 	if (rc) {
@@ -392,7 +399,12 @@ static struct notifier_block xen_memory_nb = {
 #else
 static enum bp_state reserve_additional_memory(void)
 {
+<<<<<<< HEAD
 	balloon_stats.target_pages = balloon_stats.current_pages;
+=======
+	balloon_stats.target_pages = balloon_stats.current_pages +
+				     balloon_stats.target_unpopulated;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return BP_ECANCELED;
 }
 #endif /* CONFIG_XEN_BALLOON_MEMORY_HOTPLUG */

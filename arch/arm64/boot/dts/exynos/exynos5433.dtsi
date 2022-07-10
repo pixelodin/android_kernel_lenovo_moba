@@ -18,8 +18,13 @@
 
 / {
 	compatible = "samsung,exynos5433";
+<<<<<<< HEAD
 	#address-cells = <1>;
 	#size-cells = <1>;
+=======
+	#address-cells = <2>;
+	#size-cells = <2>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	interrupt-parent = <&gic>;
 
@@ -235,7 +240,11 @@
 		compatible = "simple-bus";
 		#address-cells = <1>;
 		#size-cells = <1>;
+<<<<<<< HEAD
 		ranges;
+=======
+		ranges = <0x0 0x0 0x0 0x18000000>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		arm_a53_pmu {
 			compatible = "arm,cortex-a53-pmu", "arm,armv8-pmuv3";

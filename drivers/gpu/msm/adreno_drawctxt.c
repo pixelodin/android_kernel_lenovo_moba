@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2002,2007-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2002,2007-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include <linux/debugfs.h>
@@ -475,11 +479,19 @@ void adreno_drawctxt_detach(struct kgsl_context *context)
 	drawctxt = ADRENO_CONTEXT(context);
 	rb = drawctxt->rb;
 
+<<<<<<< HEAD
+=======
+	spin_lock(&drawctxt->lock);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	spin_lock(&adreno_dev->active_list_lock);
 	list_del_init(&drawctxt->active_node);
 	spin_unlock(&adreno_dev->active_list_lock);
 
+<<<<<<< HEAD
 	spin_lock(&drawctxt->lock);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	count = drawctxt_detach_drawobjs(drawctxt, list);
 	spin_unlock(&drawctxt->lock);
 

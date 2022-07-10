@@ -228,8 +228,13 @@ static void nbd_put(struct nbd_device *nbd)
 	if (refcount_dec_and_mutex_lock(&nbd->refs,
 					&nbd_index_mutex)) {
 		idr_remove(&nbd_index_idr, nbd->index);
+<<<<<<< HEAD
 		mutex_unlock(&nbd_index_mutex);
 		nbd_dev_remove(nbd);
+=======
+		nbd_dev_remove(nbd);
+		mutex_unlock(&nbd_index_mutex);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 }
 
@@ -349,17 +354,29 @@ static enum blk_eh_timer_return nbd_xmit_timeout(struct request *req,
 	struct nbd_device *nbd = cmd->nbd;
 	struct nbd_config *config;
 
+<<<<<<< HEAD
 	if (!refcount_inc_not_zero(&nbd->config_refs)) {
 		cmd->status = BLK_STS_TIMEOUT;
+=======
+	if (!mutex_trylock(&cmd->lock))
+		return BLK_EH_RESET_TIMER;
+
+	if (!refcount_inc_not_zero(&nbd->config_refs)) {
+		cmd->status = BLK_STS_TIMEOUT;
+		mutex_unlock(&cmd->lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto done;
 	}
 	config = nbd->config;
 
+<<<<<<< HEAD
 	if (!mutex_trylock(&cmd->lock)) {
 		nbd_config_put(nbd);
 		return BLK_EH_RESET_TIMER;
 	}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (config->num_connections > 1) {
 		dev_err_ratelimited(nbd_to_dev(nbd),
 				    "Connection timed out, retrying (%d/%d alive)\n",
@@ -664,6 +681,15 @@ static struct nbd_cmd *nbd_read_stat(struct nbd_device *nbd, int index)
 		ret = -ENOENT;
 		goto out;
 	}
+<<<<<<< HEAD
+=======
+	if (cmd->status != BLK_STS_OK) {
+		dev_err(disk_to_dev(nbd->disk), "Command already handled %p\n",
+			req);
+		ret = -ENOENT;
+		goto out;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (test_bit(NBD_CMD_REQUEUED, &cmd->flags)) {
 		dev_err(disk_to_dev(nbd->disk), "Raced with timeout on req %p\n",
 			req);
@@ -745,7 +771,14 @@ static void nbd_clear_req(struct request *req, void *data, bool reserved)
 {
 	struct nbd_cmd *cmd = blk_mq_rq_to_pdu(req);
 
+<<<<<<< HEAD
 	cmd->status = BLK_STS_IOERR;
+=======
+	mutex_lock(&cmd->lock);
+	cmd->status = BLK_STS_IOERR;
+	mutex_unlock(&cmd->lock);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	blk_mq_complete_request(req);
 }
 
@@ -924,6 +957,29 @@ static blk_status_t nbd_queue_rq(struct blk_mq_hw_ctx *hctx,
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+static struct socket *nbd_get_socket(struct nbd_device *nbd, unsigned long fd,
+				     int *err)
+{
+	struct socket *sock;
+
+	*err = 0;
+	sock = sockfd_lookup(fd, err);
+	if (!sock)
+		return NULL;
+
+	if (sock->ops->shutdown == sock_no_shutdown) {
+		dev_err(disk_to_dev(nbd->disk), "Unsupported socket: shutdown callout must be supported.\n");
+		*err = -EINVAL;
+		sockfd_put(sock);
+		return NULL;
+	}
+
+	return sock;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
 			  bool netlink)
 {
@@ -933,7 +989,11 @@ static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
 	struct nbd_sock *nsock;
 	int err;
 
+<<<<<<< HEAD
 	sock = sockfd_lookup(arg, &err);
+=======
+	sock = nbd_get_socket(nbd, arg, &err);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!sock)
 		return err;
 
@@ -956,14 +1016,23 @@ static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
 		sockfd_put(sock);
 		return -ENOMEM;
 	}
+<<<<<<< HEAD
+=======
+
+	config->socks = socks;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	nsock = kzalloc(sizeof(struct nbd_sock), GFP_KERNEL);
 	if (!nsock) {
 		sockfd_put(sock);
 		return -ENOMEM;
 	}
 
+<<<<<<< HEAD
 	config->socks = socks;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	nsock->fallback_index = -1;
 	nsock->dead = false;
 	mutex_init(&nsock->tx_lock);
@@ -985,7 +1054,11 @@ static int nbd_reconnect_socket(struct nbd_device *nbd, unsigned long arg)
 	int i;
 	int err;
 
+<<<<<<< HEAD
 	sock = sockfd_lookup(arg, &err);
+=======
+	sock = nbd_get_socket(nbd, arg, &err);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!sock)
 		return err;
 
@@ -1187,6 +1260,19 @@ static int nbd_start_device(struct nbd_device *nbd)
 		args = kzalloc(sizeof(*args), GFP_KERNEL);
 		if (!args) {
 			sock_shutdown(nbd);
+<<<<<<< HEAD
+=======
+			/*
+			 * If num_connections is m (2 < m),
+			 * and NO.1 ~ NO.n(1 < n < m) kzallocs are successful.
+			 * But NO.(n + 1) failed. We still have n recv threads.
+			 * So, add flush_workqueue here to prevent recv threads
+			 * dropping the last config_refs and trying to destroy
+			 * the workqueue from inside the workqueue.
+			 */
+			if (i)
+				flush_workqueue(nbd->recv_workq);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			return -ENOMEM;
 		}
 		sk_set_memalloc(config->socks[i]->sock->sk);
@@ -1218,10 +1304,17 @@ static int nbd_start_device_ioctl(struct nbd_device *nbd, struct block_device *b
 	mutex_unlock(&nbd->config_lock);
 	ret = wait_event_interruptible(config->recv_wq,
 					 atomic_read(&config->recv_threads) == 0);
+<<<<<<< HEAD
 	if (ret) {
 		sock_shutdown(nbd);
 		flush_workqueue(nbd->recv_workq);
 	}
+=======
+	if (ret)
+		sock_shutdown(nbd);
+	flush_workqueue(nbd->recv_workq);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mutex_lock(&nbd->config_lock);
 	nbd_bdev_reset(bdev);
 	/* user requested, ignore socket errors */

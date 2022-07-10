@@ -139,11 +139,19 @@
 		};
 
 		clcd: clcd@31040000 {
+<<<<<<< HEAD
 			compatible = "arm,pl110", "arm,primecell";
 			reg = <0x31040000 0x1000>;
 			interrupts = <14 IRQ_TYPE_LEVEL_HIGH>;
 			clocks = <&clk LPC32XX_CLK_LCD>;
 			clock-names = "apb_pclk";
+=======
+			compatible = "arm,pl111", "arm,primecell";
+			reg = <0x31040000 0x1000>;
+			interrupts = <14 IRQ_TYPE_LEVEL_HIGH>;
+			clocks = <&clk LPC32XX_CLK_LCD>, <&clk LPC32XX_CLK_LCD>;
+			clock-names = "clcdclk", "apb_pclk";
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			status = "disabled";
 		};
 
@@ -179,7 +187,11 @@
 			 * ssp0 and spi1 are shared pins;
 			 * enable one in your board dts, as needed.
 			 */
+<<<<<<< HEAD
 			ssp0: ssp@20084000 {
+=======
+			ssp0: spi@20084000 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				compatible = "arm,pl022", "arm,primecell";
 				reg = <0x20084000 0x1000>;
 				interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
@@ -199,7 +211,11 @@
 			 * ssp1 and spi2 are shared pins;
 			 * enable one in your board dts, as needed.
 			 */
+<<<<<<< HEAD
 			ssp1: ssp@2008c000 {
+=======
+			ssp1: spi@2008c000 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				compatible = "arm,pl022", "arm,primecell";
 				reg = <0x2008c000 0x1000>;
 				interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;
@@ -462,7 +478,13 @@
 			key: key@40050000 {
 				compatible = "nxp,lpc3220-key";
 				reg = <0x40050000 0x1000>;
+<<<<<<< HEAD
 				interrupts = <54 IRQ_TYPE_LEVEL_HIGH>;
+=======
+				clocks = <&clk LPC32XX_CLK_KEY>;
+				interrupt-parent = <&sic1>;
+				interrupts = <22 IRQ_TYPE_LEVEL_HIGH>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				status = "disabled";
 			};
 

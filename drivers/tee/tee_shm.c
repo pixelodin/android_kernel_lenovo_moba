@@ -263,6 +263,10 @@ struct tee_shm *tee_shm_register(struct tee_context *ctx, unsigned long addr,
 	shm->teedev = teedev;
 	shm->ctx = ctx;
 	shm->id = -1;
+<<<<<<< HEAD
+=======
+	addr = untagged_addr(addr);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	start = rounddown(addr, PAGE_SIZE);
 	shm->offset = addr - start;
 	shm->size = length;

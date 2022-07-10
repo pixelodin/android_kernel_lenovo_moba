@@ -34,3 +34,9 @@ GCOV_PROFILE	:= n
 KASAN_SANITIZE	:= n
 UBSAN_SANITIZE	:= n
 KCOV_INSTRUMENT	:= n
+<<<<<<< HEAD
+=======
+
+# remove the SCS flags from all objects in this directory
+KBUILD_CFLAGS := $(filter-out $(CC_FLAGS_SCS), $(KBUILD_CFLAGS))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

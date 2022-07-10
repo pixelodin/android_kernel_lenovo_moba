@@ -443,10 +443,21 @@ static int vfio_pci_get_irq_count(struct vfio_pci_device *vdev, int irq_type)
 {
 	if (irq_type == VFIO_PCI_INTX_IRQ_INDEX) {
 		u8 pin;
+<<<<<<< HEAD
 		pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin);
 		if (IS_ENABLED(CONFIG_VFIO_PCI_INTX) && !vdev->nointx && pin)
 			return 1;
 
+=======
+
+		if (!IS_ENABLED(CONFIG_VFIO_PCI_INTX) ||
+		    vdev->nointx || vdev->pdev->is_virtfn)
+			return 0;
+
+		pci_read_config_byte(vdev->pdev, PCI_INTERRUPT_PIN, &pin);
+
+		return pin ? 1 : 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	} else if (irq_type == VFIO_PCI_MSI_IRQ_INDEX) {
 		u8 pos;
 		u16 flags;
@@ -692,6 +703,10 @@ static long vfio_pci_ioctl(void *device_data,
 		{
 			void __iomem *io;
 			size_t size;
+<<<<<<< HEAD
+=======
+			u16 orig_cmd;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 			info.offset = VFIO_PCI_INDEX_TO_OFFSET(info.index);
 			info.flags = 0;
@@ -707,6 +722,7 @@ static long vfio_pci_ioctl(void *device_data,
 					break;
 			}
 
+<<<<<<< HEAD
 			/* Is it really there? */
 			io = pci_map_rom(pdev, &size);
 			if (!io || !size) {
@@ -716,6 +732,25 @@ static long vfio_pci_ioctl(void *device_data,
 			pci_unmap_rom(pdev, io);
 
 			info.flags = VFIO_REGION_INFO_FLAG_READ;
+=======
+			/*
+			 * Is it really there?  Enable memory decode for
+			 * implicit access in pci_map_rom().
+			 */
+			pci_read_config_word(pdev, PCI_COMMAND, &orig_cmd);
+			pci_write_config_word(pdev, PCI_COMMAND,
+					      orig_cmd | PCI_COMMAND_MEMORY);
+
+			io = pci_map_rom(pdev, &size);
+			if (io) {
+				info.flags = VFIO_REGION_INFO_FLAG_READ;
+				pci_unmap_rom(pdev, io);
+			} else {
+				info.size = 0;
+			}
+
+			pci_write_config_word(pdev, PCI_COMMAND, orig_cmd);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			break;
 		}
 		case VFIO_PCI_VGA_REGION_INDEX:

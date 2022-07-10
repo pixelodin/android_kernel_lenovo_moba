@@ -720,6 +720,7 @@ static struct thermal_zone_device_ops psy_tzd_ops = {
 	.get_temp = power_supply_read_temp,
 };
 
+<<<<<<< HEAD
 #ifdef CONFIG_PRODUCT_MOBA
 static int power_supply_read_display_rate(struct thermal_zone_device *tzd,
 		int *temp)
@@ -853,6 +854,10 @@ static int psy_register_thermal(struct power_supply *psy)
 	}
 	return ret;
 #else
+=======
+static int psy_register_thermal(struct power_supply *psy)
+{
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int i;
 
 	if (psy->desc->no_thermal)
@@ -867,11 +872,15 @@ static int psy_register_thermal(struct power_supply *psy)
 		}
 	}
 	return 0;
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void psy_unregister_thermal(struct power_supply *psy)
 {
+<<<<<<< HEAD
 #ifdef CONFIG_PRODUCT_MOBA
 	if (!IS_ERR_OR_NULL(psy->tzd))
 		thermal_zone_device_unregister(psy->tzd);
@@ -892,6 +901,11 @@ static void psy_unregister_thermal(struct power_supply *psy)
 		return;
 	thermal_zone_device_unregister(psy->tzd);
 #endif
+=======
+	if (IS_ERR_OR_NULL(psy->tzd))
+		return;
+	thermal_zone_device_unregister(psy->tzd);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /* thermal cooling device callbacks */
@@ -952,6 +966,7 @@ static const struct thermal_cooling_device_ops psy_tcd_ops = {
 	.set_cur_state = ps_set_cur_charge_cntl_limit,
 };
 
+<<<<<<< HEAD
 #ifdef CONFIG_PRODUCT_MOBA
 static int ps_get_max_display_rate_limit(struct thermal_cooling_device *tcd,
 					unsigned long *state)
@@ -1264,6 +1279,10 @@ static int psy_register_cooler(struct device *dev, struct power_supply *psy)
 	}
 	return ret;
 #else
+=======
+static int psy_register_cooler(struct device *dev, struct power_supply *psy)
+{
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int i;
 
 	/* Register for cooling device if psy can control charging */
@@ -1283,11 +1302,15 @@ static int psy_register_cooler(struct device *dev, struct power_supply *psy)
 		}
 	}
 	return 0;
+<<<<<<< HEAD
 #endif
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void psy_unregister_cooler(struct power_supply *psy)
 {
+<<<<<<< HEAD
 #ifdef CONFIG_PRODUCT_MOBA
 	if (!IS_ERR_OR_NULL(psy->tcd))
 		thermal_cooling_device_unregister(psy->tcd);
@@ -1308,6 +1331,11 @@ static void psy_unregister_cooler(struct power_supply *psy)
 		return;
 	thermal_cooling_device_unregister(psy->tcd);
 #endif
+=======
+	if (IS_ERR_OR_NULL(psy->tcd))
+		return;
+	thermal_cooling_device_unregister(psy->tcd);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 #else
 static int psy_register_thermal(struct power_supply *psy)
@@ -1389,14 +1417,24 @@ __power_supply_register(struct device *parent,
 	}
 
 	spin_lock_init(&psy->changed_lock);
+<<<<<<< HEAD
 	rc = device_init_wakeup(dev, ws);
 	if (rc)
 		goto wakeup_init_failed;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rc = device_add(dev);
 	if (rc)
 		goto device_add_failed;
 
+<<<<<<< HEAD
+=======
+	rc = device_init_wakeup(dev, ws);
+	if (rc)
+		goto wakeup_init_failed;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rc = psy_register_thermal(psy);
 	if (rc)
 		goto register_thermal_failed;
@@ -1427,8 +1465,13 @@ create_triggers_failed:
 	psy_unregister_thermal(psy);
 register_thermal_failed:
 	device_del(dev);
+<<<<<<< HEAD
 device_add_failed:
 wakeup_init_failed:
+=======
+wakeup_init_failed:
+device_add_failed:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 check_supplies_failed:
 dev_set_name_failed:
 	put_device(dev);

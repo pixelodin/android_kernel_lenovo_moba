@@ -31,9 +31,15 @@
 /* How many pages to dirty for each guest loop */
 #define  TEST_PAGES_PER_LOOP            1024
 /* How many host loops to run (one KVM_GET_DIRTY_LOG for each loop) */
+<<<<<<< HEAD
 #define  TEST_HOST_LOOP_N               32
 /* Interval for each host loop (ms) */
 #define  TEST_HOST_LOOP_INTERVAL        10
+=======
+#define  TEST_HOST_LOOP_N               32UL
+/* Interval for each host loop (ms) */
+#define  TEST_HOST_LOOP_INTERVAL        10UL
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /*
  * Guest variables.  We use these variables to share data between host

@@ -490,6 +490,10 @@ static struct urb *usb_wwan_setup_urb(struct usb_serial_port *port,
 				      void (*callback) (struct urb *))
 {
 	struct usb_serial *serial = port->serial;
+<<<<<<< HEAD
+=======
+	struct usb_wwan_intf_private *intfdata = usb_get_serial_data(serial);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct urb *urb;
 
 	urb = usb_alloc_urb(0, GFP_KERNEL);	/* No ISO */
@@ -500,6 +504,12 @@ static struct urb *usb_wwan_setup_urb(struct usb_serial_port *port,
 			  usb_sndbulkpipe(serial->dev, endpoint) | dir,
 			  buf, len, callback, ctx);
 
+<<<<<<< HEAD
+=======
+	if (intfdata->use_zlp && dir == USB_DIR_OUT)
+		urb->transfer_flags |= URB_ZERO_PACKET;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return urb;
 }
 

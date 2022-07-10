@@ -167,8 +167,15 @@ static int sm_disk_new_block(struct dm_space_map *sm, dm_block_t *b)
 	enum allocation_event ev;
 	struct sm_disk *smd = container_of(sm, struct sm_disk, sm);
 
+<<<<<<< HEAD
 	/* FIXME: we should loop round a couple of times */
 	r = sm_ll_find_free_block(&smd->old_ll, smd->begin, smd->old_ll.nr_blocks, b);
+=======
+	/*
+	 * Any block we allocate has to be free in both the old and current ll.
+	 */
+	r = sm_ll_find_common_free_block(&smd->old_ll, &smd->ll, smd->begin, smd->ll.nr_blocks, b);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (r)
 		return r;
 

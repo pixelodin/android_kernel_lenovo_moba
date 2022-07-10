@@ -18,10 +18,19 @@
 #include <asm/fixmap.h>
 
 #define __ARCH_USE_5LEVEL_HACK
+<<<<<<< HEAD
 #if defined(CONFIG_PAGE_SIZE_64KB) && !defined(CONFIG_MIPS_VA_BITS_48)
 #include <asm-generic/pgtable-nopmd.h>
 #elif !(defined(CONFIG_PAGE_SIZE_4KB) && defined(CONFIG_MIPS_VA_BITS_48))
 #include <asm-generic/pgtable-nopud.h>
+=======
+#if CONFIG_PGTABLE_LEVELS == 2
+#include <asm-generic/pgtable-nopmd.h>
+#elif CONFIG_PGTABLE_LEVELS == 3
+#include <asm-generic/pgtable-nopud.h>
+#else
+#include <asm-generic/5level-fixup.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif
 
 /*
@@ -216,6 +225,12 @@ static inline unsigned long pgd_page_vaddr(pgd_t pgd)
 	return pgd_val(pgd);
 }
 
+<<<<<<< HEAD
+=======
+#define pgd_phys(pgd)		virt_to_phys((void *)pgd_val(pgd))
+#define pgd_page(pgd)		(pfn_to_page(pgd_phys(pgd) >> PAGE_SHIFT))
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static inline pud_t *pud_offset(pgd_t *pgd, unsigned long address)
 {
 	return (pud_t *)pgd_page_vaddr(*pgd) + pud_index(address);

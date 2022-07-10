@@ -153,7 +153,11 @@
 
 &clock_audss {
 	assigned-clocks = <&clock_audss EXYNOS_MOUT_AUDSS>;
+<<<<<<< HEAD
 	assigned-clock-parents = <&clock CLK_FOUT_EPLL>;
+=======
+	assigned-clock-parents = <&clock CLK_MAU_EPLL>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 &cpu0 {
@@ -312,6 +316,10 @@
 				regulator-name = "vdd_1v35";
 				regulator-min-microvolt = <1350000>;
 				regulator-max-microvolt = <1350000>;
+<<<<<<< HEAD
+=======
+				regulator-always-on;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				regulator-boot-on;
 				regulator-state-mem {
 					regulator-on-in-suspend;
@@ -333,6 +341,10 @@
 				regulator-name = "vdd_2v";
 				regulator-min-microvolt = <2000000>;
 				regulator-max-microvolt = <2000000>;
+<<<<<<< HEAD
+=======
+				regulator-always-on;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				regulator-boot-on;
 				regulator-state-mem {
 					regulator-on-in-suspend;
@@ -343,6 +355,10 @@
 				regulator-name = "vdd_1v8";
 				regulator-min-microvolt = <1800000>;
 				regulator-max-microvolt = <1800000>;
+<<<<<<< HEAD
+=======
+				regulator-always-on;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				regulator-boot-on;
 				regulator-state-mem {
 					regulator-on-in-suspend;

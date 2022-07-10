@@ -188,7 +188,11 @@
 		compatible = "adi,adv7180cp";
 		reg = <0x20>;
 
+<<<<<<< HEAD
 		port {
+=======
+		ports {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			#address-cells = <1>;
 			#size-cells = <0>;
 

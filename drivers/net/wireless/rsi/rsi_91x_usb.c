@@ -16,6 +16,10 @@
  */
 
 #include <linux/module.h>
+<<<<<<< HEAD
+=======
+#include <linux/types.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <net/rsi_91x.h>
 #include "rsi_usb.h"
 #include "rsi_hal.h"
@@ -29,7 +33,11 @@ MODULE_PARM_DESC(dev_oper_mode,
 		 "9[Wi-Fi STA + BT LE], 13[Wi-Fi STA + BT classic + BT LE]\n"
 		 "6[AP + BT classic], 14[AP + BT classic + BT LE]");
 
+<<<<<<< HEAD
 static int rsi_rx_urb_submit(struct rsi_hw *adapter, u8 ep_num);
+=======
+static int rsi_rx_urb_submit(struct rsi_hw *adapter, u8 ep_num, gfp_t flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /**
  * rsi_usb_card_write() - This function writes to the USB Card.
@@ -117,7 +125,11 @@ static int rsi_find_bulk_in_and_out_endpoints(struct usb_interface *interface,
 	__le16 buffer_size;
 	int ii, bin_found = 0, bout_found = 0;
 
+<<<<<<< HEAD
 	iface_desc = &(interface->altsetting[0]);
+=======
+	iface_desc = interface->cur_altsetting;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	for (ii = 0; ii < iface_desc->desc.bNumEndpoints; ++ii) {
 		endpoint = &(iface_desc->endpoint[ii].desc);
@@ -283,20 +295,40 @@ static void rsi_rx_done_handler(struct urb *urb)
 	status = 0;
 
 out:
+<<<<<<< HEAD
 	if (rsi_rx_urb_submit(dev->priv, rx_cb->ep_num))
+=======
+	if (rsi_rx_urb_submit(dev->priv, rx_cb->ep_num, GFP_ATOMIC))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		rsi_dbg(ERR_ZONE, "%s: Failed in urb submission", __func__);
 
 	if (status)
 		dev_kfree_skb(rx_cb->rx_skb);
 }
 
+<<<<<<< HEAD
+=======
+static void rsi_rx_urb_kill(struct rsi_hw *adapter, u8 ep_num)
+{
+	struct rsi_91x_usbdev *dev = (struct rsi_91x_usbdev *)adapter->rsi_dev;
+	struct rx_usb_ctrl_block *rx_cb = &dev->rx_cb[ep_num - 1];
+	struct urb *urb = rx_cb->rx_urb;
+
+	usb_kill_urb(urb);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /**
  * rsi_rx_urb_submit() - This function submits the given URB to the USB stack.
  * @adapter: Pointer to the adapter structure.
  *
  * Return: 0 on success, a negative error code on failure.
  */
+<<<<<<< HEAD
 static int rsi_rx_urb_submit(struct rsi_hw *adapter, u8 ep_num)
+=======
+static int rsi_rx_urb_submit(struct rsi_hw *adapter, u8 ep_num, gfp_t mem_flags)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct rsi_91x_usbdev *dev = (struct rsi_91x_usbdev *)adapter->rsi_dev;
 	struct rx_usb_ctrl_block *rx_cb = &dev->rx_cb[ep_num - 1];
@@ -326,9 +358,17 @@ static int rsi_rx_urb_submit(struct rsi_hw *adapter, u8 ep_num)
 			  rsi_rx_done_handler,
 			  rx_cb);
 
+<<<<<<< HEAD
 	status = usb_submit_urb(urb, GFP_KERNEL);
 	if (status)
 		rsi_dbg(ERR_ZONE, "%s: Failed in urb submission\n", __func__);
+=======
+	status = usb_submit_urb(urb, mem_flags);
+	if (status) {
+		rsi_dbg(ERR_ZONE, "%s: Failed in urb submission\n", __func__);
+		dev_kfree_skb(skb);
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return status;
 }
@@ -781,17 +821,33 @@ static int rsi_probe(struct usb_interface *pfunction,
 		rsi_dbg(INIT_ZONE, "%s: Device Init Done\n", __func__);
 	}
 
+<<<<<<< HEAD
 	status = rsi_rx_urb_submit(adapter, WLAN_EP);
+=======
+	status = rsi_rx_urb_submit(adapter, WLAN_EP, GFP_KERNEL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (status)
 		goto err1;
 
 	if (adapter->priv->coex_mode > 1) {
+<<<<<<< HEAD
 		status = rsi_rx_urb_submit(adapter, BT_EP);
 		if (status)
 			goto err1;
 	}
 
 	return 0;
+=======
+		status = rsi_rx_urb_submit(adapter, BT_EP, GFP_KERNEL);
+		if (status)
+			goto err_kill_wlan_urb;
+	}
+
+	return 0;
+
+err_kill_wlan_urb:
+	rsi_rx_urb_kill(adapter, WLAN_EP);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 err1:
 	rsi_deinit_usb_interface(adapter);
 err:
@@ -815,6 +871,20 @@ static void rsi_disconnect(struct usb_interface *pfunction)
 		return;
 
 	rsi_mac80211_detach(adapter);
+<<<<<<< HEAD
+=======
+
+	if (IS_ENABLED(CONFIG_RSI_COEX) && adapter->priv->coex_mode > 1 &&
+	    adapter->priv->bt_adapter) {
+		rsi_bt_ops.detach(adapter->priv->bt_adapter);
+		adapter->priv->bt_adapter = NULL;
+	}
+
+	if (adapter->priv->coex_mode > 1)
+		rsi_rx_urb_kill(adapter, BT_EP);
+	rsi_rx_urb_kill(adapter, WLAN_EP);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rsi_reset_card(adapter);
 	rsi_deinit_usb_interface(adapter);
 	rsi_91x_deinit(adapter);

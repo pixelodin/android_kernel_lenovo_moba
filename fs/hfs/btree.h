@@ -82,6 +82,10 @@ struct hfs_find_data {
 extern struct hfs_btree *hfs_btree_open(struct super_block *, u32, btree_keycmp);
 extern void hfs_btree_close(struct hfs_btree *);
 extern void hfs_btree_write(struct hfs_btree *);
+<<<<<<< HEAD
+=======
+extern int hfs_bmap_reserve(struct hfs_btree *, int);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 extern struct hfs_bnode * hfs_bmap_alloc(struct hfs_btree *);
 extern void hfs_bmap_free(struct hfs_bnode *node);
 

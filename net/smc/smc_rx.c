@@ -212,8 +212,12 @@ int smc_rx_wait(struct smc_sock *smc, long *timeo,
 	rc = sk_wait_event(sk, timeo,
 			   sk->sk_err ||
 			   sk->sk_shutdown & RCV_SHUTDOWN ||
+<<<<<<< HEAD
 			   fcrit(conn) ||
 			   smc_cdc_rxed_any_close_or_senddone(conn),
+=======
+			   fcrit(conn),
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			   &wait);
 	remove_wait_queue(sk_sleep(sk), &wait);
 	sk_clear_bit(SOCKWQ_ASYNC_WAITDATA, sk);
@@ -263,6 +267,21 @@ static int smc_rx_recv_urg(struct smc_sock *smc, struct msghdr *msg, int len,
 	return -EAGAIN;
 }
 
+<<<<<<< HEAD
+=======
+static bool smc_rx_recvmsg_data_available(struct smc_sock *smc)
+{
+	struct smc_connection *conn = &smc->conn;
+
+	if (smc_rx_data_available(conn))
+		return true;
+	else if (conn->urg_state == SMC_URG_VALID)
+		/* we received a single urgent Byte - skip */
+		smc_rx_update_cons(smc, 0);
+	return false;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* smc_rx_recvmsg - receive data from RMBE
  * @msg:	copy data to receive buffer
  * @pipe:	copy data to pipe if set - indicates splice() call
@@ -304,6 +323,7 @@ int smc_rx_recvmsg(struct smc_sock *smc, struct msghdr *msg,
 		if (read_done >= target || (pipe && read_done))
 			break;
 
+<<<<<<< HEAD
 		if (atomic_read(&conn->bytes_to_rcv))
 			goto copy;
 		else if (conn->urg_state == SMC_URG_VALID)
@@ -314,6 +334,20 @@ int smc_rx_recvmsg(struct smc_sock *smc, struct msghdr *msg,
 		    smc_cdc_rxed_any_close_or_senddone(conn) ||
 		    conn->local_tx_ctrl.conn_state_flags.peer_conn_abort)
 			break;
+=======
+		if (smc_rx_recvmsg_data_available(smc))
+			goto copy;
+
+		if (sk->sk_shutdown & RCV_SHUTDOWN ||
+		    conn->local_tx_ctrl.conn_state_flags.peer_conn_abort) {
+			/* smc_cdc_msg_recv_action() could have run after
+			 * above smc_rx_recvmsg_data_available()
+			 */
+			if (smc_rx_recvmsg_data_available(smc))
+				goto copy;
+			break;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		if (read_done) {
 			if (sk->sk_err ||

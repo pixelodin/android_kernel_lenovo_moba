@@ -1292,6 +1292,10 @@ static int gsc_remove(struct platform_device *pdev)
 {
 	struct device *dev = &pdev->dev;
 
+<<<<<<< HEAD
+=======
+	component_del(dev, &gsc_component_ops);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pm_runtime_dont_use_autosuspend(dev);
 	pm_runtime_disable(dev);
 

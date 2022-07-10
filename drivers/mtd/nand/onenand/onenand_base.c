@@ -1251,6 +1251,7 @@ static int onenand_read_ops_nolock(struct mtd_info *mtd, loff_t from,
 
 	stats = mtd->ecc_stats;
 
+<<<<<<< HEAD
  	/* Read-while-load method */
 
  	/* Do first load to bufferRAM */
@@ -1263,12 +1264,27 @@ static int onenand_read_ops_nolock(struct mtd_info *mtd, loff_t from,
 				ret = 0;
  		}
  	}
+=======
+	/* Read-while-load method */
+
+	/* Do first load to bufferRAM */
+	if (read < len) {
+		if (!onenand_check_bufferram(mtd, from)) {
+			this->command(mtd, ONENAND_CMD_READ, from, writesize);
+			ret = this->wait(mtd, FL_READING);
+			onenand_update_bufferram(mtd, from, !ret);
+			if (mtd_is_eccerr(ret))
+				ret = 0;
+		}
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	thislen = min_t(int, writesize, len - read);
 	column = from & (writesize - 1);
 	if (column + thislen > writesize)
 		thislen = writesize - column;
 
+<<<<<<< HEAD
  	while (!ret) {
  		/* If there is more to load then start next load */
  		from += thislen;
@@ -1289,6 +1305,28 @@ static int onenand_read_ops_nolock(struct mtd_info *mtd, loff_t from,
  		}
  		/* While load is going, read from last bufferRAM */
  		this->read_bufferram(mtd, ONENAND_DATARAM, buf, column, thislen);
+=======
+	while (!ret) {
+		/* If there is more to load then start next load */
+		from += thislen;
+		if (read + thislen < len) {
+			this->command(mtd, ONENAND_CMD_READ, from, writesize);
+			/*
+			 * Chip boundary handling in DDP
+			 * Now we issued chip 1 read and pointed chip 1
+			 * bufferram so we have to point chip 0 bufferram.
+			 */
+			if (ONENAND_IS_DDP(this) &&
+			    unlikely(from == (this->chipsize >> 1))) {
+				this->write_word(ONENAND_DDP_CHIP0, this->base + ONENAND_REG_START_ADDRESS2);
+				boundary = 1;
+			} else
+				boundary = 0;
+			ONENAND_SET_PREV_BUFFERRAM(this);
+		}
+		/* While load is going, read from last bufferRAM */
+		this->read_bufferram(mtd, ONENAND_DATARAM, buf, column, thislen);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		/* Read oob area if needed */
 		if (oobbuf) {
@@ -1304,6 +1342,7 @@ static int onenand_read_ops_nolock(struct mtd_info *mtd, loff_t from,
 			oobcolumn = 0;
 		}
 
+<<<<<<< HEAD
  		/* See if we are done */
  		read += thislen;
  		if (read == len)
@@ -1322,6 +1361,26 @@ static int onenand_read_ops_nolock(struct mtd_info *mtd, loff_t from,
 		if (mtd_is_eccerr(ret))
 			ret = 0;
  	}
+=======
+		/* See if we are done */
+		read += thislen;
+		if (read == len)
+			break;
+		/* Set up for next read from bufferRAM */
+		if (unlikely(boundary))
+			this->write_word(ONENAND_DDP_CHIP1, this->base + ONENAND_REG_START_ADDRESS2);
+		ONENAND_SET_NEXT_BUFFERRAM(this);
+		buf += thislen;
+		thislen = min_t(int, writesize, len - read);
+		column = 0;
+		cond_resched();
+		/* Now wait for load */
+		ret = this->wait(mtd, FL_READING);
+		onenand_update_bufferram(mtd, from, !ret);
+		if (mtd_is_eccerr(ret))
+			ret = 0;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/*
 	 * Return success, if no ECC failures, else -EBADMSG

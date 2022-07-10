@@ -29,6 +29,11 @@
 struct memlat_node {
 	unsigned int ratio_ceil;
 	unsigned int stall_floor;
+<<<<<<< HEAD
+=======
+	unsigned int wb_pct_thres;
+	unsigned int wb_filter_ratio;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	bool mon_started;
 	bool already_zero;
 	struct list_head list;
@@ -292,11 +297,22 @@ static int devfreq_memlat_get_freq(struct devfreq *df,
 					hw->core_stats[i].inst_count,
 					hw->core_stats[i].mem_count,
 					hw->core_stats[i].freq,
+<<<<<<< HEAD
 					hw->core_stats[i].stall_pct, ratio);
 
 		if (ratio <= node->ratio_ceil
 		    && hw->core_stats[i].stall_pct >= node->stall_floor
 		    && hw->core_stats[i].freq > max_freq) {
+=======
+					hw->core_stats[i].stall_pct,
+					hw->core_stats[i].wb_pct, ratio);
+
+		if (((ratio <= node->ratio_ceil
+		      && hw->core_stats[i].stall_pct >= node->stall_floor) ||
+		      (hw->core_stats[i].wb_pct >= node->wb_pct_thres
+		      && ratio <= node->wb_filter_ratio))
+		      && (hw->core_stats[i].freq > max_freq)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			lat_dev = i;
 			max_freq = hw->core_stats[i].freq;
 		}
@@ -322,10 +338,20 @@ static int devfreq_memlat_get_freq(struct devfreq *df,
 
 gov_attr(ratio_ceil, 1U, 20000U);
 gov_attr(stall_floor, 0U, 100U);
+<<<<<<< HEAD
+=======
+gov_attr(wb_pct_thres, 0U, 100U);
+gov_attr(wb_filter_ratio, 0U, 50000U);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 static struct attribute *memlat_dev_attr[] = {
 	&dev_attr_ratio_ceil.attr,
 	&dev_attr_stall_floor.attr,
+<<<<<<< HEAD
+=======
+	&dev_attr_wb_pct_thres.attr,
+	&dev_attr_wb_filter_ratio.attr,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	&dev_attr_freq_map.attr,
 	NULL,
 };
@@ -488,6 +514,11 @@ static struct memlat_node *register_common(struct device *dev,
 		return ERR_PTR(-ENOMEM);
 
 	node->ratio_ceil = 10;
+<<<<<<< HEAD
+=======
+	node->wb_pct_thres = 100;
+	node->wb_filter_ratio = 25000;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	node->hw = hw;
 
 	if (hw->get_child_of_node) {

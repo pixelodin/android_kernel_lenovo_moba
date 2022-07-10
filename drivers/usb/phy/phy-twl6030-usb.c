@@ -400,7 +400,11 @@ static int twl6030_usb_remove(struct platform_device *pdev)
 {
 	struct twl6030_usb *twl = platform_get_drvdata(pdev);
 
+<<<<<<< HEAD
 	cancel_delayed_work(&twl->get_status_work);
+=======
+	cancel_delayed_work_sync(&twl->get_status_work);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	twl6030_interrupt_mask(TWL6030_USBOTG_INT_MASK,
 		REG_INT_MSK_LINE_C);
 	twl6030_interrupt_mask(TWL6030_USBOTG_INT_MASK,

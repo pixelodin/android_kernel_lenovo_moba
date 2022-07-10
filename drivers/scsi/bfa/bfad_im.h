@@ -143,7 +143,11 @@ struct bfad_im_s {
 static inline void bfad_im_post_vendor_event(struct bfa_aen_entry_s *entry,
 					     struct bfad_s *drv, int cnt,
 					     enum bfa_aen_category cat,
+<<<<<<< HEAD
 					     enum bfa_ioc_aen_event evt)
+=======
+					     int evt)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct timespec64 ts;
 

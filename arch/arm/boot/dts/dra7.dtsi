@@ -324,6 +324,10 @@
 				device_type = "pci";
 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
 					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
+<<<<<<< HEAD
+=======
+				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				bus-range = <0x00 0xff>;
 				#interrupt-cells = <1>;
 				num-lanes = <1>;
@@ -336,6 +340,10 @@
 						<0 0 0 2 &pcie1_intc 2>,
 						<0 0 0 3 &pcie1_intc 3>,
 						<0 0 0 4 &pcie1_intc 4>;
+<<<<<<< HEAD
+=======
+				ti,syscon-unaligned-access = <&scm_conf1 0x14 1>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				status = "disabled";
 				pcie1_intc: interrupt-controller {
 					interrupt-controller;
@@ -375,6 +383,10 @@
 				device_type = "pci";
 				ranges = <0x81000000 0 0          0x03000 0 0x00010000
 					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
+<<<<<<< HEAD
+=======
+				dma-ranges = <0x02000000 0x0 0x00000000 0x00000000 0x1 0x00000000>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				bus-range = <0x00 0xff>;
 				#interrupt-cells = <1>;
 				num-lanes = <1>;
@@ -387,6 +399,10 @@
 						<0 0 0 2 &pcie2_intc 2>,
 						<0 0 0 3 &pcie2_intc 3>,
 						<0 0 0 4 &pcie2_intc 4>;
+<<<<<<< HEAD
+=======
+				ti,syscon-unaligned-access = <&scm_conf1 0x14 2>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				pcie2_intc: interrupt-controller {
 					interrupt-controller;
 					#address-cells = <0>;
@@ -1369,7 +1385,11 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		qspi: qspi@4b300000 {
+=======
+		qspi: spi@4b300000 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			compatible = "ti,dra7xxx-qspi";
 			reg = <0x4b300000 0x100>,
 			      <0x5c000000 0x4000000>;

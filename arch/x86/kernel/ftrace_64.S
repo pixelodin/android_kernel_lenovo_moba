@@ -9,6 +9,10 @@
 #include <asm/export.h>
 #include <asm/nospec-branch.h>
 #include <asm/unwind_hints.h>
+<<<<<<< HEAD
+=======
+#include <asm/frame.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	.code64
 	.section .entry.text, "ax"
@@ -222,6 +226,11 @@ GLOBAL(ftrace_regs_caller_op_ptr)
 	leaq MCOUNT_REG_SIZE+8*2(%rsp), %rcx
 	movq %rcx, RSP(%rsp)
 
+<<<<<<< HEAD
+=======
+	ENCODE_FRAME_POINTER
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* regs go into 4th parameter */
 	leaq (%rsp), %rcx
 

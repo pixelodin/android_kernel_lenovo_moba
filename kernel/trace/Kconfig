@@ -134,7 +134,10 @@ config PREEMPTIRQ_TRACEPOINTS
 
 config TRACING
 	bool
+<<<<<<< HEAD
 	select DEBUG_FS
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	select RING_BUFFER
 	select STACKTRACE if STACKTRACE_SUPPORT
 	select TRACEPOINTS

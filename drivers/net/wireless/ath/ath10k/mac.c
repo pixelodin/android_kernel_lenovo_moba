@@ -1,7 +1,11 @@
 /*
  * Copyright (c) 2005-2011 Atheros Communications Inc.
  * Copyright (c) 2011-2017 Qualcomm Atheros, Inc.
+<<<<<<< HEAD
  * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -18,6 +22,10 @@
 
 #include "mac.h"
 
+<<<<<<< HEAD
+=======
+#include <net/cfg80211.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <net/mac80211.h>
 #include <linux/etherdevice.h>
 #include <linux/acpi.h>
@@ -967,7 +975,11 @@ static inline int ath10k_vdev_setup_sync(struct ath10k *ar)
 	if (time_left == 0)
 		return -ETIMEDOUT;
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return ar->last_wmi_vdev_start_status;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int ath10k_monitor_vdev_start(struct ath10k *ar, int vdev_id)
@@ -3650,7 +3662,11 @@ static int ath10k_mac_tx(struct ath10k *ar,
 			 struct ieee80211_vif *vif,
 			 enum ath10k_hw_txrx_mode txmode,
 			 enum ath10k_mac_tx_path txpath,
+<<<<<<< HEAD
 			 struct sk_buff *skb)
+=======
+			 struct sk_buff *skb, bool noque_offchan)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct ieee80211_hw *hw = ar->hw;
 	struct ieee80211_tx_info *info = IEEE80211_SKB_CB(skb);
@@ -3678,10 +3694,17 @@ static int ath10k_mac_tx(struct ath10k *ar,
 		}
 	}
 
+<<<<<<< HEAD
 	if (info->flags & IEEE80211_TX_CTL_TX_OFFCHAN) {
 		if (!ath10k_mac_tx_frm_has_freq(ar)) {
 			ath10k_dbg(ar, ATH10K_DBG_MAC, "queued offchannel skb %pK\n",
 				   skb);
+=======
+	if (!noque_offchan && info->flags & IEEE80211_TX_CTL_TX_OFFCHAN) {
+		if (!ath10k_mac_tx_frm_has_freq(ar)) {
+			ath10k_dbg(ar, ATH10K_DBG_MAC, "mac queued offchannel skb %pK len %d\n",
+				   skb, skb->len);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 			skb_queue_tail(&ar->offchan_tx_queue, skb);
 			ieee80211_queue_work(hw, &ar->offchan_tx_work);
@@ -3743,8 +3766,13 @@ void ath10k_offchan_tx_work(struct work_struct *work)
 
 		mutex_lock(&ar->conf_mutex);
 
+<<<<<<< HEAD
 		ath10k_dbg(ar, ATH10K_DBG_MAC, "mac offchannel skb %pK\n",
 			   skb);
+=======
+		ath10k_dbg(ar, ATH10K_DBG_MAC, "mac offchannel skb %pK len %d\n",
+			   skb, skb->len);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		hdr = (struct ieee80211_hdr *)skb->data;
 		peer_addr = ieee80211_get_DA(hdr);
@@ -3790,7 +3818,11 @@ void ath10k_offchan_tx_work(struct work_struct *work)
 		txmode = ath10k_mac_tx_h_get_txmode(ar, vif, sta, skb);
 		txpath = ath10k_mac_tx_h_get_txpath(ar, skb, txmode);
 
+<<<<<<< HEAD
 		ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb);
+=======
+		ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb, true);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (ret) {
 			ath10k_warn(ar, "failed to transmit offchannel frame: %d\n",
 				    ret);
@@ -3800,8 +3832,13 @@ void ath10k_offchan_tx_work(struct work_struct *work)
 		time_left =
 		wait_for_completion_timeout(&ar->offchan_tx_completed, 3 * HZ);
 		if (time_left == 0)
+<<<<<<< HEAD
 			ath10k_warn(ar, "timed out waiting for offchannel skb %pK\n",
 				    skb);
+=======
+			ath10k_warn(ar, "timed out waiting for offchannel skb %pK, len: %d\n",
+				    skb, skb->len);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		if (!peer && tmp_peer_created) {
 			ret = ath10k_peer_delete(ar, vdev_id, peer_addr);
@@ -3843,14 +3880,25 @@ void ath10k_mgmt_over_wmi_tx_work(struct work_struct *work)
 			     ar->running_fw->fw_file.fw_features)) {
 			paddr = dma_map_single(ar->dev, skb->data,
 					       skb->len, DMA_TO_DEVICE);
+<<<<<<< HEAD
 			if (!paddr)
 				continue;
+=======
+			if (dma_mapping_error(ar->dev, paddr)) {
+				ieee80211_free_txskb(ar->hw, skb);
+				continue;
+			}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			ret = ath10k_wmi_mgmt_tx_send(ar, skb, paddr);
 			if (ret) {
 				ath10k_warn(ar, "failed to transmit management frame by ref via WMI: %d\n",
 					    ret);
 				dma_unmap_single(ar->dev, paddr, skb->len,
+<<<<<<< HEAD
 						 DMA_FROM_DEVICE);
+=======
+						 DMA_TO_DEVICE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				ieee80211_free_txskb(ar->hw, skb);
 			}
 		} else {
@@ -3997,7 +4045,11 @@ int ath10k_mac_tx_push_txq(struct ieee80211_hw *hw,
 		spin_unlock_bh(&ar->htt.tx_lock);
 	}
 
+<<<<<<< HEAD
 	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb);
+=======
+	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb, false);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (unlikely(ret)) {
 		ath10k_warn(ar, "failed to push frame: %d\n", ret);
 
@@ -4279,7 +4331,11 @@ static void ath10k_mac_op_tx(struct ieee80211_hw *hw,
 		spin_unlock_bh(&ar->htt.tx_lock);
 	}
 
+<<<<<<< HEAD
 	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb);
+=======
+	ret = ath10k_mac_tx(ar, vif, txmode, txpath, skb, false);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (ret) {
 		ath10k_warn(ar, "failed to transmit frame: %d\n", ret);
 		if (is_htt) {
@@ -4685,6 +4741,17 @@ static int ath10k_start(struct ieee80211_hw *hw)
 		goto err_core_stop;
 	}
 
+<<<<<<< HEAD
+=======
+	if (test_bit(WMI_SERVICE_SPOOF_MAC_SUPPORT, ar->wmi.svc_map)) {
+		ret = ath10k_wmi_scan_prob_req_oui(ar, ar->mac_addr);
+		if (ret) {
+			ath10k_err(ar, "failed to set prob req oui: %i\n", ret);
+			goto err_core_stop;
+		}
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (test_bit(WMI_SERVICE_ADAPTIVE_OCS, ar->wmi.svc_map)) {
 		ret = ath10k_wmi_adaptive_qcs(ar, true);
 		if (ret) {
@@ -8363,6 +8430,10 @@ int ath10k_mac_register(struct ath10k *ar)
 		ar->hw->wiphy->bands[NL80211_BAND_5GHZ] = band;
 	}
 
+<<<<<<< HEAD
+=======
+	wiphy_read_of_freq_limits(ar->hw->wiphy);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ath10k_mac_setup_ht_vht_cap(ar);
 
 	ar->hw->wiphy->interface_modes =
@@ -8549,12 +8620,15 @@ int ath10k_mac_register(struct ath10k *ar)
 	}
 
 	if (test_bit(WMI_SERVICE_SPOOF_MAC_SUPPORT, ar->wmi.svc_map)) {
+<<<<<<< HEAD
 		ret = ath10k_wmi_scan_prob_req_oui(ar, ar->mac_addr);
 		if (ret) {
 			ath10k_err(ar, "failed to set prob req oui: %i\n", ret);
 			goto err_dfs_detector_exit;
 		}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ar->hw->wiphy->features |=
 			NL80211_FEATURE_SCAN_RANDOM_MAC_ADDR;
 	}

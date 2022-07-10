@@ -313,7 +313,11 @@ void efi_sync_low_kernel_mappings(void)
 static inline phys_addr_t
 virt_to_phys_or_null_size(void *va, unsigned long size)
 {
+<<<<<<< HEAD
 	bool bad_size;
+=======
+	phys_addr_t pa;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!va)
 		return 0;
@@ -321,6 +325,7 @@ virt_to_phys_or_null_size(void *va, unsigned long size)
 	if (virt_addr_valid(va))
 		return virt_to_phys(va);
 
+<<<<<<< HEAD
 	/*
 	 * A fully aligned variable on the stack is guaranteed not to
 	 * cross a page bounary. Try to catch strings on the stack by
@@ -331,6 +336,15 @@ virt_to_phys_or_null_size(void *va, unsigned long size)
 	WARN_ON(!IS_ALIGNED((unsigned long)va, size) || bad_size);
 
 	return slow_virt_to_phys(va);
+=======
+	pa = slow_virt_to_phys(va);
+
+	/* check if the object crosses a page boundary */
+	if (WARN_ON((pa ^ (pa + size - 1)) & PAGE_MASK))
+		return 0;
+
+	return pa;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 #define virt_to_phys_or_null(addr)				\
@@ -389,11 +403,20 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
 		return 0;
 
 	page = alloc_page(GFP_KERNEL|__GFP_DMA32);
+<<<<<<< HEAD
 	if (!page)
 		panic("Unable to allocate EFI runtime stack < 4GB\n");
 
 	efi_scratch.phys_stack = virt_to_phys(page_address(page));
 	efi_scratch.phys_stack += PAGE_SIZE; /* stack grows down */
+=======
+	if (!page) {
+		pr_err("Unable to allocate EFI runtime stack < 4GB\n");
+		return 1;
+	}
+
+	efi_scratch.phys_stack = page_to_phys(page + 1); /* stack grows down */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	npages = (_etext - _text) >> PAGE_SHIFT;
 	text = __pa(_text);
@@ -789,6 +812,11 @@ static efi_status_t
 efi_thunk_get_variable(efi_char16_t *name, efi_guid_t *vendor,
 		       u32 *attr, unsigned long *data_size, void *data)
 {
+<<<<<<< HEAD
+=======
+	u8 buf[24] __aligned(8);
+	efi_guid_t *vnd = PTR_ALIGN((efi_guid_t *)buf, sizeof(*vnd));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	efi_status_t status;
 	u32 phys_name, phys_vendor, phys_attr;
 	u32 phys_data_size, phys_data;
@@ -796,14 +824,29 @@ efi_thunk_get_variable(efi_char16_t *name, efi_guid_t *vendor,
 
 	spin_lock_irqsave(&efi_runtime_lock, flags);
 
+<<<<<<< HEAD
 	phys_data_size = virt_to_phys_or_null(data_size);
 	phys_vendor = virt_to_phys_or_null(vendor);
+=======
+	*vnd = *vendor;
+
+	phys_data_size = virt_to_phys_or_null(data_size);
+	phys_vendor = virt_to_phys_or_null(vnd);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	phys_name = virt_to_phys_or_null_size(name, efi_name_size(name));
 	phys_attr = virt_to_phys_or_null(attr);
 	phys_data = virt_to_phys_or_null_size(data, *data_size);
 
+<<<<<<< HEAD
 	status = efi_thunk(get_variable, phys_name, phys_vendor,
 			   phys_attr, phys_data_size, phys_data);
+=======
+	if (!phys_name || (data && !phys_data))
+		status = EFI_INVALID_PARAMETER;
+	else
+		status = efi_thunk(get_variable, phys_name, phys_vendor,
+				   phys_attr, phys_data_size, phys_data);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	spin_unlock_irqrestore(&efi_runtime_lock, flags);
 
@@ -814,12 +857,18 @@ static efi_status_t
 efi_thunk_set_variable(efi_char16_t *name, efi_guid_t *vendor,
 		       u32 attr, unsigned long data_size, void *data)
 {
+<<<<<<< HEAD
+=======
+	u8 buf[24] __aligned(8);
+	efi_guid_t *vnd = PTR_ALIGN((efi_guid_t *)buf, sizeof(*vnd));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u32 phys_name, phys_vendor, phys_data;
 	efi_status_t status;
 	unsigned long flags;
 
 	spin_lock_irqsave(&efi_runtime_lock, flags);
 
+<<<<<<< HEAD
 	phys_name = virt_to_phys_or_null_size(name, efi_name_size(name));
 	phys_vendor = virt_to_phys_or_null(vendor);
 	phys_data = virt_to_phys_or_null_size(data, data_size);
@@ -827,6 +876,19 @@ efi_thunk_set_variable(efi_char16_t *name, efi_guid_t *vendor,
 	/* If data_size is > sizeof(u32) we've got problems */
 	status = efi_thunk(set_variable, phys_name, phys_vendor,
 			   attr, data_size, phys_data);
+=======
+	*vnd = *vendor;
+
+	phys_name = virt_to_phys_or_null_size(name, efi_name_size(name));
+	phys_vendor = virt_to_phys_or_null(vnd);
+	phys_data = virt_to_phys_or_null_size(data, data_size);
+
+	if (!phys_name || !phys_data)
+		status = EFI_INVALID_PARAMETER;
+	else
+		status = efi_thunk(set_variable, phys_name, phys_vendor,
+				   attr, data_size, phys_data);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	spin_unlock_irqrestore(&efi_runtime_lock, flags);
 
@@ -838,6 +900,11 @@ efi_thunk_set_variable_nonblocking(efi_char16_t *name, efi_guid_t *vendor,
 				   u32 attr, unsigned long data_size,
 				   void *data)
 {
+<<<<<<< HEAD
+=======
+	u8 buf[24] __aligned(8);
+	efi_guid_t *vnd = PTR_ALIGN((efi_guid_t *)buf, sizeof(*vnd));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u32 phys_name, phys_vendor, phys_data;
 	efi_status_t status;
 	unsigned long flags;
@@ -845,6 +912,7 @@ efi_thunk_set_variable_nonblocking(efi_char16_t *name, efi_guid_t *vendor,
 	if (!spin_trylock_irqsave(&efi_runtime_lock, flags))
 		return EFI_NOT_READY;
 
+<<<<<<< HEAD
 	phys_name = virt_to_phys_or_null_size(name, efi_name_size(name));
 	phys_vendor = virt_to_phys_or_null(vendor);
 	phys_data = virt_to_phys_or_null_size(data, data_size);
@@ -852,6 +920,19 @@ efi_thunk_set_variable_nonblocking(efi_char16_t *name, efi_guid_t *vendor,
 	/* If data_size is > sizeof(u32) we've got problems */
 	status = efi_thunk(set_variable, phys_name, phys_vendor,
 			   attr, data_size, phys_data);
+=======
+	*vnd = *vendor;
+
+	phys_name = virt_to_phys_or_null_size(name, efi_name_size(name));
+	phys_vendor = virt_to_phys_or_null(vnd);
+	phys_data = virt_to_phys_or_null_size(data, data_size);
+
+	if (!phys_name || !phys_data)
+		status = EFI_INVALID_PARAMETER;
+	else
+		status = efi_thunk(set_variable, phys_name, phys_vendor,
+				   attr, data_size, phys_data);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	spin_unlock_irqrestore(&efi_runtime_lock, flags);
 
@@ -863,12 +944,18 @@ efi_thunk_get_next_variable(unsigned long *name_size,
 			    efi_char16_t *name,
 			    efi_guid_t *vendor)
 {
+<<<<<<< HEAD
+=======
+	u8 buf[24] __aligned(8);
+	efi_guid_t *vnd = PTR_ALIGN((efi_guid_t *)buf, sizeof(*vnd));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	efi_status_t status;
 	u32 phys_name_size, phys_name, phys_vendor;
 	unsigned long flags;
 
 	spin_lock_irqsave(&efi_runtime_lock, flags);
 
+<<<<<<< HEAD
 	phys_name_size = virt_to_phys_or_null(name_size);
 	phys_vendor = virt_to_phys_or_null(vendor);
 	phys_name = virt_to_phys_or_null_size(name, *name_size);
@@ -878,6 +965,23 @@ efi_thunk_get_next_variable(unsigned long *name_size,
 
 	spin_unlock_irqrestore(&efi_runtime_lock, flags);
 
+=======
+	*vnd = *vendor;
+
+	phys_name_size = virt_to_phys_or_null(name_size);
+	phys_vendor = virt_to_phys_or_null(vnd);
+	phys_name = virt_to_phys_or_null_size(name, *name_size);
+
+	if (!phys_name)
+		status = EFI_INVALID_PARAMETER;
+	else
+		status = efi_thunk(get_next_variable, phys_name_size,
+				   phys_name, phys_vendor);
+
+	spin_unlock_irqrestore(&efi_runtime_lock, flags);
+
+	*vendor = *vnd;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return status;
 }
 

@@ -2693,7 +2693,11 @@ ath10k_wmi_tlv_op_gen_mgmt_tx_send(struct ath10k *ar, struct sk_buff *msdu,
 	     ieee80211_is_deauth(hdr->frame_control) ||
 	     ieee80211_is_disassoc(hdr->frame_control)) &&
 	     ieee80211_has_protected(hdr->frame_control)) {
+<<<<<<< HEAD
 		len += IEEE80211_CCMP_MIC_LEN;
+=======
+		skb_put(msdu, IEEE80211_CCMP_MIC_LEN);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		buf_len += IEEE80211_CCMP_MIC_LEN;
 	}
 

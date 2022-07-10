@@ -1,5 +1,9 @@
 /*
+<<<<<<< HEAD
  * Copyright (c) 2011-2015, 2017, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2011-2015, 2017, 2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -201,7 +205,11 @@ static int qpnp_tm_get_temp(void *data, int *temp)
 		chip->temp = mili_celsius;
 	}
 
+<<<<<<< HEAD
 	*temp = chip->temp < 0 ? 0 : chip->temp;
+=======
+	*temp = chip->temp;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return 0;
 }

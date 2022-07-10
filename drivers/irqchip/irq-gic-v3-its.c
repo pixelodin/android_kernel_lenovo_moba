@@ -182,6 +182,25 @@ static DEFINE_IDA(its_vpeid_ida);
 #define gic_data_rdist_rd_base()	(gic_data_rdist()->rd_base)
 #define gic_data_rdist_vlpi_base()	(gic_data_rdist_rd_base() + SZ_128K)
 
+<<<<<<< HEAD
+=======
+static u16 get_its_list(struct its_vm *vm)
+{
+	struct its_node *its;
+	unsigned long its_list = 0;
+
+	list_for_each_entry(its, &its_nodes, entry) {
+		if (!its->is_v4)
+			continue;
+
+		if (vm->vlpi_count[its->list_nr])
+			__set_bit(its->list_nr, &its_list);
+	}
+
+	return (u16)its_list;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static struct its_collection *dev_event_to_col(struct its_device *its_dev,
 					       u32 event)
 {
@@ -192,7 +211,11 @@ static struct its_collection *dev_event_to_col(struct its_device *its_dev,
 
 static struct its_collection *valid_col(struct its_collection *col)
 {
+<<<<<<< HEAD
 	if (WARN_ON_ONCE(col->target_address & GENMASK_ULL(0, 15)))
+=======
+	if (WARN_ON_ONCE(col->target_address & GENMASK_ULL(15, 0)))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return NULL;
 
 	return col;
@@ -562,7 +585,11 @@ static struct its_collection *its_build_invall_cmd(struct its_node *its,
 						   struct its_cmd_desc *desc)
 {
 	its_encode_cmd(cmd, GITS_CMD_INVALL);
+<<<<<<< HEAD
 	its_encode_collection(cmd, desc->its_mapc_cmd.col->col_id);
+=======
+	its_encode_collection(cmd, desc->its_invall_cmd.col->col_id);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	its_fixup_cmd(cmd);
 
@@ -983,17 +1010,27 @@ static void its_send_vmapp(struct its_node *its,
 
 static void its_send_vmovp(struct its_vpe *vpe)
 {
+<<<<<<< HEAD
 	struct its_cmd_desc desc;
+=======
+	struct its_cmd_desc desc = {};
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct its_node *its;
 	unsigned long flags;
 	int col_id = vpe->col_idx;
 
 	desc.its_vmovp_cmd.vpe = vpe;
+<<<<<<< HEAD
 	desc.its_vmovp_cmd.its_list = (u16)its_list_map;
 
 	if (!its_list_map) {
 		its = list_first_entry(&its_nodes, struct its_node, entry);
 		desc.its_vmovp_cmd.seq_num = 0;
+=======
+
+	if (!its_list_map) {
+		its = list_first_entry(&its_nodes, struct its_node, entry);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		desc.its_vmovp_cmd.col = &its->collections[col_id];
 		its_send_single_vcommand(its, its_build_vmovp_cmd, &desc);
 		return;
@@ -1010,6 +1047,10 @@ static void its_send_vmovp(struct its_vpe *vpe)
 	raw_spin_lock_irqsave(&vmovp_lock, flags);
 
 	desc.its_vmovp_cmd.seq_num = vmovp_seq_num++;
+<<<<<<< HEAD
+=======
+	desc.its_vmovp_cmd.its_list = get_its_list(vpe->its_vm);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Emit VMOVPs */
 	list_for_each_entry(its, &its_nodes, entry) {

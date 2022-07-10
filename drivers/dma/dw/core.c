@@ -160,12 +160,20 @@ static void dwc_initialize_chan_idma32(struct dw_dma_chan *dwc)
 
 static void dwc_initialize_chan_dw(struct dw_dma_chan *dwc)
 {
+<<<<<<< HEAD
+=======
+	struct dw_dma *dw = to_dw_dma(dwc->chan.device);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u32 cfghi = DWC_CFGH_FIFO_MODE;
 	u32 cfglo = DWC_CFGL_CH_PRIOR(dwc->priority);
 	bool hs_polarity = dwc->dws.hs_polarity;
 
 	cfghi |= DWC_CFGH_DST_PER(dwc->dws.dst_id);
 	cfghi |= DWC_CFGH_SRC_PER(dwc->dws.src_id);
+<<<<<<< HEAD
+=======
+	cfghi |= DWC_CFGH_PROTCTL(dw->pdata->protctl);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Set polarity of handshake interface */
 	cfglo |= hs_polarity ? DWC_CFGL_HS_DST_POL | DWC_CFGL_HS_SRC_POL : 0;

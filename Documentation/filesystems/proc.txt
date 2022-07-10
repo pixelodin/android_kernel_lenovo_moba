@@ -428,6 +428,10 @@ SwapPss:               0 kB
 KernelPageSize:        4 kB
 MMUPageSize:           4 kB
 Locked:                0 kB
+<<<<<<< HEAD
+=======
+THPeligible:           0
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 VmFlags: rd ex mr mw me dw
 Name:           name from userspace
 
@@ -466,6 +470,11 @@ replaced by copy-on-write) part of the underlying shmem object out on swap.
 "SwapPss" shows proportional swap share of this mapping. Unlike "Swap", this
 does not take into account swapped out page of underlying shmem objects.
 "Locked" indicates whether the mapping is locked in memory or not.
+<<<<<<< HEAD
+=======
+"THPeligible" indicates whether the mapping is eligible for THP pages - 1 if
+true, 0 otherwise.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 "VmFlags" field deserves a separate description. This member represents the kernel
 flags associated with the particular virtual memory area in two letter encoded
@@ -886,6 +895,10 @@ Writeback:           0 kB
 AnonPages:      861800 kB
 Mapped:         280372 kB
 Shmem:             644 kB
+<<<<<<< HEAD
+=======
+KReclaimable:   168048 kB
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 Slab:           284364 kB
 SReclaimable:   159856 kB
 SUnreclaim:     124508 kB
@@ -953,6 +966,12 @@ AnonHugePages: Non-file backed huge pages mapped into userspace page tables
 ShmemHugePages: Memory used by shared memory (shmem) and tmpfs allocated
               with huge pages
 ShmemPmdMapped: Shared memory mapped into userspace with huge pages
+<<<<<<< HEAD
+=======
+KReclaimable: Kernel allocations that the kernel will attempt to reclaim
+              under memory pressure. Includes SReclaimable (below), and other
+              direct allocations with a shrinker.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
         Slab: in-kernel data structures cache
 SReclaimable: Part of Slab, that might be reclaimed, such as caches
   SUnreclaim: Part of Slab, that cannot be reclaimed on memory pressure

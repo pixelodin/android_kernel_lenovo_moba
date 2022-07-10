@@ -92,6 +92,7 @@
 							reg = <0x40000 0xc0000>;
 						};
 
+<<<<<<< HEAD
 						bootloaderenv@0x100000 {
 							label = "bootloader env";
 							reg = <0x100000 0x40000>;
@@ -99,6 +100,15 @@
 
 						bootloaderenvred@0x140000 {
 							label = "bootloader env redundant";
+=======
+						bootloaderenvred@0x100000 {
+							label = "bootloader env redundant";
+							reg = <0x100000 0x40000>;
+						};
+
+						bootloaderenv@0x140000 {
+							label = "bootloader env";
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 							reg = <0x140000 0x40000>;
 						};
 

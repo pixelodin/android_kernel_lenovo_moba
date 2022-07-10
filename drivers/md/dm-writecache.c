@@ -447,7 +447,17 @@ static void writecache_notify_io(unsigned long error, void *context)
 		complete(&endio->c);
 }
 
+<<<<<<< HEAD
 static void ssd_commit_flushed(struct dm_writecache *wc)
+=======
+static void writecache_wait_for_ios(struct dm_writecache *wc, int direction)
+{
+	wait_event(wc->bio_in_progress_wait[direction],
+		   !atomic_read(&wc->bio_in_progress[direction]));
+}
+
+static void ssd_commit_flushed(struct dm_writecache *wc, bool wait_for_ios)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct dm_io_region region;
 	struct dm_io_request req;
@@ -493,17 +503,31 @@ static void ssd_commit_flushed(struct dm_writecache *wc)
 	writecache_notify_io(0, &endio);
 	wait_for_completion_io(&endio.c);
 
+<<<<<<< HEAD
+=======
+	if (wait_for_ios)
+		writecache_wait_for_ios(wc, WRITE);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	writecache_disk_flush(wc, wc->ssd_dev);
 
 	memset(wc->dirty_bitmap, 0, wc->dirty_bitmap_size);
 }
 
+<<<<<<< HEAD
 static void writecache_commit_flushed(struct dm_writecache *wc)
+=======
+static void writecache_commit_flushed(struct dm_writecache *wc, bool wait_for_ios)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	if (WC_MODE_PMEM(wc))
 		wmb();
 	else
+<<<<<<< HEAD
 		ssd_commit_flushed(wc);
+=======
+		ssd_commit_flushed(wc, wait_for_ios);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void writecache_disk_flush(struct dm_writecache *wc, struct dm_dev *dev)
@@ -527,12 +551,15 @@ static void writecache_disk_flush(struct dm_writecache *wc, struct dm_dev *dev)
 		writecache_error(wc, r, "error flushing metadata: %d", r);
 }
 
+<<<<<<< HEAD
 static void writecache_wait_for_ios(struct dm_writecache *wc, int direction)
 {
 	wait_event(wc->bio_in_progress_wait[direction],
 		   !atomic_read(&wc->bio_in_progress[direction]));
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define WFE_RETURN_FOLLOWING	1
 #define WFE_LOWEST_SEQ		2
 
@@ -628,6 +655,15 @@ static void writecache_add_to_freelist(struct dm_writecache *wc, struct wc_entry
 	wc->freelist_size++;
 }
 
+<<<<<<< HEAD
+=======
+static inline void writecache_verify_watermark(struct dm_writecache *wc)
+{
+	if (unlikely(wc->freelist_size + wc->writeback_size <= wc->freelist_high_watermark))
+		queue_work(wc->writeback_wq, &wc->writeback_work);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static struct wc_entry *writecache_pop_from_freelist(struct dm_writecache *wc)
 {
 	struct wc_entry *e;
@@ -649,8 +685,13 @@ static struct wc_entry *writecache_pop_from_freelist(struct dm_writecache *wc)
 		list_del(&e->lru);
 	}
 	wc->freelist_size--;
+<<<<<<< HEAD
 	if (unlikely(wc->freelist_size + wc->writeback_size <= wc->freelist_high_watermark))
 		queue_work(wc->writeback_wq, &wc->writeback_work);
+=======
+
+	writecache_verify_watermark(wc);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return e;
 }
@@ -730,14 +771,22 @@ static void writecache_flush(struct dm_writecache *wc)
 		e = e2;
 		cond_resched();
 	}
+<<<<<<< HEAD
 	writecache_commit_flushed(wc);
 
 	writecache_wait_for_ios(wc, WRITE);
+=======
+	writecache_commit_flushed(wc, true);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	wc->seq_count++;
 	pmem_assign(sb(wc)->seq_count, cpu_to_le64(wc->seq_count));
 	writecache_flush_region(wc, &sb(wc)->seq_count, sizeof sb(wc)->seq_count);
+<<<<<<< HEAD
 	writecache_commit_flushed(wc);
+=======
+	writecache_commit_flushed(wc, false);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	wc->overwrote_committed = false;
 
@@ -761,7 +810,11 @@ static void writecache_flush(struct dm_writecache *wc)
 	}
 
 	if (need_flush_after_free)
+<<<<<<< HEAD
 		writecache_commit_flushed(wc);
+=======
+		writecache_commit_flushed(wc, false);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void writecache_flush_work(struct work_struct *work)
@@ -814,7 +867,11 @@ static void writecache_discard(struct dm_writecache *wc, sector_t start, sector_
 	}
 
 	if (discarded_something)
+<<<<<<< HEAD
 		writecache_commit_flushed(wc);
+=======
+		writecache_commit_flushed(wc, false);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static bool writecache_wait_for_writeback(struct dm_writecache *wc)
@@ -843,7 +900,11 @@ static void writecache_suspend(struct dm_target *ti)
 	}
 	wc_unlock(wc);
 
+<<<<<<< HEAD
 	flush_workqueue(wc->writeback_wq);
+=======
+	drain_workqueue(wc->writeback_wq);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	wc_lock(wc);
 	if (flush_on_suspend)
@@ -963,9 +1024,17 @@ erase_this:
 
 	if (need_flush) {
 		writecache_flush_all_metadata(wc);
+<<<<<<< HEAD
 		writecache_commit_flushed(wc);
 	}
 
+=======
+		writecache_commit_flushed(wc, false);
+	}
+
+	writecache_verify_watermark(wc);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	wc_unlock(wc);
 }
 
@@ -1223,7 +1292,12 @@ bio_copy:
 			}
 		} while (bio->bi_iter.bi_size);
 
+<<<<<<< HEAD
 		if (unlikely(wc->uncommitted_blocks >= wc->autocommit_blocks))
+=======
+		if (unlikely(bio->bi_opf & REQ_FUA ||
+			     wc->uncommitted_blocks >= wc->autocommit_blocks))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			writecache_flush(wc);
 		else
 			writecache_schedule_autocommit(wc);
@@ -1346,7 +1420,11 @@ static void __writecache_endio_pmem(struct dm_writecache *wc, struct list_head *
 			wc->writeback_size--;
 			n_walked++;
 			if (unlikely(n_walked >= ENDIO_LATENCY)) {
+<<<<<<< HEAD
 				writecache_commit_flushed(wc);
+=======
+				writecache_commit_flushed(wc, false);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				wc_unlock(wc);
 				wc_lock(wc);
 				n_walked = 0;
@@ -1427,7 +1505,11 @@ pop_from_list:
 			writecache_wait_for_ios(wc, READ);
 		}
 
+<<<<<<< HEAD
 		writecache_commit_flushed(wc);
+=======
+		writecache_commit_flushed(wc, false);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		wc_unlock(wc);
 	}
@@ -1758,10 +1840,17 @@ static int init_memory(struct dm_writecache *wc)
 		write_original_sector_seq_count(wc, &wc->entries[b], -1, -1);
 
 	writecache_flush_all_metadata(wc);
+<<<<<<< HEAD
 	writecache_commit_flushed(wc);
 	pmem_assign(sb(wc)->magic, cpu_to_le32(MEMORY_SUPERBLOCK_MAGIC));
 	writecache_flush_region(wc, &sb(wc)->magic, sizeof sb(wc)->magic);
 	writecache_commit_flushed(wc);
+=======
+	writecache_commit_flushed(wc, false);
+	pmem_assign(sb(wc)->magic, cpu_to_le32(MEMORY_SUPERBLOCK_MAGIC));
+	writecache_flush_region(wc, &sb(wc)->magic, sizeof sb(wc)->magic);
+	writecache_commit_flushed(wc, false);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return 0;
 }

@@ -3,6 +3,10 @@
  *
  * Copyright (C) 2012-2016 Synaptics Incorporated. All rights reserved.
  *
+<<<<<<< HEAD
+=======
+ * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * Copyright (C) 2012 Alexandra Chin <alexandra.chin@tw.synaptics.com>
  * Copyright (C) 2012 Scott Lin <scott.lin@tw.synaptics.com>
  *
@@ -42,10 +46,13 @@
 
 #define SYSFS_FOLDER_NAME "video"
 
+<<<<<<< HEAD
 /*
 #define RMI_DCS_SUSPEND_RESUME
 */
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static ssize_t video_sysfs_dcs_write_store(struct device *dev,
 		struct device_attribute *attr, const char *buf, size_t count);
 
@@ -112,10 +119,17 @@ static struct dcs_command resume_sequence[] = {
 #endif
 
 static struct device_attribute attrs[] = {
+<<<<<<< HEAD
 	__ATTR(dcs_write, (S_IWUSR | S_IWGRP),
 			synaptics_rmi4_show_error,
 			video_sysfs_dcs_write_store),
 	__ATTR(param, (S_IWUSR | S_IWGRP),
+=======
+	__ATTR(dcs_write, 0220,
+			synaptics_rmi4_show_error,
+			video_sysfs_dcs_write_store),
+	__ATTR(param, 0220,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			synaptics_rmi4_show_error,
 			video_sysfs_param_store),
 };
@@ -130,7 +144,11 @@ static ssize_t video_sysfs_dcs_write_store(struct device *dev,
 	int retval;
 	unsigned int input;
 
+<<<<<<< HEAD
 	if (sscanf(buf, "%x", &input) != 1)
+=======
+	if (kstrtouint(buf, 16, &input) != 1)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EINVAL;
 
 	retval = video_send_dcs_command((unsigned char)input);
@@ -145,7 +163,11 @@ static ssize_t video_sysfs_param_store(struct device *dev,
 {
 	unsigned int input;
 
+<<<<<<< HEAD
 	if (sscanf(buf, "%x", &input) != 1)
+=======
+	if (kstrtouint(buf, 16, &input) != 1)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EINVAL;
 
 	video->param = (unsigned char)input;
@@ -314,16 +336,22 @@ static void synaptics_rmi4_video_remove(struct synaptics_rmi4_data *rmi4_data)
 
 exit:
 	complete(&video_remove_complete);
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void synaptics_rmi4_video_reset(struct synaptics_rmi4_data *rmi4_data)
 {
 	if (!video)
 		synaptics_rmi4_video_init(rmi4_data);
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 #ifdef RMI_DCS_SUSPEND_RESUME
@@ -346,8 +374,11 @@ static void synaptics_rmi4_video_suspend(struct synaptics_rmi4_data *rmi4_data)
 			return;
 		msleep(suspend_sequence[ii].wait_time);
 	}
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void synaptics_rmi4_video_resume(struct synaptics_rmi4_data *rmi4_data)
@@ -369,8 +400,11 @@ static void synaptics_rmi4_video_resume(struct synaptics_rmi4_data *rmi4_data)
 			return;
 		msleep(resume_sequence[ii].wait_time);
 	}
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 #endif
 
@@ -404,8 +438,11 @@ static void __exit rmi4_video_module_exit(void)
 	synaptics_rmi4_new_function(&video_module, false);
 
 	wait_for_completion(&video_remove_complete);
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 module_init(rmi4_video_module_init);

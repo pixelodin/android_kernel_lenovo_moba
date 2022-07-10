@@ -104,6 +104,10 @@ enum {
 	NFS_LAYOUT_RETURN_REQUESTED,	/* Return this layout ASAP */
 	NFS_LAYOUT_INVALID_STID,	/* layout stateid id is invalid */
 	NFS_LAYOUT_FIRST_LAYOUTGET,	/* Serialize first layoutget */
+<<<<<<< HEAD
+=======
+	NFS_LAYOUT_INODE_FREEING,	/* The inode is being freed */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 enum layoutdriver_policy_flags {

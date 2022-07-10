@@ -462,10 +462,18 @@ static int print_insn(char *buffer, unsigned char *code, unsigned long addr)
 				ptr += sprintf(ptr, "%%c%i", value);
 			else if (operand->flags & OPERAND_VR)
 				ptr += sprintf(ptr, "%%v%i", value);
+<<<<<<< HEAD
 			else if (operand->flags & OPERAND_PCREL)
 				ptr += sprintf(ptr, "%lx", (signed int) value
 								      + addr);
 			else if (operand->flags & OPERAND_SIGNED)
+=======
+			else if (operand->flags & OPERAND_PCREL) {
+				void *pcrel = (void *)((int)value + addr);
+
+				ptr += sprintf(ptr, "%px", pcrel);
+			} else if (operand->flags & OPERAND_SIGNED)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				ptr += sprintf(ptr, "%i", value);
 			else
 				ptr += sprintf(ptr, "%u", value);
@@ -537,7 +545,11 @@ void show_code(struct pt_regs *regs)
 		else
 			*ptr++ = ' ';
 		addr = regs->psw.addr + start - 32;
+<<<<<<< HEAD
 		ptr += sprintf(ptr, "%016lx: ", addr);
+=======
+		ptr += sprintf(ptr, "%px: ", (void *)addr);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (start + opsize >= end)
 			break;
 		for (i = 0; i < opsize; i++)
@@ -565,7 +577,11 @@ void print_fn_code(unsigned char *code, unsigned long len)
 		opsize = insn_length(*code);
 		if (opsize > len)
 			break;
+<<<<<<< HEAD
 		ptr += sprintf(ptr, "%p: ", code);
+=======
+		ptr += sprintf(ptr, "%px: ", code);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		for (i = 0; i < opsize; i++)
 			ptr += sprintf(ptr, "%02x", code[i]);
 		*ptr++ = '\t';

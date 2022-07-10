@@ -84,7 +84,10 @@ static void berlin_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
 {
 	struct berlin_pwm_channel *channel = pwm_get_chip_data(pwm);
 
+<<<<<<< HEAD
 	pwm_set_chip_data(pwm, NULL);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	kfree(channel);
 }
 

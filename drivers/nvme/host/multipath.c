@@ -569,13 +569,21 @@ int nvme_mpath_init(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
 	}
 
 	INIT_WORK(&ctrl->ana_work, nvme_ana_work);
+<<<<<<< HEAD
+=======
+	kfree(ctrl->ana_log_buf);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ctrl->ana_log_buf = kmalloc(ctrl->ana_log_size, GFP_KERNEL);
 	if (!ctrl->ana_log_buf) {
 		error = -ENOMEM;
 		goto out;
 	}
 
+<<<<<<< HEAD
 	error = nvme_read_ana_log(ctrl, true);
+=======
+	error = nvme_read_ana_log(ctrl, false);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (error)
 		goto out_free_ana_log_buf;
 	return 0;

@@ -48,12 +48,15 @@ config LEDS_88PM860X
 	  This option enables support for on-chip LED drivers found on Marvell
 	  Semiconductor 88PM8606 PMIC.
 
+<<<<<<< HEAD
 config LEDS_AW9106
 	tristate "LED Support for AW9106"
 	depends on LEDS_CLASS
 	help
 	  This option enables support for the AW9106 REG LED drivers.
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 config LEDS_AAT1290
 	tristate "LED support for the AAT1290"
 	depends on LEDS_CLASS_FLASH
@@ -214,6 +217,24 @@ config LEDS_NET48XX
 	  This option enables support for the Soekris net4801 and net4826 error
 	  LED.
 
+<<<<<<< HEAD
+=======
+config LEDS_QTI_FLASH
+	tristate "Support for QTI Flash LEDs"
+	depends on LEDS_CLASS_FLASH
+	depends on MFD_SPMI_PMIC
+	select LEDS_TRIGGERS
+	help
+	  This driver supports flash LED peripheral that is present on
+	  some Qualcomm Technologies, Inc. PMICs (e.g. PM8350C).  It can
+	  configure the flash LED target current for several independent
+	  channels. It also supports various over current and over
+	  temperature mitigation features.
+
+	  To compile this driver as a module, choose M here: the
+	  module will be called leds-qti-flash.
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 config LEDS_FSG
 	tristate "LED Support for the Freecom FSG-3"
 	depends on LEDS_CLASS

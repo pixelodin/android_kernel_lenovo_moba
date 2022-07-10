@@ -74,7 +74,11 @@ trans:
 
 		"3: ;"
 		: [tfhar] "=r" (tfhar), [res] "=r" (result),
+<<<<<<< HEAD
 		[texasr] "=r" (texasr), [cptr1] "=r" (cptr1)
+=======
+		[texasr] "=r" (texasr), [cptr1] "=b" (cptr1)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		: [sprn_texasr] "i"  (SPRN_TEXASR)
 		: "memory", "r0", "r8", "r31"
 		);

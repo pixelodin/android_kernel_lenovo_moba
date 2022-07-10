@@ -712,7 +712,11 @@ void rts5260_init_params(struct rtsx_pcr *pcr)
 	pcr->sd30_drive_sel_1v8 = CFG_DRIVER_TYPE_B;
 	pcr->sd30_drive_sel_3v3 = CFG_DRIVER_TYPE_B;
 	pcr->aspm_en = ASPM_L1_EN;
+<<<<<<< HEAD
 	pcr->tx_initial_phase = SET_CLOCK_PHASE(1, 29, 16);
+=======
+	pcr->tx_initial_phase = SET_CLOCK_PHASE(27, 29, 11);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pcr->rx_initial_phase = SET_CLOCK_PHASE(24, 6, 5);
 
 	pcr->ic_version = rts5260_get_ic_version(pcr);

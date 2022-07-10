@@ -160,6 +160,10 @@ static void videobuf_dma_contig_user_put(struct videobuf_dma_contig_memory *mem)
 static int videobuf_dma_contig_user_get(struct videobuf_dma_contig_memory *mem,
 					struct videobuf_buffer *vb)
 {
+<<<<<<< HEAD
+=======
+	unsigned long untagged_baddr = untagged_addr(vb->baddr);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct mm_struct *mm = current->mm;
 	struct vm_area_struct *vma;
 	unsigned long prev_pfn, this_pfn;
@@ -167,22 +171,38 @@ static int videobuf_dma_contig_user_get(struct videobuf_dma_contig_memory *mem,
 	unsigned int offset;
 	int ret;
 
+<<<<<<< HEAD
 	offset = vb->baddr & ~PAGE_MASK;
+=======
+	offset = untagged_baddr & ~PAGE_MASK;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mem->size = PAGE_ALIGN(vb->size + offset);
 	ret = -EINVAL;
 
 	down_read(&mm->mmap_sem);
 
+<<<<<<< HEAD
 	vma = find_vma(mm, vb->baddr);
 	if (!vma)
 		goto out_up;
 
 	if ((vb->baddr + mem->size) > vma->vm_end)
+=======
+	vma = find_vma(mm, untagged_baddr);
+	if (!vma)
+		goto out_up;
+
+	if ((untagged_baddr + mem->size) > vma->vm_end)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto out_up;
 
 	pages_done = 0;
 	prev_pfn = 0; /* kill warning */
+<<<<<<< HEAD
 	user_address = vb->baddr;
+=======
+	user_address = untagged_baddr;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	while (pages_done < (mem->size >> PAGE_SHIFT)) {
 		ret = follow_pfn(vma, user_address, &this_pfn);

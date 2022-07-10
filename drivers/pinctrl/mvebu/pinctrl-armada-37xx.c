@@ -592,10 +592,17 @@ static int armada_37xx_irq_set_type(struct irq_data *d, unsigned int type)
 		regmap_read(info->regmap, in_reg, &in_val);
 
 		/* Set initial polarity based on current input level. */
+<<<<<<< HEAD
 		if (in_val & d->mask)
 			val |= d->mask;		/* falling */
 		else
 			val &= ~d->mask;	/* rising */
+=======
+		if (in_val & BIT(d->hwirq % GPIO_PER_REG))
+			val |= BIT(d->hwirq % GPIO_PER_REG);	/* falling */
+		else
+			val &= ~(BIT(d->hwirq % GPIO_PER_REG));	/* rising */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 	}
 	default:

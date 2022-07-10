@@ -23,6 +23,12 @@ void xdp_add_sk_umem(struct xdp_umem *umem, struct xdp_sock *xs)
 {
 	unsigned long flags;
 
+<<<<<<< HEAD
+=======
+	if (!xs->tx)
+		return;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	spin_lock_irqsave(&umem->xsk_list_lock, flags);
 	list_add_rcu(&xs->list, &umem->xsk_list);
 	spin_unlock_irqrestore(&umem->xsk_list_lock, flags);
@@ -32,6 +38,7 @@ void xdp_del_sk_umem(struct xdp_umem *umem, struct xdp_sock *xs)
 {
 	unsigned long flags;
 
+<<<<<<< HEAD
 	if (xs->dev) {
 		spin_lock_irqsave(&umem->xsk_list_lock, flags);
 		list_del_rcu(&xs->list);
@@ -40,6 +47,14 @@ void xdp_del_sk_umem(struct xdp_umem *umem, struct xdp_sock *xs)
 		if (umem->zc)
 			synchronize_net();
 	}
+=======
+	if (!xs->tx)
+		return;
+
+	spin_lock_irqsave(&umem->xsk_list_lock, flags);
+	list_del_rcu(&xs->list);
+	spin_unlock_irqrestore(&umem->xsk_list_lock, flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 int xdp_umem_query(struct net_device *dev, u16 queue_id)

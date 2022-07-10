@@ -1584,7 +1584,11 @@ static void phys_init_v2_hw(struct hisi_hba *hisi_hba)
 	}
 }
 
+<<<<<<< HEAD
 static void sl_notify_v2_hw(struct hisi_hba *hisi_hba, int phy_no)
+=======
+static void sl_notify_ssp_v2_hw(struct hisi_hba *hisi_hba, int phy_no)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	u32 sl_control;
 
@@ -2481,7 +2485,10 @@ slot_complete_v2_hw(struct hisi_hba *hisi_hba, struct hisi_sas_slot *slot)
 	}
 
 out:
+<<<<<<< HEAD
 	hisi_sas_slot_task_free(hisi_hba, task, slot);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	sts = ts->stat;
 	spin_lock_irqsave(&task->task_state_lock, flags);
 	if (task->task_state_flags & SAS_TASK_STATE_ABORTED) {
@@ -2491,6 +2498,10 @@ out:
 	}
 	task->task_state_flags |= SAS_TASK_STATE_DONE;
 	spin_unlock_irqrestore(&task->task_state_lock, flags);
+<<<<<<< HEAD
+=======
+	hisi_sas_slot_task_free(hisi_hba, task, slot);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!is_internal && (task->task_proto != SAS_PROTOCOL_SMP)) {
 		spin_lock_irqsave(&device->done_lock, flags);
@@ -3575,7 +3586,11 @@ static const struct hisi_sas_hw hisi_sas_v2_hw = {
 	.setup_itct = setup_itct_v2_hw,
 	.slot_index_alloc = slot_index_alloc_quirk_v2_hw,
 	.alloc_dev = alloc_dev_quirk_v2_hw,
+<<<<<<< HEAD
 	.sl_notify = sl_notify_v2_hw,
+=======
+	.sl_notify_ssp = sl_notify_ssp_v2_hw,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.get_wideport_bitmap = get_wideport_bitmap_v2_hw,
 	.clear_itct = clear_itct_v2_hw,
 	.free_device = free_device_v2_hw,

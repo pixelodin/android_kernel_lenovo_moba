@@ -3472,18 +3472,43 @@ static int smu7_get_pp_table_entry(struct pp_hwmgr *hwmgr,
 
 static int smu7_get_gpu_power(struct pp_hwmgr *hwmgr, u32 *query)
 {
+<<<<<<< HEAD
+=======
+	struct amdgpu_device *adev = hwmgr->adev;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int i;
 	u32 tmp = 0;
 
 	if (!query)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	smum_send_msg_to_smc_with_parameter(hwmgr, PPSMC_MSG_GetCurrPkgPwr, 0);
 	tmp = cgs_read_register(hwmgr->device, mmSMC_MSG_ARG_0);
 	*query = tmp;
 
 	if (tmp != 0)
 		return 0;
+=======
+	/*
+	 * PPSMC_MSG_GetCurrPkgPwr is not supported on:
+	 *  - Hawaii
+	 *  - Bonaire
+	 *  - Fiji
+	 *  - Tonga
+	 */
+	if ((adev->asic_type != CHIP_HAWAII) &&
+	    (adev->asic_type != CHIP_BONAIRE) &&
+	    (adev->asic_type != CHIP_FIJI) &&
+	    (adev->asic_type != CHIP_TONGA)) {
+		smum_send_msg_to_smc_with_parameter(hwmgr, PPSMC_MSG_GetCurrPkgPwr, 0);
+		tmp = cgs_read_register(hwmgr->device, mmSMC_MSG_ARG_0);
+		*query = tmp;
+
+		if (tmp != 0)
+			return 0;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	smum_send_msg_to_smc(hwmgr, PPSMC_MSG_PmStatusLogStart);
 	cgs_write_ind_register(hwmgr->device, CGS_IND_REG__SMC,

@@ -265,7 +265,11 @@ static inline int ndev_db_clear_mask(struct intel_ntb_dev *ndev, u64 db_bits,
 	return 0;
 }
 
+<<<<<<< HEAD
 static inline int ndev_vec_mask(struct intel_ntb_dev *ndev, int db_vector)
+=======
+static inline u64 ndev_vec_mask(struct intel_ntb_dev *ndev, int db_vector)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	u64 shift, mask;
 

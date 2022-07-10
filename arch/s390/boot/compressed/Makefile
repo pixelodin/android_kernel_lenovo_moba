@@ -8,6 +8,10 @@
 KCOV_INSTRUMENT := n
 GCOV_PROFILE := n
 UBSAN_SANITIZE := n
+<<<<<<< HEAD
+=======
+KASAN_SANITIZE := n
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 obj-y	:= $(if $(CONFIG_KERNEL_UNCOMPRESSED),,head.o misc.o) piggy.o
 targets	:= vmlinux.lds vmlinux vmlinux.bin vmlinux.bin.gz vmlinux.bin.bz2

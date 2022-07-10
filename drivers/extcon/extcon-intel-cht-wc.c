@@ -156,7 +156,11 @@ static int cht_wc_extcon_get_charger(struct cht_wc_extcon_data *ext,
 		dev_warn(ext->dev,
 			"Unhandled charger type %d, defaulting to SDP\n",
 			 ret);
+<<<<<<< HEAD
 		/* Fall through, treat as SDP */
+=======
+		return EXTCON_CHG_USB_SDP;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	case CHT_WC_USBSRC_TYPE_SDP:
 	case CHT_WC_USBSRC_TYPE_FLOAT_DP_DN:
 	case CHT_WC_USBSRC_TYPE_OTHER:

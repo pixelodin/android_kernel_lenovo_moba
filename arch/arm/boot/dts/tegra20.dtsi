@@ -419,6 +419,7 @@
 		status = "disabled";
 	};
 
+<<<<<<< HEAD
 	gmi@70009000 {
 		compatible = "nvidia,tegra20-gmi";
 		reg = <0x70009000 0x1000>;
@@ -432,6 +433,8 @@
 		status = "disabled";
 	};
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	nand-controller@70008000 {
 		compatible = "nvidia,tegra20-nand";
 		reg = <0x70008000 0x100>;
@@ -447,6 +450,22 @@
 		status = "disabled";
 	};
 
+<<<<<<< HEAD
+=======
+	gmi@70009000 {
+		compatible = "nvidia,tegra20-gmi";
+		reg = <0x70009000 0x1000>;
+		#address-cells = <2>;
+		#size-cells = <1>;
+		ranges = <0 0 0xd0000000 0xfffffff>;
+		clocks = <&tegra_car TEGRA20_CLK_NOR>;
+		clock-names = "gmi";
+		resets = <&tegra_car 42>;
+		reset-names = "gmi";
+		status = "disabled";
+	};
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pwm: pwm@7000a000 {
 		compatible = "nvidia,tegra20-pwm";
 		reg = <0x7000a000 0x100>;

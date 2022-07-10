@@ -914,7 +914,11 @@ void hfi1_send_rc_ack(struct hfi1_packet *packet, bool is_fecn)
 	pbc = create_pbc(ppd, pbc_flags, qp->srate_mbps,
 			 sc_to_vlt(ppd->dd, sc5), plen);
 	pbuf = sc_buffer_alloc(rcd->sc, plen, NULL, NULL);
+<<<<<<< HEAD
 	if (!pbuf) {
+=======
+	if (IS_ERR_OR_NULL(pbuf)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/*
 		 * We have no room to send at the moment.  Pass
 		 * responsibility for sending the ACK to the send engine
@@ -2049,8 +2053,12 @@ void hfi1_rc_rcv(struct hfi1_packet *packet)
 	struct ib_reth *reth;
 	unsigned long flags;
 	int ret;
+<<<<<<< HEAD
 	bool is_fecn = false;
 	bool copy_last = false;
+=======
+	bool copy_last = false, fecn;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u32 rkey;
 	u8 extra_bytes = pad + packet->extra_byte + (SIZE_OF_CRC << 2);
 
@@ -2059,7 +2067,11 @@ void hfi1_rc_rcv(struct hfi1_packet *packet)
 	if (hfi1_ruc_check_hdr(ibp, packet))
 		return;
 
+<<<<<<< HEAD
 	is_fecn = process_ecn(qp, packet, false);
+=======
+	fecn = process_ecn(qp, packet);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/*
 	 * Process responses (ACKs) before anything else.  Note that the
@@ -2070,8 +2082,11 @@ void hfi1_rc_rcv(struct hfi1_packet *packet)
 	if (opcode >= OP(RDMA_READ_RESPONSE_FIRST) &&
 	    opcode <= OP(ATOMIC_ACKNOWLEDGE)) {
 		rc_rcv_resp(packet);
+<<<<<<< HEAD
 		if (is_fecn)
 			goto send_ack;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return;
 	}
 
@@ -2347,11 +2362,19 @@ send_last:
 
 		/* Schedule the send engine. */
 		qp->s_flags |= RVT_S_RESP_PENDING;
+<<<<<<< HEAD
 		hfi1_schedule_send(qp);
 
 		spin_unlock_irqrestore(&qp->s_lock, flags);
 		if (is_fecn)
 			goto send_ack;
+=======
+		if (fecn)
+			qp->s_flags |= RVT_S_ECN;
+		hfi1_schedule_send(qp);
+
+		spin_unlock_irqrestore(&qp->s_lock, flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return;
 	}
 
@@ -2413,11 +2436,19 @@ send_last:
 
 		/* Schedule the send engine. */
 		qp->s_flags |= RVT_S_RESP_PENDING;
+<<<<<<< HEAD
 		hfi1_schedule_send(qp);
 
 		spin_unlock_irqrestore(&qp->s_lock, flags);
 		if (is_fecn)
 			goto send_ack;
+=======
+		if (fecn)
+			qp->s_flags |= RVT_S_ECN;
+		hfi1_schedule_send(qp);
+
+		spin_unlock_irqrestore(&qp->s_lock, flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return;
 	}
 
@@ -2430,6 +2461,7 @@ send_last:
 	qp->r_ack_psn = psn;
 	qp->r_nak_state = 0;
 	/* Send an ACK if requested or required. */
+<<<<<<< HEAD
 	if (psn & IB_BTH_REQ_ACK) {
 		if (packet->numpkt == 0) {
 			rc_cancel_ack(qp);
@@ -2440,6 +2472,11 @@ send_last:
 			goto send_ack;
 		}
 		if (unlikely(is_fecn)) {
+=======
+	if (psn & IB_BTH_REQ_ACK || fecn) {
+		if (packet->numpkt == 0 || fecn ||
+		    qp->r_adefered >= HFI1_PSN_CREDIT) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			rc_cancel_ack(qp);
 			goto send_ack;
 		}
@@ -2480,7 +2517,11 @@ nack_acc:
 	qp->r_nak_state = IB_NAK_REMOTE_ACCESS_ERROR;
 	qp->r_ack_psn = qp->r_psn;
 send_ack:
+<<<<<<< HEAD
 	hfi1_send_rc_ack(packet, is_fecn);
+=======
+	hfi1_send_rc_ack(packet, fecn);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 void hfi1_rc_hdrerr(

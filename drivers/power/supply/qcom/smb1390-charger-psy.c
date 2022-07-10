@@ -1885,7 +1885,11 @@ static int smb1390_master_probe(struct smb1390 *chip)
 		return rc;
 	}
 
+<<<<<<< HEAD
 	chip->cp_ws = wakeup_source_register("qcom-chargepump");
+=======
+	chip->cp_ws = wakeup_source_register(NULL, "qcom-chargepump");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!chip->cp_ws)
 		return -ENOMEM;
 

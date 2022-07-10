@@ -189,9 +189,19 @@ static void __init smp_build_mpidr_hash(void)
 
 static void __init setup_machine_fdt(phys_addr_t dt_phys)
 {
+<<<<<<< HEAD
 	void *dt_virt = fixmap_remap_fdt(dt_phys);
 	const char *name;
 
+=======
+	int size;
+	void *dt_virt = fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL);
+	const char *name;
+
+	if (dt_virt)
+		memblock_reserve(dt_phys, size);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!dt_virt || !early_init_dt_scan(dt_virt)) {
 		pr_crit("\n"
 			"Error: invalid device tree blob at physical address %pa (virtual address 0x%p)\n"
@@ -203,6 +213,12 @@ static void __init setup_machine_fdt(phys_addr_t dt_phys)
 			cpu_relax();
 	}
 
+<<<<<<< HEAD
+=======
+	/* Early fixups are done, map the FDT as read-only now */
+	fixmap_remap_fdt(dt_phys, &size, PAGE_KERNEL_RO);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	name = of_flat_dt_get_machine_name();
 	if (!name)
 		return;
@@ -301,6 +317,14 @@ void __init setup_arch(char **cmdline_p)
 
 	setup_machine_fdt(__fdt_pointer);
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Initialise the static keys early as they may be enabled by the
+	 * cpufeature code and early parameters.
+	 */
+	jump_label_init();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	parse_early_param();
 
 	/*
@@ -347,6 +371,12 @@ void __init setup_arch(char **cmdline_p)
 	smp_init_cpus();
 	smp_build_mpidr_hash();
 
+<<<<<<< HEAD
+=======
+	/* Init percpu seeds for random tags after cpus are set up. */
+	kasan_init_tags();
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #ifdef CONFIG_ARM64_SW_TTBR0_PAN
 	/*
 	 * Make sure init_thread_info.ttbr0 always generates translation

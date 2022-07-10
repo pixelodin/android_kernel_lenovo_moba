@@ -30,6 +30,10 @@ void schedtune_dequeue_task(struct task_struct *p, int cpu);
 #define schedtune_enqueue_task(task, cpu) do { } while (0)
 #define schedtune_dequeue_task(task, cpu) do { } while (0)
 
+<<<<<<< HEAD
 #define boosted_cpu_util(cpu, other_util, walt_load) cpu_util_cfs(cpu_rq(cpu))
 
+=======
+#define stune_util(cpu, other_util, walt_load) cpu_util_cfs(cpu_rq(cpu))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif /* CONFIG_SCHED_TUNE */

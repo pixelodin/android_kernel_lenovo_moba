@@ -21,6 +21,10 @@
 #include <linux/platform_device.h>
 #include <linux/errno.h>
 #include <linux/io.h>
+<<<<<<< HEAD
+=======
+#include <linux/io-pgtable.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/interrupt.h>
 #include <linux/list.h>
 #include <linux/spinlock.h>
@@ -35,7 +39,10 @@
 
 #include "msm_iommu_hw-8xxx.h"
 #include "msm_iommu.h"
+<<<<<<< HEAD
 #include "io-pgtable.h"
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define MRC(reg, processor, op1, crn, crm, op2)				\
 __asm__ __volatile__ (							\

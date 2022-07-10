@@ -171,12 +171,19 @@ static int qcom_mhi_qrtr_probe(struct mhi_device *mhi_dev,
 	INIT_LIST_HEAD(&qdev->ul_pkts);
 	spin_lock_init(&qdev->ul_lock);
 
+<<<<<<< HEAD
+=======
+	dev_set_drvdata(&mhi_dev->dev, qdev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rc = qrtr_endpoint_register(&qdev->ep, net_id, rt);
 	if (rc)
 		return rc;
 
+<<<<<<< HEAD
 	dev_set_drvdata(&mhi_dev->dev, qdev);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	dev_dbg(qdev->dev, "QTI MHI QRTR driver probed\n");
 
 	return 0;

@@ -20,6 +20,10 @@ enum ice_status {
 	ICE_ERR_ALREADY_EXISTS			= -14,
 	ICE_ERR_DOES_NOT_EXIST			= -15,
 	ICE_ERR_MAX_LIMIT			= -17,
+<<<<<<< HEAD
+=======
+	ICE_ERR_RESET_ONGOING			= -18,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ICE_ERR_BUF_TOO_SHORT			= -52,
 	ICE_ERR_NVM_BLANK_MODE			= -53,
 	ICE_ERR_AQ_ERROR			= -100,

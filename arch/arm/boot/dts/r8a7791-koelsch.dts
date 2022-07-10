@@ -479,8 +479,11 @@
 };
 
 &lvds0 {
+<<<<<<< HEAD
 	status = "okay";
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ports {
 		port@1 {
 			lvds_connector: endpoint {

@@ -155,8 +155,16 @@ static int update_xoff_threshold(struct mlx5e_port_buffer *port_buffer,
 		}
 
 		if (port_buffer->buffer[i].size <
+<<<<<<< HEAD
 		    (xoff + max_mtu + (1 << MLX5E_BUFFER_CELL_SHIFT)))
 			return -ENOMEM;
+=======
+		    (xoff + max_mtu + (1 << MLX5E_BUFFER_CELL_SHIFT))) {
+			pr_err("buffer_size[%d]=%d is not enough for lossless buffer\n",
+			       i, port_buffer->buffer[i].size);
+			return -ENOMEM;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		port_buffer->buffer[i].xoff = port_buffer->buffer[i].size - xoff;
 		port_buffer->buffer[i].xon  =
@@ -232,6 +240,29 @@ static int update_buffer_lossy(unsigned int max_mtu,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int fill_pfc_en(struct mlx5_core_dev *mdev, u8 *pfc_en)
+{
+	u32 g_rx_pause, g_tx_pause;
+	int err;
+
+	err = mlx5_query_port_pause(mdev, &g_rx_pause, &g_tx_pause);
+	if (err)
+		return err;
+
+	/* If global pause enabled, set all active buffers to lossless.
+	 * Otherwise, check PFC setting.
+	 */
+	if (g_rx_pause || g_tx_pause)
+		*pfc_en = 0xff;
+	else
+		err = mlx5_query_port_pfc(mdev, pfc_en, NULL);
+
+	return err;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define MINIMUM_MAX_MTU 9216
 int mlx5e_port_manual_buffer_config(struct mlx5e_priv *priv,
 				    u32 change, unsigned int mtu,
@@ -277,7 +308,11 @@ int mlx5e_port_manual_buffer_config(struct mlx5e_priv *priv,
 
 	if (change & MLX5E_PORT_BUFFER_PRIO2BUFFER) {
 		update_prio2buffer = true;
+<<<<<<< HEAD
 		err = mlx5_query_port_pfc(priv->mdev, &curr_pfc_en, NULL);
+=======
+		err = fill_pfc_en(priv->mdev, &curr_pfc_en);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (err)
 			return err;
 

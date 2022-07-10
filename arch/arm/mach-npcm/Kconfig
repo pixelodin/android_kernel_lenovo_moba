@@ -10,7 +10,11 @@ config ARCH_NPCM7XX
 	depends on ARCH_MULTI_V7
 	select PINCTRL_NPCM7XX
 	select NPCM7XX_TIMER
+<<<<<<< HEAD
 	select ARCH_REQUIRE_GPIOLIB
+=======
+	select GPIOLIB
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	select CACHE_L2X0
 	select ARM_GIC
 	select HAVE_ARM_TWD if SMP

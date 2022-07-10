@@ -14,6 +14,10 @@
 #include <linux/f2fs_fs.h>
 #include <linux/cryptohash.h>
 #include <linux/pagemap.h>
+<<<<<<< HEAD
+=======
+#include <linux/unicode.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #include "f2fs.h"
 
@@ -67,8 +71,14 @@ static void str2hashbuf(const unsigned char *msg, size_t len,
 		*buf++ = pad;
 }
 
+<<<<<<< HEAD
 f2fs_hash_t f2fs_dentry_hash(const struct qstr *name_info,
 				struct fscrypt_name *fname)
+=======
+static f2fs_hash_t __f2fs_dentry_hash(const struct inode *dir,
+				const struct qstr *name_info,
+				const struct fscrypt_name *fname)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	__u32 hash;
 	f2fs_hash_t f2fs_hash;
@@ -78,12 +88,24 @@ f2fs_hash_t f2fs_dentry_hash(const struct qstr *name_info,
 	size_t len = name_info->len;
 
 	/* encrypted bigname case */
+<<<<<<< HEAD
 	if (fname && !fname->disk_name.name)
+=======
+	if (fname && fname->is_ciphertext_name)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return cpu_to_le32(fname->hash);
 
 	if (is_dot_dotdot(name_info))
 		return 0;
 
+<<<<<<< HEAD
+=======
+	if (IS_CASEFOLDED(dir) && IS_ENCRYPTED(dir)) {
+		f2fs_hash = cpu_to_le32(fscrypt_fname_siphash(dir, name_info));
+		return f2fs_hash;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Initialize the default seed for the hash checksum functions */
 	buf[0] = 0x67452301;
 	buf[1] = 0xefcdab89;
@@ -103,3 +125,43 @@ f2fs_hash_t f2fs_dentry_hash(const struct qstr *name_info,
 	f2fs_hash = cpu_to_le32(hash & ~F2FS_HASH_COL_BIT);
 	return f2fs_hash;
 }
+<<<<<<< HEAD
+=======
+
+f2fs_hash_t f2fs_dentry_hash(const struct inode *dir,
+		const struct qstr *name_info, const struct fscrypt_name *fname)
+{
+#ifdef CONFIG_UNICODE
+	struct f2fs_sb_info *sbi = F2FS_SB(dir->i_sb);
+	const struct unicode_map *um = dir->i_sb->s_encoding;
+	int r, dlen;
+	unsigned char *buff;
+	struct qstr folded;
+	const struct qstr *name = fname ? fname->usr_fname : name_info;
+
+	if (!name_info->len || !IS_CASEFOLDED(dir))
+		goto opaque_seq;
+
+	if (IS_ENCRYPTED(dir) && !fscrypt_has_encryption_key(dir))
+		goto opaque_seq;
+
+	buff = f2fs_kzalloc(sbi, sizeof(char) * PATH_MAX, GFP_KERNEL);
+	if (!buff)
+		return -ENOMEM;
+	dlen = utf8_casefold(um, name, buff, PATH_MAX);
+	if (dlen < 0) {
+		kvfree(buff);
+		goto opaque_seq;
+	}
+	folded.name = buff;
+	folded.len = dlen;
+	r = __f2fs_dentry_hash(dir, &folded, fname);
+
+	kvfree(buff);
+	return r;
+
+opaque_seq:
+#endif
+	return __f2fs_dentry_hash(dir, name_info, fname);
+}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

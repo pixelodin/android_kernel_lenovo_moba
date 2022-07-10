@@ -570,7 +570,11 @@ static int iio_compute_scan_bytes(struct iio_dev *indio_dev,
 				const unsigned long *mask, bool timestamp)
 {
 	unsigned bytes = 0;
+<<<<<<< HEAD
 	int length, i;
+=======
+	int length, i, largest = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* How much space will the demuxed element take? */
 	for_each_set_bit(i, mask,
@@ -578,13 +582,24 @@ static int iio_compute_scan_bytes(struct iio_dev *indio_dev,
 		length = iio_storage_bytes_for_si(indio_dev, i);
 		bytes = ALIGN(bytes, length);
 		bytes += length;
+<<<<<<< HEAD
+=======
+		largest = max(largest, length);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	if (timestamp) {
 		length = iio_storage_bytes_for_timestamp(indio_dev);
 		bytes = ALIGN(bytes, length);
 		bytes += length;
+<<<<<<< HEAD
 	}
+=======
+		largest = max(largest, length);
+	}
+
+	bytes = ALIGN(bytes, largest);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return bytes;
 }
 

@@ -492,7 +492,11 @@ static void sysstats_build(struct sys_memstats *stats)
 	stats->version = SYSSTATS_VERSION;
 	stats->memtotal = K(i.totalram);
 	stats->reclaimable =
+<<<<<<< HEAD
 		global_node_page_state(NR_INDIRECTLY_RECLAIMABLE_BYTES) >> 10;
+=======
+		K(global_node_page_state(NR_KERNEL_MISC_RECLAIMABLE));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	stats->swap_used = K(i.totalswap - i.freeswap);
 	stats->swap_total = K(i.totalswap);
 	stats->vmalloc_total = K(vmalloc_nr_pages());
@@ -650,6 +654,14 @@ static int taskstats2_cmd_attr_pid(struct genl_info *info)
 	size_t size;
 	u32 pid;
 	int rc;
+<<<<<<< HEAD
+=======
+	u64 utime, stime;
+	const struct cred *tcred;
+	struct cgroup_subsys_state *css;
+	unsigned long flags;
+	struct signal_struct *sig;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	size = nla_total_size_64bit(sizeof(struct taskstats2));
 
@@ -691,6 +703,38 @@ static int taskstats2_cmd_attr_pid(struct genl_info *info)
 #undef K
 		task_unlock(p);
 	}
+<<<<<<< HEAD
+=======
+
+	/* version 2 fields begin here */
+	task_cputime(tsk, &utime, &stime);
+	stats->utime = div_u64(utime, NSEC_PER_USEC);
+	stats->stime = div_u64(stime, NSEC_PER_USEC);
+
+	if (lock_task_sighand(tsk, &flags)) {
+		sig = tsk->signal;
+		stats->cutime = sig->cutime;
+		stats->cstime = sig->cstime;
+		unlock_task_sighand(tsk, &flags);
+	}
+
+	rcu_read_lock();
+	tcred = __task_cred(tsk);
+	stats->uid = from_kuid_munged(current_user_ns(), tcred->uid);
+	stats->ppid = pid_alive(tsk) ?
+		task_tgid_nr_ns(rcu_dereference(tsk->real_parent),
+			task_active_pid_ns(current)) : 0;
+	rcu_read_unlock();
+
+	strlcpy(stats->name, tsk->comm, sizeof(stats->name));
+
+	css = task_get_css(tsk, cpuset_cgrp_id);
+	cgroup_path_ns(css->cgroup, stats->state, sizeof(stats->state),
+				current->nsproxy->cgroup_ns);
+	css_put(css);
+	/* version 2 fields end here */
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	put_task_struct(tsk);
 
 	return send_reply(rep_skb, info);
@@ -887,6 +931,7 @@ static int taskstats_user_cmd(struct sk_buff *skb, struct genl_info *info)
 static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
 {
 	struct signal_struct *sig = tsk->signal;
+<<<<<<< HEAD
 	struct taskstats *stats;
 
 	if (sig->stats || thread_group_empty(tsk))
@@ -906,6 +951,35 @@ static struct taskstats *taskstats_tgid_alloc(struct task_struct *tsk)
 		kmem_cache_free(taskstats_cache, stats);
 ret:
 	return sig->stats;
+=======
+	struct taskstats *stats_new, *stats;
+
+	/* Pairs with smp_store_release() below. */
+	stats = smp_load_acquire(&sig->stats);
+	if (stats || thread_group_empty(tsk))
+		return stats;
+
+	/* No problem if kmem_cache_zalloc() fails */
+	stats_new = kmem_cache_zalloc(taskstats_cache, GFP_KERNEL);
+
+	spin_lock_irq(&tsk->sighand->siglock);
+	stats = sig->stats;
+	if (!stats) {
+		/*
+		 * Pairs with smp_store_release() above and order the
+		 * kmem_cache_zalloc().
+		 */
+		smp_store_release(&sig->stats, stats_new);
+		stats = stats_new;
+		stats_new = NULL;
+	}
+	spin_unlock_irq(&tsk->sighand->siglock);
+
+	if (stats_new)
+		kmem_cache_free(taskstats_cache, stats_new);
+
+	return stats;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /* Send pid data out on exit */

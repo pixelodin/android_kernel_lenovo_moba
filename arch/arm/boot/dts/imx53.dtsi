@@ -23,10 +23,15 @@
 	 * The decompressor and also some bootloaders rely on a
 	 * pre-existing /chosen node to be available to insert the
 	 * command line and merge other ATAGS info.
+<<<<<<< HEAD
 	 * Also for U-Boot there must be a pre-existing /memory node.
 	 */
 	chosen {};
 	memory { device_type = "memory"; };
+=======
+	 */
+	chosen {};
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	aliases {
 		ethernet0 = &fec;

@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2014-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2014-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include <linux/kernel.h>
@@ -1237,6 +1241,12 @@ static int pil_tz_driver_probe(struct platform_device *pdev)
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	d->desc.sequential_loading = of_property_read_bool(pdev->dev.of_node,
+						"qcom,sequential-fw-load");
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	d->ramdump_dev = create_ramdump_device(d->subsys_desc.name,
 								&pdev->dev);
 	if (!d->ramdump_dev) {

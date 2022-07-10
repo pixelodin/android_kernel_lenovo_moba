@@ -46,6 +46,11 @@ int get_vaddr_frames(unsigned long start, unsigned int nr_frames,
 	if (WARN_ON_ONCE(nr_frames > vec->nr_allocated))
 		nr_frames = vec->nr_allocated;
 
+<<<<<<< HEAD
+=======
+	start = untagged_addr(start);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	down_read(&mm->mmap_sem);
 	locked = 1;
 	vma = find_vma_intersection(mm, start, start + 1);

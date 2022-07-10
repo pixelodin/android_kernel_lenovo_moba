@@ -901,6 +901,7 @@ out:
 	qeth_release_buffer(channel, iob);
 }
 
+<<<<<<< HEAD
 static int qeth_setup_channel(struct qeth_channel *channel, bool alloc_buffers)
 {
 	int cnt;
@@ -939,6 +940,8 @@ static int qeth_setup_channel(struct qeth_channel *channel, bool alloc_buffers)
 	return 0;
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int qeth_set_thread_start_bit(struct qeth_card *card,
 		unsigned long thread)
 {
@@ -1339,14 +1342,70 @@ static void qeth_free_buffer_pool(struct qeth_card *card)
 
 static void qeth_clean_channel(struct qeth_channel *channel)
 {
+<<<<<<< HEAD
 	int cnt;
 
 	QETH_DBF_TEXT(SETUP, 2, "freech");
+=======
+	struct ccw_device *cdev = channel->ccwdev;
+	int cnt;
+
+	QETH_DBF_TEXT(SETUP, 2, "freech");
+
+	spin_lock_irq(get_ccwdev_lock(cdev));
+	cdev->handler = NULL;
+	spin_unlock_irq(get_ccwdev_lock(cdev));
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	for (cnt = 0; cnt < QETH_CMD_BUFFER_NO; cnt++)
 		kfree(channel->iob[cnt].data);
 	kfree(channel->ccw);
 }
 
+<<<<<<< HEAD
+=======
+static int qeth_setup_channel(struct qeth_channel *channel, bool alloc_buffers)
+{
+	struct ccw_device *cdev = channel->ccwdev;
+	int cnt;
+
+	QETH_DBF_TEXT(SETUP, 2, "setupch");
+
+	channel->ccw = kmalloc(sizeof(struct ccw1), GFP_KERNEL | GFP_DMA);
+	if (!channel->ccw)
+		return -ENOMEM;
+	channel->state = CH_STATE_DOWN;
+	atomic_set(&channel->irq_pending, 0);
+	init_waitqueue_head(&channel->wait_q);
+
+	spin_lock_irq(get_ccwdev_lock(cdev));
+	cdev->handler = qeth_irq;
+	spin_unlock_irq(get_ccwdev_lock(cdev));
+
+	if (!alloc_buffers)
+		return 0;
+
+	for (cnt = 0; cnt < QETH_CMD_BUFFER_NO; cnt++) {
+		channel->iob[cnt].data =
+			kzalloc(QETH_BUFSIZE, GFP_DMA|GFP_KERNEL);
+		if (channel->iob[cnt].data == NULL)
+			break;
+		channel->iob[cnt].state = BUF_STATE_FREE;
+		channel->iob[cnt].channel = channel;
+		channel->iob[cnt].callback = qeth_send_control_data_cb;
+		channel->iob[cnt].rc = 0;
+	}
+	if (cnt < QETH_CMD_BUFFER_NO) {
+		qeth_clean_channel(channel);
+		return -ENOMEM;
+	}
+	channel->io_buf_no = 0;
+	spin_lock_init(&channel->iob_lock);
+
+	return 0;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static void qeth_set_single_write_queues(struct qeth_card *card)
 {
 	if ((atomic_read(&card->qdio.state) != QETH_QDIO_UNINITIALIZED) &&
@@ -1498,7 +1557,11 @@ static void qeth_core_sl_print(struct seq_file *m, struct service_level *slr)
 			CARD_BUS_ID(card), card->info.mcl_level);
 }
 
+<<<<<<< HEAD
 static struct qeth_card *qeth_alloc_card(void)
+=======
+static struct qeth_card *qeth_alloc_card(struct ccwgroup_device *gdev)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct qeth_card *card;
 
@@ -1507,6 +1570,14 @@ static struct qeth_card *qeth_alloc_card(void)
 	if (!card)
 		goto out;
 	QETH_DBF_HEX(SETUP, 2, &card, sizeof(void *));
+<<<<<<< HEAD
+=======
+
+	card->gdev = gdev;
+	CARD_RDEV(card) = gdev->cdev[0];
+	CARD_WDEV(card) = gdev->cdev[1];
+	CARD_DDEV(card) = gdev->cdev[2];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (qeth_setup_channel(&card->read, true))
 		goto out_ip;
 	if (qeth_setup_channel(&card->write, true))
@@ -4915,10 +4986,17 @@ static void qeth_qdio_establish_cq(struct qeth_card *card,
 	if (card->options.cq == QETH_CQ_ENABLED) {
 		int offset = QDIO_MAX_BUFFERS_PER_Q *
 			     (card->qdio.no_in_queues - 1);
+<<<<<<< HEAD
 		for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; ++i) {
 			in_sbal_ptrs[offset + i] = (struct qdio_buffer *)
 				virt_to_phys(card->qdio.c_q->bufs[i].buffer);
 		}
+=======
+
+		for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; i++)
+			in_sbal_ptrs[offset + i] =
+				card->qdio.c_q->bufs[i].buffer;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		queue_start_poll[card->qdio.no_in_queues - 1] = NULL;
 	}
@@ -4953,10 +5031,16 @@ static int qeth_qdio_establish(struct qeth_card *card)
 		rc = -ENOMEM;
 		goto out_free_qib_param;
 	}
+<<<<<<< HEAD
 	for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; ++i) {
 		in_sbal_ptrs[i] = (struct qdio_buffer *)
 			virt_to_phys(card->qdio.in_q->bufs[i].buffer);
 	}
+=======
+
+	for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; i++)
+		in_sbal_ptrs[i] = card->qdio.in_q->bufs[i].buffer;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	queue_start_poll = kcalloc(card->qdio.no_in_queues, sizeof(void *),
 				   GFP_KERNEL);
@@ -4977,11 +5061,19 @@ static int qeth_qdio_establish(struct qeth_card *card)
 		rc = -ENOMEM;
 		goto out_free_queue_start_poll;
 	}
+<<<<<<< HEAD
 	for (i = 0, k = 0; i < card->qdio.no_out_queues; ++i)
 		for (j = 0; j < QDIO_MAX_BUFFERS_PER_Q; ++j, ++k) {
 			out_sbal_ptrs[k] = (struct qdio_buffer *)virt_to_phys(
 				card->qdio.out_qs[i]->bufs[j]->buffer);
 		}
+=======
+
+	for (i = 0, k = 0; i < card->qdio.no_out_queues; ++i)
+		for (j = 0; j < QDIO_MAX_BUFFERS_PER_Q; j++, k++)
+			out_sbal_ptrs[k] =
+				card->qdio.out_qs[i]->bufs[j]->buffer;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	memset(&init_data, 0, sizeof(struct qdio_initialize));
 	init_data.cdev                   = CARD_DDEV(card);
@@ -5745,7 +5837,11 @@ static int qeth_core_probe_device(struct ccwgroup_device *gdev)
 
 	QETH_DBF_TEXT_(SETUP, 2, "%s", dev_name(&gdev->dev));
 
+<<<<<<< HEAD
 	card = qeth_alloc_card();
+=======
+	card = qeth_alloc_card(gdev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!card) {
 		QETH_DBF_TEXT_(SETUP, 2, "1err%d", -ENOMEM);
 		rc = -ENOMEM;
@@ -5761,6 +5857,7 @@ static int qeth_core_probe_device(struct ccwgroup_device *gdev)
 			goto err_card;
 	}
 
+<<<<<<< HEAD
 	card->read.ccwdev  = gdev->cdev[0];
 	card->write.ccwdev = gdev->cdev[1];
 	card->data.ccwdev  = gdev->cdev[2];
@@ -5770,6 +5867,9 @@ static int qeth_core_probe_device(struct ccwgroup_device *gdev)
 	gdev->cdev[1]->handler = qeth_irq;
 	gdev->cdev[2]->handler = qeth_irq;
 
+=======
+	dev_set_drvdata(&gdev->dev, card);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	qeth_setup_card(card);
 	rc = qeth_update_from_chp_desc(card);
 	if (rc)

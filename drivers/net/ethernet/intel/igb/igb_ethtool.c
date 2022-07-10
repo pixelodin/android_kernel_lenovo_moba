@@ -181,7 +181,11 @@ static int igb_get_link_ksettings(struct net_device *netdev,
 				advertising &= ~ADVERTISED_1000baseKX_Full;
 			}
 		}
+<<<<<<< HEAD
 		if (eth_flags->e100_base_fx) {
+=======
+		if (eth_flags->e100_base_fx || eth_flags->e100_base_lx) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			supported |= SUPPORTED_100baseT_Full;
 			advertising |= ADVERTISED_100baseT_Full;
 		}

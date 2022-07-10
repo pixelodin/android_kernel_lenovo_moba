@@ -480,7 +480,11 @@ static void read_fiforeg(struct sh_flctl *flctl, int rlen, int offset)
 
 	/* initiate DMA transfer */
 	if (flctl->chan_fifo0_rx && rlen >= 32 &&
+<<<<<<< HEAD
 		flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_DEV_TO_MEM) > 0)
+=======
+		flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_FROM_DEVICE) > 0)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			goto convert;	/* DMA success */
 
 	/* do polling transfer */
@@ -539,7 +543,11 @@ static void write_ec_fiforeg(struct sh_flctl *flctl, int rlen,
 
 	/* initiate DMA transfer */
 	if (flctl->chan_fifo0_tx && rlen >= 32 &&
+<<<<<<< HEAD
 		flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_MEM_TO_DEV) > 0)
+=======
+		flctl_dma_fifo0_transfer(flctl, buf, rlen, DMA_TO_DEVICE) > 0)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			return;	/* DMA success */
 
 	/* do polling transfer */

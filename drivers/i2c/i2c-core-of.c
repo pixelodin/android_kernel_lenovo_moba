@@ -53,6 +53,10 @@ int of_i2c_get_board_info(struct device *dev, struct device_node *node,
 
 	info->addr = addr;
 	info->of_node = node;
+<<<<<<< HEAD
+=======
+	info->fwnode = of_fwnode_handle(node);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (of_property_read_bool(node, "host-notify"))
 		info->flags |= I2C_CLIENT_HOST_NOTIFY;
@@ -253,6 +257,7 @@ static int of_i2c_notify(struct notifier_block *nb, unsigned long action,
 		}
 
 		client = of_i2c_register_device(adap, rd->dn);
+<<<<<<< HEAD
 		put_device(&adap->dev);
 
 		if (IS_ERR(client)) {
@@ -261,6 +266,16 @@ static int of_i2c_notify(struct notifier_block *nb, unsigned long action,
 			of_node_clear_flag(rd->dn, OF_POPULATED);
 			return notifier_from_errno(PTR_ERR(client));
 		}
+=======
+		if (IS_ERR(client)) {
+			dev_err(&adap->dev, "failed to create client for '%pOF'\n",
+				 rd->dn);
+			put_device(&adap->dev);
+			of_node_clear_flag(rd->dn, OF_POPULATED);
+			return notifier_from_errno(PTR_ERR(client));
+		}
+		put_device(&adap->dev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 	case OF_RECONFIG_CHANGE_REMOVE:
 		/* already depopulated? */

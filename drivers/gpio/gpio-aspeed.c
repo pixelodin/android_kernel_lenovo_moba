@@ -1199,7 +1199,11 @@ static int __init aspeed_gpio_probe(struct platform_device *pdev)
 	gpio->chip.irq.need_valid_mask = true;
 
 	/* Allocate a cache of the output registers */
+<<<<<<< HEAD
 	banks = gpio->config->nr_gpios >> 5;
+=======
+	banks = DIV_ROUND_UP(gpio->config->nr_gpios, 32);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	gpio->dcache = devm_kcalloc(&pdev->dev,
 				    banks, sizeof(u32), GFP_KERNEL);
 	if (!gpio->dcache)

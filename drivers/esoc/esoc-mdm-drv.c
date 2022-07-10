@@ -641,6 +641,7 @@ static struct esoc_drv esoc_ssr_drv = {
 	},
 };
 
+<<<<<<< HEAD
 static char bootreason[10];
 static int __init boot_reason_param(char *line)
 {
@@ -654,6 +655,10 @@ int __init esoc_ssr_init(void)
 {
     if(strncmp(bootreason, "usb_chg", 7)==0)
         return 0;
+=======
+int __init esoc_ssr_init(void)
+{
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return esoc_drv_register(&esoc_ssr_drv);
 }
 module_init(esoc_ssr_init);

@@ -199,7 +199,11 @@ int __init timer_of_init(struct device_node *np, struct timer_of *to)
 	}
 
 	if (!to->clkevt.name)
+<<<<<<< HEAD
 		to->clkevt.name = np->name;
+=======
+		to->clkevt.name = np->full_name;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	to->np = np;
 

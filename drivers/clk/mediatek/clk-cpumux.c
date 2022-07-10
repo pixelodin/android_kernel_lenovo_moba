@@ -53,7 +53,11 @@ static const struct clk_ops clk_cpumux_ops = {
 	.set_parent = clk_cpumux_set_parent,
 };
 
+<<<<<<< HEAD
 static struct clk __init *
+=======
+static struct clk *
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 mtk_clk_register_cpumux(const struct mtk_composite *mux,
 			struct regmap *regmap)
 {
@@ -84,9 +88,15 @@ mtk_clk_register_cpumux(const struct mtk_composite *mux,
 	return clk;
 }
 
+<<<<<<< HEAD
 int __init mtk_clk_register_cpumuxes(struct device_node *node,
 				     const struct mtk_composite *clks, int num,
 				     struct clk_onecell_data *clk_data)
+=======
+int mtk_clk_register_cpumuxes(struct device_node *node,
+			      const struct mtk_composite *clks, int num,
+			      struct clk_onecell_data *clk_data)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	int i;
 	struct clk *clk;

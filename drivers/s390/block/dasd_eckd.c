@@ -1135,7 +1135,12 @@ static u32 get_fcx_max_data(struct dasd_device *device)
 {
 	struct dasd_eckd_private *private = device->private;
 	int fcx_in_css, fcx_in_gneq, fcx_in_features;
+<<<<<<< HEAD
 	int tpm, mdc;
+=======
+	unsigned int mdc;
+	int tpm;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (dasd_nofcx)
 		return 0;
@@ -1149,7 +1154,11 @@ static u32 get_fcx_max_data(struct dasd_device *device)
 		return 0;
 
 	mdc = ccw_device_get_mdc(device->cdev, 0);
+<<<<<<< HEAD
 	if (mdc < 0) {
+=======
+	if (mdc == 0) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		dev_warn(&device->cdev->dev, "Detecting the maximum supported data size for zHPF requests failed\n");
 		return 0;
 	} else {
@@ -1160,12 +1169,20 @@ static u32 get_fcx_max_data(struct dasd_device *device)
 static int verify_fcx_max_data(struct dasd_device *device, __u8 lpm)
 {
 	struct dasd_eckd_private *private = device->private;
+<<<<<<< HEAD
 	int mdc;
+=======
+	unsigned int mdc;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u32 fcx_max_data;
 
 	if (private->fcx_max_data) {
 		mdc = ccw_device_get_mdc(device->cdev, lpm);
+<<<<<<< HEAD
 		if ((mdc < 0)) {
+=======
+		if (mdc == 0) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			dev_warn(&device->cdev->dev,
 				 "Detecting the maximum data size for zHPF "
 				 "requests failed (rc=%d) for a new path %x\n",
@@ -1769,7 +1786,11 @@ out_err2:
 	dasd_free_block(device->block);
 	device->block = NULL;
 out_err1:
+<<<<<<< HEAD
 	kfree(private->conf_data);
+=======
+	dasd_eckd_clear_conf_data(device);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	kfree(device->private);
 	device->private = NULL;
 	return rc;
@@ -1778,7 +1799,10 @@ out_err1:
 static void dasd_eckd_uncheck_device(struct dasd_device *device)
 {
 	struct dasd_eckd_private *private = device->private;
+<<<<<<< HEAD
 	int i;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!private)
 		return;
@@ -1788,6 +1812,7 @@ static void dasd_eckd_uncheck_device(struct dasd_device *device)
 	private->sneq = NULL;
 	private->vdsneq = NULL;
 	private->gneq = NULL;
+<<<<<<< HEAD
 	private->conf_len = 0;
 	for (i = 0; i < 8; i++) {
 		kfree(device->path[i].conf_data);
@@ -1803,6 +1828,9 @@ static void dasd_eckd_uncheck_device(struct dasd_device *device)
 	}
 	kfree(private->conf_data);
 	private->conf_data = NULL;
+=======
+	dasd_eckd_clear_conf_data(device);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static struct dasd_ccw_req *

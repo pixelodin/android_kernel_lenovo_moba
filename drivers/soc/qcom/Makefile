@@ -16,6 +16,10 @@ qcom_rpmh-y			+= rpmh-rsc.o
 qcom_rpmh-y			+= rpmh.o
 obj-$(CONFIG_QCOM_SMD_RPM)	+= smd-rpm.o
 obj-$(CONFIG_QCOM_SMEM) +=	smem.o
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_MSM_SPM) += msm-spm.o spm_devices.o
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 obj-$(CONFIG_QCOM_SMEM_STATE) += smem_state.o
 obj-$(CONFIG_QCOM_SMP2P)	+= smp2p.o
 obj-$(CONFIG_QCOM_SMSM)	+= smsm.o
@@ -45,6 +49,10 @@ obj-$(CONFIG_MSM_SERVICE_NOTIFIER) += service-notifier.o
 obj-$(CONFIG_MSM_SERVICE_LOCATOR) += service-locator.o
 obj-$(CONFIG_MSM_SYSMON_GLINK_COMM) += sysmon-glink.o
 obj-$(CONFIG_MSM_SYSMON_QMI_COMM) += sysmon-qmi.o
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_MSM_PIL_MSS_QDSP6V5) += pil-q6v5.o pil-msa.o pil-q6v5-mss.o
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 obj-$(CONFIG_MSM_PIL_SSR_GENERIC) += subsys-pil-tz.o
 obj-$(CONFIG_MEM_SHARE_QMI_SERVICE)		+= memshare/
 obj-$(CONFIG_MSM_PIL)   +=      peripheral-loader.o
@@ -67,8 +75,11 @@ obj-$(CONFIG_QCOM_SDM845_LLCC) += llcc-sdm845.o
 CFLAGS_rpmh-rsc.o := -I$(src)
 obj-$(CONFIG_QCOM_BUS_SCALING) += msm_bus/
 obj-$(CONFIG_QCOM_FSA4480_I2C) += fsa4480-i2c.o
+<<<<<<< HEAD
 obj-$(CONFIG_QCOM_FSA4480_I2C) += fsa4480-i2c-dota.o
 obj-$(CONFIG_QCOM_FSA4480_I2C) +=fsa4480_notifiy_mbhc.o
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 obj-$(CONFIG_QCOM_GLINK) += glink_probe.o
 obj-$(CONFIG_QCOM_GLINK_PKT) += glink_pkt.o
 obj-$(CONFIG_QCOM_SMP2P_SLEEPSTATE) += smp2p_sleepstate.o
@@ -96,8 +107,22 @@ ifdef CONFIG_DEBUG_FS
 obj-$(CONFIG_MSM_RPM_SMD)   +=  rpm-smd-debug.o
 endif
 obj-$(CONFIG_QCOM_CDSP_RM) += cdsprm.o
+<<<<<<< HEAD
 obj-$(CONFIG_ICNSS) += icnss.o
 obj-$(CONFIG_ICNSS_QMI) += icnss_qmi.o wlan_firmware_service_v01.o
 obj-$(CONFIG_RMNET_CTL) += rmnet_ctl/
 obj-$(CONFIG_QCOM_CX_IPEAK) += cx_ipeak.o
 obj-$(CONFIG_ICNSS2) += icnss2/
+=======
+obj-$(CONFIG_ICNSS) += msm_icnss.o
+msm_icnss-y := icnss.o
+msm_icnss-$(CONFIG_ICNSS_QMI) += icnss_qmi.o wlan_firmware_service_v01.o
+obj-$(CONFIG_RMNET_CTL) += rmnet_ctl/
+obj-$(CONFIG_QCOM_CX_IPEAK) += cx_ipeak.o
+obj-$(CONFIG_QTI_L2_REUSE) += l2_reuse.o
+obj-$(CONFIG_ICNSS2) += icnss2/
+obj-$(CONFIG_QTI_CRYPTO_COMMON) += crypto-qti-common.o
+obj-$(CONFIG_QTI_CRYPTO_TZ) += crypto-qti-tz.o
+obj-$(CONFIG_QTI_HW_KEY_MANAGER) += hwkm_qti.o
+hwkm_qti-y += hwkm.o
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

@@ -814,6 +814,12 @@ ice_sq_send_cmd(struct ice_hw *hw, struct ice_ctl_q_info *cq,
 	u16 retval = 0;
 	u32 val = 0;
 
+<<<<<<< HEAD
+=======
+	/* if reset is in progress return a soft error */
+	if (hw->reset_ongoing)
+		return ICE_ERR_RESET_ONGOING;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mutex_lock(&cq->sq_lock);
 
 	cq->sq_last_status = ICE_AQ_RC_OK;
@@ -908,7 +914,11 @@ ice_sq_send_cmd(struct ice_hw *hw, struct ice_ctl_q_info *cq,
 		if (ice_sq_done(hw, cq))
 			break;
 
+<<<<<<< HEAD
 		mdelay(1);
+=======
+		udelay(ICE_CTL_Q_SQ_CMD_USEC);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		total_delay++;
 	} while (total_delay < cq->sq_cmd_timeout);
 

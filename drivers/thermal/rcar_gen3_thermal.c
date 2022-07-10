@@ -14,7 +14,10 @@
 #include <linux/of_device.h>
 #include <linux/platform_device.h>
 #include <linux/pm_runtime.h>
+<<<<<<< HEAD
 #include <linux/spinlock.h>
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/sys_soc.h>
 #include <linux/thermal.h>
 
@@ -81,7 +84,10 @@ struct rcar_gen3_thermal_tsc {
 struct rcar_gen3_thermal_priv {
 	struct rcar_gen3_thermal_tsc *tscs[TSC_MAX_NUM];
 	unsigned int num_tscs;
+<<<<<<< HEAD
 	spinlock_t lock; /* Protect interrupts on and off */
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	void (*thermal_init)(struct rcar_gen3_thermal_tsc *tsc);
 };
 
@@ -231,13 +237,19 @@ static irqreturn_t rcar_gen3_thermal_irq(int irq, void *data)
 {
 	struct rcar_gen3_thermal_priv *priv = data;
 	u32 status;
+<<<<<<< HEAD
 	int i, ret = IRQ_HANDLED;
 
 	spin_lock(&priv->lock);
+=======
+	int i;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	for (i = 0; i < priv->num_tscs; i++) {
 		status = rcar_gen3_thermal_read(priv->tscs[i], REG_GEN3_IRQSTR);
 		rcar_gen3_thermal_write(priv->tscs[i], REG_GEN3_IRQSTR, 0);
 		if (status)
+<<<<<<< HEAD
 			ret = IRQ_WAKE_THREAD;
 	}
 
@@ -263,6 +275,12 @@ static irqreturn_t rcar_gen3_thermal_irq_thread(int irq, void *data)
 	rcar_thermal_irq_set(priv, true);
 	spin_unlock_irqrestore(&priv->lock, flags);
 
+=======
+			thermal_zone_device_update(priv->tscs[i]->zone,
+						   THERMAL_EVENT_UNSPECIFIED);
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return IRQ_HANDLED;
 }
 
@@ -364,8 +382,11 @@ static int rcar_gen3_thermal_probe(struct platform_device *pdev)
 	if (soc_device_match(r8a7795es1))
 		priv->thermal_init = rcar_gen3_thermal_init_r8a7795es1;
 
+<<<<<<< HEAD
 	spin_lock_init(&priv->lock);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	platform_set_drvdata(pdev, priv);
 
 	/*
@@ -383,9 +404,15 @@ static int rcar_gen3_thermal_probe(struct platform_device *pdev)
 		if (!irqname)
 			return -ENOMEM;
 
+<<<<<<< HEAD
 		ret = devm_request_threaded_irq(dev, irq, rcar_gen3_thermal_irq,
 						rcar_gen3_thermal_irq_thread,
 						IRQF_SHARED, irqname, priv);
+=======
+		ret = devm_request_threaded_irq(dev, irq, NULL,
+						rcar_gen3_thermal_irq,
+						IRQF_ONESHOT, irqname, priv);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (ret)
 			return ret;
 	}

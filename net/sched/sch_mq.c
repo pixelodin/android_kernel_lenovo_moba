@@ -158,6 +158,10 @@ static int mq_dump(struct Qdisc *sch, struct sk_buff *skb)
 			__gnet_stats_copy_queue(&sch->qstats,
 						qdisc->cpu_qstats,
 						&qdisc->qstats, qlen);
+<<<<<<< HEAD
+=======
+			sch->q.qlen		+= qlen;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		} else {
 			sch->q.qlen		+= qdisc->q.qlen;
 			sch->bstats.bytes	+= qdisc->bstats.bytes;
@@ -242,7 +246,12 @@ static int mq_dump_class_stats(struct Qdisc *sch, unsigned long cl,
 	struct netdev_queue *dev_queue = mq_queue_get(sch, cl);
 
 	sch = dev_queue->qdisc_sleeping;
+<<<<<<< HEAD
 	if (gnet_stats_copy_basic(&sch->running, d, NULL, &sch->bstats) < 0 ||
+=======
+	if (gnet_stats_copy_basic(&sch->running, d, sch->cpu_bstats,
+				  &sch->bstats) < 0 ||
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	    gnet_stats_copy_queue(d, NULL, &sch->qstats, sch->q.qlen) < 0)
 		return -1;
 	return 0;

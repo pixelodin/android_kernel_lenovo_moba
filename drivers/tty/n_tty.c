@@ -1735,7 +1735,11 @@ n_tty_receive_buf_common(struct tty_struct *tty, const unsigned char *cp,
 
 	down_read(&tty->termios_rwsem);
 
+<<<<<<< HEAD
 	while (1) {
+=======
+	do {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/*
 		 * When PARMRK is set, each input char may take up to 3 chars
 		 * in the read buf; reduce the buffer space avail by 3x
@@ -1777,7 +1781,11 @@ n_tty_receive_buf_common(struct tty_struct *tty, const unsigned char *cp,
 			fp += n;
 		count -= n;
 		rcvd += n;
+<<<<<<< HEAD
 	}
+=======
+	} while (!test_bit(TTY_LDISC_CHANGING, &tty->flags));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	tty->receive_room = room;
 
@@ -2249,7 +2257,11 @@ static ssize_t n_tty_read(struct tty_struct *tty, struct file *file,
 					break;
 				if (!timeout)
 					break;
+<<<<<<< HEAD
 				if (file->f_flags & O_NONBLOCK) {
+=======
+				if (tty_io_nonblock(tty, file)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 					retval = -EAGAIN;
 					break;
 				}
@@ -2403,7 +2415,11 @@ static ssize_t n_tty_write(struct tty_struct *tty, struct file *file,
 		}
 		if (!nr)
 			break;
+<<<<<<< HEAD
 		if (file->f_flags & O_NONBLOCK) {
+=======
+		if (tty_io_nonblock(tty, file)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			retval = -EAGAIN;
 			break;
 		}

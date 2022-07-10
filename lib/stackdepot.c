@@ -92,15 +92,28 @@ static bool init_stack_slab(void **prealloc)
 		return true;
 	if (stack_slabs[depot_index] == NULL) {
 		stack_slabs[depot_index] = *prealloc;
+<<<<<<< HEAD
 	} else {
 		stack_slabs[depot_index + 1] = *prealloc;
+=======
+		*prealloc = NULL;
+	} else {
+		/* If this is the last depot slab, do not touch the next one. */
+		if (depot_index + 1 < STACK_ALLOC_MAX_SLABS) {
+			stack_slabs[depot_index + 1] = *prealloc;
+			*prealloc = NULL;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/*
 		 * This smp_store_release pairs with smp_load_acquire() from
 		 * |next_slab_inited| above and in depot_save_stack().
 		 */
 		smp_store_release(&next_slab_inited, 1);
 	}
+<<<<<<< HEAD
 	*prealloc = NULL;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return true;
 }
 

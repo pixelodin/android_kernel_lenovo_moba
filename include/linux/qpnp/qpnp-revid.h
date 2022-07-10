@@ -300,19 +300,36 @@
 #define PM6125_V1P0_REV3	0x00
 #define PM6125_V1P0_REV4	0x01
 
+<<<<<<< HEAD
+=======
+/* PM2250_REV_ID */
+#define PM2250_V1P0_REV1	0x00
+#define PM2250_V1P0_REV2	0x01
+#define PM2250_V1P0_REV3	0x01
+#define PM2250_V1P0_REV4	0x01
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* PM6350_REV_ID */
 #define PM6350_V1P0_REV1	0x10
 #define PM6350_V1P0_REV2	0x00
 #define PM6350_V1P0_REV3	0x00
 #define PM6350_V1P0_REV4	0x01
 
+<<<<<<< HEAD
 /* PM6350_REV_ID */
+=======
+/* PMK8350_REV_ID */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define PMK8350_V1P0_REV1	0x00
 #define PMK8350_V1P0_REV2	0x00
 #define PMK8350_V1P0_REV3	0x00
 #define PMK8350_V1P0_REV4	0x01
 
+<<<<<<< HEAD
 /* PM6350_REV_ID */
+=======
+/* PMR735B_REV_ID */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define PMR735B_V1P0_REV1	0x11
 #define PMR735B_V1P0_REV2	0x00
 #define PMR735B_V1P0_REV3	0x01
@@ -333,8 +350,13 @@
 /* PM8937 */
 #define PM8937_SUBTYPE		0x19
 
+<<<<<<< HEAD
 /* PMI8937 */
 #define PMI8937_SUBTYPE		0x37
+=======
+/* PM2250 */
+#define PM2250_SUBTYPE		0x37
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /* SMB1390 */
 #define SMB1390_SUBTYPE		0x23

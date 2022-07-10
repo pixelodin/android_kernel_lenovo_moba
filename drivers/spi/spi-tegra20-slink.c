@@ -1078,7 +1078,11 @@ static int tegra_slink_probe(struct platform_device *pdev)
 	ret = clk_enable(tspi->clk);
 	if (ret < 0) {
 		dev_err(&pdev->dev, "Clock enable failed %d\n", ret);
+<<<<<<< HEAD
 		goto exit_free_master;
+=======
+		goto exit_clk_unprepare;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	spi_irq = platform_get_irq(pdev, 0);
@@ -1151,6 +1155,11 @@ exit_free_irq:
 	free_irq(spi_irq, tspi);
 exit_clk_disable:
 	clk_disable(tspi->clk);
+<<<<<<< HEAD
+=======
+exit_clk_unprepare:
+	clk_unprepare(tspi->clk);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 exit_free_master:
 	spi_master_put(master);
 	return ret;
@@ -1164,6 +1173,10 @@ static int tegra_slink_remove(struct platform_device *pdev)
 	free_irq(tspi->irq, tspi);
 
 	clk_disable(tspi->clk);
+<<<<<<< HEAD
+=======
+	clk_unprepare(tspi->clk);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (tspi->tx_dma_chan)
 		tegra_slink_deinit_dma_param(tspi, false);

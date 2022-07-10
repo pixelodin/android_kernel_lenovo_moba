@@ -1611,20 +1611,43 @@ static void sd_rescan(struct device *dev)
 static int sd_compat_ioctl(struct block_device *bdev, fmode_t mode,
 			   unsigned int cmd, unsigned long arg)
 {
+<<<<<<< HEAD
 	struct scsi_device *sdev = scsi_disk(bdev->bd_disk)->device;
 	int error;
 
+=======
+	struct gendisk *disk = bdev->bd_disk;
+	struct scsi_disk *sdkp = scsi_disk(disk);
+	struct scsi_device *sdev = sdkp->device;
+	void __user *p = compat_ptr(arg);
+	int error;
+
+	error = scsi_verify_blk_ioctl(bdev, cmd);
+	if (error < 0)
+		return error;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	error = scsi_ioctl_block_when_processing_errors(sdev, cmd,
 			(mode & FMODE_NDELAY) != 0);
 	if (error)
 		return error;
+<<<<<<< HEAD
+=======
+
+	if (is_sed_ioctl(cmd))
+		return sed_ioctl(sdkp->opal_dev, cmd, p);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	       
 	/* 
 	 * Let the static ioctl translation table take care of it.
 	 */
 	if (!sdev->host->hostt->compat_ioctl)
 		return -ENOIOCTLCMD; 
+<<<<<<< HEAD
 	return sdev->host->hostt->compat_ioctl(sdev, cmd, (void __user *)arg);
+=======
+	return sdev->host->hostt->compat_ioctl(sdev, cmd, p);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 #endif
 
@@ -1884,9 +1907,19 @@ static int sd_done(struct scsi_cmnd *SCpnt)
 		}
 		break;
 	case REQ_OP_ZONE_REPORT:
+<<<<<<< HEAD
 		if (!result) {
 			good_bytes = scsi_bufflen(SCpnt)
 				- scsi_get_resid(SCpnt);
+=======
+		/* To avoid that the block layer performs an incorrect
+		 * bio_advance() call and restart of the remainder of
+		 * incomplete report zone BIOs, always indicate a full
+		 * completion of REQ_OP_ZONE_REPORT.
+		 */
+		if (!result) {
+			good_bytes = scsi_bufflen(SCpnt);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			scsi_set_resid(SCpnt, 0);
 		} else {
 			good_bytes = 0;
@@ -2120,8 +2153,15 @@ static int sd_read_protection_type(struct scsi_disk *sdkp, unsigned char *buffer
 	u8 type;
 	int ret = 0;
 
+<<<<<<< HEAD
 	if (scsi_device_protection(sdp) == 0 || (buffer[12] & 1) == 0)
 		return ret;
+=======
+	if (scsi_device_protection(sdp) == 0 || (buffer[12] & 1) == 0) {
+		sdkp->protection_type = 0;
+		return ret;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	type = ((buffer[12] >> 1) & 7) + 1; /* P_TYPE 0 = Type 1 */
 

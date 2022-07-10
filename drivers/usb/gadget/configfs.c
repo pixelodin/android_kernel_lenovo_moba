@@ -93,6 +93,11 @@ struct gadget_info {
 	bool unbinding;
 	char b_vendor_code;
 	char qw_sign[OS_STRING_QW_SIGN_LEN];
+<<<<<<< HEAD
+=======
+	spinlock_t spinlock;
+	bool unbind;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #ifdef CONFIG_USB_CONFIGFS_UEVENT
 	bool connected;
 	bool sw_connected;
@@ -164,7 +169,11 @@ static int usb_string_copy(const char *s, char **s_copy)
 		if (!str)
 			return -ENOMEM;
 	}
+<<<<<<< HEAD
 	strncpy(str, s, MAX_USB_STRING_WITH_NULL_LEN);
+=======
+	strlcpy(str, s, MAX_USB_STRING_WITH_NULL_LEN);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (str[ret - 1] == '\n')
 		str[ret - 1] = '\0';
 	*s_copy = str;
@@ -1293,6 +1302,10 @@ static int configfs_composite_bind(struct usb_gadget *gadget,
 	int				ret;
 
 	/* the gi->lock is hold by the caller */
+<<<<<<< HEAD
+=======
+	gi->unbind = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	cdev->gadget = gadget;
 	set_gadget_data(gadget, cdev);
 	ret = composite_dev_prepare(composite, cdev);
@@ -1479,19 +1492,129 @@ static void configfs_composite_unbind(struct usb_gadget *gadget)
 {
 	struct usb_composite_dev	*cdev;
 	struct gadget_info		*gi;
+<<<<<<< HEAD
+=======
+	unsigned long flags;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* the gi->lock is hold by the caller */
 
 	cdev = get_gadget_data(gadget);
 	gi = container_of(cdev, struct gadget_info, cdev);
+<<<<<<< HEAD
+=======
+	spin_lock_irqsave(&gi->spinlock, flags);
+	gi->unbind = 1;
+	spin_unlock_irqrestore(&gi->spinlock, flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	kfree(otg_desc[0]);
 	otg_desc[0] = NULL;
 	purge_configs_funcs(gi);
 	composite_dev_cleanup(cdev);
 	usb_ep_autoconfig_reset(cdev->gadget);
+<<<<<<< HEAD
 	cdev->gadget = NULL;
 	set_gadget_data(gadget, NULL);
+=======
+	spin_lock_irqsave(&gi->spinlock, flags);
+	cdev->gadget = NULL;
+	set_gadget_data(gadget, NULL);
+	spin_unlock_irqrestore(&gi->spinlock, flags);
+}
+
+#ifndef CONFIG_USB_CONFIGFS_UEVENT
+static int configfs_composite_setup(struct usb_gadget *gadget,
+		const struct usb_ctrlrequest *ctrl)
+{
+	struct usb_composite_dev *cdev;
+	struct gadget_info *gi;
+	unsigned long flags;
+	int ret;
+
+	cdev = get_gadget_data(gadget);
+	if (!cdev)
+		return 0;
+
+	gi = container_of(cdev, struct gadget_info, cdev);
+	spin_lock_irqsave(&gi->spinlock, flags);
+	cdev = get_gadget_data(gadget);
+	if (!cdev || gi->unbind) {
+		spin_unlock_irqrestore(&gi->spinlock, flags);
+		return 0;
+	}
+
+	ret = composite_setup(gadget, ctrl);
+	spin_unlock_irqrestore(&gi->spinlock, flags);
+	return ret;
+}
+
+static void configfs_composite_disconnect(struct usb_gadget *gadget)
+{
+	struct usb_composite_dev *cdev;
+	struct gadget_info *gi;
+	unsigned long flags;
+
+	cdev = get_gadget_data(gadget);
+	if (!cdev)
+		return;
+
+	gi = container_of(cdev, struct gadget_info, cdev);
+	spin_lock_irqsave(&gi->spinlock, flags);
+	cdev = get_gadget_data(gadget);
+	if (!cdev || gi->unbind) {
+		spin_unlock_irqrestore(&gi->spinlock, flags);
+		return;
+	}
+
+	composite_disconnect(gadget);
+	spin_unlock_irqrestore(&gi->spinlock, flags);
+}
+#endif
+
+static void configfs_composite_suspend(struct usb_gadget *gadget)
+{
+	struct usb_composite_dev *cdev;
+	struct gadget_info *gi;
+	unsigned long flags;
+
+	cdev = get_gadget_data(gadget);
+	if (!cdev)
+		return;
+
+	gi = container_of(cdev, struct gadget_info, cdev);
+	spin_lock_irqsave(&gi->spinlock, flags);
+	cdev = get_gadget_data(gadget);
+	if (!cdev || gi->unbind) {
+		spin_unlock_irqrestore(&gi->spinlock, flags);
+		return;
+	}
+
+	composite_suspend(gadget);
+	spin_unlock_irqrestore(&gi->spinlock, flags);
+}
+
+static void configfs_composite_resume(struct usb_gadget *gadget)
+{
+	struct usb_composite_dev *cdev;
+	struct gadget_info *gi;
+	unsigned long flags;
+
+	cdev = get_gadget_data(gadget);
+	if (!cdev)
+		return;
+
+	gi = container_of(cdev, struct gadget_info, cdev);
+	spin_lock_irqsave(&gi->spinlock, flags);
+	cdev = get_gadget_data(gadget);
+	if (!cdev || gi->unbind) {
+		spin_unlock_irqrestore(&gi->spinlock, flags);
+		return;
+	}
+
+	composite_resume(gadget);
+	spin_unlock_irqrestore(&gi->spinlock, flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 #ifdef CONFIG_USB_CONFIGFS_UEVENT
@@ -1511,7 +1634,12 @@ static int android_setup(struct usb_gadget *gadget,
 	}
 	spin_unlock_irqrestore(&cdev->lock, flags);
 	list_for_each_entry(fi, &gi->available_func, cfs_list) {
+<<<<<<< HEAD
 		if (fi != NULL && fi->f != NULL && fi->f->setup != NULL) {
+=======
+		if (fi != NULL && fi->f != NULL && fi->f->setup != NULL
+		    && fi->f->config != NULL) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			value = fi->f->setup(fi->f, c);
 			if (value >= 0)
 				break;
@@ -1588,12 +1716,21 @@ static const struct usb_gadget_driver configfs_driver_template = {
 	.reset          = android_disconnect,
 	.disconnect     = android_disconnect,
 #else
+<<<<<<< HEAD
 	.setup          = composite_setup,
 	.reset          = composite_disconnect,
 	.disconnect     = composite_disconnect,
 #endif
 	.suspend	= composite_suspend,
 	.resume		= composite_resume,
+=======
+	.setup          = configfs_composite_setup,
+	.reset          = configfs_composite_disconnect,
+	.disconnect     = configfs_composite_disconnect,
+#endif
+	.suspend	= configfs_composite_suspend,
+	.resume		= configfs_composite_resume,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	.max_speed	= USB_SPEED_SUPER_PLUS,
 	.driver = {
@@ -1631,6 +1768,7 @@ out:
 }
 
 static DEVICE_ATTR(state, S_IRUGO, state_show, NULL);
+<<<<<<< HEAD
 static ssize_t usb_status_show(struct device *pdev, struct device_attribute *attr,
 			char *buf)
 {
@@ -1694,6 +1832,11 @@ static struct device_attribute *android_usb_attributes[] = {
 #ifdef CONFIG_PRODUCT_MOBA
 	&dev_attr_otg_status,
 #endif
+=======
+
+static struct device_attribute *android_usb_attributes[] = {
+	&dev_attr_state,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	NULL
 };
 
@@ -1788,6 +1931,10 @@ static struct config_group *gadgets_make(
 	gi->composite.resume = NULL;
 	gi->composite.max_speed = USB_SPEED_SUPER;
 
+<<<<<<< HEAD
+=======
+	spin_lock_init(&gi->spinlock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mutex_init(&gi->lock);
 	INIT_LIST_HEAD(&gi->string_list);
 	INIT_LIST_HEAD(&gi->available_func);

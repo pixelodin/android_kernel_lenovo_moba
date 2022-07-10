@@ -31,6 +31,10 @@
 #include <linux/irq.h>
 
 #include <linux/atomic.h>
+<<<<<<< HEAD
+=======
+#include <asm/arch_timer.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <asm/cacheflush.h>
 #include <asm/exception.h>
 #include <asm/unistd.h>
@@ -736,6 +740,80 @@ late_initcall(arm_mrc_hook_init);
 
 #endif
 
+<<<<<<< HEAD
+=======
+static int get_timer_count_trap(struct pt_regs *regs, unsigned int instr)
+{
+	u64 cval;
+	unsigned int res;
+	int rd = (instr >> 12) & 0xF;
+	int rn =  (instr >> 16) & 0xF;
+
+	res = arm_check_condition(instr, regs->ARM_cpsr);
+	if (res == ARM_OPCODE_CONDTEST_FAIL) {
+		regs->ARM_pc += 4;
+		return 0;
+	}
+
+	if (rd == 15 || rn == 15)
+		return 1;
+	cval = arch_counter_get_cntvct();
+	regs->uregs[rd] = cval;
+	regs->uregs[rn] = cval >> 32;
+	regs->ARM_pc += 4;
+	return 0;
+}
+
+static struct undef_hook get_timer_count_hook = {
+	.instr_mask	= 0x0ff00fff,
+	.instr_val	= 0x0c500f1e,
+	.cpsr_mask	= MODE_MASK,
+	.cpsr_val	= USR_MODE,
+	.fn		= get_timer_count_trap,
+};
+
+void get_timer_count_hook_init(void)
+{
+	register_undef_hook(&get_timer_count_hook);
+}
+EXPORT_SYMBOL(get_timer_count_hook_init);
+
+static int get_freq_trap(struct pt_regs *regs, unsigned int instr)
+{
+	u32 fval;
+	unsigned int res;
+	int rd = (instr >> 12) & 0xF;
+
+	res = arm_check_condition(instr, regs->ARM_cpsr);
+	if (res == ARM_OPCODE_CONDTEST_FAIL) {
+		regs->ARM_pc += 4;
+		return 0;
+	}
+
+	if (rd == 15)
+		return 1;
+
+	fval = arch_timer_get_cntfrq();
+	regs->uregs[rd] = fval;
+	regs->ARM_pc += 4;
+	return 0;
+}
+
+static struct undef_hook get_freq_hook = {
+	.instr_mask	= 0x0fff0fff,
+	.instr_val	= 0x0e1e0f10,
+	.cpsr_mask	= MODE_MASK,
+	.cpsr_val	= USR_MODE,
+	.fn		= get_freq_trap,
+};
+
+void get_timer_freq_hook_init(void)
+{
+	register_undef_hook(&get_freq_hook);
+}
+EXPORT_SYMBOL(get_timer_freq_hook_init);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * A data abort trap was taken, but we did not handle the instruction.
  * Try to abort the user program, or panic if it was the kernel.

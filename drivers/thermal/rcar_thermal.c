@@ -434,8 +434,13 @@ static irqreturn_t rcar_thermal_irq(int irq, void *data)
 	rcar_thermal_for_each_priv(priv, common) {
 		if (rcar_thermal_had_changed(priv, status)) {
 			rcar_thermal_irq_disable(priv);
+<<<<<<< HEAD
 			schedule_delayed_work(&priv->work,
 					      msecs_to_jiffies(300));
+=======
+			queue_delayed_work(system_freezable_wq, &priv->work,
+					   msecs_to_jiffies(300));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 	}
 
@@ -493,7 +498,11 @@ static int rcar_thermal_probe(struct platform_device *pdev)
 	pm_runtime_get_sync(dev);
 
 	for (i = 0; i < chip->nirqs; i++) {
+<<<<<<< HEAD
 		irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+=======
+		irq = platform_get_resource(pdev, IORESOURCE_IRQ, i);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (!irq)
 			continue;
 		if (!common->base) {

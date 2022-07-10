@@ -285,6 +285,13 @@ static int msm_rng_probe(struct platform_device *pdev)
 					"qcom,msm-rng-iface-clk")) {
 				msm_rng_dev->prng_clk = clk_get(&pdev->dev,
 							"iface_clk");
+<<<<<<< HEAD
+=======
+			} else if (of_property_read_bool(pdev->dev.of_node,
+					"qcom,msm-rng-hwkm-clk")) {
+				msm_rng_dev->prng_clk = clk_get(&pdev->dev,
+							 "km_clk_src");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			} else {
 				msm_rng_dev->prng_clk = clk_get(&pdev->dev,
 							 "core_clk");

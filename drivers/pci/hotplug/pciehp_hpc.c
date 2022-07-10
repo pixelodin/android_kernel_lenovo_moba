@@ -620,6 +620,10 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
 	irqreturn_t ret;
 	u32 events;
 
+<<<<<<< HEAD
+=======
+	ctrl->ist_running = true;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pci_config_pm_runtime_get(pdev);
 
 	/* rerun pciehp_isr() if the port was inaccessible on interrupt */
@@ -666,6 +670,10 @@ static irqreturn_t pciehp_ist(int irq, void *dev_id)
 	up_read(&ctrl->reset_lock);
 
 	pci_config_pm_runtime_put(pdev);
+<<<<<<< HEAD
+=======
+	ctrl->ist_running = false;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	wake_up(&ctrl->requester);
 	return IRQ_HANDLED;
 }

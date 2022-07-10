@@ -1252,7 +1252,11 @@ static void cx18_cancel_out_work_orders(struct cx18 *cx)
 {
 	int i;
 	for (i = 0; i < CX18_MAX_STREAMS; i++)
+<<<<<<< HEAD
 		if (&cx->streams[i].video_dev)
+=======
+		if (cx->streams[i].video_dev.v4l2_dev)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			cancel_work_sync(&cx->streams[i].out_work_order);
 }
 

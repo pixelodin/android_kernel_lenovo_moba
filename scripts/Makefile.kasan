@@ -1,5 +1,10 @@
 # SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
 ifdef CONFIG_KASAN
+=======
+ifdef CONFIG_KASAN_GENERIC
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 ifdef CONFIG_KASAN_INLINE
 	call_threshold := 10000
 else
@@ -12,6 +17,7 @@ CFLAGS_KASAN_MINIMAL := -fsanitize=kernel-address
 
 cc-param = $(call cc-option, -mllvm -$(1), $(call cc-option, --param $(1)))
 
+<<<<<<< HEAD
 ifeq ($(call cc-option, $(CFLAGS_KASAN_MINIMAL) -Werror),)
    ifneq ($(CONFIG_COMPILE_TEST),y)
         $(warning Cannot use CONFIG_KASAN: \
@@ -20,10 +26,15 @@ ifeq ($(call cc-option, $(CFLAGS_KASAN_MINIMAL) -Werror),)
 else
    # -fasan-shadow-offset fails without -fsanitize
    CFLAGS_KASAN_SHADOW := $(call cc-option, -fsanitize=kernel-address \
+=======
+# -fasan-shadow-offset fails without -fsanitize
+CFLAGS_KASAN_SHADOW := $(call cc-option, -fsanitize=kernel-address \
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			-fasan-shadow-offset=$(KASAN_SHADOW_OFFSET), \
 			$(call cc-option, -fsanitize=kernel-address \
 			-mllvm -asan-mapping-offset=$(KASAN_SHADOW_OFFSET)))
 
+<<<<<<< HEAD
    ifeq ($(strip $(CFLAGS_KASAN_SHADOW)),)
       CFLAGS_KASAN := $(CFLAGS_KASAN_MINIMAL)
    else
@@ -44,4 +55,35 @@ endif
 
 CFLAGS_KASAN_NOSANITIZE := -fno-builtin
 
+=======
+ifeq ($(strip $(CFLAGS_KASAN_SHADOW)),)
+	CFLAGS_KASAN := $(CFLAGS_KASAN_MINIMAL)
+else
+	# Now add all the compiler specific options that are valid standalone
+	CFLAGS_KASAN := $(CFLAGS_KASAN_SHADOW) \
+	 $(call cc-param,asan-globals=1) \
+	 $(call cc-param,asan-instrumentation-with-call-threshold=$(call_threshold)) \
+	 $(call cc-param,asan-stack=$(CONFIG_KASAN_STACK)) \
+	 $(call cc-param,asan-instrument-allocas=1)
+endif
+
+endif # CONFIG_KASAN_GENERIC
+
+ifdef CONFIG_KASAN_SW_TAGS
+
+ifdef CONFIG_KASAN_INLINE
+    instrumentation_flags := -mllvm -hwasan-mapping-offset=$(KASAN_SHADOW_OFFSET)
+else
+    instrumentation_flags := -mllvm -hwasan-instrument-with-calls=1
+endif
+
+CFLAGS_KASAN := -fsanitize=kernel-hwaddress \
+		-mllvm -hwasan-instrument-stack=0 \
+		$(instrumentation_flags)
+
+endif # CONFIG_KASAN_SW_TAGS
+
+ifdef CONFIG_KASAN
+CFLAGS_KASAN_NOSANITIZE := -fno-builtin
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 endif

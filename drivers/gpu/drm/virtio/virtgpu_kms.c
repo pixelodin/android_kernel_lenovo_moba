@@ -28,11 +28,14 @@
 #include <drm/drmP.h>
 #include "virtgpu_drv.h"
 
+<<<<<<< HEAD
 static int virtio_gpu_fbdev = 1;
 
 MODULE_PARM_DESC(fbdev, "Disable/Enable framebuffer device & console");
 module_param_named(fbdev, virtio_gpu_fbdev, int, 0400);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static void virtio_gpu_config_changed_work_func(struct work_struct *work)
 {
 	struct virtio_gpu_device *vgdev =
@@ -44,6 +47,11 @@ static void virtio_gpu_config_changed_work_func(struct work_struct *work)
 	virtio_cread(vgdev->vdev, struct virtio_gpu_config,
 		     events_read, &events_read);
 	if (events_read & VIRTIO_GPU_EVENT_DISPLAY) {
+<<<<<<< HEAD
+=======
+		if (vgdev->has_edid)
+			virtio_gpu_cmd_get_edids(vgdev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		virtio_gpu_cmd_get_display_info(vgdev);
 		drm_helper_hpd_irq_event(vgdev->ddev);
 		events_clear |= VIRTIO_GPU_EVENT_DISPLAY;
@@ -52,6 +60,7 @@ static void virtio_gpu_config_changed_work_func(struct work_struct *work)
 		      events_clear, &events_clear);
 }
 
+<<<<<<< HEAD
 static void virtio_gpu_ctx_id_get(struct virtio_gpu_device *vgdev,
 				  uint32_t *resid)
 {
@@ -78,13 +87,29 @@ static void virtio_gpu_context_create(struct virtio_gpu_device *vgdev,
 {
 	virtio_gpu_ctx_id_get(vgdev, ctx_id);
 	virtio_gpu_cmd_context_create(vgdev, *ctx_id, nlen, name);
+=======
+static int virtio_gpu_context_create(struct virtio_gpu_device *vgdev,
+				      uint32_t nlen, const char *name)
+{
+	int handle = ida_alloc(&vgdev->ctx_id_ida, GFP_KERNEL);
+
+	if (handle < 0)
+		return handle;
+	handle += 1;
+	virtio_gpu_cmd_context_create(vgdev, handle, nlen, name);
+	return handle;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void virtio_gpu_context_destroy(struct virtio_gpu_device *vgdev,
 				      uint32_t ctx_id)
 {
 	virtio_gpu_cmd_context_destroy(vgdev, ctx_id);
+<<<<<<< HEAD
 	virtio_gpu_ctx_id_put(vgdev, ctx_id);
+=======
+	ida_free(&vgdev->ctx_id_ida, ctx_id - 1);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void virtio_gpu_init_vq(struct virtio_gpu_queue *vgvq,
@@ -151,10 +176,15 @@ int virtio_gpu_driver_load(struct drm_device *dev, unsigned long flags)
 	vgdev->dev = dev->dev;
 
 	spin_lock_init(&vgdev->display_info_lock);
+<<<<<<< HEAD
 	spin_lock_init(&vgdev->ctx_id_idr_lock);
 	idr_init(&vgdev->ctx_id_idr);
 	spin_lock_init(&vgdev->resource_idr_lock);
 	idr_init(&vgdev->resource_idr);
+=======
+	ida_init(&vgdev->ctx_id_ida);
+	ida_init(&vgdev->resource_ida);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	init_waitqueue_head(&vgdev->resp_wq);
 	virtio_gpu_init_vq(&vgdev->ctrlq, virtio_gpu_dequeue_ctrl_func);
 	virtio_gpu_init_vq(&vgdev->cursorq, virtio_gpu_dequeue_cursor_func);
@@ -174,6 +204,13 @@ int virtio_gpu_driver_load(struct drm_device *dev, unsigned long flags)
 #else
 	DRM_INFO("virgl 3d acceleration not supported by guest\n");
 #endif
+<<<<<<< HEAD
+=======
+	if (virtio_has_feature(vgdev->vdev, VIRTIO_GPU_F_EDID)) {
+		vgdev->has_edid = true;
+		DRM_INFO("EDID support available.\n");
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	ret = virtio_find_vqs(vgdev->vdev, 2, vqs, callbacks, names, NULL);
 	if (ret) {
@@ -219,12 +256,20 @@ int virtio_gpu_driver_load(struct drm_device *dev, unsigned long flags)
 
 	if (num_capsets)
 		virtio_gpu_get_capsets(vgdev, num_capsets);
+<<<<<<< HEAD
 	virtio_gpu_cmd_get_display_info(vgdev);
 	wait_event_timeout(vgdev->resp_wq, !vgdev->display_info_pending,
 			   5 * HZ);
 	if (virtio_gpu_fbdev)
 		virtio_gpu_fbdev_init(vgdev);
 
+=======
+	if (vgdev->has_edid)
+		virtio_gpu_cmd_get_edids(vgdev);
+	virtio_gpu_cmd_get_display_info(vgdev);
+	wait_event_timeout(vgdev->resp_wq, !vgdev->display_info_pending,
+			   5 * HZ);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 
 err_modeset:
@@ -257,6 +302,10 @@ void virtio_gpu_driver_unload(struct drm_device *dev)
 	flush_work(&vgdev->ctrlq.dequeue_work);
 	flush_work(&vgdev->cursorq.dequeue_work);
 	flush_work(&vgdev->config_changed_work);
+<<<<<<< HEAD
+=======
+	vgdev->vdev->config->reset(vgdev->vdev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	vgdev->vdev->config->del_vqs(vgdev->vdev);
 
 	virtio_gpu_modeset_fini(vgdev);
@@ -271,7 +320,11 @@ int virtio_gpu_driver_open(struct drm_device *dev, struct drm_file *file)
 {
 	struct virtio_gpu_device *vgdev = dev->dev_private;
 	struct virtio_gpu_fpriv *vfpriv;
+<<<<<<< HEAD
 	uint32_t id;
+=======
+	int id;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	char dbgname[TASK_COMM_LEN];
 
 	/* can't create contexts without 3d renderer */
@@ -284,7 +337,15 @@ int virtio_gpu_driver_open(struct drm_device *dev, struct drm_file *file)
 		return -ENOMEM;
 
 	get_task_comm(dbgname, current);
+<<<<<<< HEAD
 	virtio_gpu_context_create(vgdev, strlen(dbgname), dbgname, &id);
+=======
+	id = virtio_gpu_context_create(vgdev, strlen(dbgname), dbgname);
+	if (id < 0) {
+		kfree(vfpriv);
+		return id;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	vfpriv->ctx_id = id;
 	file->driver_priv = vfpriv;

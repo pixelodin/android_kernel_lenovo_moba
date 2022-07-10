@@ -1000,7 +1000,11 @@ static int tw9910_remove(struct i2c_client *client)
 	if (priv->pdn_gpio)
 		gpiod_put(priv->pdn_gpio);
 	clk_put(priv->clk);
+<<<<<<< HEAD
 	v4l2_device_unregister_subdev(&priv->subdev);
+=======
+	v4l2_async_unregister_subdev(&priv->subdev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return 0;
 }

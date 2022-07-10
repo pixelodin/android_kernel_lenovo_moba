@@ -714,7 +714,11 @@ static int rk808_regulator_dt_parse_pdata(struct device *dev,
 		}
 
 		if (!pdata->dvs_gpio[i]) {
+<<<<<<< HEAD
 			dev_warn(dev, "there is no dvs%d gpio\n", i);
+=======
+			dev_info(dev, "there is no dvs%d gpio\n", i);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			continue;
 		}
 

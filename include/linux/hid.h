@@ -414,6 +414,10 @@ struct hid_global {
 
 struct hid_local {
 	unsigned usage[HID_MAX_USAGES]; /* usage array */
+<<<<<<< HEAD
+=======
+	u8 usage_size[HID_MAX_USAGES]; /* usage size array */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	unsigned collection_index[HID_MAX_USAGES]; /* collection index array */
 	unsigned usage_index;
 	unsigned usage_minimum;
@@ -494,7 +498,11 @@ struct hid_report_enum {
 };
 
 #define HID_MIN_BUFFER_SIZE	64		/* make sure there is at least a packet size of space */
+<<<<<<< HEAD
 #define HID_MAX_BUFFER_SIZE	4096		/* 4kb */
+=======
+#define HID_MAX_BUFFER_SIZE	8192		/* 8kb */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define HID_CONTROL_FIFO_SIZE	256		/* to init devices with >100 reports */
 #define HID_OUTPUT_FIFO_SIZE	64
 

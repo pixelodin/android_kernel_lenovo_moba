@@ -52,7 +52,16 @@ EXPORT_SYMBOL(drm_rect_intersect);
 
 static u32 clip_scaled(u32 src, u32 dst, u32 clip)
 {
+<<<<<<< HEAD
 	u64 tmp = mul_u32_u32(src, dst - clip);
+=======
+	u64 tmp;
+
+	if (dst == 0)
+		return 0;
+
+	tmp = mul_u32_u32(src, dst - clip);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/*
 	 * Round toward 1.0 when clipping so that we don't accidentally

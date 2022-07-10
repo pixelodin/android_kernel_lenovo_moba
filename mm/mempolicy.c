@@ -671,7 +671,13 @@ static int queue_pages_test_walk(unsigned long start, unsigned long end,
  * 1 - there is unmovable page, but MPOL_MF_MOVE* & MPOL_MF_STRICT were
  *     specified.
  * 0 - queue pages successfully or no misplaced page.
+<<<<<<< HEAD
  * -EIO - there is misplaced page and only MPOL_MF_STRICT was specified.
+=======
+ * errno - i.e. misplaced pages with MPOL_MF_STRICT specified (-EIO) or
+ *         memory range specified by nodemask and maxnode points outside
+ *         your accessible address space (-EFAULT)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 static int
 queue_pages_range(struct mm_struct *mm, unsigned long start, unsigned long end,
@@ -1286,7 +1292,11 @@ static long do_mbind(unsigned long start, unsigned long len,
 			  flags | MPOL_MF_INVERT, &pagelist);
 
 	if (ret < 0) {
+<<<<<<< HEAD
 		err = -EIO;
+=======
+		err = ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto up_out;
 	}
 
@@ -1305,10 +1315,19 @@ static long do_mbind(unsigned long start, unsigned long len,
 
 		if ((ret > 0) || (nr_failed && (flags & MPOL_MF_STRICT)))
 			err = -EIO;
+<<<<<<< HEAD
 	} else
 		putback_movable_pages(&pagelist);
 
 up_out:
+=======
+	} else {
+up_out:
+		if (!list_empty(&pagelist))
+			putback_movable_pages(&pagelist);
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	up_write(&mm->mmap_sem);
 mpol_out:
 	mpol_put(new);
@@ -1405,6 +1424,10 @@ static long kernel_mbind(unsigned long start, unsigned long len,
 	int err;
 	unsigned short mode_flags;
 
+<<<<<<< HEAD
+=======
+	start = untagged_addr(start);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mode_flags = mode & MPOL_MODE_FLAGS;
 	mode &= ~MPOL_MODE_FLAGS;
 	if (mode >= MPOL_MAX)
@@ -1562,6 +1585,11 @@ static int kernel_get_mempolicy(int __user *policy,
 	int uninitialized_var(pval);
 	nodemask_t nodes;
 
+<<<<<<< HEAD
+=======
+	addr = untagged_addr(addr);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (nmask != NULL && maxnode < nr_node_ids)
 		return -EINVAL;
 
@@ -2822,6 +2850,12 @@ int mpol_parse_str(char *str, struct mempolicy **mpol)
 	char *flags = strchr(str, '=');
 	int err = 1;
 
+<<<<<<< HEAD
+=======
+	if (flags)
+		*flags++ = '\0';	/* terminate mode string */
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (nodelist) {
 		/* NUL-terminate mode or flags string */
 		*nodelist++ = '\0';
@@ -2832,9 +2866,12 @@ int mpol_parse_str(char *str, struct mempolicy **mpol)
 	} else
 		nodes_clear(nodes);
 
+<<<<<<< HEAD
 	if (flags)
 		*flags++ = '\0';	/* terminate mode string */
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	for (mode = 0; mode < MPOL_MAX; mode++) {
 		if (!strcmp(str, policy_modes[mode])) {
 			break;

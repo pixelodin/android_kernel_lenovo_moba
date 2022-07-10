@@ -134,6 +134,10 @@ enum tegra_io_pad {
 	TEGRA_IO_PAD_USB2,
 	TEGRA_IO_PAD_USB3,
 	TEGRA_IO_PAD_USB_BIAS,
+<<<<<<< HEAD
+=======
+	TEGRA_IO_PAD_AO_HV,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 /* deprecated, use TEGRA_IO_PAD_{HDMI,LVDS} instead */

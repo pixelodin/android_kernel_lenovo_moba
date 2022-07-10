@@ -1673,6 +1673,10 @@ struct rtl8xxxu_fileops rtl8723bu_fops = {
 	.has_s0s1 = 1,
 	.has_tx_report = 1,
 	.gen2_thermal_meter = 1,
+<<<<<<< HEAD
+=======
+	.needs_full_init = 1,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.adda_1t_init = 0x01c00014,
 	.adda_1t_path_on = 0x01c00014,
 	.adda_2t_path_on_a = 0x01c00014,

@@ -202,6 +202,11 @@ static ssize_t min_level_change_store(struct device *dev,
 	if (hdcp->cb && hdcp->client_ctx)
 		hdcp->cb(hdcp->client_ctx, min_enc_lvl);
 
+<<<<<<< HEAD
+=======
+	pr_debug("min_enc_lvl = %d\n", min_enc_lvl);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return ret;
 }
 

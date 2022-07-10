@@ -52,7 +52,16 @@ static inline unsigned long xchg64(__volatile__ unsigned long *m, unsigned long 
 	return val;
 }
 
+<<<<<<< HEAD
 #define xchg(ptr,x) ((__typeof__(*(ptr)))__xchg((unsigned long)(x),(ptr),sizeof(*(ptr))))
+=======
+#define xchg(ptr,x)							\
+({	__typeof__(*(ptr)) __ret;					\
+	__ret = (__typeof__(*(ptr)))					\
+		__xchg((unsigned long)(x), (ptr), sizeof(*(ptr)));	\
+	__ret;								\
+})
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 void __xchg_called_with_bad_pointer(void);
 

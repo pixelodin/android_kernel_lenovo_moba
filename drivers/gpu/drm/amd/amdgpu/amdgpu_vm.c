@@ -700,10 +700,15 @@ int amdgpu_vm_flush(struct amdgpu_ring *ring, struct amdgpu_job *job, bool need_
 		id->oa_base != job->oa_base ||
 		id->oa_size != job->oa_size);
 	bool vm_flush_needed = job->vm_needs_flush;
+<<<<<<< HEAD
 	bool pasid_mapping_needed = id->pasid != job->pasid ||
 		!id->pasid_mapping ||
 		!dma_fence_is_signaled(id->pasid_mapping);
 	struct dma_fence *fence = NULL;
+=======
+	struct dma_fence *fence = NULL;
+	bool pasid_mapping_needed = false;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	unsigned patch_offset = 0;
 	int r;
 
@@ -713,6 +718,15 @@ int amdgpu_vm_flush(struct amdgpu_ring *ring, struct amdgpu_job *job, bool need_
 		pasid_mapping_needed = true;
 	}
 
+<<<<<<< HEAD
+=======
+	mutex_lock(&id_mgr->lock);
+	if (id->pasid != job->pasid || !id->pasid_mapping ||
+	    !dma_fence_is_signaled(id->pasid_mapping))
+		pasid_mapping_needed = true;
+	mutex_unlock(&id_mgr->lock);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	gds_switch_needed &= !!ring->funcs->emit_gds_switch;
 	vm_flush_needed &= !!ring->funcs->emit_vm_flush  &&
 			job->vm_pd_addr != AMDGPU_BO_INVALID_OFFSET;
@@ -752,9 +766,17 @@ int amdgpu_vm_flush(struct amdgpu_ring *ring, struct amdgpu_job *job, bool need_
 	}
 
 	if (pasid_mapping_needed) {
+<<<<<<< HEAD
 		id->pasid = job->pasid;
 		dma_fence_put(id->pasid_mapping);
 		id->pasid_mapping = dma_fence_get(fence);
+=======
+		mutex_lock(&id_mgr->lock);
+		id->pasid = job->pasid;
+		dma_fence_put(id->pasid_mapping);
+		id->pasid_mapping = dma_fence_get(fence);
+		mutex_unlock(&id_mgr->lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	dma_fence_put(fence);
 

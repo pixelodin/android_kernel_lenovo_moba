@@ -41,7 +41,10 @@ struct cc_req_mgr_handle {
 #else
 	struct tasklet_struct comptask;
 #endif
+<<<<<<< HEAD
 	bool is_runtime_suspended;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct cc_bl_item {
@@ -403,6 +406,10 @@ static void cc_proc_backlog(struct cc_drvdata *drvdata)
 		spin_lock(&mgr->bl_lock);
 		list_del(&bli->list);
 		--mgr->bl_len;
+<<<<<<< HEAD
+=======
+		kfree(bli);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	spin_unlock(&mgr->bl_lock);
@@ -660,6 +667,7 @@ static void comp_handler(unsigned long devarg)
 
 	cc_proc_backlog(drvdata);
 }
+<<<<<<< HEAD
 
 /*
  * resume the queue configuration - no need to take the lock as this happens
@@ -709,3 +717,5 @@ bool cc_req_queue_suspended(struct cc_drvdata *drvdata)
 }
 
 #endif
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

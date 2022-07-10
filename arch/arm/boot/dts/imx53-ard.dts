@@ -19,6 +19,10 @@
 	compatible = "fsl,imx53-ard", "fsl,imx53";
 
 	memory@70000000 {
+<<<<<<< HEAD
+=======
+		device_type = "memory";
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		reg = <0x70000000 0x40000000>;
 	};
 

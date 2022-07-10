@@ -931,7 +931,11 @@ int qla24xx_control_vp(scsi_qla_host_t *vha, int cmd)
 
 	sp = qla2x00_get_sp(base_vha, NULL, GFP_KERNEL);
 	if (!sp)
+<<<<<<< HEAD
 		goto done;
+=======
+		return rval;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	sp->type = SRB_CTRL_VP;
 	sp->name = "ctrl_vp";
@@ -946,7 +950,11 @@ int qla24xx_control_vp(scsi_qla_host_t *vha, int cmd)
 		ql_dbg(ql_dbg_async, vha, 0xffff,
 		    "%s: %s Failed submission. %x.\n",
 		    __func__, sp->name, rval);
+<<<<<<< HEAD
 		goto done_free_sp;
+=======
+		goto done;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	ql_dbg(ql_dbg_vport, vha, 0x113f, "%s hndl %x submitted\n",
@@ -962,6 +970,7 @@ int qla24xx_control_vp(scsi_qla_host_t *vha, int cmd)
 	case QLA_SUCCESS:
 		ql_dbg(ql_dbg_vport, vha, 0xffff, "%s: %s done.\n",
 		    __func__, sp->name);
+<<<<<<< HEAD
 		goto done_free_sp;
 	default:
 		ql_dbg(ql_dbg_vport, vha, 0xffff, "%s: %s Failed. %x.\n",
@@ -972,6 +981,15 @@ done:
 	return rval;
 
 done_free_sp:
+=======
+		break;
+	default:
+		ql_dbg(ql_dbg_vport, vha, 0xffff, "%s: %s Failed. %x.\n",
+		    __func__, sp->name, rval);
+		break;
+	}
+done:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	sp->free(sp);
 	return rval;
 }

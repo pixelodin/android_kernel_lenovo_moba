@@ -378,10 +378,19 @@ struct module {
 	const s32 *unused_gpl_crcs;
 #endif
 
+<<<<<<< HEAD
 #ifdef CONFIG_MODULE_SIG
 	/* Signature was verified. */
 	bool sig_ok;
 #endif
+=======
+	/*
+	 * Signature was verified. Unconditionally compiled in Android to
+	 * preserve ABI compatibility between kernels without module
+	 * signing enabled and signed modules.
+	 */
+	bool sig_ok;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	bool async_probe_requested;
 

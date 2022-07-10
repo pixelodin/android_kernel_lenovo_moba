@@ -55,6 +55,7 @@ static void unregister_listen_notifier(struct notifier_block *nb)
 static int listen_notify_handler(struct notifier_block *this,
 				 unsigned long event, void *data)
 {
+<<<<<<< HEAD
 	struct chtls_dev *cdev;
 	struct sock *sk;
 	int ret;
@@ -73,6 +74,21 @@ static int listen_notify_handler(struct notifier_block *this,
 				chtls_listen_stop(cdev, sk);
 		}
 		mutex_unlock(&cdev_list_lock);
+=======
+	struct chtls_listen *clisten;
+	int ret = NOTIFY_DONE;
+
+	clisten = (struct chtls_listen *)data;
+
+	switch (event) {
+	case CHTLS_LISTEN_START:
+		ret = chtls_listen_start(clisten->cdev, clisten->sk);
+		kfree(clisten);
+		break;
+	case CHTLS_LISTEN_STOP:
+		chtls_listen_stop(clisten->cdev, clisten->sk);
+		kfree(clisten);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 	}
 	return ret;
@@ -90,8 +106,14 @@ static int listen_backlog_rcv(struct sock *sk, struct sk_buff *skb)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int chtls_start_listen(struct sock *sk)
 {
+=======
+static int chtls_start_listen(struct chtls_dev *cdev, struct sock *sk)
+{
+	struct chtls_listen *clisten;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int err;
 
 	if (sk->sk_protocol != IPPROTO_TCP)
@@ -102,13 +124,25 @@ static int chtls_start_listen(struct sock *sk)
 		return -EADDRNOTAVAIL;
 
 	sk->sk_backlog_rcv = listen_backlog_rcv;
+<<<<<<< HEAD
 	mutex_lock(&notify_mutex);
 	err = raw_notifier_call_chain(&listen_notify_list,
 				      CHTLS_LISTEN_START, sk);
+=======
+	clisten = kmalloc(sizeof(*clisten), GFP_KERNEL);
+	if (!clisten)
+		return -ENOMEM;
+	clisten->cdev = cdev;
+	clisten->sk = sk;
+	mutex_lock(&notify_mutex);
+	err = raw_notifier_call_chain(&listen_notify_list,
+				      CHTLS_LISTEN_START, clisten);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mutex_unlock(&notify_mutex);
 	return err;
 }
 
+<<<<<<< HEAD
 static void chtls_stop_listen(struct sock *sk)
 {
 	if (sk->sk_protocol != IPPROTO_TCP)
@@ -117,6 +151,23 @@ static void chtls_stop_listen(struct sock *sk)
 	mutex_lock(&notify_mutex);
 	raw_notifier_call_chain(&listen_notify_list,
 				CHTLS_LISTEN_STOP, sk);
+=======
+static void chtls_stop_listen(struct chtls_dev *cdev, struct sock *sk)
+{
+	struct chtls_listen *clisten;
+
+	if (sk->sk_protocol != IPPROTO_TCP)
+		return;
+
+	clisten = kmalloc(sizeof(*clisten), GFP_KERNEL);
+	if (!clisten)
+		return;
+	clisten->cdev = cdev;
+	clisten->sk = sk;
+	mutex_lock(&notify_mutex);
+	raw_notifier_call_chain(&listen_notify_list,
+				CHTLS_LISTEN_STOP, clisten);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mutex_unlock(&notify_mutex);
 }
 
@@ -138,15 +189,29 @@ static int chtls_inline_feature(struct tls_device *dev)
 
 static int chtls_create_hash(struct tls_device *dev, struct sock *sk)
 {
+<<<<<<< HEAD
 	if (sk->sk_state == TCP_LISTEN)
 		return chtls_start_listen(sk);
+=======
+	struct chtls_dev *cdev = to_chtls_dev(dev);
+
+	if (sk->sk_state == TCP_LISTEN)
+		return chtls_start_listen(cdev, sk);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 }
 
 static void chtls_destroy_hash(struct tls_device *dev, struct sock *sk)
 {
+<<<<<<< HEAD
 	if (sk->sk_state == TCP_LISTEN)
 		chtls_stop_listen(sk);
+=======
+	struct chtls_dev *cdev = to_chtls_dev(dev);
+
+	if (sk->sk_state == TCP_LISTEN)
+		chtls_stop_listen(cdev, sk);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void chtls_register_dev(struct chtls_dev *cdev)

@@ -8,6 +8,10 @@ EXTRA_CLEAN = $(OUTPUT)/*.o $(OUTPUT)/check-reversed.S
 top_srcdir = ../../../../..
 include ../../lib.mk
 
+<<<<<<< HEAD
+=======
+$(OUTPUT)/switch_endian_test: ASFLAGS += -I $(OUTPUT)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 $(OUTPUT)/switch_endian_test: $(OUTPUT)/check-reversed.S
 
 $(OUTPUT)/check-reversed.o: $(OUTPUT)/check.o

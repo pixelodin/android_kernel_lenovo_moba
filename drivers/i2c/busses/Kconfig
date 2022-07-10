@@ -433,12 +433,22 @@ config I2C_BCM_KONA
 	  If you do not need KONA I2C interface, say N.
 
 config I2C_BRCMSTB
+<<<<<<< HEAD
 	tristate "BRCM Settop I2C controller"
 	depends on ARCH_BRCMSTB || BMIPS_GENERIC || COMPILE_TEST
 	default y
 	help
 	  If you say yes to this option, support will be included for the
 	  I2C interface on the Broadcom Settop SoCs.
+=======
+	tristate "BRCM Settop/DSL I2C controller"
+	depends on ARCH_BRCMSTB || BMIPS_GENERIC || ARCH_BCM_63XX || \
+		   COMPILE_TEST
+	default y
+	help
+	  If you say yes to this option, support will be included for the
+	  I2C interface on the Broadcom Settop/DSL SoCs.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	  If you do not need I2C interface, say N.
 
@@ -1339,6 +1349,20 @@ config I2C_OPAL
 	  This driver can also be built as a module. If so, the module will be
 	  called as i2c-opal.
 
+<<<<<<< HEAD
+=======
+config I2C_MSM_V2
+	tristate "I2C_MSM_V2"
+	depends on ARCH_QCOM
+	help
+	  If you say yes to this option, support will be included for the
+	  built-in I2C interface and its DMA engine on the MSM family
+	  processors.
+
+	  This driver can also be built as a module.  If so, the module
+	  will be called i2c-msm-v2.
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 config I2C_ZX2967
 	tristate "ZTE ZX2967 I2C support"
 	depends on ARCH_ZX

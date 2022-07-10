@@ -23,6 +23,10 @@
 #include <linux/platform_device.h>
 #include <linux/pm_runtime.h>
 #include <linux/regulator/consumer.h>
+<<<<<<< HEAD
+=======
+#include <linux/string.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/usb/of.h>
 #include <linux/workqueue.h>
 
@@ -199,7 +203,11 @@ static void rcar_gen3_init_from_a_peri_to_a_host(struct rcar_gen3_chan *ch)
 	val = readl(usb2_base + USB2_OBINTEN);
 	writel(val & ~USB2_OBINT_BITS, usb2_base + USB2_OBINTEN);
 
+<<<<<<< HEAD
 	rcar_gen3_enable_vbus_ctrl(ch, 0);
+=======
+	rcar_gen3_enable_vbus_ctrl(ch, 1);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rcar_gen3_init_for_host(ch);
 
 	writel(val | USB2_OBINT_BITS, usb2_base + USB2_OBINTEN);
@@ -241,9 +249,15 @@ static ssize_t role_store(struct device *dev, struct device_attribute *attr,
 	if (!ch->has_otg_pins || !ch->phy->init_count)
 		return -EIO;
 
+<<<<<<< HEAD
 	if (!strncmp(buf, "host", strlen("host")))
 		new_mode = PHY_MODE_USB_HOST;
 	else if (!strncmp(buf, "peripheral", strlen("peripheral")))
+=======
+	if (sysfs_streq(buf, "host"))
+		new_mode = PHY_MODE_USB_HOST;
+	else if (sysfs_streq(buf, "peripheral"))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		new_mode = PHY_MODE_USB_DEVICE;
 	else
 		return -EINVAL;

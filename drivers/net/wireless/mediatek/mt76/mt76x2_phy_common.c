@@ -232,9 +232,15 @@ void mt76x2_phy_set_txpower(struct mt76x2_dev *dev)
 	mt76_wr(dev, MT_TX_PWR_CFG_7,
 		mt76x2_tx_power_mask(t.ofdm[6], t.vht[8], t.ht[6], t.vht[8]));
 	mt76_wr(dev, MT_TX_PWR_CFG_8,
+<<<<<<< HEAD
 		mt76x2_tx_power_mask(t.ht[14], t.vht[8], t.vht[8], 0));
 	mt76_wr(dev, MT_TX_PWR_CFG_9,
 		mt76x2_tx_power_mask(t.ht[6], t.vht[8], t.vht[8], 0));
+=======
+		mt76x2_tx_power_mask(t.ht[14], 0, t.vht[8], t.vht[8]));
+	mt76_wr(dev, MT_TX_PWR_CFG_9,
+		mt76x2_tx_power_mask(t.ht[6], 0, t.vht[8], t.vht[8]));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 EXPORT_SYMBOL_GPL(mt76x2_phy_set_txpower);
 

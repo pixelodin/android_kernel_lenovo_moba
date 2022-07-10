@@ -64,9 +64,15 @@ mtype_destroy(struct ip_set *set)
 	if (SET_WITH_TIMEOUT(set))
 		del_timer_sync(&map->gc);
 
+<<<<<<< HEAD
 	ip_set_free(map->members);
 	if (set->dsize && set->extensions & IPSET_EXT_DESTROY)
 		mtype_ext_cleanup(set);
+=======
+	if (set->dsize && set->extensions & IPSET_EXT_DESTROY)
+		mtype_ext_cleanup(set);
+	ip_set_free(map->members);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ip_set_free(map);
 
 	set->data = NULL;
@@ -79,7 +85,11 @@ mtype_flush(struct ip_set *set)
 
 	if (set->extensions & IPSET_EXT_DESTROY)
 		mtype_ext_cleanup(set);
+<<<<<<< HEAD
 	memset(map->members, 0, map->memsize);
+=======
+	bitmap_zero(map->members, map->elements);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	set->elements = 0;
 	set->ext_size = 0;
 }

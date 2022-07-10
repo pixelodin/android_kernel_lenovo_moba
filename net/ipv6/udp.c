@@ -54,6 +54,10 @@
 #include <linux/proc_fs.h>
 #include <linux/seq_file.h>
 #include <trace/events/skb.h>
+<<<<<<< HEAD
+=======
+#include <trace/events/udp.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include "udp_impl.h"
 
 static bool udp6_lib_exact_dif_match(struct net *net, struct sk_buff *skb)
@@ -154,7 +158,11 @@ static int compute_score(struct sock *sk, struct net *net,
 			score++;
 	}
 
+<<<<<<< HEAD
 	if (sk->sk_incoming_cpu == raw_smp_processor_id())
+=======
+	if (READ_ONCE(sk->sk_incoming_cpu) == raw_smp_processor_id())
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		score++;
 
 	return score;
@@ -538,9 +546,17 @@ static int __udpv6_queue_rcv_skb(struct sock *sk, struct sk_buff *skb)
 		int is_udplite = IS_UDPLITE(sk);
 
 		/* Note that an ENOMEM error is charged twice */
+<<<<<<< HEAD
 		if (rc == -ENOMEM)
 			UDP6_INC_STATS(sock_net(sk),
 					 UDP_MIB_RCVBUFERRORS, is_udplite);
+=======
+		if (rc == -ENOMEM) {
+			UDP6_INC_STATS(sock_net(sk),
+					 UDP_MIB_RCVBUFERRORS, is_udplite);
+			trace_udpv6_fail_rcv_buf_errors(skb);
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		UDP6_INC_STATS(sock_net(sk), UDP_MIB_INERRORS, is_udplite);
 		kfree_skb(skb);
 		return -1;

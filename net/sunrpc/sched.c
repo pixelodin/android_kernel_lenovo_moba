@@ -99,6 +99,7 @@ __rpc_add_timer(struct rpc_wait_queue *queue, struct rpc_task *task)
 	list_add(&task->u.tk_wait.timer_list, &queue->timer_list.list);
 }
 
+<<<<<<< HEAD
 static void rpc_rotate_queue_owner(struct rpc_wait_queue *queue)
 {
 	struct list_head *q = &queue->tasks[queue->priority];
@@ -130,6 +131,66 @@ static void rpc_reset_waitqueue_priority(struct rpc_wait_queue *queue)
 {
 	rpc_set_waitqueue_priority(queue, queue->maxpriority);
 	rpc_set_waitqueue_owner(queue, 0);
+=======
+static void rpc_set_waitqueue_priority(struct rpc_wait_queue *queue, int priority)
+{
+	if (queue->priority != priority) {
+		queue->priority = priority;
+		queue->nr = 1U << priority;
+	}
+}
+
+static void rpc_reset_waitqueue_priority(struct rpc_wait_queue *queue)
+{
+	rpc_set_waitqueue_priority(queue, queue->maxpriority);
+}
+
+/*
+ * Add a request to a queue list
+ */
+static void
+__rpc_list_enqueue_task(struct list_head *q, struct rpc_task *task)
+{
+	struct rpc_task *t;
+
+	list_for_each_entry(t, q, u.tk_wait.list) {
+		if (t->tk_owner == task->tk_owner) {
+			list_add_tail(&task->u.tk_wait.links,
+					&t->u.tk_wait.links);
+			/* Cache the queue head in task->u.tk_wait.list */
+			task->u.tk_wait.list.next = q;
+			task->u.tk_wait.list.prev = NULL;
+			return;
+		}
+	}
+	INIT_LIST_HEAD(&task->u.tk_wait.links);
+	list_add_tail(&task->u.tk_wait.list, q);
+}
+
+/*
+ * Remove request from a queue list
+ */
+static void
+__rpc_list_dequeue_task(struct rpc_task *task)
+{
+	struct list_head *q;
+	struct rpc_task *t;
+
+	if (task->u.tk_wait.list.prev == NULL) {
+		list_del(&task->u.tk_wait.links);
+		return;
+	}
+	if (!list_empty(&task->u.tk_wait.links)) {
+		t = list_first_entry(&task->u.tk_wait.links,
+				struct rpc_task,
+				u.tk_wait.links);
+		/* Assume __rpc_list_enqueue_task() cached the queue head */
+		q = t->u.tk_wait.list.next;
+		list_add_tail(&t->u.tk_wait.list, q);
+		list_del(&task->u.tk_wait.links);
+	}
+	list_del(&task->u.tk_wait.list);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /*
@@ -139,6 +200,7 @@ static void __rpc_add_wait_queue_priority(struct rpc_wait_queue *queue,
 		struct rpc_task *task,
 		unsigned char queue_priority)
 {
+<<<<<<< HEAD
 	struct list_head *q;
 	struct rpc_task *t;
 
@@ -155,6 +217,11 @@ static void __rpc_add_wait_queue_priority(struct rpc_wait_queue *queue,
 		}
 	}
 	list_add_tail(&task->u.tk_wait.list, q);
+=======
+	if (unlikely(queue_priority > queue->maxpriority))
+		queue_priority = queue->maxpriority;
+	__rpc_list_enqueue_task(&queue->tasks[queue_priority], task);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /*
@@ -194,6 +261,7 @@ static void __rpc_add_wait_queue(struct rpc_wait_queue *queue,
  */
 static void __rpc_remove_wait_queue_priority(struct rpc_task *task)
 {
+<<<<<<< HEAD
 	struct rpc_task *t;
 
 	if (!list_empty(&task->u.tk_wait.links)) {
@@ -201,6 +269,9 @@ static void __rpc_remove_wait_queue_priority(struct rpc_task *task)
 		list_move(&t->u.tk_wait.list, &task->u.tk_wait.list);
 		list_splice_init(&task->u.tk_wait.links, &t->u.tk_wait.links);
 	}
+=======
+	__rpc_list_dequeue_task(task);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /*
@@ -212,7 +283,12 @@ static void __rpc_remove_wait_queue(struct rpc_wait_queue *queue, struct rpc_tas
 	__rpc_disable_timer(queue, task);
 	if (RPC_IS_PRIORITY(queue))
 		__rpc_remove_wait_queue_priority(task);
+<<<<<<< HEAD
 	list_del(&task->u.tk_wait.list);
+=======
+	else
+		list_del(&task->u.tk_wait.list);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	queue->qlen--;
 	dprintk("RPC: %5u removed from queue %p \"%s\"\n",
 			task->tk_pid, queue, rpc_qname(queue));
@@ -493,6 +569,7 @@ static struct rpc_task *__rpc_find_next_queued_priority(struct rpc_wait_queue *q
 	 * Service a batch of tasks from a single owner.
 	 */
 	q = &queue->tasks[queue->priority];
+<<<<<<< HEAD
 	if (!list_empty(q)) {
 		task = list_entry(q->next, struct rpc_task, u.tk_wait.list);
 		if (queue->owner == task->tk_owner) {
@@ -504,6 +581,11 @@ static struct rpc_task *__rpc_find_next_queued_priority(struct rpc_wait_queue *q
 		 * Check if we need to switch queues.
 		 */
 		goto new_owner;
+=======
+	if (!list_empty(q) && --queue->nr) {
+		task = list_first_entry(q, struct rpc_task, u.tk_wait.list);
+		goto out;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	/*
@@ -515,7 +597,11 @@ static struct rpc_task *__rpc_find_next_queued_priority(struct rpc_wait_queue *q
 		else
 			q = q - 1;
 		if (!list_empty(q)) {
+<<<<<<< HEAD
 			task = list_entry(q->next, struct rpc_task, u.tk_wait.list);
+=======
+			task = list_first_entry(q, struct rpc_task, u.tk_wait.list);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			goto new_queue;
 		}
 	} while (q != &queue->tasks[queue->priority]);
@@ -525,8 +611,11 @@ static struct rpc_task *__rpc_find_next_queued_priority(struct rpc_wait_queue *q
 
 new_queue:
 	rpc_set_waitqueue_priority(queue, (unsigned int)(q - &queue->tasks[0]));
+<<<<<<< HEAD
 new_owner:
 	rpc_set_waitqueue_owner(queue, task->tk_owner);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 out:
 	return task;
 }

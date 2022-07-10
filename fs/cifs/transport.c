@@ -286,8 +286,16 @@ __smb_send_rqst(struct TCP_Server_Info *server, int num_rqst,
 	int val = 1;
 	__be32 rfc1002_marker;
 
+<<<<<<< HEAD
 	if (cifs_rdma_enabled(server) && server->smbd_conn) {
 		rc = smbd_send(server, num_rqst, rqst);
+=======
+	if (cifs_rdma_enabled(server)) {
+		/* return -EAGAIN when connecting or reconnecting */
+		rc = -EAGAIN;
+		if (server->smbd_conn)
+			rc = smbd_send(server, num_rqst, rqst);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto smbd_done;
 	}
 	if (ssocket == NULL)

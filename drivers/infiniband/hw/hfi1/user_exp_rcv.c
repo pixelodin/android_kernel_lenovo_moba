@@ -90,9 +90,12 @@ int hfi1_user_exp_rcv_init(struct hfi1_filedata *fd,
 	struct hfi1_devdata *dd = uctxt->dd;
 	int ret = 0;
 
+<<<<<<< HEAD
 	spin_lock_init(&fd->tid_lock);
 	spin_lock_init(&fd->invalid_lock);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	fd->entry_to_rb = kcalloc(uctxt->expected_count,
 				  sizeof(struct rb_node *),
 				  GFP_KERNEL);
@@ -165,10 +168,18 @@ void hfi1_user_exp_rcv_free(struct hfi1_filedata *fd)
 	if (fd->handler) {
 		hfi1_mmu_rb_unregister(fd->handler);
 	} else {
+<<<<<<< HEAD
+=======
+		mutex_lock(&uctxt->exp_mutex);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (!EXP_TID_SET_EMPTY(uctxt->tid_full_list))
 			unlock_exp_tids(uctxt, &uctxt->tid_full_list, fd);
 		if (!EXP_TID_SET_EMPTY(uctxt->tid_used_list))
 			unlock_exp_tids(uctxt, &uctxt->tid_used_list, fd);
+<<<<<<< HEAD
+=======
+		mutex_unlock(&uctxt->exp_mutex);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	kfree(fd->invalid_tids);

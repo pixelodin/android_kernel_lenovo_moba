@@ -65,7 +65,10 @@ static const char* host_info(struct Scsi_Host *host)
 static int slave_alloc (struct scsi_device *sdev)
 {
 	struct us_data *us = host_to_us(sdev->host);
+<<<<<<< HEAD
 	int maxp;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/*
 	 * Set the INQUIRY transfer length to 36.  We don't use any of
@@ -75,6 +78,7 @@ static int slave_alloc (struct scsi_device *sdev)
 	sdev->inquiry_len = 36;
 
 	/*
+<<<<<<< HEAD
 	 * USB has unusual scatter-gather requirements: the length of each
 	 * scatterlist element except the last must be divisible by the
 	 * Bulk maxpacket value.  Fortunately this value is always a
@@ -84,6 +88,8 @@ static int slave_alloc (struct scsi_device *sdev)
 	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
 
 	/*
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	 * Some host controllers may have alignment requirements.
 	 * We'll play it safe by requiring 512-byte alignment always.
 	 */

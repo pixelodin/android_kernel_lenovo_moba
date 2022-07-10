@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2002,2007-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2002,2007-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include <linux/slab.h>
@@ -160,7 +164,11 @@ static long adreno_ioctl_preemption_counters_query(
 		levels_to_copy = gpudev->num_prio_levels;
 
 	if (copy_to_user((void __user *) (uintptr_t) read->counters,
+<<<<<<< HEAD
 			adreno_dev->preempt.counters.hostptr,
+=======
+			adreno_dev->preempt.scratch.hostptr,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			levels_to_copy * size_level))
 		return -EFAULT;
 

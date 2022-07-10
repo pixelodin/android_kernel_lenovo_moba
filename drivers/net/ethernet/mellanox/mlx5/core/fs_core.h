@@ -121,6 +121,10 @@ struct mlx5_flow_table {
 	struct {
 		bool			active;
 		unsigned int		required_groups;
+<<<<<<< HEAD
+=======
+		unsigned int		group_size;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		unsigned int		num_groups;
 	} autogroup;
 	/* Protect fwd_rules */

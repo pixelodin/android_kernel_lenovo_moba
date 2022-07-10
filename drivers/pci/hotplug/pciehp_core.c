@@ -348,7 +348,11 @@ static struct pcie_port_service_driver hpdriver_portdrv = {
 #endif	/* PM */
 };
 
+<<<<<<< HEAD
 static int __init pcied_init(void)
+=======
+int __init pcie_hp_init(void)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	int retval = 0;
 
@@ -359,4 +363,7 @@ static int __init pcied_init(void)
 
 	return retval;
 }
+<<<<<<< HEAD
 device_initcall(pcied_init);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

@@ -1190,6 +1190,14 @@ static int spi_qup_suspend(struct device *device)
 	struct spi_qup *controller = spi_master_get_devdata(master);
 	int ret;
 
+<<<<<<< HEAD
+=======
+	if (pm_runtime_suspended(device)) {
+		ret = spi_qup_pm_resume_runtime(device);
+		if (ret)
+			return ret;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = spi_master_suspend(master);
 	if (ret)
 		return ret;
@@ -1198,10 +1206,15 @@ static int spi_qup_suspend(struct device *device)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (!pm_runtime_suspended(device)) {
 		clk_disable_unprepare(controller->cclk);
 		clk_disable_unprepare(controller->iclk);
 	}
+=======
+	clk_disable_unprepare(controller->cclk);
+	clk_disable_unprepare(controller->iclk);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 }
 

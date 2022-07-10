@@ -6,7 +6,10 @@
 
 struct request;
 
+<<<<<<< HEAD
 #ifdef CONFIG_BLK_DEV_BSG
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct bsg_ops {
 	int	(*check_proto)(struct sg_io_v4 *hdr);
 	int	(*fill_hdr)(struct request *rq, struct sg_io_v4 *hdr,
@@ -22,6 +25,10 @@ struct bsg_class_device {
 	const struct bsg_ops *ops;
 };
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_BLK_DEV_BSG
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 int bsg_register_queue(struct request_queue *q, struct device *parent,
 		const char *name, const struct bsg_ops *ops);
 int bsg_scsi_register_queue(struct request_queue *q, struct device *parent);

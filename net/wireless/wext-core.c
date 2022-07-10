@@ -657,7 +657,12 @@ struct iw_statistics *get_wireless_stats(struct net_device *dev)
 	return NULL;
 }
 
+<<<<<<< HEAD
 static int iw_handler_get_iwstats(struct net_device *		dev,
+=======
+/* noinline to avoid a bogus warning with -O3 */
+static noinline int iw_handler_get_iwstats(struct net_device *	dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				  struct iw_request_info *	info,
 				  union iwreq_data *		wrqu,
 				  char *			extra)

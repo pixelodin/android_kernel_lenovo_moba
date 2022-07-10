@@ -118,7 +118,12 @@ static void dn_dst_ifdown(struct dst_entry *, struct net_device *dev, int how);
 static struct dst_entry *dn_dst_negative_advice(struct dst_entry *);
 static void dn_dst_link_failure(struct sk_buff *);
 static void dn_dst_update_pmtu(struct dst_entry *dst, struct sock *sk,
+<<<<<<< HEAD
 			       struct sk_buff *skb , u32 mtu);
+=======
+			       struct sk_buff *skb , u32 mtu,
+			       bool confirm_neigh);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static void dn_dst_redirect(struct dst_entry *dst, struct sock *sk,
 			    struct sk_buff *skb);
 static struct neighbour *dn_dst_neigh_lookup(const struct dst_entry *dst,
@@ -259,7 +264,12 @@ static int dn_dst_gc(struct dst_ops *ops)
  * advertise to the other end).
  */
 static void dn_dst_update_pmtu(struct dst_entry *dst, struct sock *sk,
+<<<<<<< HEAD
 			       struct sk_buff *skb, u32 mtu)
+=======
+			       struct sk_buff *skb, u32 mtu,
+			       bool confirm_neigh)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct dn_route *rt = (struct dn_route *) dst;
 	struct neighbour *n = rt->n;

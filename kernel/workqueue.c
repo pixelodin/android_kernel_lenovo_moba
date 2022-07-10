@@ -1422,6 +1422,7 @@ static void __queue_work(int cpu, struct workqueue_struct *wq,
 	    WARN_ON_ONCE(!is_chained_work(wq)))
 		return;
 retry:
+<<<<<<< HEAD
 	if (req_cpu == WORK_CPU_UNBOUND)
 		cpu = wq_select_unbound_cpu(raw_smp_processor_id());
 
@@ -1430,6 +1431,18 @@ retry:
 		pwq = per_cpu_ptr(wq->cpu_pwqs, cpu);
 	else
 		pwq = unbound_pwq_by_node(wq, cpu_to_node(cpu));
+=======
+	/* pwq which will be used unless @work is executing elsewhere */
+	if (wq->flags & WQ_UNBOUND) {
+		if (req_cpu == WORK_CPU_UNBOUND)
+			cpu = wq_select_unbound_cpu(raw_smp_processor_id());
+		pwq = unbound_pwq_by_node(wq, cpu_to_node(cpu));
+	} else {
+		if (req_cpu == WORK_CPU_UNBOUND)
+			cpu = raw_smp_processor_id();
+		pwq = per_cpu_ptr(wq->cpu_pwqs, cpu);
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/*
 	 * If @work was previously on a different pool, it might still be
@@ -1546,7 +1559,13 @@ static void __queue_delayed_work(int cpu, struct workqueue_struct *wq,
 	struct work_struct *work = &dwork->work;
 
 	WARN_ON_ONCE(!wq);
+<<<<<<< HEAD
 	WARN_ON_ONCE(timer->function != delayed_work_timer_fn);
+=======
+#ifndef CONFIG_CFI
+	WARN_ON_ONCE(timer->function != delayed_work_timer_fn);
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	WARN_ON_ONCE(timer_pending(timer));
 	WARN_ON_ONCE(!list_empty(&work->entry));
 
@@ -2454,8 +2473,19 @@ repeat:
 			 */
 			if (need_to_create_worker(pool)) {
 				spin_lock(&wq_mayday_lock);
+<<<<<<< HEAD
 				get_pwq(pwq);
 				list_move_tail(&pwq->mayday_node, &wq->maydays);
+=======
+				/*
+				 * Queue iff we aren't racing destruction
+				 * and somebody else hasn't queued it already.
+				 */
+				if (wq->rescuer && list_empty(&pwq->mayday_node)) {
+					get_pwq(pwq);
+					list_add_tail(&pwq->mayday_node, &wq->maydays);
+				}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				spin_unlock(&wq_mayday_lock);
 			}
 		}
@@ -3143,12 +3173,15 @@ static bool __cancel_work(struct work_struct *work, bool is_dwork)
 	local_irq_restore(flags);
 	return ret;
 }
+<<<<<<< HEAD
 #ifdef CONFIG_PRODUCT_MOBA
 bool cancel_work(struct work_struct *work)
 {
        return __cancel_work(work, false);
 }
 #endif
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /**
  * cancel_delayed_work - cancel a delayed work
@@ -4201,9 +4234,35 @@ void destroy_workqueue(struct workqueue_struct *wq)
 	struct pool_workqueue *pwq;
 	int node;
 
+<<<<<<< HEAD
 	/* drain it before proceeding with destruction */
 	drain_workqueue(wq);
 
+=======
+	/*
+	 * Remove it from sysfs first so that sanity check failure doesn't
+	 * lead to sysfs name conflicts.
+	 */
+	workqueue_sysfs_unregister(wq);
+
+	/* drain it before proceeding with destruction */
+	drain_workqueue(wq);
+
+	/* kill rescuer, if sanity checks fail, leave it w/o rescuer */
+	if (wq->rescuer) {
+		struct worker *rescuer = wq->rescuer;
+
+		/* this prevents new queueing */
+		spin_lock_irq(&wq_mayday_lock);
+		wq->rescuer = NULL;
+		spin_unlock_irq(&wq_mayday_lock);
+
+		/* rescuer will empty maydays list before exiting */
+		kthread_stop(rescuer->task);
+		kfree(rescuer);
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* sanity checks */
 	mutex_lock(&wq->mutex);
 	for_each_pwq(pwq, wq) {
@@ -4235,11 +4294,14 @@ void destroy_workqueue(struct workqueue_struct *wq)
 	list_del_rcu(&wq->list);
 	mutex_unlock(&wq_pool_mutex);
 
+<<<<<<< HEAD
 	workqueue_sysfs_unregister(wq);
 
 	if (wq->rescuer)
 		kthread_stop(wq->rescuer->task);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!(wq->flags & WQ_UNBOUND)) {
 		/*
 		 * The base ref is never dropped on per-cpu pwqs.  Directly
@@ -4511,7 +4573,12 @@ static void show_pwq(struct pool_workqueue *pwq)
 	pr_info("  pwq %d:", pool->id);
 	pr_cont_pool_info(pool);
 
+<<<<<<< HEAD
 	pr_cont(" active=%d/%d%s\n", pwq->nr_active, pwq->max_active,
+=======
+	pr_cont(" active=%d/%d refcnt=%d%s\n",
+		pwq->nr_active, pwq->max_active, pwq->refcnt,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		!list_empty(&pwq->mayday_node) ? " MAYDAY" : "");
 
 	hash_for_each(pool->busy_hash, bkt, worker, hentry) {

@@ -236,7 +236,11 @@ static void ntb_netdev_tx_timer(struct timer_list *t)
 	struct net_device *ndev = dev->ndev;
 
 	if (ntb_transport_tx_free_entry(dev->qp) < tx_stop) {
+<<<<<<< HEAD
 		mod_timer(&dev->tx_timer, jiffies + msecs_to_jiffies(tx_time));
+=======
+		mod_timer(&dev->tx_timer, jiffies + usecs_to_jiffies(tx_time));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	} else {
 		/* Make sure anybody stopping the queue after this sees the new
 		 * value of ntb_transport_tx_free_entry()

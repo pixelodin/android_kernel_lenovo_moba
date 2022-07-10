@@ -47,19 +47,31 @@
 		compatible = "operating-points-v2";
 		opp-shared;
 
+<<<<<<< HEAD
 		opp@648000000 {
+=======
+		opp-648000000 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			opp-hz = /bits/ 64 <648000000>;
 			opp-microvolt = <1040000 1040000 1300000>;
 			clock-latency-ns = <244144>; /* 8 32k periods */
 		};
 
+<<<<<<< HEAD
 		opp@816000000 {
+=======
+		opp-816000000 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			opp-hz = /bits/ 64 <816000000>;
 			opp-microvolt = <1100000 1100000 1300000>;
 			clock-latency-ns = <244144>; /* 8 32k periods */
 		};
 
+<<<<<<< HEAD
 		opp@1008000000 {
+=======
+		opp-1008000000 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			opp-hz = /bits/ 64 <1008000000>;
 			opp-microvolt = <1200000 1200000 1300000>;
 			clock-latency-ns = <244144>; /* 8 32k periods */
@@ -80,7 +92,11 @@
 			#cooling-cells = <2>;
 		};
 
+<<<<<<< HEAD
 		cpu@1 {
+=======
+		cpu1: cpu@1 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			compatible = "arm,cortex-a7";
 			device_type = "cpu";
 			reg = <1>;
@@ -90,7 +106,11 @@
 			#cooling-cells = <2>;
 		};
 
+<<<<<<< HEAD
 		cpu@2 {
+=======
+		cpu2: cpu@2 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			compatible = "arm,cortex-a7";
 			device_type = "cpu";
 			reg = <2>;
@@ -100,7 +120,11 @@
 			#cooling-cells = <2>;
 		};
 
+<<<<<<< HEAD
 		cpu@3 {
+=======
+		cpu3: cpu@3 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			compatible = "arm,cortex-a7";
 			device_type = "cpu";
 			reg = <3>;
@@ -111,6 +135,18 @@
 		};
 	};
 
+<<<<<<< HEAD
+=======
+	pmu {
+		compatible = "arm,cortex-a7-pmu";
+		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
+			     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
+			     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
+			     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
+	};
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	timer {
 		compatible = "arm,armv7-timer";
 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
@@ -122,7 +158,11 @@
 	soc {
 		system-control@1c00000 {
 			compatible = "allwinner,sun8i-h3-system-control";
+<<<<<<< HEAD
 			reg = <0x01c00000 0x30>;
+=======
+			reg = <0x01c00000 0x1000>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			#address-cells = <1>;
 			#size-cells = <1>;
 			ranges;

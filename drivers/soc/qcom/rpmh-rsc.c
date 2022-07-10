@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #define pr_fmt(fmt) "%s " fmt, KBUILD_MODNAME
@@ -561,6 +565,17 @@ void rpmh_rsc_mode_solver_set(struct rsc_drv *drv, bool enable)
 	int m;
 	struct tcs_group *tcs = get_tcs_of_type(drv, ACTIVE_TCS);
 
+<<<<<<< HEAD
+=======
+	/*
+	 * If we made an active request on a RSC that does not have a
+	 * dedicated TCS for active state use, then re-purposed wake TCSes
+	 * should be checked for not busy, because we used wake TCSes for
+	 * active requests in this case.
+	 */
+	if (!tcs->num_tcs)
+		tcs = get_tcs_of_type(drv, WAKE_TCS);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 again:
 	spin_lock(&drv->lock);
 	for (m = tcs->offset; m < tcs->offset + tcs->num_tcs; m++) {
@@ -692,7 +707,11 @@ static void print_tcs_info(struct rsc_drv *drv, int tcs_id, unsigned long *accl)
 	}
 }
 
+<<<<<<< HEAD
 void rpmh_rsc_debug(struct rsc_drv *drv)
+=======
+void rpmh_rsc_debug(struct rsc_drv *drv, struct completion *compl)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct irq_data *rsc_irq_data = irq_get_irq_data(drv->irq);
 	bool irq_sts;
@@ -718,6 +737,11 @@ void rpmh_rsc_debug(struct rsc_drv *drv)
 	irq_get_irqchip_state(drv->irq, IRQCHIP_STATE_PENDING, &irq_sts);
 	pr_warn("HW IRQ %lu is %s at GIC\n", rsc_irq_data->hwirq,
 		irq_sts ? "PENDING" : "NOT PENDING");
+<<<<<<< HEAD
+=======
+	pr_warn("Completion is %s to finish\n",
+		completion_done(compl) ? "PENDING" : "NOT PENDING");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	for_each_set_bit(i, &accl, ARRAY_SIZE(accl_str)) {
 		strlcat(str, accl_str[i], sizeof(str));
@@ -910,6 +934,10 @@ static struct platform_driver rpmh_driver = {
 	.driver = {
 		  .name = "rpmh",
 		  .of_match_table = rpmh_drv_match,
+<<<<<<< HEAD
+=======
+		  .suppress_bind_attrs = true,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 };
 
@@ -918,3 +946,9 @@ static int __init rpmh_driver_init(void)
 	return platform_driver_register(&rpmh_driver);
 }
 arch_initcall(rpmh_driver_init);
+<<<<<<< HEAD
+=======
+
+MODULE_LICENSE("GPL v2");
+MODULE_DESCRIPTION("Qualcomm RPM-Hardened (RPMH) Communication driver");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

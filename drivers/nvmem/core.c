@@ -559,7 +559,11 @@ static struct nvmem_device *nvmem_find(const char *name)
 	d = bus_find_device_by_name(&nvmem_bus_type, NULL, name);
 
 	if (!d)
+<<<<<<< HEAD
 		return NULL;
+=======
+		return ERR_PTR(-ENOENT);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return to_nvmem_device(d);
 }
@@ -899,7 +903,12 @@ static void nvmem_shift_read_buffer_in_place(struct nvmem_cell *cell, void *buf)
 		*p-- = 0;
 
 	/* clear msb bits if any leftover in the last byte */
+<<<<<<< HEAD
 	*p &= GENMASK((cell->nbits%BITS_PER_BYTE) - 1, 0);
+=======
+	if (cell->nbits%BITS_PER_BYTE)
+		*p &= GENMASK((cell->nbits%BITS_PER_BYTE) - 1, 0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int __nvmem_cell_read(struct nvmem_device *nvmem,

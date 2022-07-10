@@ -26,9 +26,15 @@ void ppc4xx_trng_probe(struct crypto4xx_core_device *core_dev);
 void ppc4xx_trng_remove(struct crypto4xx_core_device *core_dev);
 #else
 static inline void ppc4xx_trng_probe(
+<<<<<<< HEAD
 	struct crypto4xx_device *dev __maybe_unused) { }
 static inline void ppc4xx_trng_remove(
 	struct crypto4xx_device *dev __maybe_unused) { }
+=======
+	struct crypto4xx_core_device *dev __maybe_unused) { }
+static inline void ppc4xx_trng_remove(
+	struct crypto4xx_core_device *dev __maybe_unused) { }
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif
 
 #endif

@@ -237,23 +237,67 @@ static inline int regs_within_kernel_stack(struct pt_regs *regs,
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * regs_get_kernel_stack_nth_addr() - get the address of the Nth entry on stack
+ * @regs:	pt_regs which contains kernel stack pointer.
+ * @n:		stack entry number.
+ *
+ * regs_get_kernel_stack_nth() returns the address of the @n th entry of the
+ * kernel stack which is specified by @regs. If the @n th entry is NOT in
+ * the kernel stack, this returns NULL.
+ */
+static inline unsigned long *regs_get_kernel_stack_nth_addr(struct pt_regs *regs, unsigned int n)
+{
+	unsigned long *addr = (unsigned long *)kernel_stack_pointer(regs);
+
+	addr += n;
+	if (regs_within_kernel_stack(regs, (unsigned long)addr))
+		return addr;
+	else
+		return NULL;
+}
+
+/* To avoid include hell, we can't include uaccess.h */
+extern long probe_kernel_read(void *dst, const void *src, size_t size);
+
+/**
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * regs_get_kernel_stack_nth() - get Nth entry of the stack
  * @regs:	pt_regs which contains kernel stack pointer.
  * @n:		stack entry number.
  *
  * regs_get_kernel_stack_nth() returns @n th entry of the kernel stack which
+<<<<<<< HEAD
  * is specified by @regs. If the @n th entry is NOT in the kernel stack,
+=======
+ * is specified by @regs. If the @n th entry is NOT in the kernel stack
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * this returns 0.
  */
 static inline unsigned long regs_get_kernel_stack_nth(struct pt_regs *regs,
 						      unsigned int n)
 {
+<<<<<<< HEAD
 	unsigned long *addr = (unsigned long *)kernel_stack_pointer(regs);
 	addr += n;
 	if (regs_within_kernel_stack(regs, (unsigned long)addr))
 		return *addr;
 	else
 		return 0;
+=======
+	unsigned long *addr;
+	unsigned long val;
+	long ret;
+
+	addr = regs_get_kernel_stack_nth_addr(regs, n);
+	if (addr) {
+		ret = probe_kernel_read(&val, addr, sizeof(val));
+		if (!ret)
+			return val;
+	}
+	return 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 #define arch_has_single_step()	(1)

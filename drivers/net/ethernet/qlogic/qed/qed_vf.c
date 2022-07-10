@@ -1698,7 +1698,11 @@ static void qed_handle_bulletin_change(struct qed_hwfn *hwfn)
 	ops->ports_update(cookie, vxlan_port, geneve_port);
 
 	/* Always update link configuration according to bulletin */
+<<<<<<< HEAD
 	qed_link_update(hwfn);
+=======
+	qed_link_update(hwfn, NULL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 void qed_iov_vf_task(struct work_struct *work)

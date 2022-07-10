@@ -1029,7 +1029,12 @@ static int netlink_bind(struct socket *sock, struct sockaddr *addr,
 	if (nlk->netlink_bind && groups) {
 		int group;
 
+<<<<<<< HEAD
 		for (group = 0; group < nlk->ngroups; group++) {
+=======
+		/* nl_groups is a u32, so cap the maximum groups we can bind */
+		for (group = 0; group < BITS_PER_TYPE(u32); group++) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			if (!test_bit(group, &groups))
 				continue;
 			err = nlk->netlink_bind(net, group + 1);
@@ -1048,7 +1053,11 @@ static int netlink_bind(struct socket *sock, struct sockaddr *addr,
 			netlink_insert(sk, nladdr->nl_pid) :
 			netlink_autobind(sock);
 		if (err) {
+<<<<<<< HEAD
 			netlink_undo_bind(nlk->ngroups, groups, sk);
+=======
+			netlink_undo_bind(BITS_PER_TYPE(u32), groups, sk);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			goto unlock;
 		}
 	}
@@ -2410,7 +2419,11 @@ void netlink_ack(struct sk_buff *in_skb, struct nlmsghdr *nlh, int err,
 							       in_skb->len))
 				WARN_ON(nla_put_u32(skb, NLMSGERR_ATTR_OFFS,
 						    (u8 *)extack->bad_attr -
+<<<<<<< HEAD
 						    in_skb->data));
+=======
+						    (u8 *)nlh));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		} else {
 			if (extack->cookie_len)
 				WARN_ON(nla_put(skb, NLMSGERR_ATTR_COOKIE,

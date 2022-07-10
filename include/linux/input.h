@@ -36,6 +36,16 @@ struct input_value {
 	__s32 value;
 };
 
+<<<<<<< HEAD
+=======
+enum input_clock_type {
+	INPUT_CLK_REAL = 0,
+	INPUT_CLK_MONO,
+	INPUT_CLK_BOOT,
+	INPUT_CLK_MAX
+};
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /**
  * struct input_dev - represents an input device
  * @name: name of the device
@@ -117,6 +127,11 @@ struct input_value {
  * @vals: array of values queued in the current frame
  * @devres_managed: indicates that devices is managed with devres framework
  *	and needs not be explicitly unregistered or freed.
+<<<<<<< HEAD
+=======
+ * @timestamp: storage for a timestamp set by input_set_timestamp called
+ *  by a driver
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 struct input_dev {
 	const char *name;
@@ -187,6 +202,11 @@ struct input_dev {
 	struct input_value *vals;
 
 	bool devres_managed;
+<<<<<<< HEAD
+=======
+
+	ktime_t timestamp[INPUT_CLK_MAX];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 #define to_input_dev(d) container_of(d, struct input_dev, dev)
 
@@ -385,6 +405,12 @@ void input_close_device(struct input_handle *);
 
 int input_flush_device(struct input_handle *handle, struct file *file);
 
+<<<<<<< HEAD
+=======
+void input_set_timestamp(struct input_dev *dev, ktime_t timestamp);
+ktime_t *input_get_timestamp(struct input_dev *dev);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 void input_event(struct input_dev *dev, unsigned int type, unsigned int code, int value);
 void input_inject_event(struct input_handle *handle, unsigned int type, unsigned int code, int value);
 

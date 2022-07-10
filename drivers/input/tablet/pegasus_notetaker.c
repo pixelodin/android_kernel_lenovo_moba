@@ -274,7 +274,11 @@ static int pegasus_probe(struct usb_interface *intf,
 		return -ENODEV;
 
 	/* Sanity check that the device has an endpoint */
+<<<<<<< HEAD
 	if (intf->altsetting[0].desc.bNumEndpoints < 1) {
+=======
+	if (intf->cur_altsetting->desc.bNumEndpoints < 1) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		dev_err(&intf->dev, "Invalid number of endpoints\n");
 		return -EINVAL;
 	}

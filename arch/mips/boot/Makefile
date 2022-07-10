@@ -123,7 +123,11 @@ $(obj)/vmlinux.its.S: $(addprefix $(srctree)/arch/mips/$(PLATFORM)/,$(ITS_INPUTS
 targets += vmlinux.its
 targets += vmlinux.gz.its
 targets += vmlinux.bz2.its
+<<<<<<< HEAD
 targets += vmlinux.lzmo.its
+=======
+targets += vmlinux.lzma.its
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 targets += vmlinux.lzo.its
 
 quiet_cmd_cpp_its_S = ITS     $@

@@ -34,6 +34,10 @@
 static void dwmac1000_core_init(struct mac_device_info *hw,
 				struct net_device *dev)
 {
+<<<<<<< HEAD
+=======
+	struct stmmac_priv *priv = netdev_priv(dev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	void __iomem *ioaddr = hw->pcsr;
 	u32 value = readl(ioaddr + GMAC_CONTROL);
 	int mtu = dev->mtu;
@@ -45,7 +49,11 @@ static void dwmac1000_core_init(struct mac_device_info *hw,
 	 * Broadcom tags can look like invalid LLC/SNAP packets and cause the
 	 * hardware to truncate packets on reception.
 	 */
+<<<<<<< HEAD
 	if (netdev_uses_dsa(dev))
+=======
+	if (netdev_uses_dsa(dev) || !priv->plat->enh_desc)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		value &= ~GMAC_CONTROL_ACS;
 
 	if (mtu > 1500)

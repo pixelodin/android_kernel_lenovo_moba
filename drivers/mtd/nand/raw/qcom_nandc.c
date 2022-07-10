@@ -23,7 +23,10 @@
 #include <linux/of_device.h>
 #include <linux/delay.h>
 #include <linux/dma/qcom_bam_dma.h>
+<<<<<<< HEAD
 #include <linux/dma-direct.h> /* XXX: drivers shall never use this directly! */
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /* NANDc reg offsets */
 #define	NAND_FLASH_CMD			0x00

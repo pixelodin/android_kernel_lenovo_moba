@@ -131,7 +131,11 @@ static int srp_get_pr_transport_id(
 	memset(buf + 8, 0, leading_zero_bytes);
 	rc = hex2bin(buf + 8 + leading_zero_bytes, p, count);
 	if (rc < 0) {
+<<<<<<< HEAD
 		pr_debug("hex2bin failed for %s: %d\n", __func__, rc);
+=======
+		pr_debug("hex2bin failed for %s: %d\n", p, rc);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return rc;
 	}
 

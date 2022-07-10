@@ -112,6 +112,16 @@ static int pl030_probe(struct amba_device *dev, const struct amba_id *id)
 		goto err_rtc;
 	}
 
+<<<<<<< HEAD
+=======
+	rtc->rtc = devm_rtc_allocate_device(&dev->dev);
+	if (IS_ERR(rtc->rtc)) {
+		ret = PTR_ERR(rtc->rtc);
+		goto err_rtc;
+	}
+
+	rtc->rtc->ops = &pl030_ops;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rtc->base = ioremap(dev->res.start, resource_size(&dev->res));
 	if (!rtc->base) {
 		ret = -ENOMEM;
@@ -128,12 +138,18 @@ static int pl030_probe(struct amba_device *dev, const struct amba_id *id)
 	if (ret)
 		goto err_irq;
 
+<<<<<<< HEAD
 	rtc->rtc = rtc_device_register("pl030", &dev->dev, &pl030_ops,
 				       THIS_MODULE);
 	if (IS_ERR(rtc->rtc)) {
 		ret = PTR_ERR(rtc->rtc);
 		goto err_reg;
 	}
+=======
+	ret = rtc_register_device(rtc->rtc);
+	if (ret)
+		goto err_reg;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return 0;
 
@@ -154,7 +170,10 @@ static int pl030_remove(struct amba_device *dev)
 	writel(0, rtc->base + RTC_CR);
 
 	free_irq(dev->irq[0], rtc);
+<<<<<<< HEAD
 	rtc_device_unregister(rtc->rtc);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	iounmap(rtc->base);
 	amba_release_regions(dev);
 

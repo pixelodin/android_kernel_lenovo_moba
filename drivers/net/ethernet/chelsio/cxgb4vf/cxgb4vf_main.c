@@ -722,6 +722,13 @@ static int adapter_up(struct adapter *adapter)
 
 		if (adapter->flags & USING_MSIX)
 			name_msix_vecs(adapter);
+<<<<<<< HEAD
+=======
+
+		/* Initialize hash mac addr list*/
+		INIT_LIST_HEAD(&adapter->mac_hlist);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		adapter->flags |= FULL_INIT_DONE;
 	}
 
@@ -747,8 +754,11 @@ static int adapter_up(struct adapter *adapter)
 	enable_rx(adapter);
 	t4vf_sge_start(adapter);
 
+<<<<<<< HEAD
 	/* Initialize hash mac addr list*/
 	INIT_LIST_HEAD(&adapter->mac_hlist);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 }
 

@@ -1861,7 +1861,11 @@ int mlx5_eswitch_set_vport_state(struct mlx5_eswitch *esw,
 
 unlock:
 	mutex_unlock(&esw->state_lock);
+<<<<<<< HEAD
 	return 0;
+=======
+	return err;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 int mlx5_eswitch_get_vport_config(struct mlx5_eswitch *esw,

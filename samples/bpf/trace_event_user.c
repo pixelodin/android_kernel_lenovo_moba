@@ -35,9 +35,15 @@ static void print_ksym(__u64 addr)
 		return;
 	sym = ksym_search(addr);
 	printf("%s;", sym->name);
+<<<<<<< HEAD
 	if (!strcmp(sym->name, "sys_read"))
 		sys_read_seen = true;
 	else if (!strcmp(sym->name, "sys_write"))
+=======
+	if (!strstr(sym->name, "sys_read"))
+		sys_read_seen = true;
+	else if (!strstr(sym->name, "sys_write"))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		sys_write_seen = true;
 }
 

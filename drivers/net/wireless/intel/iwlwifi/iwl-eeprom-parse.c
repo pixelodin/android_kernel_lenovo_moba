@@ -928,6 +928,7 @@ iwl_parse_eeprom_data(struct device *dev, const struct iwl_cfg *cfg,
 	return NULL;
 }
 IWL_EXPORT_SYMBOL(iwl_parse_eeprom_data);
+<<<<<<< HEAD
 
 /* helper functions */
 int iwl_nvm_check_version(struct iwl_nvm_data *data,
@@ -947,3 +948,5 @@ int iwl_nvm_check_version(struct iwl_nvm_data *data,
 	return -EINVAL;
 }
 IWL_EXPORT_SYMBOL(iwl_nvm_check_version);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

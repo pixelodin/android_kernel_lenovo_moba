@@ -3108,6 +3108,7 @@ static int smiapp_probe(struct i2c_client *client,
 	if (rval < 0)
 		goto out_media_entity_cleanup;
 
+<<<<<<< HEAD
 	rval = v4l2_async_register_subdev_sensor_common(&sensor->src->sd);
 	if (rval < 0)
 		goto out_media_entity_cleanup;
@@ -3115,12 +3116,28 @@ static int smiapp_probe(struct i2c_client *client,
 	pm_runtime_set_active(&client->dev);
 	pm_runtime_get_noresume(&client->dev);
 	pm_runtime_enable(&client->dev);
+=======
+	pm_runtime_set_active(&client->dev);
+	pm_runtime_get_noresume(&client->dev);
+	pm_runtime_enable(&client->dev);
+
+	rval = v4l2_async_register_subdev_sensor_common(&sensor->src->sd);
+	if (rval < 0)
+		goto out_disable_runtime_pm;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pm_runtime_set_autosuspend_delay(&client->dev, 1000);
 	pm_runtime_use_autosuspend(&client->dev);
 	pm_runtime_put_autosuspend(&client->dev);
 
 	return 0;
 
+<<<<<<< HEAD
+=======
+out_disable_runtime_pm:
+	pm_runtime_disable(&client->dev);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 out_media_entity_cleanup:
 	media_entity_cleanup(&sensor->src->sd.entity);
 

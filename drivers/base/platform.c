@@ -26,6 +26,11 @@
 #include <linux/clk/clk-conf.h>
 #include <linux/limits.h>
 #include <linux/property.h>
+<<<<<<< HEAD
+=======
+#include <linux/kmemleak.h>
+#include <linux/types.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #include "base.h"
 #include "power/power.h"
@@ -66,7 +71,11 @@ void __weak arch_setup_pdev_archdata(struct platform_device *pdev)
 struct resource *platform_get_resource(struct platform_device *dev,
 				       unsigned int type, unsigned int num)
 {
+<<<<<<< HEAD
 	int i;
+=======
+	u32 i;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	for (i = 0; i < dev->num_resources; i++) {
 		struct resource *r = &dev->resource[i];
@@ -161,7 +170,11 @@ struct resource *platform_get_resource_byname(struct platform_device *dev,
 					      unsigned int type,
 					      const char *name)
 {
+<<<<<<< HEAD
 	int i;
+=======
+	u32 i;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	for (i = 0; i < dev->num_resources; i++) {
 		struct resource *r = &dev->resource[i];
@@ -358,7 +371,12 @@ EXPORT_SYMBOL_GPL(platform_device_add_properties);
  */
 int platform_device_add(struct platform_device *pdev)
 {
+<<<<<<< HEAD
 	int i, ret;
+=======
+	u32 i;
+	int ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!pdev)
 		return -EINVAL;
@@ -424,7 +442,11 @@ int platform_device_add(struct platform_device *pdev)
 		pdev->id = PLATFORM_DEVID_AUTO;
 	}
 
+<<<<<<< HEAD
 	while (--i >= 0) {
+=======
+	while (i--) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		struct resource *r = &pdev->resource[i];
 		if (r->parent)
 			release_resource(r);
@@ -445,7 +467,11 @@ EXPORT_SYMBOL_GPL(platform_device_add);
  */
 void platform_device_del(struct platform_device *pdev)
 {
+<<<<<<< HEAD
 	int i;
+=======
+	u32 i;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (pdev) {
 		device_remove_properties(&pdev->dev);
@@ -525,6 +551,11 @@ struct platform_device *platform_device_register_full(
 		if (!pdev->dev.dma_mask)
 			goto err;
 
+<<<<<<< HEAD
+=======
+		kmemleak_ignore(pdev->dev.dma_mask);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		*pdev->dev.dma_mask = pdevinfo->dma_mask;
 		pdev->dev.coherent_dma_mask = pdevinfo->dma_mask;
 	}

@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2012-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include <linux/kernel.h>
@@ -9,7 +13,11 @@
 #include <linux/dma-mapping.h>
 
 #include "f_qdss.h"
+<<<<<<< HEAD
 static int alloc_sps_req(struct usb_ep *data_ep)
+=======
+int alloc_sps_req(struct usb_ep *data_ep)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct usb_request *req = NULL;
 	struct f_qdss *qdss = data_ep->driver_data;
@@ -24,8 +32,12 @@ static int alloc_sps_req(struct usb_ep *data_ep)
 	}
 
 	req->length = 32*1024;
+<<<<<<< HEAD
 	sps_params = MSM_SPS_MODE | MSM_DISABLE_WB |
 			qdss->bam_info.usb_bam_pipe_idx;
+=======
+	sps_params = MSM_SPS_MODE | MSM_DISABLE_WB;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	req->udc_priv = sps_params;
 	qdss->endless_req = req;
 
@@ -98,7 +110,11 @@ int set_qdss_data_connection(struct f_qdss *qdss, int enable)
 				&bam_info.usb_bam_pipe_idx,
 				NULL, bam_info.data_fifo, NULL);
 
+<<<<<<< HEAD
 		alloc_sps_req(qdss->port.data);
+=======
+		qdss->endless_req->udc_priv |= qdss->bam_info.usb_bam_pipe_idx;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		msm_data_fifo_config(qdss->port.data,
 			bam_info.data_fifo->iova,
 			bam_info.data_fifo->size,

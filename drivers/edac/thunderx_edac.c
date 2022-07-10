@@ -1884,7 +1884,11 @@ static irqreturn_t thunderx_l2c_threaded_isr(int irq, void *irq_id)
 	default:
 		dev_err(&l2c->pdev->dev, "Unsupported device: %04x\n",
 			l2c->pdev->device);
+<<<<<<< HEAD
 		return IRQ_NONE;
+=======
+		goto err_free;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	while (CIRC_CNT(l2c->ring_head, l2c->ring_tail,
@@ -1906,7 +1910,11 @@ static irqreturn_t thunderx_l2c_threaded_isr(int irq, void *irq_id)
 		l2c->ring_tail++;
 	}
 
+<<<<<<< HEAD
 	return IRQ_HANDLED;
+=======
+	ret = IRQ_HANDLED;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 err_free:
 	kfree(other);

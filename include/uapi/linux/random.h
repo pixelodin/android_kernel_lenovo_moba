@@ -48,9 +48,18 @@ struct rand_pool_info {
  * Flags for getrandom(2)
  *
  * GRND_NONBLOCK	Don't block and return EAGAIN instead
+<<<<<<< HEAD
  * GRND_RANDOM		Use the /dev/random pool instead of /dev/urandom
  */
 #define GRND_NONBLOCK	0x0001
 #define GRND_RANDOM	0x0002
+=======
+ * GRND_RANDOM		No effect
+ * GRND_INSECURE	Return non-cryptographic random bytes
+ */
+#define GRND_NONBLOCK	0x0001
+#define GRND_RANDOM	0x0002
+#define GRND_INSECURE	0x0004
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #endif /* _UAPI_LINUX_RANDOM_H */

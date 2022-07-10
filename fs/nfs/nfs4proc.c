@@ -1393,8 +1393,11 @@ static int can_open_delegated(struct nfs_delegation *delegation, fmode_t fmode,
 		return 0;
 	if ((delegation->type & fmode) != fmode)
 		return 0;
+<<<<<<< HEAD
 	if (test_bit(NFS_DELEGATION_RETURNING, &delegation->flags))
 		return 0;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	switch (claim) {
 	case NFS4_OPEN_CLAIM_NULL:
 	case NFS4_OPEN_CLAIM_FH:
@@ -1751,7 +1754,10 @@ static void nfs4_return_incompatible_delegation(struct inode *inode, fmode_t fmo
 static struct nfs4_state *nfs4_try_open_cached(struct nfs4_opendata *opendata)
 {
 	struct nfs4_state *state = opendata->state;
+<<<<<<< HEAD
 	struct nfs_inode *nfsi = NFS_I(state->inode);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct nfs_delegation *delegation;
 	int open_mode = opendata->o_arg.open_flags;
 	fmode_t fmode = opendata->o_arg.fmode;
@@ -1768,7 +1774,11 @@ static struct nfs4_state *nfs4_try_open_cached(struct nfs4_opendata *opendata)
 		}
 		spin_unlock(&state->owner->so_lock);
 		rcu_read_lock();
+<<<<<<< HEAD
 		delegation = rcu_dereference(nfsi->delegation);
+=======
+		delegation = nfs4_get_valid_delegation(state->inode);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (!can_open_delegated(delegation, fmode, claim)) {
 			rcu_read_unlock();
 			break;
@@ -2293,7 +2303,11 @@ static void nfs4_open_prepare(struct rpc_task *task, void *calldata)
 					data->o_arg.open_flags, claim))
 			goto out_no_action;
 		rcu_read_lock();
+<<<<<<< HEAD
 		delegation = rcu_dereference(NFS_I(data->state->inode)->delegation);
+=======
+		delegation = nfs4_get_valid_delegation(data->state->inode);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (can_open_delegated(delegation, data->o_arg.fmode, claim))
 			goto unlock_no_action;
 		rcu_read_unlock();
@@ -3092,6 +3106,14 @@ static struct nfs4_state *nfs4_do_open(struct inode *dir,
 			exception.retry = 1;
 			continue;
 		}
+<<<<<<< HEAD
+=======
+		if (status == -NFS4ERR_EXPIRED) {
+			nfs4_schedule_lease_recovery(server->nfs_client);
+			exception.retry = 1;
+			continue;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (status == -EAGAIN) {
 			/* We must have found a delegation */
 			exception.retry = 1;
@@ -5115,7 +5137,11 @@ static void nfs4_proc_write_setup(struct nfs_pgio_header *hdr,
 	hdr->timestamp   = jiffies;
 
 	msg->rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_WRITE];
+<<<<<<< HEAD
 	nfs4_init_sequence(&hdr->args.seq_args, &hdr->res.seq_res, 1, 0);
+=======
+	nfs4_init_sequence(&hdr->args.seq_args, &hdr->res.seq_res, 0, 0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	nfs4_state_protect_write(server->nfs_client, clnt, msg, hdr);
 }
 
@@ -5943,6 +5969,10 @@ int nfs4_proc_setclientid(struct nfs_client *clp, u32 program,
 	}
 	status = task->tk_status;
 	if (setclientid.sc_cred) {
+<<<<<<< HEAD
+=======
+		kfree(clp->cl_acceptor);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		clp->cl_acceptor = rpcauth_stringify_acceptor(setclientid.sc_cred);
 		put_rpccred(setclientid.sc_cred);
 	}
@@ -6105,8 +6135,15 @@ static void nfs4_delegreturn_prepare(struct rpc_task *task, void *data)
 
 	d_data = (struct nfs4_delegreturndata *)data;
 
+<<<<<<< HEAD
 	if (!d_data->lr.roc && nfs4_wait_on_layoutreturn(d_data->inode, task))
 		return;
+=======
+	if (!d_data->lr.roc && nfs4_wait_on_layoutreturn(d_data->inode, task)) {
+		nfs4_sequence_done(task, &d_data->res.seq_res);
+		return;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	lo = d_data->args.lr_args ? d_data->args.lr_args->layout : NULL;
 	if (lo && !pnfs_layout_is_valid(lo)) {

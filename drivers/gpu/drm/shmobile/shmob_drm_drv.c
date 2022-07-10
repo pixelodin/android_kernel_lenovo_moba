@@ -233,8 +233,13 @@ static int shmob_drm_probe(struct platform_device *pdev)
 
 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 	sdev->mmio = devm_ioremap_resource(&pdev->dev, res);
+<<<<<<< HEAD
 	if (sdev->mmio == NULL)
 		return -ENOMEM;
+=======
+	if (IS_ERR(sdev->mmio))
+		return PTR_ERR(sdev->mmio);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	ret = shmob_drm_setup_clocks(sdev, pdata->clk_source);
 	if (ret < 0)

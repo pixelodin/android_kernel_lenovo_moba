@@ -45,7 +45,11 @@
  * 'asm/cpufeature.h' of your favorite architecture.
  */
 #define module_cpu_feature_match(x, __initfunc)			\
+<<<<<<< HEAD
 static struct cpu_feature const cpu_feature_match_ ## x[] =	\
+=======
+static struct cpu_feature const __maybe_unused cpu_feature_match_ ## x[] = \
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	{ { .feature = cpu_feature(x) }, { } };			\
 MODULE_DEVICE_TABLE(cpu, cpu_feature_match_ ## x);		\
 								\

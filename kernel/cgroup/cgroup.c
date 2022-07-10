@@ -2941,8 +2941,11 @@ static int cgroup_apply_control_enable(struct cgroup *cgrp)
 		for_each_subsys(ss, ssid) {
 			struct cgroup_subsys_state *css = cgroup_css(dsct, ss);
 
+<<<<<<< HEAD
 			WARN_ON_ONCE(css && percpu_ref_is_dying(&css->refcnt));
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			if (!(cgroup_ss_mask(dsct) & (1 << ss->id)))
 				continue;
 
@@ -2952,6 +2955,11 @@ static int cgroup_apply_control_enable(struct cgroup *cgrp)
 					return PTR_ERR(css);
 			}
 
+<<<<<<< HEAD
+=======
+			WARN_ON_ONCE(percpu_ref_is_dying(&css->refcnt));
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			if (css_visible(css)) {
 				ret = css_populate_dir(css);
 				if (ret)
@@ -2987,11 +2995,19 @@ static void cgroup_apply_control_disable(struct cgroup *cgrp)
 		for_each_subsys(ss, ssid) {
 			struct cgroup_subsys_state *css = cgroup_css(dsct, ss);
 
+<<<<<<< HEAD
 			WARN_ON_ONCE(css && percpu_ref_is_dying(&css->refcnt));
 
 			if (!css)
 				continue;
 
+=======
+			if (!css)
+				continue;
+
+			WARN_ON_ONCE(percpu_ref_is_dying(&css->refcnt));
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			if (css->parent &&
 			    !(cgroup_ss_mask(dsct) & (1 << ss->id))) {
 				kill_css(css);
@@ -3278,7 +3294,12 @@ static ssize_t cgroup_type_write(struct kernfs_open_file *of, char *buf,
 	if (strcmp(strstrip(buf), "threaded"))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	cgrp = cgroup_kn_lock_live(of->kn, false);
+=======
+	/* drain dying csses before we re-apply (threaded) subtree control */
+	cgrp = cgroup_kn_lock_live(of->kn, true);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!cgrp)
 		return -ENOENT;
 
@@ -4449,6 +4470,12 @@ static void *cgroup_procs_next(struct seq_file *s, void *v, loff_t *pos)
 	struct kernfs_open_file *of = s->private;
 	struct css_task_iter *it = of->priv;
 
+<<<<<<< HEAD
+=======
+	if (pos)
+		(*pos)++;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return css_task_iter_next(it);
 }
 
@@ -4464,7 +4491,11 @@ static void *__cgroup_procs_start(struct seq_file *s, loff_t *pos,
 	 * from position 0, so we can simply keep iterating on !0 *pos.
 	 */
 	if (!it) {
+<<<<<<< HEAD
 		if (WARN_ON_ONCE((*pos)++))
+=======
+		if (WARN_ON_ONCE((*pos)))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			return ERR_PTR(-EINVAL);
 
 		it = kzalloc(sizeof(*it), GFP_KERNEL);
@@ -4472,10 +4503,18 @@ static void *__cgroup_procs_start(struct seq_file *s, loff_t *pos,
 			return ERR_PTR(-ENOMEM);
 		of->priv = it;
 		css_task_iter_start(&cgrp->self, iter_flags, it);
+<<<<<<< HEAD
 	} else if (!(*pos)++) {
 		css_task_iter_end(it);
 		css_task_iter_start(&cgrp->self, iter_flags, it);
 	}
+=======
+	} else if (!(*pos)) {
+		css_task_iter_end(it);
+		css_task_iter_start(&cgrp->self, iter_flags, it);
+	} else
+		return it->cur_task;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return cgroup_procs_next(s, NULL, NULL);
 }
@@ -6057,6 +6096,13 @@ void cgroup_sk_alloc(struct sock_cgroup_data *skcd)
 		return;
 	}
 
+<<<<<<< HEAD
+=======
+	/* Don't associate the sock with unrelated interrupted task's cgroup. */
+	if (in_interrupt())
+		return;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rcu_read_lock();
 
 	while (true) {
@@ -6180,4 +6226,50 @@ static int __init cgroup_sysfs_init(void)
 	return sysfs_create_group(kernel_kobj, &cgroup_sysfs_attr_group);
 }
 subsys_initcall(cgroup_sysfs_init);
+<<<<<<< HEAD
+=======
+
+static u64 power_of_ten(int power)
+{
+	u64 v = 1;
+	while (power--)
+		v *= 10;
+	return v;
+}
+
+/**
+ * cgroup_parse_float - parse a floating number
+ * @input: input string
+ * @dec_shift: number of decimal digits to shift
+ * @v: output
+ *
+ * Parse a decimal floating point number in @input and store the result in
+ * @v with decimal point right shifted @dec_shift times.  For example, if
+ * @input is "12.3456" and @dec_shift is 3, *@v will be set to 12345.
+ * Returns 0 on success, -errno otherwise.
+ *
+ * There's nothing cgroup specific about this function except that it's
+ * currently the only user.
+ */
+int cgroup_parse_float(const char *input, unsigned dec_shift, s64 *v)
+{
+	s64 whole, frac = 0;
+	int fstart = 0, fend = 0, flen;
+
+	if (!sscanf(input, "%lld.%n%lld%n", &whole, &fstart, &frac, &fend))
+		return -EINVAL;
+	if (frac < 0)
+		return -EINVAL;
+
+	flen = fend > fstart ? fend - fstart : 0;
+	if (flen < dec_shift)
+		frac *= power_of_ten(dec_shift - flen);
+	else
+		frac = DIV_ROUND_CLOSEST_ULL(frac, power_of_ten(flen - dec_shift));
+
+	*v = whole * power_of_ten(dec_shift) + frac;
+	return 0;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif /* CONFIG_SYSFS */

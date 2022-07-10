@@ -78,7 +78,11 @@ struct bios_args {
 	u32 command;
 	u32 commandtype;
 	u32 datasize;
+<<<<<<< HEAD
 	u32 data;
+=======
+	u8 data[128];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 enum hp_wmi_commandtype {
@@ -229,7 +233,11 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
 		.command = command,
 		.commandtype = query,
 		.datasize = insize,
+<<<<<<< HEAD
 		.data = 0,
+=======
+		.data = { 0 },
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	};
 	struct acpi_buffer input = { sizeof(struct bios_args), &args };
 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
@@ -241,7 +249,11 @@ static int hp_wmi_perform_query(int query, enum hp_wmi_command command,
 
 	if (WARN_ON(insize > sizeof(args.data)))
 		return -EINVAL;
+<<<<<<< HEAD
 	memcpy(&args.data, buffer, insize);
+=======
+	memcpy(&args.data[0], buffer, insize);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	wmi_evaluate_method(HPWMI_BIOS_GUID, 0, mid, &input, &output);
 
@@ -313,7 +325,11 @@ static int __init hp_wmi_bios_2008_later(void)
 
 static int __init hp_wmi_bios_2009_later(void)
 {
+<<<<<<< HEAD
 	int state = 0;
+=======
+	u8 state[128];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int ret = hp_wmi_perform_query(HPWMI_FEATURE2_QUERY, HPWMI_READ, &state,
 				       sizeof(state), sizeof(state));
 	if (!ret)
@@ -393,7 +409,11 @@ static int hp_wmi_rfkill2_refresh(void)
 	int err, i;
 
 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
+<<<<<<< HEAD
 				   0, sizeof(state));
+=======
+				   sizeof(state), sizeof(state));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (err)
 		return err;
 
@@ -790,7 +810,11 @@ static int __init hp_wmi_rfkill2_setup(struct platform_device *device)
 	int err, i;
 
 	err = hp_wmi_perform_query(HPWMI_WIRELESS2_QUERY, HPWMI_READ, &state,
+<<<<<<< HEAD
 				   0, sizeof(state));
+=======
+				   sizeof(state), sizeof(state));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (err)
 		return err < 0 ? err : -EINVAL;
 

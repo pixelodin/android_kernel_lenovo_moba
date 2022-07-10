@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2014-2018, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2014-2018, 2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include <linux/list_sort.h>
@@ -9,6 +13,10 @@
 #include <linux/slab.h>
 #include <linux/types.h>
 #include <linux/msm-bus.h>
+<<<<<<< HEAD
+=======
+#define CREATE_TRACE_POINTS
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <trace/events/trace_msm_bus.h>
 
 struct node_vote_info {

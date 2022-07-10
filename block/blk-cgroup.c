@@ -955,9 +955,20 @@ static int blkcg_print_stat(struct seq_file *sf, void *v)
 		int i;
 		bool has_stats = false;
 
+<<<<<<< HEAD
 		dname = blkg_dev_name(blkg);
 		if (!dname)
 			continue;
+=======
+		spin_lock_irq(blkg->q->queue_lock);
+
+		if (!blkg->online)
+			goto skip;
+
+		dname = blkg_dev_name(blkg);
+		if (!dname)
+			goto skip;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		/*
 		 * Hooray string manipulation, count is the size written NOT
@@ -967,8 +978,11 @@ static int blkcg_print_stat(struct seq_file *sf, void *v)
 		 */
 		off += scnprintf(buf+off, size-off, "%s ", dname);
 
+<<<<<<< HEAD
 		spin_lock_irq(blkg->q->queue_lock);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		rwstat = blkg_rwstat_recursive_sum(blkg, NULL,
 					offsetof(struct blkcg_gq, stat_bytes));
 		rbytes = atomic64_read(&rwstat.aux_cnt[BLKG_RWSTAT_READ]);
@@ -981,8 +995,11 @@ static int blkcg_print_stat(struct seq_file *sf, void *v)
 		wios = atomic64_read(&rwstat.aux_cnt[BLKG_RWSTAT_WRITE]);
 		dios = atomic64_read(&rwstat.aux_cnt[BLKG_RWSTAT_DISCARD]);
 
+<<<<<<< HEAD
 		spin_unlock_irq(blkg->q->queue_lock);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (rbytes || wbytes || rios || wios) {
 			has_stats = true;
 			off += scnprintf(buf+off, size-off,
@@ -1023,6 +1040,11 @@ next:
 				seq_commit(sf, -1);
 			}
 		}
+<<<<<<< HEAD
+=======
+	skip:
+		spin_unlock_irq(blkg->q->queue_lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	rcu_read_unlock();

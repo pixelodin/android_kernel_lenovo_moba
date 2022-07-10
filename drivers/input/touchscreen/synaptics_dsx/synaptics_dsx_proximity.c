@@ -3,6 +3,10 @@
  *
  * Copyright (C) 2012-2016 Synaptics Incorporated. All rights reserved.
  *
+<<<<<<< HEAD
+=======
+ * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * Copyright (C) 2012 Alexandra Chin <alexandra.chin@tw.synaptics.com>
  * Copyright (C) 2012 Scott Lin <scott.lin@tw.synaptics.com>
  *
@@ -54,7 +58,11 @@ static ssize_t synaptics_rmi4_hover_finger_en_store(struct device *dev,
 		struct device_attribute *attr, const char *buf, size_t count);
 
 static struct device_attribute attrs[] = {
+<<<<<<< HEAD
 	__ATTR(hover_finger_en, (S_IRUGO | S_IWUGO),
+=======
+	__ATTR(hover_finger_en, 0664,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			synaptics_rmi4_hover_finger_en_show,
 			synaptics_rmi4_hover_finger_en_store),
 };
@@ -156,8 +164,11 @@ static void prox_hover_finger_lift(void)
 	input_report_key(prox->prox_dev, BTN_TOOL_FINGER, 0);
 	input_sync(prox->prox_dev);
 	prox->hover_finger_present = false;
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void prox_hover_finger_report(void)
@@ -206,8 +217,11 @@ static void prox_hover_finger_report(void)
 			__func__, x, y, z);
 
 	prox->hover_finger_present = true;
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int prox_set_hover_finger_en(void)
@@ -254,8 +268,11 @@ static void prox_set_params(void)
 			prox->rmi4_data->sensor_max_y, 0, 0);
 	input_set_abs_params(prox->prox_dev, ABS_DISTANCE, 0,
 			HOVER_Z_MAX, 0, 0);
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int prox_reg_init(void)
@@ -421,7 +438,11 @@ static ssize_t synaptics_rmi4_hover_finger_en_store(struct device *dev,
 	if (!prox)
 		return -ENODEV;
 
+<<<<<<< HEAD
 	if (sscanf(buf, "%x", &input) != 1)
+=======
+	if (kstrtouint(buf, 16, &input) != 1)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EINVAL;
 
 	if (input == 1)
@@ -467,8 +488,11 @@ static void synaptics_rmi4_prox_attn(struct synaptics_rmi4_data *rmi4_data,
 
 	if (prox->intr_mask & intr_mask)
 		prox_hover_finger_report();
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int synaptics_rmi4_prox_init(struct synaptics_rmi4_data *rmi4_data)
@@ -603,8 +627,11 @@ static void synaptics_rmi4_prox_remove(struct synaptics_rmi4_data *rmi4_data)
 
 exit:
 	complete(&prox_remove_complete);
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void synaptics_rmi4_prox_reset(struct synaptics_rmi4_data *rmi4_data)
@@ -619,8 +646,11 @@ static void synaptics_rmi4_prox_reset(struct synaptics_rmi4_data *rmi4_data)
 	prox_scan_pdt();
 
 	prox_set_hover_finger_en();
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void synaptics_rmi4_prox_reinit(struct synaptics_rmi4_data *rmi4_data)
@@ -631,8 +661,11 @@ static void synaptics_rmi4_prox_reinit(struct synaptics_rmi4_data *rmi4_data)
 	prox_hover_finger_lift();
 
 	prox_set_hover_finger_en();
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void synaptics_rmi4_prox_e_suspend(struct synaptics_rmi4_data *rmi4_data)
@@ -641,8 +674,11 @@ static void synaptics_rmi4_prox_e_suspend(struct synaptics_rmi4_data *rmi4_data)
 		return;
 
 	prox_hover_finger_lift();
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void synaptics_rmi4_prox_suspend(struct synaptics_rmi4_data *rmi4_data)
@@ -651,8 +687,11 @@ static void synaptics_rmi4_prox_suspend(struct synaptics_rmi4_data *rmi4_data)
 		return;
 
 	prox_hover_finger_lift();
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static struct synaptics_rmi4_exp_fn proximity_module = {
@@ -680,8 +719,11 @@ static void __exit rmi4_proximity_module_exit(void)
 	synaptics_rmi4_new_function(&proximity_module, false);
 
 	wait_for_completion(&prox_remove_complete);
+<<<<<<< HEAD
 
 	return;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 module_init(rmi4_proximity_module_init);

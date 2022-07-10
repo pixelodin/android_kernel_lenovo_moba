@@ -436,9 +436,17 @@ static void submit_request(struct usba_ep *ep, struct usba_request *req)
 		next_fifo_transaction(ep, req);
 		if (req->last_transaction) {
 			usba_ep_writel(ep, CTL_DIS, USBA_TX_PK_RDY);
+<<<<<<< HEAD
 			usba_ep_writel(ep, CTL_ENB, USBA_TX_COMPLETE);
 		} else {
 			usba_ep_writel(ep, CTL_DIS, USBA_TX_COMPLETE);
+=======
+			if (ep_is_control(ep))
+				usba_ep_writel(ep, CTL_ENB, USBA_TX_COMPLETE);
+		} else {
+			if (ep_is_control(ep))
+				usba_ep_writel(ep, CTL_DIS, USBA_TX_COMPLETE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			usba_ep_writel(ep, CTL_ENB, USBA_TX_PK_RDY);
 		}
 	}

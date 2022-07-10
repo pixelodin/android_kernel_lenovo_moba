@@ -168,9 +168,22 @@ static const struct i2c_device_id wf_lm87_id[] = {
 };
 MODULE_DEVICE_TABLE(i2c, wf_lm87_id);
 
+<<<<<<< HEAD
 static struct i2c_driver wf_lm87_driver = {
 	.driver = {
 		.name	= "wf_lm87",
+=======
+static const struct of_device_id wf_lm87_of_id[] = {
+	{ .compatible = "lm87cimt", },
+	{ }
+};
+MODULE_DEVICE_TABLE(of, wf_lm87_of_id);
+
+static struct i2c_driver wf_lm87_driver = {
+	.driver = {
+		.name	= "wf_lm87",
+		.of_match_table = wf_lm87_of_id,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	.probe		= wf_lm87_probe,
 	.remove		= wf_lm87_remove,

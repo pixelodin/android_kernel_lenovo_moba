@@ -174,7 +174,10 @@ static int rvin_group_link_notify(struct media_link *link, u32 flags,
 
 	if (csi_id == -ENODEV) {
 		struct v4l2_subdev *sd;
+<<<<<<< HEAD
 		unsigned int i;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		/*
 		 * Make sure the source entity subdevice is registered as
@@ -632,7 +635,11 @@ static int rvin_parallel_init(struct rvin_dev *vin)
 	ret = v4l2_async_notifier_register(&vin->v4l2_dev, &vin->notifier);
 	if (ret < 0) {
 		vin_err(vin, "Notifier registration failed\n");
+<<<<<<< HEAD
 		v4l2_async_notifier_cleanup(&vin->group->notifier);
+=======
+		v4l2_async_notifier_cleanup(&vin->notifier);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return ret;
 	}
 

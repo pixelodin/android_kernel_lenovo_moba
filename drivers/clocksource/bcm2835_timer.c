@@ -134,7 +134,11 @@ static int __init bcm2835_timer_init(struct device_node *node)
 	ret = setup_irq(irq, &timer->act);
 	if (ret) {
 		pr_err("Can't set up timer IRQ\n");
+<<<<<<< HEAD
 		goto err_iounmap;
+=======
+		goto err_timer_free;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	clockevents_config_and_register(&timer->evt, freq, 0xf, 0xffffffff);
@@ -143,6 +147,12 @@ static int __init bcm2835_timer_init(struct device_node *node)
 
 	return 0;
 
+<<<<<<< HEAD
+=======
+err_timer_free:
+	kfree(timer);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 err_iounmap:
 	iounmap(base);
 	return ret;

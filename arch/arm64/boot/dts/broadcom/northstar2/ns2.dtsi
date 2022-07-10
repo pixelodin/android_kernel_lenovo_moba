@@ -639,7 +639,11 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		ssp0: ssp@66180000 {
+=======
+		ssp0: spi@66180000 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			compatible = "arm,pl022", "arm,primecell";
 			reg = <0x66180000 0x1000>;
 			interrupts = <GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH>;
@@ -650,7 +654,11 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		ssp1: ssp@66190000 {
+=======
+		ssp1: spi@66190000 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			compatible = "arm,pl022", "arm,primecell";
 			reg = <0x66190000 0x1000>;
 			interrupts = <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>;

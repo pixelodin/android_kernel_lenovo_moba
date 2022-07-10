@@ -82,7 +82,11 @@
 
 	reg_usb1_vbus: usb1-vbus {
 		compatible = "regulator-fixed";
+<<<<<<< HEAD
 		pinctrl-names = "default";
+=======
+		regulator-name = "usb1-vbus";
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		regulator-min-microvolt = <5000000>;
 		regulator-max-microvolt = <5000000>;
 		enable-active-high;
@@ -91,7 +95,11 @@
 
 	reg_usb3_vbus: usb3-vbus {
 		compatible = "regulator-fixed";
+<<<<<<< HEAD
 		pinctrl-names = "default";
+=======
+		regulator-name = "usb3-vbus";
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		regulator-min-microvolt = <5000000>;
 		regulator-max-microvolt = <5000000>;
 		enable-active-high;

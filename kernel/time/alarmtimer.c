@@ -91,6 +91,10 @@ static int alarmtimer_rtc_add_device(struct device *dev,
 	unsigned long flags;
 	struct rtc_device *rtc = to_rtc_device(dev);
 	struct wakeup_source *__ws;
+<<<<<<< HEAD
+=======
+	int ret = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (rtcdev)
 		return -EBUSY;
@@ -100,13 +104,22 @@ static int alarmtimer_rtc_add_device(struct device *dev,
 	if (!device_may_wakeup(rtc->dev.parent))
 		return -1;
 
+<<<<<<< HEAD
 	__ws = wakeup_source_register("alarmtimer");
+=======
+	__ws = wakeup_source_register(dev, "alarmtimer");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	spin_lock_irqsave(&rtcdev_lock, flags);
 	if (!rtcdev) {
 		if (!try_module_get(rtc->owner)) {
+<<<<<<< HEAD
 			spin_unlock_irqrestore(&rtcdev_lock, flags);
 			return -1;
+=======
+			ret = -1;
+			goto unlock;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 
 		rtcdev = rtc;
@@ -115,11 +128,19 @@ static int alarmtimer_rtc_add_device(struct device *dev,
 		ws = __ws;
 		__ws = NULL;
 	}
+<<<<<<< HEAD
+=======
+unlock:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	spin_unlock_irqrestore(&rtcdev_lock, flags);
 
 	wakeup_source_unregister(__ws);
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static inline void alarmtimer_rtc_timer_init(void)

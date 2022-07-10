@@ -693,6 +693,10 @@ static int __dwc3_msm_ep_queue(struct dwc3_ep *dep, struct dwc3_request *req)
 	memset(trb, 0, sizeof(*trb));
 
 	req->trb = trb;
+<<<<<<< HEAD
+=======
+	req->num_trbs++;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	trb->bph = DBM_TRB_BIT | DBM_TRB_DMA | DBM_TRB_EP_NUM(dep->number);
 	trb->size = DWC3_TRB_SIZE_LENGTH(req->request.length);
 	trb->ctrl = DWC3_TRBCTL_NORMAL | DWC3_TRB_CTRL_HWO |
@@ -775,6 +779,15 @@ static int dwc3_msm_ep_queue(struct usb_ep *ep,
 	 * as soon as possible so we will release back the lock.
 	 */
 	spin_lock_irqsave(&dwc->lock, flags);
+<<<<<<< HEAD
+=======
+	if (!dwc->pullups_connected) {
+		dev_err(mdwc->dev, "%s: No Pullup\n", __func__);
+		spin_unlock_irqrestore(&dwc->lock, flags);
+		return -ESHUTDOWN;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!dep->endpoint.desc) {
 		dev_err(mdwc->dev,
 			"%s: trying to queue request %pK to disabled ep %s\n",
@@ -1003,11 +1016,26 @@ static void gsi_store_ringbase_dbl_info(struct usb_ep *ep,
 		lower_32_bits(dwc3_trb_dma_offset(dep, &dep->trb_pool[0])),
 		upper_32_bits(dwc3_trb_dma_offset(dep, &dep->trb_pool[0])));
 
+<<<<<<< HEAD
+=======
+	if (request->mapped_db_reg_phs_addr_lsb &&
+			dwc->sysdev != request->dev) {
+		dma_unmap_resource(request->dev,
+			request->mapped_db_reg_phs_addr_lsb,
+			PAGE_SIZE, DMA_BIDIRECTIONAL, 0);
+		request->mapped_db_reg_phs_addr_lsb = 0;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!request->mapped_db_reg_phs_addr_lsb) {
 		request->mapped_db_reg_phs_addr_lsb =
 			dma_map_resource(dwc->sysdev,
 				(phys_addr_t)request->db_reg_phs_addr_lsb,
 				PAGE_SIZE, DMA_BIDIRECTIONAL, 0);
+<<<<<<< HEAD
+=======
+		request->dev = dwc->sysdev;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (dma_mapping_error(dwc->sysdev,
 				request->mapped_db_reg_phs_addr_lsb))
 			dev_err(mdwc->dev, "mapping error for db_reg_phs_addr_lsb\n");
@@ -1166,7 +1194,11 @@ static int gsi_prepare_trbs(struct usb_ep *ep, struct usb_gsi_request *req)
 	req->buf_base_addr = dma_alloc_attrs(dwc->sysdev, len, &req->dma,
 					GFP_KERNEL, dma_attr);
 	if (!req->buf_base_addr) {
+<<<<<<< HEAD
 		dev_err(dwc->dev, "%s: buf_base_addr allocate failed %s\n",
+=======
+		dev_err(dwc->dev, "buf_base_addr allocate failed %s\n",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				dep->name);
 		return -ENOMEM;
 	}
@@ -1559,6 +1591,14 @@ static int dwc3_msm_gsi_ep_op(struct usb_ep *ep,
 		ret = gsi_get_xfer_index(ep);
 		break;
 	case GSI_EP_OP_STORE_DBL_INFO:
+<<<<<<< HEAD
+=======
+		if (!dwc->pullups_connected) {
+			dbg_log_string("No Pullup\n");
+			return -ESHUTDOWN;
+		}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		request = (struct usb_gsi_request *)op_data;
 		gsi_store_ringbase_dbl_info(ep, request);
 		break;
@@ -2164,6 +2204,12 @@ static void dwc3_msm_notify_event(struct dwc3 *dwc, unsigned int event,
 		break;
 	case DWC3_CONTROLLER_NOTIFY_CLEAR_DB:
 		dev_dbg(mdwc->dev, "DWC3_CONTROLLER_NOTIFY_CLEAR_DB\n");
+<<<<<<< HEAD
+=======
+		if (!mdwc->gsi_ev_buff)
+			break;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		dwc3_msm_write_reg_field(mdwc->base,
 			GSI_GENERAL_CFG_REG(mdwc->gsi_reg),
 			BLOCK_GSI_WR_GO_MASK, true);
@@ -2911,10 +2957,19 @@ static void dwc3_resume_work(struct work_struct *w)
 	union extcon_property_value val;
 	unsigned int extcon_id;
 	struct extcon_dev *edev = NULL;
+<<<<<<< HEAD
 	int ret = 0;
 
 	dev_dbg(mdwc->dev, "%s: dwc3 resume work\n", __func__);
 
+=======
+	const char *edev_name;
+	char *eud_str;
+	bool eud_connected = false;
+	int ret = 0;
+
+	dev_dbg(mdwc->dev, "%s: dwc3 resume work\n", __func__);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (mdwc->extcon && mdwc->vbus_active && !mdwc->in_restart) {
 		extcon_id = EXTCON_USB;
 		edev = mdwc->extcon[mdwc->ext_idx].edev;
@@ -2923,15 +2978,38 @@ static void dwc3_resume_work(struct work_struct *w)
 		edev = mdwc->extcon[mdwc->ext_idx].edev;
 	}
 
+<<<<<<< HEAD
 	/* Check speed and Type-C polarity values in order to configure PHY */
 	if (edev && extcon_get_state(edev, extcon_id)) {
 		dwc->maximum_speed = dwc->max_hw_supp_speed;
+=======
+	if (edev) {
+		edev_name = extcon_get_edev_name(edev);
+		dbg_log_string("edev:%s\n", edev_name);
+		/* Skip querying speed and cc_state for EUD edev */
+		eud_str = strnstr(edev_name, "eud", strlen(edev_name));
+		if (eud_str)
+			eud_connected = true;
+	}
+
+	/* Check speed and Type-C polarity values in order to configure PHY */
+	if (!eud_connected && edev && extcon_get_state(edev, extcon_id)) {
+		dwc->maximum_speed = dwc->max_hw_supp_speed;
+		dwc->gadget.max_speed = dwc->maximum_speed;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		ret = extcon_get_property(edev, extcon_id,
 				EXTCON_PROP_USB_SS, &val);
 
+<<<<<<< HEAD
 		if (!ret && val.intval == 0)
 			dwc->maximum_speed = USB_SPEED_HIGH;
+=======
+		if (!ret && val.intval == 0) {
+			dwc->maximum_speed = USB_SPEED_HIGH;
+			dwc->gadget.max_speed = dwc->maximum_speed;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		if (mdwc->override_usb_speed &&
 			mdwc->override_usb_speed <= dwc->maximum_speed) {
@@ -2939,6 +3017,10 @@ static void dwc3_resume_work(struct work_struct *w)
 			dwc->gadget.max_speed = dwc->maximum_speed;
 			dbg_event(0xFF, "override_speed",
 					mdwc->override_usb_speed);
+<<<<<<< HEAD
+=======
+			mdwc->override_usb_speed = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 
 		dbg_event(0xFF, "speed", dwc->maximum_speed);
@@ -3292,8 +3374,17 @@ static int dwc3_msm_vbus_notifier(struct notifier_block *nb,
 		mdwc->vbus_active = event;
 	}
 
+<<<<<<< HEAD
 	if (get_psy_type(mdwc) == POWER_SUPPLY_TYPE_USB_CDP &&
 			mdwc->vbus_active) {
+=======
+	/*
+	 * Drive a pulse on DP to ensure proper CDP detection
+	 * and only when the vbus connect event is a valid one.
+	 */
+	if (get_psy_type(mdwc) == POWER_SUPPLY_TYPE_USB_CDP &&
+			mdwc->vbus_active && !mdwc->check_eud_state) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		dev_dbg(mdwc->dev, "Connected to CDP, pull DP up\n");
 		usb_phy_drive_dp_pulse(mdwc->hs_phy, DP_PULSE_WIDTH_MSEC);
 	}
@@ -3304,16 +3395,22 @@ static int dwc3_msm_vbus_notifier(struct notifier_block *nb,
 	return NOTIFY_DONE;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_PRODUCT_MOBA
 extern int fusb_init_fail;
 #endif
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int dwc3_msm_extcon_register(struct dwc3_msm *mdwc)
 {
 	struct device_node *node = mdwc->dev->of_node;
 	struct extcon_dev *edev;
 	int idx, extcon_cnt, ret = 0;
+<<<<<<< HEAD
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	bool check_vbus_state, check_id_state, phandle_found = false;
 
 	extcon_cnt = of_count_phandle_with_args(node, "extcon", NULL);
@@ -3322,6 +3419,7 @@ static int dwc3_msm_extcon_register(struct dwc3_msm *mdwc)
 		return -ENODEV;
 	}
 
+<<<<<<< HEAD
 #ifdef CONFIG_PRODUCT_MOBA
        if(extcon_cnt == 1&& fusb_init_fail==1){
              pr_info("FUSB  %s - Error: dwc3_msm_extcon_register failed! ,extcon_cnt=%d,fusb_init_fail=%d\n", __func__,extcon_cnt,fusb_init_fail);
@@ -3329,6 +3427,8 @@ static int dwc3_msm_extcon_register(struct dwc3_msm *mdwc)
 	}
 #endif
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mdwc->extcon = devm_kcalloc(mdwc->dev, extcon_cnt,
 					sizeof(*mdwc->extcon), GFP_KERNEL);
 	if (!mdwc->extcon)
@@ -4035,10 +4135,17 @@ static int dwc3_msm_remove(struct platform_device *pdev)
 
 	if (mdwc->hs_phy)
 		mdwc->hs_phy->flags &= ~PHY_HOST_MODE;
+<<<<<<< HEAD
 	platform_device_put(mdwc->dwc3);
 	of_platform_depopulate(&pdev->dev);
 
 	dbg_event(0xFF, "Remov put", 0);
+=======
+	dbg_event(0xFF, "Remov put", 0);
+	platform_device_put(mdwc->dwc3);
+	of_platform_depopulate(&pdev->dev);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pm_runtime_disable(mdwc->dev);
 	pm_runtime_barrier(mdwc->dev);
 	pm_runtime_put_sync(mdwc->dev);

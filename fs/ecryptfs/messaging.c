@@ -392,6 +392,10 @@ int __init ecryptfs_init_messaging(void)
 					* ecryptfs_message_buf_len),
 				       GFP_KERNEL);
 	if (!ecryptfs_msg_ctx_arr) {
+<<<<<<< HEAD
+=======
+		kfree(ecryptfs_daemon_hash);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		rc = -ENOMEM;
 		goto out;
 	}

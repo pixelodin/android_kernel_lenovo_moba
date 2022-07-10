@@ -463,8 +463,12 @@
 					<&pinmux 108 16 27>,
 					<&pinmux 135 77 6>,
 					<&pinmux 141 67 4>,
+<<<<<<< HEAD
 					<&pinmux 145 149 6>,
 					<&pinmux 151 91 4>;
+=======
+					<&pinmux 145 149 6>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		};
 
 		i2c1: i2c@e0000 {
@@ -521,7 +525,11 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		ssp0: ssp@180000 {
+=======
+		ssp0: spi@180000 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			compatible = "arm,pl022", "arm,primecell";
 			reg = <0x00180000 0x1000>;
 			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
@@ -533,7 +541,11 @@
 			status = "disabled";
 		};
 
+<<<<<<< HEAD
 		ssp1: ssp@190000 {
+=======
+		ssp1: spi@190000 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			compatible = "arm,pl022", "arm,primecell";
 			reg = <0x00190000 0x1000>;
 			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;

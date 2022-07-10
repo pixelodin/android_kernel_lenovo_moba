@@ -307,8 +307,15 @@ static struct pcie_port_service_driver dpcdriver = {
 	.reset_link	= dpc_reset_link,
 };
 
+<<<<<<< HEAD
 static int __init dpc_service_init(void)
 {
 	return pcie_port_service_register(&dpcdriver);
 }
 device_initcall(dpc_service_init);
+=======
+int __init pcie_dpc_init(void)
+{
+	return pcie_port_service_register(&dpcdriver);
+}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

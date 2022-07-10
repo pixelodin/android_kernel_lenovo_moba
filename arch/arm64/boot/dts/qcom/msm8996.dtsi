@@ -918,6 +918,11 @@
 				interrupts = <0 138 IRQ_TYPE_LEVEL_HIGH>;
 				phys = <&hsusb_phy2>;
 				phy-names = "usb2-phy";
+<<<<<<< HEAD
+=======
+				snps,dis_u2_susphy_quirk;
+				snps,dis_enblslpm_quirk;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			};
 		};
 
@@ -947,6 +952,11 @@
 				interrupts = <0 131 IRQ_TYPE_LEVEL_HIGH>;
 				phys = <&hsusb_phy1>, <&ssusb_phy_0>;
 				phy-names = "usb2-phy", "usb3-phy";
+<<<<<<< HEAD
+=======
+				snps,dis_u2_susphy_quirk;
+				snps,dis_enblslpm_quirk;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			};
 		};
 

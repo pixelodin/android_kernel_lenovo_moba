@@ -52,10 +52,18 @@ static void tty_port_default_wakeup(struct tty_port *port)
 	}
 }
 
+<<<<<<< HEAD
 static const struct tty_port_client_operations default_client_ops = {
 	.receive_buf = tty_port_default_receive_buf,
 	.write_wakeup = tty_port_default_wakeup,
 };
+=======
+const struct tty_port_client_operations tty_port_default_client_ops = {
+	.receive_buf = tty_port_default_receive_buf,
+	.write_wakeup = tty_port_default_wakeup,
+};
+EXPORT_SYMBOL_GPL(tty_port_default_client_ops);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 void tty_port_init(struct tty_port *port)
 {
@@ -68,7 +76,11 @@ void tty_port_init(struct tty_port *port)
 	spin_lock_init(&port->lock);
 	port->close_delay = (50 * HZ) / 100;
 	port->closing_wait = (3000 * HZ) / 100;
+<<<<<<< HEAD
 	port->client_ops = &default_client_ops;
+=======
+	port->client_ops = &tty_port_default_client_ops;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	kref_init(&port->kref);
 }
 EXPORT_SYMBOL(tty_port_init);

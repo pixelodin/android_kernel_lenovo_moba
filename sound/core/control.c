@@ -1468,8 +1468,14 @@ static int call_tlv_handler(struct snd_ctl_file *file, int op_flag,
 	if (kctl->tlv.c == NULL)
 		return -ENXIO;
 
+<<<<<<< HEAD
 	/* When locked, this is unavailable. */
 	if (vd->owner != NULL && vd->owner != file)
+=======
+	/* Write and command operations are not allowed for locked element. */
+	if (op_flag != SNDRV_CTL_TLV_OP_READ &&
+	    vd->owner != NULL && vd->owner != file)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EPERM;
 
 	return kctl->tlv.c(kctl, op_flag, size, buf);

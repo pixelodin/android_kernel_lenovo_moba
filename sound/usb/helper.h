@@ -30,4 +30,11 @@ static inline int snd_usb_ctrl_intf(struct snd_usb_audio *chip)
 	return get_iface_desc(chip->ctrl_intf)->bInterfaceNumber;
 }
 
+<<<<<<< HEAD
+=======
+/* in validate.c */
+bool snd_usb_validate_audio_desc(void *p, int protocol);
+bool snd_usb_validate_midi_desc(void *p);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif /* __USBAUDIO_HELPER_H */

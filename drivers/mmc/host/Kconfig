@@ -151,6 +151,7 @@ config MMC_SDHCI_OF_AT91
 	help
 	  This selects the Atmel SDMMC driver
 
+<<<<<<< HEAD
 config MMC_SDHCI_MSM_ICE
 	bool "Qualcomm Technologies, Inc Inline Crypto Engine for SDHCI core"
 	depends on MMC_SDHCI_MSM && CRYPTO_DEV_QCOM_ICE
@@ -162,6 +163,8 @@ config MMC_SDHCI_MSM_ICE
 	  Select this if you have ICE supported for SDHCI on QTI chipset.
 	  If unsure, say N.
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 config MMC_SDHCI_OF_ESDHC
 	tristate "SDHCI OF support for the Freescale eSDHC controller"
 	depends on MMC_SDHCI_PLTFM
@@ -949,6 +952,11 @@ config MMC_SDHCI_XENON
 config MMC_SDHCI_OMAP
 	tristate "TI SDHCI Controller Support"
 	depends on MMC_SDHCI_PLTFM && OF
+<<<<<<< HEAD
+=======
+	select THERMAL
+	imply TI_SOC_THERMAL
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	help
 	  This selects the Secure Digital Host Controller Interface (SDHCI)
 	  support present in TI's DRA7 SOCs. The controller supports
@@ -957,3 +965,23 @@ config MMC_SDHCI_OMAP
 	  If you have a controller with this interface, say Y or M here.
 
 	  If unsure, say N.
+<<<<<<< HEAD
+=======
+
+config MMC_CQHCI_CRYPTO
+	bool "CQHCI Crypto Engine Support"
+	depends on MMC_CQHCI && BLK_INLINE_ENCRYPTION
+	help
+	  Enable Crypto Engine Support in CQHCI.
+	  Enabling this makes it possible for the kernel to use the crypto
+	  capabilities of the CQHCI device (if present) to perform crypto
+	  operations on data being transferred to/from the device.
+
+config MMC_CQHCI_CRYPTO_QTI
+	bool "Vendor specific CQHCI Crypto Engine Support"
+	depends on MMC_CQHCI_CRYPTO
+	help
+	 Enable Vendor Crypto Engine Support in CQHCI
+	 Enabling this allows kernel to use CQHCI crypto operations defined
+	 and implemented by QTI.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

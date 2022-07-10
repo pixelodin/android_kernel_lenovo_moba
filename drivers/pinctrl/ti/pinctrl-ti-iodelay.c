@@ -496,7 +496,11 @@ static int ti_iodelay_dt_node_to_map(struct pinctrl_dev *pctldev,
 		return -EINVAL;
 
 	rows = pinctrl_count_index_with_args(np, name);
+<<<<<<< HEAD
 	if (rows == -EINVAL)
+=======
+	if (rows < 0)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return rows;
 
 	*map = devm_kzalloc(iod->dev, sizeof(**map), GFP_KERNEL);

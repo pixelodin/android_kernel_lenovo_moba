@@ -361,6 +361,10 @@ static void aafs_remove(struct dentry *dentry)
 			simple_rmdir(dir, dentry);
 		else
 			simple_unlink(dir, dentry);
+<<<<<<< HEAD
+=======
+		d_delete(dentry);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		dput(dentry);
 	}
 	inode_unlock(dir);
@@ -592,7 +596,11 @@ static __poll_t ns_revision_poll(struct file *file, poll_table *pt)
 
 void __aa_bump_ns_revision(struct aa_ns *ns)
 {
+<<<<<<< HEAD
 	ns->revision++;
+=======
+	WRITE_ONCE(ns->revision, ns->revision + 1);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	wake_up_interruptible(&ns->wait);
 }
 

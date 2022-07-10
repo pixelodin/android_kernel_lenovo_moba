@@ -404,6 +404,12 @@ static int icnss_stats_show_state(struct seq_file *s, struct icnss_priv *priv)
 			continue;
 		case ICNSS_PDR:
 			seq_puts(s, "PDR TRIGGERED");
+<<<<<<< HEAD
+=======
+			continue;
+		case ICNSS_DEL_SERVER:
+			seq_puts(s, "DEL SERVER");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 
 		seq_printf(s, "UNKNOWN-%d", i);

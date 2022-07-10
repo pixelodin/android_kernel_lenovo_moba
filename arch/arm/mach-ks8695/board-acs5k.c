@@ -100,7 +100,11 @@ static struct i2c_board_info acs5k_i2c_devs[] __initdata = {
 	},
 };
 
+<<<<<<< HEAD
 static void acs5k_i2c_init(void)
+=======
+static void __init acs5k_i2c_init(void)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	/* The gpio interface */
 	gpiod_add_lookup_table(&acs5k_i2c_gpiod_table);

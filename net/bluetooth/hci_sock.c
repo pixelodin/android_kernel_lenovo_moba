@@ -831,6 +831,11 @@ static int hci_sock_release(struct socket *sock)
 	if (!sk)
 		return 0;
 
+<<<<<<< HEAD
+=======
+	lock_sock(sk);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	switch (hci_pi(sk)->channel) {
 	case HCI_CHANNEL_MONITOR:
 		atomic_dec(&monitor_promisc);
@@ -878,6 +883,10 @@ static int hci_sock_release(struct socket *sock)
 	skb_queue_purge(&sk->sk_receive_queue);
 	skb_queue_purge(&sk->sk_write_queue);
 
+<<<<<<< HEAD
+=======
+	release_sock(sk);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	sock_put(sk);
 	return 0;
 }

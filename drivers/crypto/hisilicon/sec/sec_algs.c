@@ -153,6 +153,27 @@ static void sec_alg_skcipher_init_context(struct crypto_skcipher *atfm,
 				       ctx->cipher_alg);
 }
 
+<<<<<<< HEAD
+=======
+static void sec_free_hw_sgl(struct sec_hw_sgl *hw_sgl,
+			    dma_addr_t psec_sgl, struct sec_dev_info *info)
+{
+	struct sec_hw_sgl *sgl_current, *sgl_next;
+	dma_addr_t sgl_next_dma;
+
+	sgl_current = hw_sgl;
+	while (sgl_current) {
+		sgl_next = sgl_current->next;
+		sgl_next_dma = sgl_current->next_sgl;
+
+		dma_pool_free(info->hw_sgl_pool, sgl_current, psec_sgl);
+
+		sgl_current = sgl_next;
+		psec_sgl = sgl_next_dma;
+	}
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int sec_alloc_and_fill_hw_sgl(struct sec_hw_sgl **sec_sgl,
 				     dma_addr_t *psec_sgl,
 				     struct scatterlist *sgl,
@@ -199,6 +220,7 @@ static int sec_alloc_and_fill_hw_sgl(struct sec_hw_sgl **sec_sgl,
 	return 0;
 
 err_free_hw_sgls:
+<<<<<<< HEAD
 	sgl_current = *sec_sgl;
 	while (sgl_current) {
 		sgl_next = sgl_current->next;
@@ -206,11 +228,15 @@ err_free_hw_sgls:
 			      sgl_current->next_sgl);
 		sgl_current = sgl_next;
 	}
+=======
+	sec_free_hw_sgl(*sec_sgl, *psec_sgl, info);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	*psec_sgl = 0;
 
 	return ret;
 }
 
+<<<<<<< HEAD
 static void sec_free_hw_sgl(struct sec_hw_sgl *hw_sgl,
 			    dma_addr_t psec_sgl, struct sec_dev_info *info)
 {
@@ -229,6 +255,8 @@ static void sec_free_hw_sgl(struct sec_hw_sgl *hw_sgl,
 	}
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int sec_alg_skcipher_setkey(struct crypto_skcipher *tfm,
 				   const u8 *key, unsigned int keylen,
 				   enum sec_cipher_alg alg)

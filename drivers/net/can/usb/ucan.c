@@ -796,7 +796,11 @@ resubmit:
 			  up);
 
 	usb_anchor_urb(urb, &up->rx_urbs);
+<<<<<<< HEAD
 	ret = usb_submit_urb(urb, GFP_KERNEL);
+=======
+	ret = usb_submit_urb(urb, GFP_ATOMIC);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (ret < 0) {
 		netdev_err(up->netdev,

@@ -115,6 +115,10 @@ EVENT_PARSE_VERSION = $(EP_VERSION).$(EP_PATCHLEVEL).$(EP_EXTRAVERSION)
 
 LIB_TARGET  = libtraceevent.a libtraceevent.so.$(EVENT_PARSE_VERSION)
 LIB_INSTALL = libtraceevent.a libtraceevent.so*
+<<<<<<< HEAD
+=======
+LIB_INSTALL := $(addprefix $(OUTPUT),$(LIB_INSTALL))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 INCLUDES = -I. -I $(srctree)/tools/include $(CONFIG_INCLUDES)
 

@@ -69,14 +69,22 @@ archive_builtin()
 	fi
 }
 
+<<<<<<< HEAD
 # If CONFIG_LTO_CLANG is selected, collect generated symbol versions into
 # .tmp_symversions
 modversions()
+=======
+# If CONFIG_LTO_CLANG is selected, generate a linker script to ensure correct
+# ordering of initcalls, and with CONFIG_MODVERSIONS also enabled, collect the
+# previously generated symbol versions into the same script.
+lto_lds()
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	if [ -z "${CONFIG_LTO_CLANG}" ]; then
 		return
 	fi
 
+<<<<<<< HEAD
 	if [ -z "${CONFIG_MODVERSIONS}" ]; then
 		return
 	fi
@@ -92,6 +100,23 @@ modversions()
 	done
 
 	echo "-T .tmp_symversions"
+=======
+	${srctree}/scripts/generate_initcall_order.pl \
+		built-in.a ${KBUILD_VMLINUX_LIBS} \
+		> .tmp_lto.lds
+
+	if [ -n "${CONFIG_MODVERSIONS}" ]; then
+		for a in built-in.a ${KBUILD_VMLINUX_LIBS}; do
+			for o in $(${AR} t $a); do
+				if [ -f ${o}.symversions ]; then
+					cat ${o}.symversions >> .tmp_lto.lds
+				fi
+			done
+		done
+	fi
+
+	echo "-T .tmp_lto.lds"
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 # Link of vmlinux.o used for section mismatch analysis
@@ -113,7 +138,11 @@ modpost_link()
 		info LTO vmlinux.o
 	fi
 
+<<<<<<< HEAD
 	${LD} ${KBUILD_LDFLAGS} -r -o ${1} $(modversions) ${objects}
+=======
+	${LD} ${KBUILD_LDFLAGS} -r -o ${1} $(lto_lds) ${objects}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 # If CONFIG_LTO_CLANG is selected, we postpone running recordmcount until
@@ -241,7 +270,11 @@ cleanup()
 {
 	rm -f .tmp_System.map
 	rm -f .tmp_kallsyms*
+<<<<<<< HEAD
 	rm -f .tmp_symversions
+=======
+	rm -f .tmp_lto.lds
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rm -f .tmp_vmlinux*
 	rm -f built-in.a
 	rm -f System.map
@@ -280,6 +313,7 @@ if [ "$1" = "clean" ]; then
 fi
 
 # We need access to CONFIG_ symbols
+<<<<<<< HEAD
 case "${KCONFIG_CONFIG}" in
 */*)
 	. "${KCONFIG_CONFIG}"
@@ -288,6 +322,9 @@ case "${KCONFIG_CONFIG}" in
 	# Force using a file from the current directory
 	. "./${KCONFIG_CONFIG}"
 esac
+=======
+. include/config/auto.conf
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 # Update version
 info GEN .version

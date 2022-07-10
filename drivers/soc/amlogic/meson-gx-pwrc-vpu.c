@@ -54,12 +54,20 @@ static int meson_gx_pwrc_vpu_power_off(struct generic_pm_domain *genpd)
 	/* Power Down Memories */
 	for (i = 0; i < 32; i += 2) {
 		regmap_update_bits(pd->regmap_hhi, HHI_VPU_MEM_PD_REG0,
+<<<<<<< HEAD
 				   0x2 << i, 0x3 << i);
+=======
+				   0x3 << i, 0x3 << i);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		udelay(5);
 	}
 	for (i = 0; i < 32; i += 2) {
 		regmap_update_bits(pd->regmap_hhi, HHI_VPU_MEM_PD_REG1,
+<<<<<<< HEAD
 				   0x2 << i, 0x3 << i);
+=======
+				   0x3 << i, 0x3 << i);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		udelay(5);
 	}
 	for (i = 8; i < 16; i++) {
@@ -108,13 +116,21 @@ static int meson_gx_pwrc_vpu_power_on(struct generic_pm_domain *genpd)
 	/* Power Up Memories */
 	for (i = 0; i < 32; i += 2) {
 		regmap_update_bits(pd->regmap_hhi, HHI_VPU_MEM_PD_REG0,
+<<<<<<< HEAD
 				   0x2 << i, 0);
+=======
+				   0x3 << i, 0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		udelay(5);
 	}
 
 	for (i = 0; i < 32; i += 2) {
 		regmap_update_bits(pd->regmap_hhi, HHI_VPU_MEM_PD_REG1,
+<<<<<<< HEAD
 				   0x2 << i, 0);
+=======
+				   0x3 << i, 0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		udelay(5);
 	}
 

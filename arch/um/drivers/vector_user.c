@@ -30,6 +30,10 @@
 #include <stdlib.h>
 #include <os.h>
 #include <um_malloc.h>
+<<<<<<< HEAD
+=======
+#include <sys/uio.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include "vector_user.h"
 
 #define ID_GRE 0

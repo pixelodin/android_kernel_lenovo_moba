@@ -645,12 +645,26 @@ nla_put_failure:
 	return -1;
 }
 
+<<<<<<< HEAD
 static void route4_bind_class(void *fh, u32 classid, unsigned long cl)
 {
 	struct route4_filter *f = fh;
 
 	if (f && f->res.classid == classid)
 		f->res.class = cl;
+=======
+static void route4_bind_class(void *fh, u32 classid, unsigned long cl, void *q,
+			      unsigned long base)
+{
+	struct route4_filter *f = fh;
+
+	if (f && f->res.classid == classid) {
+		if (cl)
+			__tcf_bind_filter(q, &f->res, base);
+		else
+			__tcf_unbind_filter(q, &f->res);
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static struct tcf_proto_ops cls_route4_ops __read_mostly = {

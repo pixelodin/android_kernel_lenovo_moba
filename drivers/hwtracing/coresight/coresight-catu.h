@@ -110,11 +110,15 @@ static inline bool coresight_is_catu_device(struct coresight_device *csdev)
 	return true;
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_CORESIGHT_CATU
 extern const struct etr_buf_operations etr_catu_buf_ops;
 #else
 /* Dummy declaration for the CATU ops */
 static const struct etr_buf_operations etr_catu_buf_ops;
 #endif
+=======
+extern const struct etr_buf_operations etr_catu_buf_ops;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #endif

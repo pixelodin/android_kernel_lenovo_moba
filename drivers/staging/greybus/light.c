@@ -1098,6 +1098,7 @@ static void gb_lights_channel_release(struct gb_channel *channel)
 static void gb_lights_light_release(struct gb_light *light)
 {
 	int i;
+<<<<<<< HEAD
 	int count;
 
 	light->ready = false;
@@ -1113,6 +1114,23 @@ static void gb_lights_light_release(struct gb_light *light)
 	}
 	kfree(light->channels);
 	kfree(light->name);
+=======
+
+	light->ready = false;
+
+	if (light->has_flash)
+		gb_lights_light_v4l2_unregister(light);
+	light->has_flash = false;
+
+	for (i = 0; i < light->channels_count; i++)
+		gb_lights_channel_release(&light->channels[i]);
+	light->channels_count = 0;
+
+	kfree(light->channels);
+	light->channels = NULL;
+	kfree(light->name);
+	light->name = NULL;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void gb_lights_release(struct gb_lights *glights)

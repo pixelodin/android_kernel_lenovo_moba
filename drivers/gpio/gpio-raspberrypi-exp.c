@@ -206,6 +206,10 @@ static int rpi_exp_gpio_probe(struct platform_device *pdev)
 	}
 
 	fw = rpi_firmware_get(fw_node);
+<<<<<<< HEAD
+=======
+	of_node_put(fw_node);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!fw)
 		return -EPROBE_DEFER;
 

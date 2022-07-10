@@ -135,7 +135,11 @@ static struct clk_fixed_factor crc_div = {
 /* 514MHz Configuration*/
 static const struct alpha_pll_config gpu_cc_pll1_config = {
 	.l = 0x1A,
+<<<<<<< HEAD
 	.cal_l = 0x3F,
+=======
+	.cal_l = 0x3D,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.alpha = 0xC555,
 	.config_ctl_val = 0x20485699,
 	.config_ctl_hi_val = 0x00002067,

@@ -87,6 +87,12 @@ static int sdcardfs_create(struct inode *dir, struct dentry *dentry,
 	lower_dentry_mnt = lower_path.mnt;
 	lower_parent_dentry = lock_parent(lower_dentry);
 
+<<<<<<< HEAD
+=======
+	if (d_is_positive(lower_dentry))
+		return -EEXIST;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* set last 16bytes of mode field to 0664 */
 	mode = (mode & S_IFMT) | 00664;
 
@@ -559,20 +565,26 @@ static int sdcardfs_permission(struct vfsmount *mnt, struct inode *inode, int ma
 	struct inode tmp;
 	struct sdcardfs_inode_data *top = top_data_get(SDCARDFS_I(inode));
 
+<<<<<<< HEAD
 	uid_t cred_userid;
 	uid_t inode_userid;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (IS_ERR(mnt))
 		return PTR_ERR(mnt);
 
 	if (!top)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	/* multispace convert appid to uid */
 	cred_userid = __kuid_val(current_cred()->fsuid) / AID_USER_OFFSET;
 	inode_userid = __kuid_val(inode->i_uid) / AID_USER_OFFSET;
 
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/*
 	 * Permission check on sdcardfs inode.
 	 * Calling process should have AID_SDCARD_RW permission
@@ -587,6 +599,7 @@ static int sdcardfs_permission(struct vfsmount *mnt, struct inode *inode, int ma
 	copy_attrs(&tmp, inode);
 	tmp.i_uid = make_kuid(&init_user_ns, top->d_uid);
 	tmp.i_gid = make_kgid(&init_user_ns, get_gid(mnt, inode->i_sb, top));
+<<<<<<< HEAD
 	/* multispace allow uid >= 900 to access files of uid 0 */
 	if ((cred_userid >= 900 && cred_userid <= 999) &&
 		(inode_userid == 0 ||
@@ -599,6 +612,8 @@ static int sdcardfs_permission(struct vfsmount *mnt, struct inode *inode, int ma
 			(SDCARDFS_I(inode)->data->userid) <= 999))) {
 		tmp.i_gid = current_cred()->fsgid;
 	}
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	tmp.i_mode = (inode->i_mode & S_IFMT)
 			| get_mode(mnt, SDCARDFS_I(inode), top);
 	data_put(top);

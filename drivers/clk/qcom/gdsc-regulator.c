@@ -146,6 +146,12 @@ static int gdsc_is_enabled(struct regulator_dev *rdev)
 	if (!sc->toggle_logic)
 		return !sc->resets_asserted;
 
+<<<<<<< HEAD
+=======
+	if (sc->skip_disable_before_enable)
+		return false;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (sc->parent_regulator) {
 		/*
 		 * The parent regulator for the GDSC is required to be on to
@@ -209,6 +215,12 @@ static int gdsc_enable(struct regulator_dev *rdev)
 	uint32_t regval, hw_ctrl_regval = 0x0;
 	int i, ret = 0;
 
+<<<<<<< HEAD
+=======
+	if (sc->skip_disable_before_enable)
+		return 0;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (sc->parent_regulator) {
 		ret = regulator_set_voltage(sc->parent_regulator,
 				RPMH_REGULATOR_LEVEL_LOW_SVS, INT_MAX);
@@ -367,7 +379,10 @@ static int gdsc_enable(struct regulator_dev *rdev)
 		clk_disable_unprepare(sc->clocks[sc->root_clk_idx]);
 
 	sc->is_gdsc_enabled = true;
+<<<<<<< HEAD
 	sc->skip_disable_before_enable = false;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 end:
 	if (ret && sc->bus_handle) {
 		msm_bus_scale_client_update_request(sc->bus_handle, 0);
@@ -386,6 +401,7 @@ static int gdsc_disable(struct regulator_dev *rdev)
 	uint32_t regval;
 	int i, ret = 0;
 
+<<<<<<< HEAD
 	/*
 	 * Protect GDSC against late_init disabling when the GDSC is enabled
 	 * by an entity outside external to HLOS.
@@ -396,6 +412,8 @@ static int gdsc_disable(struct regulator_dev *rdev)
 		return 0;
 	}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (sc->force_root_en)
 		clk_prepare_enable(sc->clocks[sc->root_clk_idx]);
 
@@ -582,6 +600,22 @@ static int gdsc_set_mode(struct regulator_dev *rdev, unsigned int mode)
 		 */
 		gdsc_mb(sc);
 		udelay(1);
+<<<<<<< HEAD
+=======
+
+		/*
+		 * While switching from HW to SW mode, HW may be busy
+		 * updating internal required signals. Polling for PWR_ON
+		 * ensures that the GDSC switches to SW mode before software
+		 * starts to use SW mode.
+		 */
+		if (sc->is_gdsc_enabled) {
+			ret = poll_gdsc_status(sc, ENABLED);
+			if (ret)
+				dev_err(&rdev->dev, "%s enable timed out\n",
+					sc->rdesc.name);
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 	default:
 		ret = -EINVAL;

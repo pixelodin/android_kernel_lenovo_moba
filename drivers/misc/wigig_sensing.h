@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 /*
+<<<<<<< HEAD
  * Copyright (c) 2019, The Linux foundation. All rights reserved.
+=======
+ * Copyright (c) 2019-2020, The Linux foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #ifndef __WIGIG_SENSING_H__
@@ -8,6 +12,10 @@
 #include <linux/cdev.h>
 #include <linux/circ_buf.h>
 #include <linux/kfifo.h>
+<<<<<<< HEAD
+=======
+#include <linux/ktime.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/slab.h>
 #include <uapi/misc/wigig_sensing_uapi.h>
 
@@ -41,6 +49,11 @@
 #define SPIS_CONFIG_REG_OPT_VAL         (0x44200800)
 #define SPIS_EXTENDED_RESET_COMMAND_LEN (225)
 
+<<<<<<< HEAD
+=======
+#define MAX_SPI_READ_CHUNKS (10)
+#define SPI_MIN_TRANSACTION_SIZE (512)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define SPI_MAX_TRANSACTION_SIZE (8*1024)
 #define SPI_CMD_TRANSACTION_SIZE (512)
 #define SPI_BUFFER_SIZE (SPI_MAX_TRANSACTION_SIZE + OPCODE_WIDTH + \
@@ -146,6 +159,10 @@ struct wigig_sensing_stm {
 	bool auto_recovery;
 	bool fw_is_ready;
 	bool spi_malfunction;
+<<<<<<< HEAD
+=======
+	bool spi_ready;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	bool waiting_for_deep_sleep_exit;
 	bool waiting_for_deep_sleep_exit_first_pass;
 	bool burst_size_ready;
@@ -159,12 +176,40 @@ struct wigig_sensing_stm {
 	enum wigig_sensing_mode mode_request;
 };
 
+<<<<<<< HEAD
+=======
+enum spi_stats_meas {
+	SPI_STATS_MEAS_MIN,
+	SPI_STATS_MEAS_SANITY = SPI_STATS_MEAS_MIN,
+	SPI_STATS_MEAS_DEASSERT,
+	SPI_STATS_MEAS_DRI_PROC,
+	SPI_STATS_MEAS_MBOX_FILL_STATUS,
+	SPI_STATS_MEAS_CHANGE_MODE,
+	SPI_STATS_MEAS_DATA_READY,
+	SPI_STATS_MEAS_MAX,
+};
+
+#define SPI_STATS_MAX_NAME_LEN (20)
+struct spi_stats {
+	char name[SPI_STATS_MAX_NAME_LEN];
+	atomic64_t min;
+	atomic64_t max;
+	atomic64_t acc;
+	atomic_t num_meas;
+	ktime_t start, delta;
+};
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct wigig_sensing_ctx {
 	dev_t wigig_sensing_dev;
 	struct cdev cdev;
 	struct class *class;
 	struct device *dev;
 	struct spi_device *spi_dev;
+<<<<<<< HEAD
+=======
+	struct dentry *debugfs_dent;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	 /* Locks */
 	struct mutex ioctl_lock;
@@ -190,6 +235,10 @@ struct wigig_sensing_ctx {
 	struct wigig_sensing_stm stm;
 	u32 last_read_length;
 	union user_rgf_spi_mbox_inb inb_cmd;
+<<<<<<< HEAD
+=======
+	u32 spi_transaction_size;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* CIR buffer */
 	struct cir_data cir_data;
@@ -197,6 +246,12 @@ struct wigig_sensing_ctx {
 	bool event_pending;
 	DECLARE_KFIFO(events_fifo, enum wigig_sensing_event, 8);
 	u32 dropped_bursts;
+<<<<<<< HEAD
+=======
+
+	/* Statistics */
+	struct spi_stats spi_stats[SPI_STATS_MEAS_MAX];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 #endif /* __WIGIG_SENSING_H__ */

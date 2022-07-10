@@ -47,11 +47,19 @@ struct gpio_irq_chip {
 	 */
 	const struct irq_domain_ops *domain_ops;
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_IRQ_DOMAIN_HIERARCHY
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/**
 	 * @parent_domain:
 	 *
 	 */
 	struct irq_domain *parent_domain;
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/**
 	 * @handler:

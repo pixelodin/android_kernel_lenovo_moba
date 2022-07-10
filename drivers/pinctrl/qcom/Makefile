@@ -25,3 +25,7 @@ obj-$(CONFIG_PINCTRL_LITO) += pinctrl-lito.o
 obj-$(CONFIG_PINCTRL_BENGAL) += pinctrl-bengal.o
 obj-$(CONFIG_PINCTRL_LAGOON) += pinctrl-lagoon.o
 obj-$(CONFIG_PINCTRL_SCUBA) += pinctrl-scuba.o
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_PINCTRL_SDM660)   += pinctrl-sdm660.o
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

@@ -111,9 +111,13 @@ static int sama5d4_wdt_set_timeout(struct watchdog_device *wdd,
 	u32 value = WDT_SEC2TICKS(timeout);
 
 	wdt->mr &= ~AT91_WDT_WDV;
+<<<<<<< HEAD
 	wdt->mr &= ~AT91_WDT_WDD;
 	wdt->mr |= AT91_WDT_SET_WDV(value);
 	wdt->mr |= AT91_WDT_SET_WDD(value);
+=======
+	wdt->mr |= AT91_WDT_SET_WDV(value);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/*
 	 * WDDIS has to be 0 when updating WDD/WDV. The datasheet states: When
@@ -247,6 +251,7 @@ static int sama5d4_wdt_probe(struct platform_device *pdev)
 		}
 	}
 
+<<<<<<< HEAD
 	ret = watchdog_init_timeout(wdd, wdt_timeout, &pdev->dev);
 	if (ret) {
 		dev_err(&pdev->dev, "unable to set timeout value\n");
@@ -256,6 +261,13 @@ static int sama5d4_wdt_probe(struct platform_device *pdev)
 	timeout = WDT_SEC2TICKS(wdd->timeout);
 
 	wdt->mr |= AT91_WDT_SET_WDD(timeout);
+=======
+	watchdog_init_timeout(wdd, wdt_timeout, &pdev->dev);
+
+	timeout = WDT_SEC2TICKS(wdd->timeout);
+
+	wdt->mr |= AT91_WDT_SET_WDD(WDT_SEC2TICKS(MAX_WDT_TIMEOUT));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	wdt->mr |= AT91_WDT_SET_WDV(timeout);
 
 	ret = sama5d4_wdt_init(wdt);

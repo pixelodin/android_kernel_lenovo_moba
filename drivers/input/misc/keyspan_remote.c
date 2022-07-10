@@ -339,7 +339,12 @@ static int keyspan_setup(struct usb_device* dev)
 	int retval = 0;
 
 	retval = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
+<<<<<<< HEAD
 				 0x11, 0x40, 0x5601, 0x0, NULL, 0, 0);
+=======
+				 0x11, 0x40, 0x5601, 0x0, NULL, 0,
+				 USB_CTRL_SET_TIMEOUT);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (retval) {
 		dev_dbg(&dev->dev, "%s - failed to set bit rate due to error: %d\n",
 			__func__, retval);
@@ -347,7 +352,12 @@ static int keyspan_setup(struct usb_device* dev)
 	}
 
 	retval = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
+<<<<<<< HEAD
 				 0x44, 0x40, 0x0, 0x0, NULL, 0, 0);
+=======
+				 0x44, 0x40, 0x0, 0x0, NULL, 0,
+				 USB_CTRL_SET_TIMEOUT);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (retval) {
 		dev_dbg(&dev->dev, "%s - failed to set resume sensitivity due to error: %d\n",
 			__func__, retval);
@@ -355,7 +365,12 @@ static int keyspan_setup(struct usb_device* dev)
 	}
 
 	retval = usb_control_msg(dev, usb_sndctrlpipe(dev, 0),
+<<<<<<< HEAD
 				 0x22, 0x40, 0x0, 0x0, NULL, 0, 0);
+=======
+				 0x22, 0x40, 0x0, 0x0, NULL, 0,
+				 USB_CTRL_SET_TIMEOUT);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (retval) {
 		dev_dbg(&dev->dev, "%s - failed to turn receive on due to error: %d\n",
 			__func__, retval);

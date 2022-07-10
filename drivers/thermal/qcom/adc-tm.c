@@ -196,6 +196,13 @@ static const struct of_device_id adc_tm_match_table[] = {
 		.data = &data_adc_tm5,
 	},
 	{
+<<<<<<< HEAD
+=======
+		.compatible = "qcom,adc-tm-rev2",
+		.data = &data_adc_tm_rev2,
+	},
+	{
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.compatible = "qcom,adc-tm5-iio",
 		.data = &data_adc_tm5,
 	},

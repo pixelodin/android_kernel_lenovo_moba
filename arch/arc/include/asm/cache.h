@@ -124,7 +124,13 @@ extern unsigned long perip_base, perip_end;
 
 /* IO coherency related Auxiliary registers */
 #define ARC_REG_IO_COH_ENABLE	0x500
+<<<<<<< HEAD
 #define ARC_REG_IO_COH_PARTIAL	0x501
+=======
+#define ARC_IO_COH_ENABLE_BIT	BIT(0)
+#define ARC_REG_IO_COH_PARTIAL	0x501
+#define ARC_IO_COH_PARTIAL_BIT	BIT(0)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define ARC_REG_IO_COH_AP0_BASE	0x508
 #define ARC_REG_IO_COH_AP0_SIZE	0x509
 

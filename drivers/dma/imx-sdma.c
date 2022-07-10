@@ -335,6 +335,10 @@ struct sdma_desc {
  * @sdma:		pointer to the SDMA engine for this channel
  * @channel:		the channel number, matches dmaengine chan_id + 1
  * @direction:		transfer type. Needed for setting SDMA script
+<<<<<<< HEAD
+=======
+ * @slave_config	Slave configuration
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * @peripheral_type:	Peripheral type. Needed for setting SDMA script
  * @event_id0:		aka dma request line
  * @event_id1:		for channels that use 2 events
@@ -362,6 +366,10 @@ struct sdma_channel {
 	struct sdma_engine		*sdma;
 	unsigned int			channel;
 	enum dma_transfer_direction		direction;
+<<<<<<< HEAD
+=======
+	struct dma_slave_config		slave_config;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	enum sdma_peripheral_type	peripheral_type;
 	unsigned int			event_id0;
 	unsigned int			event_id1;
@@ -440,6 +448,13 @@ struct sdma_engine {
 	struct sdma_buffer_descriptor	*bd0;
 };
 
+<<<<<<< HEAD
+=======
+static int sdma_config_write(struct dma_chan *chan,
+		       struct dma_slave_config *dmaengine_cfg,
+		       enum dma_transfer_direction direction);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static struct sdma_driver_data sdma_imx31 = {
 	.chnenbl0 = SDMA_CHNENBL0_IMX31,
 	.num_events = 32,
@@ -1122,6 +1137,7 @@ static int sdma_config_channel(struct dma_chan *chan)
 	sdmac->shp_addr = 0;
 	sdmac->per_addr = 0;
 
+<<<<<<< HEAD
 	if (sdmac->event_id0) {
 		if (sdmac->event_id0 >= sdmac->sdma->drvdata->num_events)
 			return -EINVAL;
@@ -1134,6 +1150,8 @@ static int sdma_config_channel(struct dma_chan *chan)
 		sdma_event_enable(sdmac, sdmac->event_id1);
 	}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	switch (sdmac->peripheral_type) {
 	case IMX_DMATYPE_DSP:
 		sdma_config_ownership(sdmac, false, true, true);
@@ -1431,6 +1449,11 @@ static struct dma_async_tx_descriptor *sdma_prep_slave_sg(
 	struct scatterlist *sg;
 	struct sdma_desc *desc;
 
+<<<<<<< HEAD
+=======
+	sdma_config_write(chan, &sdmac->slave_config, direction);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	desc = sdma_transfer_init(sdmac, direction, sg_len);
 	if (!desc)
 		goto err_out;
@@ -1515,6 +1538,11 @@ static struct dma_async_tx_descriptor *sdma_prep_dma_cyclic(
 
 	dev_dbg(sdma->dev, "%s channel: %d\n", __func__, channel);
 
+<<<<<<< HEAD
+=======
+	sdma_config_write(chan, &sdmac->slave_config, direction);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	desc = sdma_transfer_init(sdmac, direction, num_periods);
 	if (!desc)
 		goto err_out;
@@ -1570,17 +1598,31 @@ err_out:
 	return NULL;
 }
 
+<<<<<<< HEAD
 static int sdma_config(struct dma_chan *chan,
 		       struct dma_slave_config *dmaengine_cfg)
 {
 	struct sdma_channel *sdmac = to_sdma_chan(chan);
 
 	if (dmaengine_cfg->direction == DMA_DEV_TO_MEM) {
+=======
+static int sdma_config_write(struct dma_chan *chan,
+		       struct dma_slave_config *dmaengine_cfg,
+		       enum dma_transfer_direction direction)
+{
+	struct sdma_channel *sdmac = to_sdma_chan(chan);
+
+	if (direction == DMA_DEV_TO_MEM) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		sdmac->per_address = dmaengine_cfg->src_addr;
 		sdmac->watermark_level = dmaengine_cfg->src_maxburst *
 			dmaengine_cfg->src_addr_width;
 		sdmac->word_size = dmaengine_cfg->src_addr_width;
+<<<<<<< HEAD
 	} else if (dmaengine_cfg->direction == DMA_DEV_TO_DEV) {
+=======
+	} else if (direction == DMA_DEV_TO_DEV) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		sdmac->per_address2 = dmaengine_cfg->src_addr;
 		sdmac->per_address = dmaengine_cfg->dst_addr;
 		sdmac->watermark_level = dmaengine_cfg->src_maxburst &
@@ -1594,10 +1636,40 @@ static int sdma_config(struct dma_chan *chan,
 			dmaengine_cfg->dst_addr_width;
 		sdmac->word_size = dmaengine_cfg->dst_addr_width;
 	}
+<<<<<<< HEAD
 	sdmac->direction = dmaengine_cfg->direction;
 	return sdma_config_channel(chan);
 }
 
+=======
+	sdmac->direction = direction;
+	return sdma_config_channel(chan);
+}
+
+static int sdma_config(struct dma_chan *chan,
+		       struct dma_slave_config *dmaengine_cfg)
+{
+	struct sdma_channel *sdmac = to_sdma_chan(chan);
+
+	memcpy(&sdmac->slave_config, dmaengine_cfg, sizeof(*dmaengine_cfg));
+
+	/* Set ENBLn earlier to make sure dma request triggered after that */
+	if (sdmac->event_id0) {
+		if (sdmac->event_id0 >= sdmac->sdma->drvdata->num_events)
+			return -EINVAL;
+		sdma_event_enable(sdmac, sdmac->event_id0);
+	}
+
+	if (sdmac->event_id1) {
+		if (sdmac->event_id1 >= sdmac->sdma->drvdata->num_events)
+			return -EINVAL;
+		sdma_event_enable(sdmac, sdmac->event_id1);
+	}
+
+	return 0;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static enum dma_status sdma_tx_status(struct dma_chan *chan,
 				      dma_cookie_t cookie,
 				      struct dma_tx_state *txstate)
@@ -1662,6 +1734,17 @@ static void sdma_add_scripts(struct sdma_engine *sdma,
 	if (!sdma->script_number)
 		sdma->script_number = SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1;
 
+<<<<<<< HEAD
+=======
+	if (sdma->script_number > sizeof(struct sdma_script_start_addrs)
+				  / sizeof(s32)) {
+		dev_err(sdma->dev,
+			"SDMA script number %d not match with firmware.\n",
+			sdma->script_number);
+		return;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	for (i = 0; i < sdma->script_number; i++)
 		if (addr_arr[i] > 0)
 			saddr_arr[i] = addr_arr[i];

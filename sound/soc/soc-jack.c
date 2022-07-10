@@ -100,10 +100,16 @@ void snd_soc_jack_report(struct snd_soc_jack *jack, int status, int mask)
 	unsigned int sync = 0;
 	int enable;
 
+<<<<<<< HEAD
 	trace_snd_soc_jack_report(jack, mask, status);
 
 	if (!jack)
 		return;
+=======
+	if (!jack)
+		return;
+	trace_snd_soc_jack_report(jack, mask, status);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	dapm = &jack->card->dapm;
 

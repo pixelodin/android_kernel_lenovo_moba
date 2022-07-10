@@ -1002,6 +1002,10 @@ static void *jbd2_seq_info_start(struct seq_file *seq, loff_t *pos)
 
 static void *jbd2_seq_info_next(struct seq_file *seq, void *v, loff_t *pos)
 {
+<<<<<<< HEAD
+=======
+	(*pos)++;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return NULL;
 }
 
@@ -1700,6 +1704,14 @@ int jbd2_journal_load(journal_t *journal)
 		       journal->j_devname);
 		return -EFSCORRUPTED;
 	}
+<<<<<<< HEAD
+=======
+	/*
+	 * clear JBD2_ABORT flag initialized in journal_init_common
+	 * here to update log tail information with the newest seq.
+	 */
+	journal->j_flags &= ~JBD2_ABORT;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* OK, we've finished with the dynamic journal bits:
 	 * reinitialise the dynamic contents of the superblock in memory
@@ -1707,7 +1719,10 @@ int jbd2_journal_load(journal_t *journal)
 	if (journal_reset(journal))
 		goto recovery_error;
 
+<<<<<<< HEAD
 	journal->j_flags &= ~JBD2_ABORT;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	journal->j_flags |= JBD2_LOADED;
 	return 0;
 
@@ -2128,8 +2143,12 @@ static void __journal_abort_soft (journal_t *journal, int errno)
 
 	if (journal->j_flags & JBD2_ABORT) {
 		write_unlock(&journal->j_state_lock);
+<<<<<<< HEAD
 		if (!old_errno && old_errno != -ESHUTDOWN &&
 		    errno == -ESHUTDOWN)
+=======
+		if (old_errno != -ESHUTDOWN && errno == -ESHUTDOWN)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			jbd2_journal_update_sb_errno(journal);
 		return;
 	}
@@ -2137,12 +2156,19 @@ static void __journal_abort_soft (journal_t *journal, int errno)
 
 	__jbd2_journal_abort_hard(journal);
 
+<<<<<<< HEAD
 	if (errno) {
 		jbd2_journal_update_sb_errno(journal);
 		write_lock(&journal->j_state_lock);
 		journal->j_flags |= JBD2_REC_ERR;
 		write_unlock(&journal->j_state_lock);
 	}
+=======
+	jbd2_journal_update_sb_errno(journal);
+	write_lock(&journal->j_state_lock);
+	journal->j_flags |= JBD2_REC_ERR;
+	write_unlock(&journal->j_state_lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /**
@@ -2184,11 +2210,14 @@ static void __journal_abort_soft (journal_t *journal, int errno)
  * failure to disk.  ext3_error, for example, now uses this
  * functionality.
  *
+<<<<<<< HEAD
  * Errors which originate from within the journaling layer will NOT
  * supply an errno; a null errno implies that absolutely no further
  * writes are done to the journal (unless there are any already in
  * progress).
  *
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 void jbd2_journal_abort(journal_t *journal, int errno)

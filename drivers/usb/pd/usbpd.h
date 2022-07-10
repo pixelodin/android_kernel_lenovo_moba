@@ -63,6 +63,7 @@ struct pd_phy_params {
 	enum power_role power_role;
 	u8		frame_filter_val;
 };
+<<<<<<< HEAD
 #ifdef CONFIG_PRODUCT_MOBA
 struct usbpd_pdo {
        bool pps;
@@ -77,6 +78,8 @@ int usbpd_get_pps_status(struct usbpd *pd, u32 *status);
 int usbpd_fetch_pdo(struct usbpd *pd, struct usbpd_pdo *pdos);
 int usbpd_select_pdo(struct usbpd *pd, int pdo, int uv, int ua);
 #endif
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #if IS_ENABLED(CONFIG_QPNP_USB_PDPHY)
 int pd_phy_open(struct pd_phy_params *params);

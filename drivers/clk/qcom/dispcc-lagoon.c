@@ -120,7 +120,11 @@ static struct pll_vco fabia_vco[] = {
 
 static const struct alpha_pll_config disp_cc_pll0_config = {
 	.l = 0x3A,
+<<<<<<< HEAD
 	.cal_l = 0x3F,
+=======
+	.cal_l = 0x31,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.alpha = 0x5555,
 	.config_ctl_val = 0x20485699,
 	.config_ctl_hi_val = 0x00002067,

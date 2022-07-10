@@ -187,6 +187,10 @@ static int iproc_pwmc_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 static const struct pwm_ops iproc_pwm_ops = {
 	.apply = iproc_pwmc_apply,
 	.get_state = iproc_pwmc_get_state,
+<<<<<<< HEAD
+=======
+	.owner = THIS_MODULE,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 static int iproc_pwmc_probe(struct platform_device *pdev)

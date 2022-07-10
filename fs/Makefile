@@ -24,7 +24,11 @@ obj-$(CONFIG_PROC_FS) += proc_namespace.o
 
 obj-y				+= notify/
 obj-$(CONFIG_EPOLL)		+= eventpoll.o
+<<<<<<< HEAD
 obj-$(CONFIG_ANON_INODES)	+= anon_inodes.o
+=======
+obj-y				+= anon_inodes.o
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 obj-$(CONFIG_SIGNALFD)		+= signalfd.o
 obj-$(CONFIG_TIMERFD)		+= timerfd.o
 obj-$(CONFIG_EVENTFD)		+= eventfd.o
@@ -32,6 +36,10 @@ obj-$(CONFIG_USERFAULTFD)	+= userfaultfd.o
 obj-$(CONFIG_AIO)               += aio.o
 obj-$(CONFIG_FS_DAX)		+= dax.o
 obj-$(CONFIG_FS_ENCRYPTION)	+= crypto/
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_FS_VERITY)		+= verity/
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 obj-$(CONFIG_FILE_LOCKING)      += locks.o
 obj-$(CONFIG_COMPAT)		+= compat.o compat_ioctl.o
 obj-$(CONFIG_BINFMT_AOUT)	+= binfmt_aout.o
@@ -91,6 +99,10 @@ obj-$(CONFIG_EXPORTFS)		+= exportfs/
 obj-$(CONFIG_NFSD)		+= nfsd/
 obj-$(CONFIG_LOCKD)		+= lockd/
 obj-$(CONFIG_NLS)		+= nls/
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_UNICODE)		+= unicode/
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 obj-$(CONFIG_SYSV_FS)		+= sysv/
 obj-$(CONFIG_CIFS)		+= cifs/
 obj-$(CONFIG_HPFS_FS)		+= hpfs/
@@ -108,6 +120,10 @@ obj-$(CONFIG_ADFS_FS)		+= adfs/
 obj-$(CONFIG_FUSE_FS)		+= fuse/
 obj-$(CONFIG_OVERLAY_FS)	+= overlayfs/
 obj-$(CONFIG_ORANGEFS_FS)       += orangefs/
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_INCREMENTAL_FS)	+= incfs/
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 obj-$(CONFIG_UDF_FS)		+= udf/
 obj-$(CONFIG_SUN_OPENPROMFS)	+= openpromfs/
 obj-$(CONFIG_OMFS_FS)		+= omfs/
@@ -129,4 +145,7 @@ obj-y				+= exofs/ # Multiple modules
 obj-$(CONFIG_CEPH_FS)		+= ceph/
 obj-$(CONFIG_PSTORE)		+= pstore/
 obj-$(CONFIG_EFIVAR_FS)		+= efivarfs/
+<<<<<<< HEAD
 obj-$(CONFIG_EXFAT_FS)		+= exfat/
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

@@ -325,16 +325,25 @@ void __migration_entry_wait(struct mm_struct *mm, pte_t *ptep,
 
 	/*
 	 * Once radix-tree replacement of page migration started, page_count
+<<<<<<< HEAD
 	 * *must* be zero. And, we don't want to call wait_on_page_locked()
 	 * against a page without get_page().
 	 * So, we use get_page_unless_zero(), here. Even failed, page fault
 	 * will occur again.
+=======
+	 * is zero; but we must not call put_and_wait_on_page_locked() without
+	 * a ref. Use get_page_unless_zero(), and just fault again if it fails.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	 */
 	if (!get_page_unless_zero(page))
 		goto out;
 	pte_unmap_unlock(ptep, ptl);
+<<<<<<< HEAD
 	wait_on_page_locked(page);
 	put_page(page);
+=======
+	put_and_wait_on_page_locked(page);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return;
 out:
 	pte_unmap_unlock(ptep, ptl);
@@ -368,8 +377,12 @@ void pmd_migration_entry_wait(struct mm_struct *mm, pmd_t *pmd)
 	if (!get_page_unless_zero(page))
 		goto unlock;
 	spin_unlock(ptl);
+<<<<<<< HEAD
 	wait_on_page_locked(page);
 	put_page(page);
+=======
+	put_and_wait_on_page_locked(page);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return;
 unlock:
 	spin_unlock(ptl);
@@ -1512,9 +1525,17 @@ static int do_move_pages_to_node(struct mm_struct *mm,
 /*
  * Resolves the given address to a struct page, isolates it from the LRU and
  * puts it to the given pagelist.
+<<<<<<< HEAD
  * Returns -errno if the page cannot be found/isolated or 0 when it has been
  * queued or the page doesn't need to be migrated because it is already on
  * the target node
+=======
+ * Returns:
+ *     errno - if the page cannot be found/isolated
+ *     0 - when it doesn't have to be migrated because it is already on the
+ *         target node
+ *     1 - when it has been queued
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
 		int node, struct list_head *pagelist, bool migrate_all)
@@ -1553,7 +1574,11 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
 	if (PageHuge(page)) {
 		if (PageHead(page)) {
 			isolate_huge_page(page, pagelist);
+<<<<<<< HEAD
 			err = 0;
+=======
+			err = 1;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 	} else {
 		struct page *head;
@@ -1563,7 +1588,11 @@ static int add_page_for_migration(struct mm_struct *mm, unsigned long addr,
 		if (err)
 			goto out_putpage;
 
+<<<<<<< HEAD
 		err = 0;
+=======
+		err = 1;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		list_add_tail(&head->lru, pagelist);
 		mod_node_page_state(page_pgdat(head),
 			NR_ISOLATED_ANON + page_is_file_cache(head),
@@ -1608,7 +1637,11 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
 			goto out_flush;
 		if (get_user(node, nodes + i))
 			goto out_flush;
+<<<<<<< HEAD
 		addr = (unsigned long)p;
+=======
+		addr = (unsigned long)untagged_addr(p);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		err = -ENODEV;
 		if (node < 0 || node >= MAX_NUMNODES)
@@ -1625,8 +1658,24 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
 			start = i;
 		} else if (node != current_node) {
 			err = do_move_pages_to_node(mm, &pagelist, current_node);
+<<<<<<< HEAD
 			if (err)
 				goto out;
+=======
+			if (err) {
+				/*
+				 * Positive err means the number of failed
+				 * pages to migrate.  Since we are going to
+				 * abort and return the number of non-migrated
+				 * pages, so need to incude the rest of the
+				 * nr_pages that have not been attempted as
+				 * well.
+				 */
+				if (err > 0)
+					err += nr_pages - i - 1;
+				goto out;
+			}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			err = store_status(status, start, current_node, i - start);
 			if (err)
 				goto out;
@@ -1640,16 +1689,38 @@ static int do_pages_move(struct mm_struct *mm, nodemask_t task_nodes,
 		 */
 		err = add_page_for_migration(mm, addr, current_node,
 				&pagelist, flags & MPOL_MF_MOVE_ALL);
+<<<<<<< HEAD
 		if (!err)
 			continue;
+=======
+
+		if (!err) {
+			/* The page is already on the target node */
+			err = store_status(status, i, current_node, 1);
+			if (err)
+				goto out_flush;
+			continue;
+		} else if (err > 0) {
+			/* The page is successfully queued for migration */
+			continue;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		err = store_status(status, i, err, 1);
 		if (err)
 			goto out_flush;
 
 		err = do_move_pages_to_node(mm, &pagelist, current_node);
+<<<<<<< HEAD
 		if (err)
 			goto out;
+=======
+		if (err) {
+			if (err > 0)
+				err += nr_pages - i - 1;
+			goto out;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (i > start) {
 			err = store_status(status, start, current_node, i - start);
 			if (err)
@@ -1663,9 +1734,22 @@ out_flush:
 
 	/* Make sure we do not overwrite the existing error */
 	err1 = do_move_pages_to_node(mm, &pagelist, current_node);
+<<<<<<< HEAD
 	if (!err1)
 		err1 = store_status(status, start, current_node, i - start);
 	if (!err)
+=======
+	/*
+	 * Don't have to report non-attempted pages here since:
+	 *     - If the above loop is done gracefully all pages have been
+	 *       attempted.
+	 *     - If the above loop is aborted it means a fatal error
+	 *       happened, should return ret.
+	 */
+	if (!err1)
+		err1 = store_status(status, start, current_node, i - start);
+	if (err >= 0)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		err = err1;
 out:
 	return err;
@@ -2052,6 +2136,7 @@ int migrate_misplaced_transhuge_page(struct mm_struct *mm,
 	entry = maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
 
 	/*
+<<<<<<< HEAD
 	 * Clear the old entry under pagetable lock and establish the new PTE.
 	 * Any parallel GUP will either observe the old page blocking on the
 	 * page lock, block on the page table lock or observe the new page.
@@ -2061,6 +2146,28 @@ int migrate_misplaced_transhuge_page(struct mm_struct *mm,
 	flush_cache_range(vma, mmun_start, mmun_end);
 	page_add_anon_rmap(new_page, vma, mmun_start, true);
 	pmdp_huge_clear_flush_notify(vma, mmun_start, pmd);
+=======
+	 * Overwrite the old entry under pagetable lock and establish
+	 * the new PTE. Any parallel GUP will either observe the old
+	 * page blocking on the page lock, block on the page table
+	 * lock or observe the new page. The SetPageUptodate on the
+	 * new page and page_add_new_anon_rmap guarantee the copy is
+	 * visible before the pagetable update.
+	 */
+	flush_cache_range(vma, mmun_start, mmun_end);
+	page_add_anon_rmap(new_page, vma, mmun_start, true);
+	/*
+	 * At this point the pmd is numa/protnone (i.e. non present) and the TLB
+	 * has already been flushed globally.  So no TLB can be currently
+	 * caching this non present pmd mapping.  There's no need to clear the
+	 * pmd before doing set_pmd_at(), nor to flush the TLB after
+	 * set_pmd_at().  Clearing the pmd here would introduce a race
+	 * condition against MADV_DONTNEED, because MADV_DONTNEED only holds the
+	 * mmap_sem for reading.  If the pmd is set to NULL at any given time,
+	 * MADV_DONTNEED won't wait on the pmd lock and it'll skip clearing this
+	 * pmd.
+	 */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	set_pmd_at(mm, mmun_start, pmd, entry);
 	update_mmu_cache_pmd(vma, address, &entry);
 
@@ -2074,7 +2181,11 @@ int migrate_misplaced_transhuge_page(struct mm_struct *mm,
 	 * No need to double call mmu_notifier->invalidate_range() callback as
 	 * the above pmdp_huge_clear_flush_notify() did already call it.
 	 */
+<<<<<<< HEAD
 	mmu_notifier_invalidate_range_only_end(mm, mmun_start, mmun_end);
+=======
+	mmu_notifier_invalidate_range_end(mm, mmun_start, mmun_end);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Take an "isolate" reference and put new page on the LRU. */
 	get_page(new_page);

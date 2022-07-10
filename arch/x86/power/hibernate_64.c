@@ -266,9 +266,15 @@ free_tfm:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void hibernation_e820_save(void *buf)
 {
 	get_e820_md5(e820_table_firmware, buf);
+=======
+static int hibernation_e820_save(void *buf)
+{
+	return get_e820_md5(e820_table_firmware, buf);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static bool hibernation_e820_mismatch(void *buf)
@@ -288,8 +294,14 @@ static bool hibernation_e820_mismatch(void *buf)
 	return memcmp(result, buf, MD5_DIGEST_SIZE) ? true : false;
 }
 #else
+<<<<<<< HEAD
 static void hibernation_e820_save(void *buf)
 {
+=======
+static int hibernation_e820_save(void *buf)
+{
+	return 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static bool hibernation_e820_mismatch(void *buf)
@@ -334,9 +346,13 @@ int arch_hibernation_header_save(void *addr, unsigned int max_size)
 
 	rdr->magic = RESTORE_MAGIC;
 
+<<<<<<< HEAD
 	hibernation_e820_save(rdr->e820_digest);
 
 	return 0;
+=======
+	return hibernation_e820_save(rdr->e820_digest);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /**

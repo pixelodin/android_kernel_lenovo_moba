@@ -1572,7 +1572,11 @@ int drm_wait_vblank_ioctl(struct drm_device *dev, void *data,
 	unsigned int flags, pipe, high_pipe;
 
 	if (!dev->irq_enabled)
+<<<<<<< HEAD
 		return -EINVAL;
+=======
+		return -EOPNOTSUPP;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (vblwait->request.type & _DRM_VBLANK_SIGNAL)
 		return -EINVAL;
@@ -1813,7 +1817,11 @@ int drm_crtc_get_sequence_ioctl(struct drm_device *dev, void *data,
 		return -EINVAL;
 
 	if (!dev->irq_enabled)
+<<<<<<< HEAD
 		return -EINVAL;
+=======
+		return -EOPNOTSUPP;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	crtc = drm_crtc_find(dev, file_priv, get_seq->crtc_id);
 	if (!crtc)
@@ -1871,7 +1879,11 @@ int drm_crtc_queue_sequence_ioctl(struct drm_device *dev, void *data,
 		return -EINVAL;
 
 	if (!dev->irq_enabled)
+<<<<<<< HEAD
 		return -EINVAL;
+=======
+		return -EOPNOTSUPP;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	crtc = drm_crtc_find(dev, file_priv, queue_seq->crtc_id);
 	if (!crtc)

@@ -769,7 +769,11 @@ send:
 
 	usb_fill_int_urb(port->interrupt_out_urb, port->serial->dev,
 		usb_sndintpipe(port->serial->dev, port->interrupt_out_endpointAddress),
+<<<<<<< HEAD
 		port->interrupt_out_buffer, port->interrupt_out_size,
+=======
+		port->interrupt_out_buffer, actual_size,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		cypress_write_int_callback, port, priv->write_urb_interval);
 	result = usb_submit_urb(port->interrupt_out_urb, GFP_ATOMIC);
 	if (result) {

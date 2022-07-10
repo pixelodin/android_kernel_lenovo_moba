@@ -1939,12 +1939,28 @@ void btrfs_kill_all_delayed_nodes(struct btrfs_root *root)
 		}
 
 		inode_id = delayed_nodes[n - 1]->inode_id + 1;
+<<<<<<< HEAD
 
 		for (i = 0; i < n; i++)
 			refcount_inc(&delayed_nodes[i]->refs);
 		spin_unlock(&root->inode_lock);
 
 		for (i = 0; i < n; i++) {
+=======
+		for (i = 0; i < n; i++) {
+			/*
+			 * Don't increase refs in case the node is dead and
+			 * about to be removed from the tree in the loop below
+			 */
+			if (!refcount_inc_not_zero(&delayed_nodes[i]->refs))
+				delayed_nodes[i] = NULL;
+		}
+		spin_unlock(&root->inode_lock);
+
+		for (i = 0; i < n; i++) {
+			if (!delayed_nodes[i])
+				continue;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			__btrfs_kill_delayed_node(delayed_nodes[i]);
 			btrfs_release_delayed_node(delayed_nodes[i]);
 		}

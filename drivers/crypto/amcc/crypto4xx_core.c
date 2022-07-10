@@ -373,12 +373,17 @@ static u32 crypto4xx_build_sdr(struct crypto4xx_device *dev)
 		dma_alloc_coherent(dev->core_dev->device,
 			PPC4XX_SD_BUFFER_SIZE * PPC4XX_NUM_SD,
 			&dev->scatter_buffer_pa, GFP_ATOMIC);
+<<<<<<< HEAD
 	if (!dev->scatter_buffer_va) {
 		dma_free_coherent(dev->core_dev->device,
 				  sizeof(struct ce_sd) * PPC4XX_NUM_SD,
 				  dev->sdr, dev->sdr_pa);
 		return -ENOMEM;
 	}
+=======
+	if (!dev->scatter_buffer_va)
+		return -ENOMEM;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	for (i = 0; i < PPC4XX_NUM_SD; i++) {
 		dev->sdr[i].ptr = dev->scatter_buffer_pa +

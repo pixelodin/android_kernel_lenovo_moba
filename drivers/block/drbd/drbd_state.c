@@ -688,11 +688,17 @@ request_detach(struct drbd_device *device)
 			CS_VERBOSE | CS_ORDERED | CS_INHIBIT_MD_IO);
 }
 
+<<<<<<< HEAD
 enum drbd_state_rv
 drbd_request_detach_interruptible(struct drbd_device *device)
 {
 	enum drbd_state_rv rv;
 	int ret;
+=======
+int drbd_request_detach_interruptible(struct drbd_device *device)
+{
+	int ret, rv;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	drbd_suspend_io(device); /* so no-one is stuck in drbd_al_begin_io */
 	wait_event_interruptible(device->state_wait,

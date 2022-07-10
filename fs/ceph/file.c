@@ -1735,7 +1735,10 @@ static long ceph_fallocate(struct file *file, int mode,
 	struct ceph_file_info *fi = file->private_data;
 	struct inode *inode = file_inode(file);
 	struct ceph_inode_info *ci = ceph_inode(inode);
+<<<<<<< HEAD
 	struct ceph_fs_client *fsc = ceph_inode_to_client(inode);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct ceph_cap_flush *prealloc_cf;
 	int want, got = 0;
 	int dirty;
@@ -1743,10 +1746,14 @@ static long ceph_fallocate(struct file *file, int mode,
 	loff_t endoff = 0;
 	loff_t size;
 
+<<<<<<< HEAD
 	if ((offset + length) > max(i_size_read(inode), fsc->max_file_size))
 		return -EFBIG;
 
 	if (mode & ~(FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE))
+=======
+	if (mode != (FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EOPNOTSUPP;
 
 	if (!S_ISREG(inode->i_mode))
@@ -1763,6 +1770,7 @@ static long ceph_fallocate(struct file *file, int mode,
 		goto unlock;
 	}
 
+<<<<<<< HEAD
 	if (!(mode & (FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE)) &&
 	    ceph_quota_is_max_bytes_exceeded(inode, offset + length)) {
 		ret = -EDQUOT;
@@ -1775,6 +1783,8 @@ static long ceph_fallocate(struct file *file, int mode,
 		goto unlock;
 	}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (ci->i_inline_version != CEPH_INLINE_NONE) {
 		ret = ceph_uninline_data(file, NULL);
 		if (ret < 0)
@@ -1782,12 +1792,21 @@ static long ceph_fallocate(struct file *file, int mode,
 	}
 
 	size = i_size_read(inode);
+<<<<<<< HEAD
 	if (!(mode & FALLOC_FL_KEEP_SIZE)) {
 		endoff = offset + length;
 		ret = inode_newsize_ok(inode, endoff);
 		if (ret)
 			goto unlock;
 	}
+=======
+
+	/* Are we punching a hole beyond EOF? */
+	if (offset >= size)
+		goto unlock;
+	if ((offset + length) > size)
+		length = size - offset;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (fi->fmode & CEPH_FILE_MODE_LAZY)
 		want = CEPH_CAP_FILE_BUFFER | CEPH_CAP_FILE_LAZYIO;
@@ -1798,6 +1817,7 @@ static long ceph_fallocate(struct file *file, int mode,
 	if (ret < 0)
 		goto unlock;
 
+<<<<<<< HEAD
 	if (mode & FALLOC_FL_PUNCH_HOLE) {
 		if (offset < size)
 			ceph_zero_pagecache_range(inode, offset, length);
@@ -1808,6 +1828,10 @@ static long ceph_fallocate(struct file *file, int mode,
 			ceph_check_caps(ceph_inode(inode),
 				CHECK_CAPS_AUTHONLY, NULL);
 	}
+=======
+	ceph_zero_pagecache_range(inode, offset, length);
+	ret = ceph_zero_objects(inode, offset, length);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!ret) {
 		spin_lock(&ci->i_ceph_lock);
@@ -1817,9 +1841,12 @@ static long ceph_fallocate(struct file *file, int mode,
 		spin_unlock(&ci->i_ceph_lock);
 		if (dirty)
 			__mark_inode_dirty(inode, dirty);
+<<<<<<< HEAD
 		if ((endoff > size) &&
 		    ceph_quota_is_max_bytes_approaching(inode, endoff))
 			ceph_check_caps(ci, CHECK_CAPS_NODELAY, NULL);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	ceph_put_cap_refs(ci, got);

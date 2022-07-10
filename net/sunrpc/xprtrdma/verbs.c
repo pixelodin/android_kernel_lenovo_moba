@@ -248,6 +248,10 @@ rpcrdma_conn_upcall(struct rdma_cm_id *id, struct rdma_cm_event *event)
 			ia->ri_device->name,
 			rpcrdma_addrstr(xprt), rpcrdma_portstr(xprt));
 #endif
+<<<<<<< HEAD
+=======
+		init_completion(&ia->ri_remove_done);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		set_bit(RPCRDMA_IAF_REMOVING, &ia->ri_flags);
 		ep->rep_connected = -ENODEV;
 		xprt_force_disconnect(&xprt->rx_xprt);
@@ -306,7 +310,10 @@ rpcrdma_create_id(struct rpcrdma_xprt *xprt, struct rpcrdma_ia *ia)
 	trace_xprtrdma_conn_start(xprt);
 
 	init_completion(&ia->ri_done);
+<<<<<<< HEAD
 	init_completion(&ia->ri_remove_done);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	id = rdma_create_id(xprt->rx_xprt.xprt_net, rpcrdma_conn_upcall,
 			    xprt, RDMA_PS_TCP, IB_QPT_RC);
@@ -1558,10 +1565,18 @@ rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, bool temp)
 	rc = ib_post_recv(r_xprt->rx_ia.ri_id->qp, wr,
 			  (const struct ib_recv_wr **)&bad_wr);
 	if (rc) {
+<<<<<<< HEAD
 		for (wr = bad_wr; wr; wr = wr->next) {
 			struct rpcrdma_rep *rep;
 
 			rep = container_of(wr, struct rpcrdma_rep, rr_recv_wr);
+=======
+		for (wr = bad_wr; wr;) {
+			struct rpcrdma_rep *rep;
+
+			rep = container_of(wr, struct rpcrdma_rep, rr_recv_wr);
+			wr = wr->next;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			rpcrdma_recv_buffer_put(rep);
 			--count;
 		}

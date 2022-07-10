@@ -139,6 +139,10 @@
 #define ADC_GPIO7				0x18
 #define ADC_SBUx				0x99
 #define ADC_MID_CHG_DIV6			0x1e
+<<<<<<< HEAD
+=======
+#define ANA_IN					0x1d
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define ADC_OFF					0xff
 
 /* 30k pull-up1 */
@@ -158,6 +162,10 @@
 #define ADC_GPIO6_PU1				0x37
 #define ADC_GPIO7_PU1				0x38
 #define ADC_SBUx_PU1				0x39
+<<<<<<< HEAD
+=======
+#define ANA_IN					0x1d
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /* 100k pull-up2 */
 #define ADC_BAT_THERM_PU2			0x4a
@@ -239,6 +247,10 @@
 #define ADC_SCALE_HW_CALIB_BATT_THERM_30K	0xD
 #define ADC_SCALE_HW_CALIB_BATT_THERM_400K	0xE
 #define ADC_SCALE_HW_CALIB_PM5_SMB1398_TEMP	0xF
+<<<<<<< HEAD
+=======
+#define ADC_SCALE_HW_CALIB_PM2250_S3_DIE_TEMP	0x10
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /* ADC channels for ADC for PMIC7 */
 

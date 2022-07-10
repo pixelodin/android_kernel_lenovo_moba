@@ -391,6 +391,42 @@ static struct uvc_streaming *uvc_stream_by_id(struct uvc_device *dev, int id)
 }
 
 /* ------------------------------------------------------------------------
+<<<<<<< HEAD
+=======
+ * Streaming Object Management
+ */
+
+static void uvc_stream_delete(struct uvc_streaming *stream)
+{
+	mutex_destroy(&stream->mutex);
+
+	usb_put_intf(stream->intf);
+
+	kfree(stream->format);
+	kfree(stream->header.bmaControls);
+	kfree(stream);
+}
+
+static struct uvc_streaming *uvc_stream_new(struct uvc_device *dev,
+					    struct usb_interface *intf)
+{
+	struct uvc_streaming *stream;
+
+	stream = kzalloc(sizeof(*stream), GFP_KERNEL);
+	if (stream == NULL)
+		return NULL;
+
+	mutex_init(&stream->mutex);
+
+	stream->dev = dev;
+	stream->intf = usb_get_intf(intf);
+	stream->intfnum = intf->cur_altsetting->desc.bInterfaceNumber;
+
+	return stream;
+}
+
+/* ------------------------------------------------------------------------
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * Descriptors parsing
  */
 
@@ -682,6 +718,7 @@ static int uvc_parse_streaming(struct uvc_device *dev,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	streaming = kzalloc(sizeof(*streaming), GFP_KERNEL);
 	if (streaming == NULL) {
 		usb_driver_release_interface(&uvc_driver.driver, intf);
@@ -693,6 +730,14 @@ static int uvc_parse_streaming(struct uvc_device *dev,
 	streaming->intf = usb_get_intf(intf);
 	streaming->intfnum = intf->cur_altsetting->desc.bInterfaceNumber;
 
+=======
+	streaming = uvc_stream_new(dev, intf);
+	if (streaming == NULL) {
+		usb_driver_release_interface(&uvc_driver.driver, intf);
+		return -ENOMEM;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* The Pico iMage webcam has its class-specific interface descriptors
 	 * after the endpoint descriptors.
 	 */
@@ -899,10 +944,14 @@ static int uvc_parse_streaming(struct uvc_device *dev,
 
 error:
 	usb_driver_release_interface(&uvc_driver.driver, intf);
+<<<<<<< HEAD
 	usb_put_intf(intf);
 	kfree(streaming->format);
 	kfree(streaming->header.bmaControls);
 	kfree(streaming);
+=======
+	uvc_stream_delete(streaming);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return ret;
 }
 
@@ -1457,6 +1506,14 @@ static int uvc_scan_chain_forward(struct uvc_video_chain *chain,
 			break;
 		if (forward == prev)
 			continue;
+<<<<<<< HEAD
+=======
+		if (forward->chain.next || forward->chain.prev) {
+			uvc_trace(UVC_TRACE_DESCR, "Found reference to "
+				"entity %d already in chain.\n", forward->id);
+			return -EINVAL;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		switch (UVC_ENTITY_TYPE(forward)) {
 		case UVC_VC_EXTENSION_UNIT:
@@ -1538,6 +1595,16 @@ static int uvc_scan_chain_backward(struct uvc_video_chain *chain,
 				return -1;
 			}
 
+<<<<<<< HEAD
+=======
+			if (term->chain.next || term->chain.prev) {
+				uvc_trace(UVC_TRACE_DESCR, "Found reference to "
+					"entity %d already in chain.\n",
+					term->id);
+				return -EINVAL;
+			}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			if (uvc_trace_param & UVC_TRACE_PROBE)
 				printk(KERN_CONT " %d", term->id);
 
@@ -1818,7 +1885,11 @@ static int uvc_scan_device(struct uvc_device *dev)
  * is released.
  *
  * As this function is called after or during disconnect(), all URBs have
+<<<<<<< HEAD
  * already been canceled by the USB core. There is no need to kill the
+=======
+ * already been cancelled by the USB core. There is no need to kill the
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * interrupt URB manually.
  */
 static void uvc_delete(struct kref *kref)
@@ -1856,10 +1927,14 @@ static void uvc_delete(struct kref *kref)
 		streaming = list_entry(p, struct uvc_streaming, list);
 		usb_driver_release_interface(&uvc_driver.driver,
 			streaming->intf);
+<<<<<<< HEAD
 		usb_put_intf(streaming->intf);
 		kfree(streaming->format);
 		kfree(streaming->header.bmaControls);
 		kfree(streaming);
+=======
+		uvc_stream_delete(streaming);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	kfree(dev);
@@ -2124,6 +2199,23 @@ static int uvc_probe(struct usb_interface *intf,
 			   sizeof(dev->name) - len);
 	}
 
+<<<<<<< HEAD
+=======
+	/* Initialize the media device. */
+#ifdef CONFIG_MEDIA_CONTROLLER
+	dev->mdev.dev = &intf->dev;
+	strscpy(dev->mdev.model, dev->name, sizeof(dev->mdev.model));
+	if (udev->serial)
+		strscpy(dev->mdev.serial, udev->serial,
+			sizeof(dev->mdev.serial));
+	usb_make_path(udev, dev->mdev.bus_info, sizeof(dev->mdev.bus_info));
+	dev->mdev.hw_revision = le16_to_cpu(udev->descriptor.bcdDevice);
+	media_device_init(&dev->mdev);
+
+	dev->vdev.mdev = &dev->mdev;
+#endif
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Parse the Video Class control descriptor. */
 	if (uvc_parse_control(dev) < 0) {
 		uvc_trace(UVC_TRACE_PROBE, "Unable to parse UVC "
@@ -2144,6 +2236,7 @@ static int uvc_probe(struct usb_interface *intf,
 			"linux-uvc-devel mailing list.\n");
 	}
 
+<<<<<<< HEAD
 	/* Initialize the media device and register the V4L2 device. */
 #ifdef CONFIG_MEDIA_CONTROLLER
 	dev->mdev.dev = &intf->dev;
@@ -2157,6 +2250,9 @@ static int uvc_probe(struct usb_interface *intf,
 
 	dev->vdev.mdev = &dev->mdev;
 #endif
+=======
+	/* Register the V4L2 device. */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (v4l2_device_register(&intf->dev, &dev->vdev) < 0)
 		goto error;
 

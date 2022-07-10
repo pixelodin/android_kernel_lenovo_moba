@@ -28,6 +28,10 @@
 #include <net/addrconf.h>
 #include <net/ip6_route.h>
 #include <net/dst_cache.h>
+<<<<<<< HEAD
+=======
+#include <net/ip_tunnels.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #ifdef CONFIG_IPV6_SEG6_HMAC
 #include <net/seg6_hmac.h>
 #endif
@@ -135,7 +139,12 @@ static bool decap_and_validate(struct sk_buff *skb, int proto)
 
 	skb_reset_network_header(skb);
 	skb_reset_transport_header(skb);
+<<<<<<< HEAD
 	skb->encapsulation = 0;
+=======
+	if (iptunnel_pull_offloads(skb))
+		return false;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return true;
 }

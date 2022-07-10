@@ -24,6 +24,7 @@ static int hclge_ring_space(struct hclge_cmq_ring *ring)
 	return ring->desc_num - used - 1;
 }
 
+<<<<<<< HEAD
 static int is_valid_csq_clean_head(struct hclge_cmq_ring *ring, int h)
 {
 	int u = ring->next_to_use;
@@ -33,6 +34,17 @@ static int is_valid_csq_clean_head(struct hclge_cmq_ring *ring, int h)
 		return 0;
 
 	return u > c ? (h > c && h <= u) : (h > c || h <= u);
+=======
+static int is_valid_csq_clean_head(struct hclge_cmq_ring *ring, int head)
+{
+	int ntu = ring->next_to_use;
+	int ntc = ring->next_to_clean;
+
+	if (ntu > ntc)
+		return head >= ntc && head <= ntu;
+
+	return head >= ntc || head <= ntu;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int hclge_alloc_cmd_desc(struct hclge_cmq_ring *ring)
@@ -260,6 +272,11 @@ int hclge_cmd_send(struct hclge_hw *hw, struct hclge_desc *desc, int num)
 
 			if (desc_ret == HCLGE_CMD_EXEC_SUCCESS)
 				retval = 0;
+<<<<<<< HEAD
+=======
+			else if (desc_ret == HCLGE_CMD_NOT_SUPPORTED)
+				retval = -EOPNOTSUPP;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			else
 				retval = -EIO;
 			hw->cmq.last_status = desc_ret;

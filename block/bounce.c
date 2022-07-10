@@ -267,6 +267,7 @@ static struct bio *bounce_clone_bio(struct bio *bio_src, gfp_t gfp_mask,
 		break;
 	}
 
+<<<<<<< HEAD
 	if (bio_integrity(bio_src)) {
 		int ret;
 
@@ -278,6 +279,16 @@ static struct bio *bounce_clone_bio(struct bio *bio_src, gfp_t gfp_mask,
 	}
 
 	bio_clone_crypt_key(bio, bio_src);
+=======
+	bio_crypt_clone(bio, bio_src, gfp_mask);
+
+	if (bio_integrity(bio_src) &&
+	    bio_integrity_clone(bio, bio_src, gfp_mask) < 0) {
+		bio_put(bio);
+		return NULL;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	bio_clone_blkcg_association(bio, bio_src);
 
 	return bio;

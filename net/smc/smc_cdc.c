@@ -96,6 +96,10 @@ int smc_cdc_msg_send(struct smc_connection *conn,
 		     struct smc_wr_buf *wr_buf,
 		     struct smc_cdc_tx_pend *pend)
 {
+<<<<<<< HEAD
+=======
+	union smc_host_cursor cfed;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct smc_link *link;
 	int rc;
 
@@ -105,12 +109,19 @@ int smc_cdc_msg_send(struct smc_connection *conn,
 
 	conn->tx_cdc_seq++;
 	conn->local_tx_ctrl.seqno = conn->tx_cdc_seq;
+<<<<<<< HEAD
 	smc_host_msg_to_cdc((struct smc_cdc_msg *)wr_buf,
 			    &conn->local_tx_ctrl, conn);
 	rc = smc_wr_tx_send(link, (struct smc_wr_tx_pend_priv *)pend);
 	if (!rc)
 		smc_curs_copy(&conn->rx_curs_confirmed,
 			      &conn->local_tx_ctrl.cons, conn);
+=======
+	smc_host_msg_to_cdc((struct smc_cdc_msg *)wr_buf, conn, &cfed);
+	rc = smc_wr_tx_send(link, (struct smc_wr_tx_pend_priv *)pend);
+	if (!rc)
+		smc_curs_copy(&conn->rx_curs_confirmed, &cfed, conn);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return rc;
 }

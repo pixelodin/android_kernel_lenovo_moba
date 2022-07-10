@@ -29,10 +29,19 @@
 #define PCI_DEVICE_ID_INTEL_BXT_M		0x1aaa
 #define PCI_DEVICE_ID_INTEL_APL			0x5aaa
 #define PCI_DEVICE_ID_INTEL_KBP			0xa2b0
+<<<<<<< HEAD
 #define PCI_DEVICE_ID_INTEL_CMLH		0x02ee
 #define PCI_DEVICE_ID_INTEL_GLK			0x31aa
 #define PCI_DEVICE_ID_INTEL_CNPLP		0x9dee
 #define PCI_DEVICE_ID_INTEL_CNPH		0xa36e
+=======
+#define PCI_DEVICE_ID_INTEL_CMLLP		0x02ee
+#define PCI_DEVICE_ID_INTEL_CMLH		0x06ee
+#define PCI_DEVICE_ID_INTEL_GLK			0x31aa
+#define PCI_DEVICE_ID_INTEL_CNPLP		0x9dee
+#define PCI_DEVICE_ID_INTEL_CNPH		0xa36e
+#define PCI_DEVICE_ID_INTEL_CNPV		0xa3b0
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define PCI_DEVICE_ID_INTEL_ICLLP		0x34ee
 
 #define PCI_INTEL_BXT_DSM_GUID		"732b85d5-b7a7-4a1b-9ba0-4bbd00ffd511"
@@ -256,7 +265,11 @@ static int dwc3_pci_probe(struct pci_dev *pci, const struct pci_device_id *id)
 
 	ret = platform_device_add_properties(dwc->dwc3, p);
 	if (ret < 0)
+<<<<<<< HEAD
 		return ret;
+=======
+		goto err;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	ret = dwc3_pci_quirks(dwc);
 	if (ret)
@@ -306,6 +319,12 @@ static const struct pci_device_id dwc3_pci_id_table[] = {
 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_MRFLD),
 	  (kernel_ulong_t) &dwc3_pci_mrfld_properties, },
 
+<<<<<<< HEAD
+=======
+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CMLLP),
+	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CMLH),
 	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
 
@@ -336,6 +355,12 @@ static const struct pci_device_id dwc3_pci_id_table[] = {
 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CNPH),
 	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
 
+<<<<<<< HEAD
+=======
+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_CNPV),
+	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_ICLLP),
 	  (kernel_ulong_t) &dwc3_pci_intel_properties, },
 

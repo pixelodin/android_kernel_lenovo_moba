@@ -9053,8 +9053,11 @@ struct mlx5_ifc_query_lag_out_bits {
 
 	u8         syndrome[0x20];
 
+<<<<<<< HEAD
 	u8         reserved_at_40[0x40];
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct mlx5_ifc_lagc_bits ctx;
 };
 

@@ -72,6 +72,12 @@ void mt76x2_reset_wlan(struct mt76x2_dev *dev, bool enable)
 {
 	u32 val;
 
+<<<<<<< HEAD
+=======
+	if (!enable)
+		goto out;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	val = mt76_rr(dev, MT_WLAN_FUN_CTRL);
 
 	val &= ~MT_WLAN_FUN_CTRL_FRC_WL_ANT_SEL;
@@ -87,6 +93,10 @@ void mt76x2_reset_wlan(struct mt76x2_dev *dev, bool enable)
 	mt76_wr(dev, MT_WLAN_FUN_CTRL, val);
 	udelay(20);
 
+<<<<<<< HEAD
+=======
+out:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mt76x2_set_wlan_state(dev, enable);
 }
 EXPORT_SYMBOL_GPL(mt76x2_reset_wlan);

@@ -142,7 +142,11 @@ void prepare_ftrace_return(unsigned long *parent, unsigned long self_addr,
 	 */
 	old = *parent;
 
+<<<<<<< HEAD
 	if (function_graph_enter(old, self_addr, frame_pointer, parent))
+=======
+	if (!function_graph_enter(old, self_addr, frame_pointer, parent))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		*parent = return_hooker;
 }
 

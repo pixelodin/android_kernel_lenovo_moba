@@ -354,7 +354,11 @@ static int bcm_qspi_bspi_set_flex_mode(struct bcm_qspi *qspi,
 {
 	int bpc = 0, bpp = 0;
 	u8 command = op->cmd.opcode;
+<<<<<<< HEAD
 	int width  = op->cmd.buswidth ? op->cmd.buswidth : SPI_NBITS_SINGLE;
+=======
+	int width = op->data.buswidth ? op->data.buswidth : SPI_NBITS_SINGLE;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int addrlen = op->addr.nbytes;
 	int flex_mode = 1;
 
@@ -992,7 +996,11 @@ static int bcm_qspi_exec_mem_op(struct spi_mem *mem,
 	if (mspi_read)
 		return bcm_qspi_mspi_exec_mem_op(spi, op);
 
+<<<<<<< HEAD
 	ret = bcm_qspi_bspi_set_mode(qspi, op, -1);
+=======
+	ret = bcm_qspi_bspi_set_mode(qspi, op, 0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!ret)
 		ret = bcm_qspi_bspi_exec_mem_op(spi, op);

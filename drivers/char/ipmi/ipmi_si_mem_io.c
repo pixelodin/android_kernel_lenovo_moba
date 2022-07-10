@@ -51,7 +51,11 @@ static unsigned char mem_inq(const struct si_sm_io *io, unsigned int offset)
 static void mem_outq(const struct si_sm_io *io, unsigned int offset,
 		     unsigned char b)
 {
+<<<<<<< HEAD
 	writeq(b << io->regshift, (io->addr)+(offset * io->regspacing));
+=======
+	writeq((u64)b << io->regshift, (io->addr)+(offset * io->regspacing));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 #endif
 

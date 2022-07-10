@@ -5239,7 +5239,11 @@ __xfs_bunmapi(
 		 * Make sure we don't touch multiple AGF headers out of order
 		 * in a single transaction, as that could cause AB-BA deadlocks.
 		 */
+<<<<<<< HEAD
 		if (!wasdel) {
+=======
+		if (!wasdel && !isrt) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			agno = XFS_FSB_TO_AGNO(mp, del.br_startblock);
 			if (prev_agno != NULLAGNUMBER && prev_agno > agno)
 				break;

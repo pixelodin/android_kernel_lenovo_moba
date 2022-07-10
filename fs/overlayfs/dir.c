@@ -1177,7 +1177,11 @@ static int ovl_rename(struct inode *olddir, struct dentry *old,
 	if (newdentry == trap)
 		goto out_dput;
 
+<<<<<<< HEAD
 	if (WARN_ON(olddentry->d_inode == newdentry->d_inode))
+=======
+	if (olddentry->d_inode == newdentry->d_inode)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto out_dput;
 
 	err = 0;

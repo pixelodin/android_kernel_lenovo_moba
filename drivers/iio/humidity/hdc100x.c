@@ -229,7 +229,11 @@ static int hdc100x_read_raw(struct iio_dev *indio_dev,
 			*val2 = 65536;
 			return IIO_VAL_FRACTIONAL;
 		} else {
+<<<<<<< HEAD
 			*val = 100;
+=======
+			*val = 100000;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			*val2 = 65536;
 			return IIO_VAL_FRACTIONAL;
 		}

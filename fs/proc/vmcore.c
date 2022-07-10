@@ -177,6 +177,19 @@ int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
 }
 
 /*
+<<<<<<< HEAD
+=======
+ * Architectures which support memory encryption override this.
+ */
+ssize_t __weak
+copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
+			   unsigned long offset, int userbuf)
+{
+	return copy_oldmem_page(pfn, buf, csize, offset, userbuf);
+}
+
+/*
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * Copy to either kernel or user space
  */
 static int copy_to(void *target, void *src, size_t size, int userbuf)

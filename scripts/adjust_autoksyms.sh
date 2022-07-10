@@ -1,6 +1,10 @@
 #!/bin/sh
 
+<<<<<<< HEAD
 # Script to create/update include/generated/autoksyms.h and dependency files
+=======
+# Script to update include/generated/autoksyms.h and dependency files
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #
 # Copyright:	(C) 2016  Linaro Limited
 # Created by:	Nicolas Pitre, January 2016
@@ -9,9 +13,13 @@
 # it under the terms of the GNU General Public License version 2 as
 # published by the Free Software Foundation.
 
+<<<<<<< HEAD
 # Create/update the include/generated/autoksyms.h file from the list
 # of all module's needed symbols as recorded on the third line of
 # .tmp_versions/*.mod files.
+=======
+# Update the include/generated/autoksyms.h file.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #
 # For each symbol being added or removed, the corresponding dependency
 # file's timestamp is updated to force a rebuild of the affected source
@@ -39,6 +47,7 @@ case "$KBUILD_VERBOSE" in
 esac
 
 # We need access to CONFIG_ symbols
+<<<<<<< HEAD
 case "${KCONFIG_CONFIG}" in
 */*)
 	. "${KCONFIG_CONFIG}"
@@ -68,6 +77,12 @@ done >> "$new_ksyms_file"
 if [ -n "$CONFIG_MODVERSIONS" ]; then
 	echo "#define __KSYM_module_layout 1" >> "$new_ksyms_file"
 fi
+=======
+. include/config/auto.conf
+
+# Generate a new symbol list file
+$CONFIG_SHELL $srctree/scripts/gen_autoksyms.sh "$new_ksyms_file"
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 # Extract changes between old and new list and touch corresponding
 # dependency files.

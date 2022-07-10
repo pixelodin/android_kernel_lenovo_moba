@@ -361,11 +361,16 @@ int drm_legacy_addctx(struct drm_device *dev, void *data,
 {
 	struct drm_ctx_list *ctx_entry;
 	struct drm_ctx *ctx = data;
+<<<<<<< HEAD
+=======
+	int tmp_handle;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!drm_core_check_feature(dev, DRIVER_KMS_LEGACY_CONTEXT) &&
 	    !drm_core_check_feature(dev, DRIVER_LEGACY))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	ctx->handle = drm_legacy_ctxbitmap_next(dev);
 	if (ctx->handle == DRM_KERNEL_CONTEXT) {
 		/* Skip kernel's context and get a new one. */
@@ -378,6 +383,22 @@ int drm_legacy_addctx(struct drm_device *dev, void *data,
 		return -ENOMEM;
 	}
 
+=======
+	tmp_handle = drm_legacy_ctxbitmap_next(dev);
+	if (tmp_handle == DRM_KERNEL_CONTEXT) {
+		/* Skip kernel's context and get a new one. */
+		tmp_handle = drm_legacy_ctxbitmap_next(dev);
+	}
+	DRM_DEBUG("%d\n", tmp_handle);
+	if (tmp_handle < 0) {
+		DRM_DEBUG("Not enough free contexts.\n");
+		/* Should this return -EBUSY instead? */
+		return tmp_handle;
+	}
+
+	ctx->handle = tmp_handle;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ctx_entry = kmalloc(sizeof(*ctx_entry), GFP_KERNEL);
 	if (!ctx_entry) {
 		DRM_DEBUG("out of memory\n");

@@ -5,7 +5,11 @@
 # Copyright (C) 1995-2000 Russell King
 #
 
+<<<<<<< HEAD
 lib-y		:= backtrace.o changebit.o csumipv6.o csumpartial.o   \
+=======
+lib-y		:= changebit.o csumipv6.o csumpartial.o               \
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		   csumpartialcopy.o csumpartialcopyuser.o clearbit.o \
 		   delay.o delay-loop.o findbit.o memchr.o memcpy.o   \
 		   memmove.o memset.o setbit.o                        \
@@ -19,6 +23,15 @@ lib-y		:= backtrace.o changebit.o csumipv6.o csumpartial.o   \
 mmu-y		:= clear_user.o copy_page.o getuser.o putuser.o       \
 		   copy_from_user.o copy_to_user.o
 
+<<<<<<< HEAD
+=======
+ifdef CONFIG_CC_IS_CLANG
+  lib-y	+= backtrace-clang.o
+else
+  lib-y	+= backtrace.o
+endif
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 # using lib_ here won't override already available weak symbols
 obj-$(CONFIG_UACCESS_WITH_MEMCPY) += uaccess_with_memcpy.o
 

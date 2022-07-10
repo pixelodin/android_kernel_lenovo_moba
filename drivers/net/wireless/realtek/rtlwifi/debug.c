@@ -109,7 +109,11 @@ static const struct file_operations file_ops_common = {
 	.open = dl_debug_open_common,
 	.read = seq_read,
 	.llseek = seq_lseek,
+<<<<<<< HEAD
 	.release = seq_release,
+=======
+	.release = single_release,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 static int rtl_debug_get_mac_page(struct seq_file *m, void *v)

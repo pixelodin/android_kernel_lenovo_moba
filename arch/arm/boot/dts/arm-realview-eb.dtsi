@@ -371,7 +371,11 @@
 			clock-names = "uartclk", "apb_pclk";
 		};
 
+<<<<<<< HEAD
 		ssp: ssp@1000d000 {
+=======
+		ssp: spi@1000d000 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			compatible = "arm,pl022", "arm,primecell";
 			reg = <0x1000d000 0x1000>;
 			clocks = <&sspclk>, <&pclk>;

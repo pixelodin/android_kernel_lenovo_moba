@@ -18,6 +18,10 @@
 #include <linux/string.h>
 #include <linux/mm.h>
 #include <linux/fs.h>
+<<<<<<< HEAD
+=======
+#include <linux/fscrypt.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/fsnotify.h>
 #include <linux/slab.h>
 #include <linux/init.h>
@@ -257,6 +261,7 @@ static void __d_free(struct rcu_head *head)
 	kmem_cache_free(dentry_cache, dentry); 
 }
 
+<<<<<<< HEAD
 static void __d_free_external_name(struct rcu_head *head)
 {
 	struct external_name *name = container_of(head, struct external_name,
@@ -275,6 +280,12 @@ static void __d_free_external(struct rcu_head *head)
 
 	__d_free_external_name(&external_name(dentry)->u.head);
 
+=======
+static void __d_free_external(struct rcu_head *head)
+{
+	struct dentry *dentry = container_of(head, struct dentry, d_u.d_rcu);
+	kfree(external_name(dentry));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	kmem_cache_free(dentry_cache, dentry);
 }
 
@@ -306,7 +317,11 @@ void release_dentry_name_snapshot(struct name_snapshot *name)
 		struct external_name *p;
 		p = container_of(name->name, struct external_name, name[0]);
 		if (unlikely(atomic_dec_and_test(&p->u.count)))
+<<<<<<< HEAD
 			call_rcu(&p->u.head, __d_free_external_name);
+=======
+			kfree_rcu(p, u.head);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 }
 EXPORT_SYMBOL(release_dentry_name_snapshot);
@@ -1602,7 +1617,10 @@ EXPORT_SYMBOL(d_invalidate);
  
 struct dentry *__d_alloc(struct super_block *sb, const struct qstr *name)
 {
+<<<<<<< HEAD
 	struct external_name *ext = NULL;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct dentry *dentry;
 	char *dname;
 	int err;
@@ -1623,6 +1641,7 @@ struct dentry *__d_alloc(struct super_block *sb, const struct qstr *name)
 		dname = dentry->d_iname;
 	} else if (name->len > DNAME_INLINE_LEN-1) {
 		size_t size = offsetof(struct external_name, name[1]);
+<<<<<<< HEAD
 
 		ext = kmalloc(size + name->len, GFP_KERNEL_ACCOUNT);
 		if (!ext) {
@@ -1631,6 +1650,17 @@ struct dentry *__d_alloc(struct super_block *sb, const struct qstr *name)
 		}
 		atomic_set(&ext->u.count, 1);
 		dname = ext->name;
+=======
+		struct external_name *p = kmalloc(size + name->len,
+						  GFP_KERNEL_ACCOUNT |
+						  __GFP_RECLAIMABLE);
+		if (!p) {
+			kmem_cache_free(dentry_cache, dentry); 
+			return NULL;
+		}
+		atomic_set(&p->u.count, 1);
+		dname = p->name;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	} else  {
 		dname = dentry->d_iname;
 	}	
@@ -1669,12 +1699,15 @@ struct dentry *__d_alloc(struct super_block *sb, const struct qstr *name)
 		}
 	}
 
+<<<<<<< HEAD
 	if (unlikely(ext)) {
 		pg_data_t *pgdat = page_pgdat(virt_to_page(ext));
 		mod_node_page_state(pgdat, NR_INDIRECTLY_RECLAIMABLE_BYTES,
 				    ksize(ext));
 	}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	this_cpu_inc(nr_dentry);
 
 	return dentry;
@@ -2707,7 +2740,11 @@ static void copy_name(struct dentry *dentry, struct dentry *target)
 		dentry->d_name.hash_len = target->d_name.hash_len;
 	}
 	if (old_name && likely(atomic_dec_and_test(&old_name->u.count)))
+<<<<<<< HEAD
 		call_rcu(&old_name->u.head, __d_free_external_name);
+=======
+		kfree_rcu(old_name, u.head);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /*
@@ -2785,6 +2822,10 @@ static void __d_move(struct dentry *dentry, struct dentry *target,
 	list_move(&dentry->d_child, &dentry->d_parent->d_subdirs);
 	__d_rehash(dentry);
 	fsnotify_update_flags(dentry);
+<<<<<<< HEAD
+=======
+	fscrypt_handle_d_move(dentry);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	write_seqcount_end(&target->d_seq);
 	write_seqcount_end(&dentry->d_seq);

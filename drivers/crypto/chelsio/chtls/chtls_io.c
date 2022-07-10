@@ -1716,7 +1716,11 @@ int chtls_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
 		return peekmsg(sk, msg, len, nonblock, flags);
 
 	if (sk_can_busy_loop(sk) &&
+<<<<<<< HEAD
 	    skb_queue_empty(&sk->sk_receive_queue) &&
+=======
+	    skb_queue_empty_lockless(&sk->sk_receive_queue) &&
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	    sk->sk_state == TCP_ESTABLISHED)
 		sk_busy_loop(sk, nonblock);
 

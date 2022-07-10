@@ -1054,6 +1054,7 @@ gss_read_verf(struct rpc_gss_wire_cred *gc,
 	return 0;
 }
 
+<<<<<<< HEAD
 /* Ok this is really heavily depending on a set of semantics in
  * how rqstp is set up by svc_recv and pages laid down by the
  * server when reading a request. We are basically guaranteed that
@@ -1072,6 +1073,34 @@ gss_read_proxy_verf(struct svc_rqst *rqstp,
 	struct kvec *argv = &rqstp->rq_arg.head[0];
 	u32 inlen;
 	int res;
+=======
+static void gss_free_in_token_pages(struct gssp_in_token *in_token)
+{
+	u32 inlen;
+	int i;
+
+	i = 0;
+	inlen = in_token->page_len;
+	while (inlen) {
+		if (in_token->pages[i])
+			put_page(in_token->pages[i]);
+		inlen -= inlen > PAGE_SIZE ? PAGE_SIZE : inlen;
+	}
+
+	kfree(in_token->pages);
+	in_token->pages = NULL;
+}
+
+static int gss_read_proxy_verf(struct svc_rqst *rqstp,
+			       struct rpc_gss_wire_cred *gc, __be32 *authp,
+			       struct xdr_netobj *in_handle,
+			       struct gssp_in_token *in_token)
+{
+	struct kvec *argv = &rqstp->rq_arg.head[0];
+	unsigned int page_base, length;
+	int pages, i, res;
+	size_t inlen;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	res = gss_read_common_verf(gc, argv, authp, in_handle);
 	if (res)
@@ -1081,10 +1110,43 @@ gss_read_proxy_verf(struct svc_rqst *rqstp,
 	if (inlen > (argv->iov_len + rqstp->rq_arg.page_len))
 		return SVC_DENIED;
 
+<<<<<<< HEAD
 	in_token->pages = rqstp->rq_pages;
 	in_token->page_base = (ulong)argv->iov_base & ~PAGE_MASK;
 	in_token->page_len = inlen;
 
+=======
+	pages = DIV_ROUND_UP(inlen, PAGE_SIZE);
+	in_token->pages = kcalloc(pages, sizeof(struct page *), GFP_KERNEL);
+	if (!in_token->pages)
+		return SVC_DENIED;
+	in_token->page_base = 0;
+	in_token->page_len = inlen;
+	for (i = 0; i < pages; i++) {
+		in_token->pages[i] = alloc_page(GFP_KERNEL);
+		if (!in_token->pages[i]) {
+			gss_free_in_token_pages(in_token);
+			return SVC_DENIED;
+		}
+	}
+
+	length = min_t(unsigned int, inlen, argv->iov_len);
+	memcpy(page_address(in_token->pages[0]), argv->iov_base, length);
+	inlen -= length;
+
+	i = 1;
+	page_base = rqstp->rq_arg.page_base;
+	while (inlen) {
+		length = min_t(unsigned int, inlen, PAGE_SIZE);
+		memcpy(page_address(in_token->pages[i]),
+		       page_address(rqstp->rq_arg.pages[i]) + page_base,
+		       length);
+
+		inlen -= length;
+		page_base = 0;
+		i++;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 }
 
@@ -1190,6 +1252,10 @@ static int gss_proxy_save_rsc(struct cache_detail *cd,
 		dprintk("RPC:       No creds found!\n");
 		goto out;
 	} else {
+<<<<<<< HEAD
+=======
+		struct timespec64 boot;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		/* steal creds */
 		rsci.cred = ud->creds;
@@ -1210,6 +1276,12 @@ static int gss_proxy_save_rsc(struct cache_detail *cd,
 						&expiry, GFP_KERNEL);
 		if (status)
 			goto out;
+<<<<<<< HEAD
+=======
+
+		getboottime64(&boot);
+		expiry -= boot.tv_sec;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	rsci.h.expiry_time = expiry;
@@ -1259,8 +1331,16 @@ static int svcauth_gss_proxy_init(struct svc_rqst *rqstp,
 		break;
 	case GSS_S_COMPLETE:
 		status = gss_proxy_save_rsc(sn->rsc_cache, &ud, &handle);
+<<<<<<< HEAD
 		if (status)
 			goto out;
+=======
+		if (status) {
+			pr_info("%s: gss_proxy_save_rsc failed (%d)\n",
+				__func__, status);
+			goto out;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		cli_handle.data = (u8 *)&handle;
 		cli_handle.len = sizeof(handle);
 		break;
@@ -1271,6 +1351,7 @@ static int svcauth_gss_proxy_init(struct svc_rqst *rqstp,
 
 	/* Got an answer to the upcall; use it: */
 	if (gss_write_init_verf(sn->rsc_cache, rqstp,
+<<<<<<< HEAD
 				&cli_handle, &ud.major_status))
 		goto out;
 	if (gss_write_resv(resv, PAGE_SIZE,
@@ -1280,6 +1361,22 @@ static int svcauth_gss_proxy_init(struct svc_rqst *rqstp,
 
 	ret = SVC_COMPLETE;
 out:
+=======
+				&cli_handle, &ud.major_status)) {
+		pr_info("%s: gss_write_init_verf failed\n", __func__);
+		goto out;
+	}
+	if (gss_write_resv(resv, PAGE_SIZE,
+			   &cli_handle, &ud.out_token,
+			   ud.major_status, ud.minor_status)) {
+		pr_info("%s: gss_write_resv failed\n", __func__);
+		goto out;
+	}
+
+	ret = SVC_COMPLETE;
+out:
+	gss_free_in_token_pages(&ud.in_token);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	gssp_free_upcall_data(&ud);
 	return ret;
 }

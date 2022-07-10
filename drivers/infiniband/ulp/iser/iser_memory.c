@@ -240,8 +240,13 @@ int iser_fast_reg_fmr(struct iscsi_iser_task *iser_task,
 	page_vec->npages = 0;
 	page_vec->fake_mr.page_size = SIZE_4K;
 	plen = ib_sg_to_pages(&page_vec->fake_mr, mem->sg,
+<<<<<<< HEAD
 			      mem->size, NULL, iser_set_page);
 	if (unlikely(plen < mem->size)) {
+=======
+			      mem->dma_nents, NULL, iser_set_page);
+	if (unlikely(plen < mem->dma_nents)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		iser_err("page vec too short to hold this SG\n");
 		iser_data_buf_dump(mem, device->ib_device);
 		iser_dump_page_vec(page_vec);
@@ -451,10 +456,17 @@ static int iser_fast_reg_mr(struct iscsi_iser_task *iser_task,
 
 	ib_update_fast_reg_key(mr, ib_inc_rkey(mr->rkey));
 
+<<<<<<< HEAD
 	n = ib_map_mr_sg(mr, mem->sg, mem->size, NULL, SIZE_4K);
 	if (unlikely(n != mem->size)) {
 		iser_err("failed to map sg (%d/%d)\n",
 			 n, mem->size);
+=======
+	n = ib_map_mr_sg(mr, mem->sg, mem->dma_nents, NULL, SIZE_4K);
+	if (unlikely(n != mem->dma_nents)) {
+		iser_err("failed to map sg (%d/%d)\n",
+			 n, mem->dma_nents);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return n < 0 ? n : -EINVAL;
 	}
 

@@ -242,27 +242,42 @@ static int iwl_pcie_gen2_build_amsdu(struct iwl_trans *trans,
 	struct ieee80211_hdr *hdr = (void *)skb->data;
 	unsigned int snap_ip_tcp_hdrlen, ip_hdrlen, total_len, hdr_room;
 	unsigned int mss = skb_shinfo(skb)->gso_size;
+<<<<<<< HEAD
 	u16 length, iv_len, amsdu_pad;
+=======
+	u16 length, amsdu_pad;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u8 *start_hdr;
 	struct iwl_tso_hdr_page *hdr_page;
 	struct page **page_ptr;
 	struct tso_t tso;
 
+<<<<<<< HEAD
 	/* if the packet is protected, then it must be CCMP or GCMP */
 	iv_len = ieee80211_has_protected(hdr->frame_control) ?
 		IEEE80211_CCMP_HDR_LEN : 0;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	trace_iwlwifi_dev_tx(trans->dev, skb, tfd, sizeof(*tfd),
 			     &dev_cmd->hdr, start_len, 0);
 
 	ip_hdrlen = skb_transport_header(skb) - skb_network_header(skb);
 	snap_ip_tcp_hdrlen = 8 + ip_hdrlen + tcp_hdrlen(skb);
+<<<<<<< HEAD
 	total_len = skb->len - snap_ip_tcp_hdrlen - hdr_len - iv_len;
+=======
+	total_len = skb->len - snap_ip_tcp_hdrlen - hdr_len;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	amsdu_pad = 0;
 
 	/* total amount of header we may need for this A-MSDU */
 	hdr_room = DIV_ROUND_UP(total_len, mss) *
+<<<<<<< HEAD
 		(3 + snap_ip_tcp_hdrlen + sizeof(struct ethhdr)) + iv_len;
+=======
+		(3 + snap_ip_tcp_hdrlen + sizeof(struct ethhdr));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Our device supports 9 segments at most, it will fit in 1 page */
 	hdr_page = get_page_hdr(trans, hdr_room);
@@ -273,6 +288,7 @@ static int iwl_pcie_gen2_build_amsdu(struct iwl_trans *trans,
 	start_hdr = hdr_page->pos;
 	page_ptr = (void *)((u8 *)skb->cb + trans_pcie->page_offs);
 	*page_ptr = hdr_page->page;
+<<<<<<< HEAD
 	memcpy(hdr_page->pos, skb->data + hdr_len, iv_len);
 	hdr_page->pos += iv_len;
 
@@ -281,6 +297,14 @@ static int iwl_pcie_gen2_build_amsdu(struct iwl_trans *trans,
 	 * we will restore it for the tx_status flow.
 	 */
 	skb_pull(skb, hdr_len + iv_len);
+=======
+
+	/*
+	 * Pull the ieee80211 header to be able to use TSO core,
+	 * we will restore it for the tx_status flow.
+	 */
+	skb_pull(skb, hdr_len);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/*
 	 * Remove the length of all the headers that we don't actually
@@ -355,8 +379,13 @@ static int iwl_pcie_gen2_build_amsdu(struct iwl_trans *trans,
 		}
 	}
 
+<<<<<<< HEAD
 	/* re -add the WiFi header and IV */
 	skb_push(skb, hdr_len + iv_len);
+=======
+	/* re -add the WiFi header */
+	skb_push(skb, hdr_len);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return 0;
 
@@ -526,7 +555,16 @@ struct iwl_tfh_tfd *iwl_pcie_gen2_build_tfd(struct iwl_trans *trans,
 
 	hdr_len = ieee80211_hdrlen(hdr->frame_control);
 
+<<<<<<< HEAD
 	if (amsdu)
+=======
+	/*
+	 * Only build A-MSDUs here if doing so by GSO, otherwise it may be
+	 * an A-MSDU for other reasons, e.g. NAN or an A-MSDU having been
+	 * built in the higher layers already.
+	 */
+	if (amsdu && skb_shinfo(skb)->gso_size)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return iwl_pcie_gen2_build_tx_amsdu(trans, txq, dev_cmd, skb,
 						    out_meta, hdr_len, len);
 
@@ -555,6 +593,7 @@ int iwl_trans_pcie_gen2_tx(struct iwl_trans *trans, struct sk_buff *skb,
 
 	spin_lock(&txq->lock);
 
+<<<<<<< HEAD
 	if (trans->cfg->device_family >= IWL_DEVICE_FAMILY_22560) {
 		struct iwl_tx_cmd_gen3 *tx_cmd_gen3 =
 			(void *)dev_cmd->payload;
@@ -567,6 +606,8 @@ int iwl_trans_pcie_gen2_tx(struct iwl_trans *trans, struct sk_buff *skb,
 		cmd_len = le16_to_cpu(tx_cmd_gen2->len);
 	}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (iwl_queue_space(trans, txq) < txq->high_mark) {
 		iwl_stop_queue(trans, txq);
 
@@ -604,6 +645,21 @@ int iwl_trans_pcie_gen2_tx(struct iwl_trans *trans, struct sk_buff *skb,
 		return -1;
 	}
 
+<<<<<<< HEAD
+=======
+	if (trans->cfg->device_family >= IWL_DEVICE_FAMILY_22560) {
+		struct iwl_tx_cmd_gen3 *tx_cmd_gen3 =
+			(void *)dev_cmd->payload;
+
+		cmd_len = le16_to_cpu(tx_cmd_gen3->len);
+	} else {
+		struct iwl_tx_cmd_gen2 *tx_cmd_gen2 =
+			(void *)dev_cmd->payload;
+
+		cmd_len = le16_to_cpu(tx_cmd_gen2->len);
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Set up entry for this TFD in Tx byte-count array */
 	iwl_pcie_gen2_update_byte_tbl(trans_pcie, txq, cmd_len,
 				      iwl_pcie_gen2_get_num_tbs(trans, tfd));

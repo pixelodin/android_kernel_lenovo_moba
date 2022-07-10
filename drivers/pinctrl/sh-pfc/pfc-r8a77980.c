@@ -2751,7 +2751,11 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
 #define F_(x, y)	x,
 #define FM(x)		FN_##x,
 	{ PINMUX_CFG_REG_VAR("MOD_SEL0", 0xe6060500, 32,
+<<<<<<< HEAD
 			     4, 4, 4, 4,
+=======
+			     4, 4, 4, 4, 4,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1) {
 		/* RESERVED 31, 30, 29, 28 */
 		0, 0, 0, 0, 0, 0, 0, 0,	0, 0, 0, 0, 0, 0, 0, 0,

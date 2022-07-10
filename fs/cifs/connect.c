@@ -930,6 +930,29 @@ cifs_handle_standard(struct TCP_Server_Info *server, struct mid_q_entry *mid)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static void
+smb2_add_credits_from_hdr(char *buffer, struct TCP_Server_Info *server)
+{
+	struct smb2_sync_hdr *shdr = (struct smb2_sync_hdr *)buffer;
+
+	/*
+	 * SMB1 does not use credits.
+	 */
+	if (server->vals->header_preamble_size)
+		return;
+
+	if (shdr->CreditRequest) {
+		spin_lock(&server->req_lock);
+		server->credits += le16_to_cpu(shdr->CreditRequest);
+		spin_unlock(&server->req_lock);
+		wake_up(&server->request_q);
+	}
+}
+
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int
 cifs_demultiplex_thread(void *p)
 {
@@ -950,6 +973,10 @@ cifs_demultiplex_thread(void *p)
 		mempool_resize(cifs_req_poolp, length + cifs_min_rcv);
 
 	set_freezable();
+<<<<<<< HEAD
+=======
+	allow_kernel_signal(SIGKILL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	while (server->tcpStatus != CifsExiting) {
 		if (try_to_freeze())
 			continue;
@@ -1059,6 +1086,10 @@ next_pdu:
 			} else if (server->ops->is_oplock_break &&
 				   server->ops->is_oplock_break(bufs[i],
 								server)) {
+<<<<<<< HEAD
+=======
+				smb2_add_credits_from_hdr(bufs[i], server);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				cifs_dbg(FYI, "Received oplock break\n");
 			} else {
 				cifs_dbg(VFS, "No task to wake, unknown frame "
@@ -1070,6 +1101,10 @@ next_pdu:
 				if (server->ops->dump_detail)
 					server->ops->dump_detail(bufs[i],
 								 server);
+<<<<<<< HEAD
+=======
+				smb2_add_credits_from_hdr(bufs[i], server);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				cifs_dump_mids(server);
 #endif /* CIFS_DEBUG2 */
 			}
@@ -2432,7 +2467,11 @@ cifs_put_tcp_session(struct TCP_Server_Info *server, int from_reconnect)
 
 	task = xchg(&server->tsk, NULL);
 	if (task)
+<<<<<<< HEAD
 		force_sig(SIGKILL, task);
+=======
+		send_sig(SIGKILL, task, 1);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static struct TCP_Server_Info *
@@ -3319,8 +3358,15 @@ match_prepath(struct super_block *sb, struct cifs_mnt_data *mnt_data)
 {
 	struct cifs_sb_info *old = CIFS_SB(sb);
 	struct cifs_sb_info *new = mnt_data->cifs_sb;
+<<<<<<< HEAD
 	bool old_set = old->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH;
 	bool new_set = new->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH;
+=======
+	bool old_set = (old->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH) &&
+		old->prepath;
+	bool new_set = (new->mnt_cifs_flags & CIFS_MOUNT_USE_PREFIX_PATH) &&
+		new->prepath;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (old_set && new_set && !strcmp(new->prepath, old->prepath))
 		return 1;
@@ -3769,7 +3815,11 @@ int cifs_setup_cifs_sb(struct smb_vol *pvolume_info,
 	cifs_sb->mnt_gid = pvolume_info->linux_gid;
 	cifs_sb->mnt_file_mode = pvolume_info->file_mode;
 	cifs_sb->mnt_dir_mode = pvolume_info->dir_mode;
+<<<<<<< HEAD
 	cifs_dbg(FYI, "file mode: 0x%hx  dir mode: 0x%hx\n",
+=======
+	cifs_dbg(FYI, "file mode: %04ho  dir mode: %04ho\n",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		 cifs_sb->mnt_file_mode, cifs_sb->mnt_dir_mode);
 
 	cifs_sb->actimeo = pvolume_info->actimeo;

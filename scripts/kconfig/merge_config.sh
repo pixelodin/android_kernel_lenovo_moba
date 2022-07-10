@@ -151,7 +151,11 @@ fi
 # Use the merged file as the starting point for:
 # alldefconfig: Fills in any missing symbols with Kconfig default
 # allnoconfig: Fills in any missing symbols with # CONFIG_* is not set
+<<<<<<< HEAD
 make KCONFIG_ALLCONFIG=$TMP_FILE $OUTPUT_ARG $ALLTARGET
+=======
+make $MAKE_ARGS KCONFIG_ALLCONFIG=$TMP_FILE $OUTPUT_ARG $ALLTARGET
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 
 # Check all specified config values took (might have missed-dependency issues)

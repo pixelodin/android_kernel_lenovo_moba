@@ -445,7 +445,15 @@ static int __init mirred_init_module(void)
 		return err;
 
 	pr_info("Mirror/redirect action on\n");
+<<<<<<< HEAD
 	return tcf_register_action(&act_mirred_ops, &mirred_net_ops);
+=======
+	err = tcf_register_action(&act_mirred_ops, &mirred_net_ops);
+	if (err)
+		unregister_netdevice_notifier(&mirred_device_notifier);
+
+	return err;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void __exit mirred_cleanup_module(void)

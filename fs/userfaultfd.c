@@ -1279,21 +1279,39 @@ static __always_inline void wake_userfault(struct userfaultfd_ctx *ctx,
 }
 
 static __always_inline int validate_range(struct mm_struct *mm,
+<<<<<<< HEAD
 					  __u64 start, __u64 len)
 {
 	__u64 task_size = mm->task_size;
 
 	if (start & ~PAGE_MASK)
+=======
+					  __u64 *start, __u64 len)
+{
+	__u64 task_size = mm->task_size;
+
+	*start = untagged_addr(*start);
+
+	if (*start & ~PAGE_MASK)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EINVAL;
 	if (len & ~PAGE_MASK)
 		return -EINVAL;
 	if (!len)
 		return -EINVAL;
+<<<<<<< HEAD
 	if (start < mmap_min_addr)
 		return -EINVAL;
 	if (start >= task_size)
 		return -EINVAL;
 	if (len > task_size - start)
+=======
+	if (*start < mmap_min_addr)
+		return -EINVAL;
+	if (*start >= task_size)
+		return -EINVAL;
+	if (len > task_size - *start)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EINVAL;
 	return 0;
 }
@@ -1343,7 +1361,11 @@ static int userfaultfd_register(struct userfaultfd_ctx *ctx,
 		goto out;
 	}
 
+<<<<<<< HEAD
 	ret = validate_range(mm, uffdio_register.range.start,
+=======
+	ret = validate_range(mm, &uffdio_register.range.start,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			     uffdio_register.range.len);
 	if (ret)
 		goto out;
@@ -1535,7 +1557,11 @@ static int userfaultfd_unregister(struct userfaultfd_ctx *ctx,
 	if (copy_from_user(&uffdio_unregister, buf, sizeof(uffdio_unregister)))
 		goto out;
 
+<<<<<<< HEAD
 	ret = validate_range(mm, uffdio_unregister.start,
+=======
+	ret = validate_range(mm, &uffdio_unregister.start,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			     uffdio_unregister.len);
 	if (ret)
 		goto out;
@@ -1689,7 +1715,11 @@ static int userfaultfd_wake(struct userfaultfd_ctx *ctx,
 	if (copy_from_user(&uffdio_wake, buf, sizeof(uffdio_wake)))
 		goto out;
 
+<<<<<<< HEAD
 	ret = validate_range(ctx->mm, uffdio_wake.start, uffdio_wake.len);
+=======
+	ret = validate_range(ctx->mm, &uffdio_wake.start, uffdio_wake.len);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (ret)
 		goto out;
 
@@ -1729,7 +1759,11 @@ static int userfaultfd_copy(struct userfaultfd_ctx *ctx,
 			   sizeof(uffdio_copy)-sizeof(__s64)))
 		goto out;
 
+<<<<<<< HEAD
 	ret = validate_range(ctx->mm, uffdio_copy.dst, uffdio_copy.len);
+=======
+	ret = validate_range(ctx->mm, &uffdio_copy.dst, uffdio_copy.len);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (ret)
 		goto out;
 	/*
@@ -1785,7 +1819,11 @@ static int userfaultfd_zeropage(struct userfaultfd_ctx *ctx,
 			   sizeof(uffdio_zeropage)-sizeof(__s64)))
 		goto out;
 
+<<<<<<< HEAD
 	ret = validate_range(ctx->mm, uffdio_zeropage.range.start,
+=======
+	ret = validate_range(ctx->mm, &uffdio_zeropage.range.start,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			     uffdio_zeropage.range.len);
 	if (ret)
 		goto out;
@@ -1845,6 +1883,7 @@ static int userfaultfd_api(struct userfaultfd_ctx *ctx,
 	if (copy_from_user(&uffdio_api, buf, sizeof(uffdio_api)))
 		goto out;
 	features = uffdio_api.features;
+<<<<<<< HEAD
 	if (uffdio_api.api != UFFD_API || (features & ~UFFD_API_FEATURES)) {
 		memset(&uffdio_api, 0, sizeof(uffdio_api));
 		if (copy_to_user(buf, &uffdio_api, sizeof(uffdio_api)))
@@ -1852,6 +1891,14 @@ static int userfaultfd_api(struct userfaultfd_ctx *ctx,
 		ret = -EINVAL;
 		goto out;
 	}
+=======
+	ret = -EINVAL;
+	if (uffdio_api.api != UFFD_API || (features & ~UFFD_API_FEATURES))
+		goto err_out;
+	ret = -EPERM;
+	if ((features & UFFD_FEATURE_EVENT_FORK) && !capable(CAP_SYS_PTRACE))
+		goto err_out;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* report all available features and ioctls to userland */
 	uffdio_api.features = UFFD_API_FEATURES;
 	uffdio_api.ioctls = UFFD_API_IOCTLS;
@@ -1864,6 +1911,14 @@ static int userfaultfd_api(struct userfaultfd_ctx *ctx,
 	ret = 0;
 out:
 	return ret;
+<<<<<<< HEAD
+=======
+err_out:
+	memset(&uffdio_api, 0, sizeof(uffdio_api));
+	if (copy_to_user(buf, &uffdio_api, sizeof(uffdio_api)))
+		ret = -EFAULT;
+	goto out;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static long userfaultfd_ioctl(struct file *file, unsigned cmd,

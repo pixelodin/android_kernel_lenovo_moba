@@ -333,6 +333,7 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
 	cp->fall_through = p->fall_through;
 	cp->tp = tp;
 
+<<<<<<< HEAD
 	if (p->perfect) {
 		int i;
 
@@ -350,6 +351,8 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
 	if (old_r)
 		cr = r->res;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (tb[TCA_TCINDEX_HASH])
 		cp->hash = nla_get_u32(tb[TCA_TCINDEX_HASH]);
 
@@ -359,6 +362,36 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
 	if (tb[TCA_TCINDEX_SHIFT])
 		cp->shift = nla_get_u32(tb[TCA_TCINDEX_SHIFT]);
 
+<<<<<<< HEAD
+=======
+	if (!cp->hash) {
+		/* Hash not specified, use perfect hash if the upper limit
+		 * of the hashing index is below the threshold.
+		 */
+		if ((cp->mask >> cp->shift) < PERFECT_HASH_THRESHOLD)
+			cp->hash = (cp->mask >> cp->shift) + 1;
+		else
+			cp->hash = DEFAULT_HASH_SIZE;
+	}
+
+	if (p->perfect) {
+		int i;
+
+		if (tcindex_alloc_perfect_hash(net, cp) < 0)
+			goto errout;
+		for (i = 0; i < min(cp->hash, p->hash); i++)
+			cp->perfect[i].res = p->perfect[i].res;
+		balloc = 1;
+	}
+	cp->h = p->h;
+
+	err = tcindex_filter_result_init(&new_filter_result);
+	if (err < 0)
+		goto errout_alloc;
+	if (old_r)
+		cr = r->res;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	err = -EBUSY;
 
 	/* Hash already allocated, make sure that we still meet the
@@ -376,6 +409,7 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
 	if (tb[TCA_TCINDEX_FALL_THROUGH])
 		cp->fall_through = nla_get_u32(tb[TCA_TCINDEX_FALL_THROUGH]);
 
+<<<<<<< HEAD
 	if (!cp->hash) {
 		/* Hash not specified, use perfect hash if the upper limit
 		 * of the hashing index is below the threshold.
@@ -386,6 +420,8 @@ tcindex_set_parms(struct net *net, struct tcf_proto *tp, unsigned long base,
 			cp->hash = DEFAULT_HASH_SIZE;
 	}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!cp->perfect && !cp->h)
 		cp->alloc_hash = cp->hash;
 
@@ -484,7 +520,10 @@ errout_alloc:
 		tcindex_free_perfect_hash(cp);
 	else if (balloc == 2)
 		kfree(cp->h);
+<<<<<<< HEAD
 errout1:
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	tcf_exts_destroy(&new_filter_result.exts);
 errout:
 	kfree(cp);
@@ -652,12 +691,26 @@ nla_put_failure:
 	return -1;
 }
 
+<<<<<<< HEAD
 static void tcindex_bind_class(void *fh, u32 classid, unsigned long cl)
 {
 	struct tcindex_filter_result *r = fh;
 
 	if (r && r->res.classid == classid)
 		r->res.class = cl;
+=======
+static void tcindex_bind_class(void *fh, u32 classid, unsigned long cl,
+			       void *q, unsigned long base)
+{
+	struct tcindex_filter_result *r = fh;
+
+	if (r && r->res.classid == classid) {
+		if (cl)
+			__tcf_bind_filter(q, &r->res, base);
+		else
+			__tcf_unbind_filter(q, &r->res);
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static struct tcf_proto_ops cls_tcindex_ops __read_mostly = {

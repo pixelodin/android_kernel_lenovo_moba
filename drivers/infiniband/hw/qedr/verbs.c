@@ -67,7 +67,11 @@ static inline int qedr_ib_copy_to_udata(struct ib_udata *udata, void *src,
 
 int qedr_query_pkey(struct ib_device *ibdev, u8 port, u16 index, u16 *pkey)
 {
+<<<<<<< HEAD
 	if (index > QEDR_ROCE_PKEY_TABLE_LEN)
+=======
+	if (index >= QEDR_ROCE_PKEY_TABLE_LEN)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EINVAL;
 
 	*pkey = QEDR_ROCE_PKEY_DEFAULT;
@@ -158,6 +162,7 @@ int qedr_query_device(struct ib_device *ibdev,
 	return 0;
 }
 
+<<<<<<< HEAD
 #define QEDR_SPEED_SDR		(1)
 #define QEDR_SPEED_DDR		(2)
 #define QEDR_SPEED_QDR		(4)
@@ -165,47 +170,82 @@ int qedr_query_device(struct ib_device *ibdev,
 #define QEDR_SPEED_FDR		(16)
 #define QEDR_SPEED_EDR		(32)
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static inline void get_link_speed_and_width(int speed, u8 *ib_speed,
 					    u8 *ib_width)
 {
 	switch (speed) {
 	case 1000:
+<<<<<<< HEAD
 		*ib_speed = QEDR_SPEED_SDR;
 		*ib_width = IB_WIDTH_1X;
 		break;
 	case 10000:
 		*ib_speed = QEDR_SPEED_QDR;
+=======
+		*ib_speed = IB_SPEED_SDR;
+		*ib_width = IB_WIDTH_1X;
+		break;
+	case 10000:
+		*ib_speed = IB_SPEED_QDR;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		*ib_width = IB_WIDTH_1X;
 		break;
 
 	case 20000:
+<<<<<<< HEAD
 		*ib_speed = QEDR_SPEED_DDR;
+=======
+		*ib_speed = IB_SPEED_DDR;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		*ib_width = IB_WIDTH_4X;
 		break;
 
 	case 25000:
+<<<<<<< HEAD
 		*ib_speed = QEDR_SPEED_EDR;
+=======
+		*ib_speed = IB_SPEED_EDR;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		*ib_width = IB_WIDTH_1X;
 		break;
 
 	case 40000:
+<<<<<<< HEAD
 		*ib_speed = QEDR_SPEED_QDR;
+=======
+		*ib_speed = IB_SPEED_QDR;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		*ib_width = IB_WIDTH_4X;
 		break;
 
 	case 50000:
+<<<<<<< HEAD
 		*ib_speed = QEDR_SPEED_QDR;
 		*ib_width = IB_WIDTH_4X;
 		break;
 
 	case 100000:
 		*ib_speed = QEDR_SPEED_EDR;
+=======
+		*ib_speed = IB_SPEED_HDR;
+		*ib_width = IB_WIDTH_1X;
+		break;
+
+	case 100000:
+		*ib_speed = IB_SPEED_EDR;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		*ib_width = IB_WIDTH_4X;
 		break;
 
 	default:
 		/* Unsupported */
+<<<<<<< HEAD
 		*ib_speed = QEDR_SPEED_SDR;
+=======
+		*ib_speed = IB_SPEED_SDR;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		*ib_width = IB_WIDTH_1X;
 	}
 }
@@ -1701,6 +1741,17 @@ static void qedr_cleanup_user(struct qedr_dev *dev, struct qedr_qp *qp)
 	if (qp->urq.umem)
 		ib_umem_release(qp->urq.umem);
 	qp->urq.umem = NULL;
+<<<<<<< HEAD
+=======
+
+	if (rdma_protocol_roce(&dev->ibdev, 1)) {
+		qedr_free_pbl(dev, &qp->usq.pbl_info, qp->usq.pbl_tbl);
+		qedr_free_pbl(dev, &qp->urq.pbl_info, qp->urq.pbl_tbl);
+	} else {
+		kfree(qp->usq.pbl_tbl);
+		kfree(qp->urq.pbl_tbl);
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int qedr_create_user_qp(struct qedr_dev *dev,
@@ -2809,8 +2860,13 @@ int qedr_dereg_mr(struct ib_mr *ib_mr)
 
 	dev->ops->rdma_free_tid(dev->rdma_ctx, mr->hw_mr.itid);
 
+<<<<<<< HEAD
 	if ((mr->type != QEDR_MR_DMA) && (mr->type != QEDR_MR_FRMR))
 		qedr_free_pbl(dev, &mr->info.pbl_info, mr->info.pbl_table);
+=======
+	if (mr->type != QEDR_MR_DMA)
+		free_mr_info(dev, &mr->info);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* it could be user registered memory. */
 	if (mr->umem)

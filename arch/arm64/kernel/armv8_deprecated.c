@@ -177,6 +177,12 @@ static void __init register_insn_emulation(struct insn_emulation_ops *ops)
 	struct insn_emulation *insn;
 
 	insn = kzalloc(sizeof(*insn), GFP_KERNEL);
+<<<<<<< HEAD
+=======
+	if (!insn)
+		return;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	insn->ops = ops;
 	insn->min = INSN_UNDEF;
 
@@ -236,6 +242,11 @@ static void __init register_insn_emulation_sysctl(void)
 
 	insns_sysctl = kcalloc(nr_insn_emulated + 1, sizeof(*sysctl),
 			       GFP_KERNEL);
+<<<<<<< HEAD
+=======
+	if (!insns_sysctl)
+		return;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	raw_spin_lock_irqsave(&insn_emulation_lock, flags);
 	list_for_each_entry(insn, &insn_emulation, node) {

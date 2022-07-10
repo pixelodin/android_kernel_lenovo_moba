@@ -13,9 +13,17 @@
 
 #define AFS_LOCK_GRANTED	0
 #define AFS_LOCK_PENDING	1
+<<<<<<< HEAD
 
 struct workqueue_struct *afs_lock_manager;
 
+=======
+#define AFS_LOCK_YOUR_TRY	2
+
+struct workqueue_struct *afs_lock_manager;
+
+static void afs_next_locker(struct afs_vnode *vnode, int error);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static void afs_fl_copy_lock(struct file_lock *new, struct file_lock *fl);
 static void afs_fl_release_private(struct file_lock *fl);
 
@@ -24,6 +32,15 @@ static const struct file_lock_operations afs_lock_ops = {
 	.fl_release_private	= afs_fl_release_private,
 };
 
+<<<<<<< HEAD
+=======
+static inline void afs_set_lock_state(struct afs_vnode *vnode, enum afs_lock_state state)
+{
+	_debug("STATE %u -> %u", vnode->lock_state, state);
+	vnode->lock_state = state;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * if the callback is broken on this vnode, then the lock may now be available
  */
@@ -31,14 +48,25 @@ void afs_lock_may_be_available(struct afs_vnode *vnode)
 {
 	_enter("{%x:%u}", vnode->fid.vid, vnode->fid.vnode);
 
+<<<<<<< HEAD
 	queue_delayed_work(afs_lock_manager, &vnode->lock_work, 0);
+=======
+	spin_lock(&vnode->lock);
+	if (vnode->lock_state == AFS_VNODE_LOCK_WAITING_FOR_CB)
+		afs_next_locker(vnode, 0);
+	spin_unlock(&vnode->lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /*
  * the lock will time out in 5 minutes unless we extend it, so schedule
  * extension in a bit less than that time
  */
+<<<<<<< HEAD
 static void afs_schedule_lock_extension(struct afs_vnode *vnode)
+=======
+static void __maybe_unused afs_schedule_lock_extension(struct afs_vnode *vnode)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	queue_delayed_work(afs_lock_manager, &vnode->lock_work,
 			   AFS_LOCKWAIT * HZ / 2);
@@ -49,6 +77,7 @@ static void afs_schedule_lock_extension(struct afs_vnode *vnode)
  * first lock in the queue is itself a readlock)
  * - the caller must hold the vnode lock
  */
+<<<<<<< HEAD
 static void afs_grant_locks(struct afs_vnode *vnode, struct file_lock *fl)
 {
 	struct file_lock *p, *_p;
@@ -64,10 +93,73 @@ static void afs_grant_locks(struct afs_vnode *vnode, struct file_lock *fl)
 				wake_up(&p->fl_wait);
 			}
 		}
+=======
+static void afs_grant_locks(struct afs_vnode *vnode)
+{
+	struct file_lock *p, *_p;
+	bool exclusive = (vnode->lock_type == AFS_LOCK_WRITE);
+
+	list_for_each_entry_safe(p, _p, &vnode->pending_locks, fl_u.afs.link) {
+		if (!exclusive && p->fl_type == F_WRLCK)
+			continue;
+
+		list_move_tail(&p->fl_u.afs.link, &vnode->granted_locks);
+		p->fl_u.afs.state = AFS_LOCK_GRANTED;
+		wake_up(&p->fl_wait);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 }
 
 /*
+<<<<<<< HEAD
+=======
+ * If an error is specified, reject every pending lock that matches the
+ * authentication and type of the lock we failed to get.  If there are any
+ * remaining lockers, try to wake up one of them to have a go.
+ */
+static void afs_next_locker(struct afs_vnode *vnode, int error)
+{
+	struct file_lock *p, *_p, *next = NULL;
+	struct key *key = vnode->lock_key;
+	unsigned int fl_type = F_RDLCK;
+
+	_enter("");
+
+	if (vnode->lock_type == AFS_LOCK_WRITE)
+		fl_type = F_WRLCK;
+
+	list_for_each_entry_safe(p, _p, &vnode->pending_locks, fl_u.afs.link) {
+		if (error &&
+		    p->fl_type == fl_type &&
+		    afs_file_key(p->fl_file) == key) {
+			list_del_init(&p->fl_u.afs.link);
+			p->fl_u.afs.state = error;
+			wake_up(&p->fl_wait);
+		}
+
+		/* Select the next locker to hand off to. */
+		if (next &&
+		    (next->fl_type == F_WRLCK || p->fl_type == F_RDLCK))
+			continue;
+		next = p;
+	}
+
+	vnode->lock_key = NULL;
+	key_put(key);
+
+	if (next) {
+		afs_set_lock_state(vnode, AFS_VNODE_LOCK_SETTING);
+		next->fl_u.afs.state = AFS_LOCK_YOUR_TRY;
+		wake_up(&next->fl_wait);
+	} else {
+		afs_set_lock_state(vnode, AFS_VNODE_LOCK_NONE);
+	}
+
+	_leave("");
+}
+
+/*
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * Get a lock on a file
  */
 static int afs_set_lock(struct afs_vnode *vnode, struct key *key,
@@ -170,8 +262,11 @@ void afs_lock_work(struct work_struct *work)
 {
 	struct afs_vnode *vnode =
 		container_of(work, struct afs_vnode, lock_work.work);
+<<<<<<< HEAD
 	struct file_lock *fl, *next;
 	afs_lock_type_t type;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct key *key;
 	int ret;
 
@@ -184,7 +279,11 @@ again:
 	switch (vnode->lock_state) {
 	case AFS_VNODE_LOCK_NEED_UNLOCK:
 		_debug("unlock");
+<<<<<<< HEAD
 		vnode->lock_state = AFS_VNODE_LOCK_UNLOCKING;
+=======
+		afs_set_lock_state(vnode, AFS_VNODE_LOCK_UNLOCKING);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		spin_unlock(&vnode->lock);
 
 		/* attempt to release the server lock; if it fails, we just
@@ -196,6 +295,7 @@ again:
 			       vnode->fid.vid, vnode->fid.vnode, ret);
 
 		spin_lock(&vnode->lock);
+<<<<<<< HEAD
 		key_put(vnode->lock_key);
 		vnode->lock_key = NULL;
 		vnode->lock_state = AFS_VNODE_LOCK_NONE;
@@ -212,6 +312,11 @@ again:
 		vnode->lock_type = (next->fl_type == F_RDLCK) ? AFS_LOCK_READ : AFS_LOCK_WRITE;
 		vnode->lock_state = AFS_VNODE_LOCK_WAITING_FOR_CB;
 		goto again;
+=======
+		afs_next_locker(vnode, 0);
+		spin_unlock(&vnode->lock);
+		return;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* If we've already got a lock, then it must be time to extend that
 	 * lock as AFS locks time out after 5 minutes.
@@ -222,7 +327,11 @@ again:
 		ASSERT(!list_empty(&vnode->granted_locks));
 
 		key = key_get(vnode->lock_key);
+<<<<<<< HEAD
 		vnode->lock_state = AFS_VNODE_LOCK_EXTENDING;
+=======
+		afs_set_lock_state(vnode, AFS_VNODE_LOCK_EXTENDING);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		spin_unlock(&vnode->lock);
 
 		ret = afs_extend_lock(vnode, key); /* RPC */
@@ -236,17 +345,24 @@ again:
 
 		if (vnode->lock_state != AFS_VNODE_LOCK_EXTENDING)
 			goto again;
+<<<<<<< HEAD
 		vnode->lock_state = AFS_VNODE_LOCK_GRANTED;
 
 		if (ret == 0)
 			afs_schedule_lock_extension(vnode);
 		else
+=======
+		afs_set_lock_state(vnode, AFS_VNODE_LOCK_GRANTED);
+
+		if (ret != 0)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			queue_delayed_work(afs_lock_manager, &vnode->lock_work,
 					   HZ * 10);
 		spin_unlock(&vnode->lock);
 		_leave(" [ext]");
 		return;
 
+<<<<<<< HEAD
 		/* If we don't have a granted lock, then we must've been called
 		 * back by the server, and so if might be possible to get a
 		 * lock we're currently waiting for.
@@ -302,6 +418,19 @@ again:
 			_leave(" [granted]");
 			return;
 		}
+=======
+	/* If we're waiting for a callback to indicate lock release, we can't
+	 * actually rely on this, so need to recheck at regular intervals.  The
+	 * problem is that the server might not notify us if the lock just
+	 * expires (say because a client died) rather than being explicitly
+	 * released.
+	 */
+	case AFS_VNODE_LOCK_WAITING_FOR_CB:
+		_debug("retry");
+		afs_next_locker(vnode, 0);
+		spin_unlock(&vnode->lock);
+		return;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	default:
 		/* Looks like a lock request was withdrawn. */
@@ -319,6 +448,7 @@ again:
  */
 static void afs_defer_unlock(struct afs_vnode *vnode)
 {
+<<<<<<< HEAD
 	_enter("");
 
 	if (vnode->lock_state == AFS_VNODE_LOCK_GRANTED ||
@@ -327,6 +457,17 @@ static void afs_defer_unlock(struct afs_vnode *vnode)
 
 		vnode->lock_state = AFS_VNODE_LOCK_NEED_UNLOCK;
 		afs_lock_may_be_available(vnode);
+=======
+	_enter("%u", vnode->lock_state);
+
+	if (list_empty(&vnode->granted_locks) &&
+	    (vnode->lock_state == AFS_VNODE_LOCK_GRANTED ||
+	     vnode->lock_state == AFS_VNODE_LOCK_EXTENDING)) {
+		cancel_delayed_work(&vnode->lock_work);
+
+		afs_set_lock_state(vnode, AFS_VNODE_LOCK_NEED_UNLOCK);
+		queue_delayed_work(afs_lock_manager, &vnode->lock_work, 0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 }
 
@@ -376,6 +517,7 @@ static int afs_do_setlk_check(struct afs_vnode *vnode, struct key *key,
 }
 
 /*
+<<<<<<< HEAD
  * Remove the front runner from the pending queue.
  * - The caller must hold vnode->lock.
  */
@@ -420,6 +562,8 @@ static void afs_dequeue_lock(struct afs_vnode *vnode, struct file_lock *fl)
 }
 
 /*
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * request a lock on a file on the server
  */
 static int afs_do_setlk(struct file *file, struct file_lock *fl)
@@ -432,10 +576,13 @@ static int afs_do_setlk(struct file *file, struct file_lock *fl)
 
 	_enter("{%x:%u},%u", vnode->fid.vid, vnode->fid.vnode, fl->fl_type);
 
+<<<<<<< HEAD
 	/* only whole-file locks are supported */
 	if (fl->fl_start != 0 || fl->fl_end != OFFSET_MAX)
 		return -EINVAL;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	fl->fl_ops = &afs_lock_ops;
 	INIT_LIST_HEAD(&fl->fl_u.afs.link);
 	fl->fl_u.afs.state = AFS_LOCK_PENDING;
@@ -447,6 +594,7 @@ static int afs_do_setlk(struct file *file, struct file_lock *fl)
 		return ret;
 
 	spin_lock(&vnode->lock);
+<<<<<<< HEAD
 
 	/* If we've already got a readlock on the server then we instantly
 	 * grant another readlock, irrespective of whether there are any
@@ -465,26 +613,81 @@ static int afs_do_setlk(struct file *file, struct file_lock *fl)
 	if (vnode->lock_state != AFS_VNODE_LOCK_NONE)
 		goto need_to_wait;
 
+=======
+	list_add_tail(&fl->fl_u.afs.link, &vnode->pending_locks);
+
+	/* If we've already got a lock on the server then try to move to having
+	 * the VFS grant the requested lock.  Note that this means that other
+	 * clients may get starved out.
+	 */
+	_debug("try %u", vnode->lock_state);
+	if (vnode->lock_state == AFS_VNODE_LOCK_GRANTED) {
+		if (type == AFS_LOCK_READ) {
+			_debug("instant readlock");
+			list_move_tail(&fl->fl_u.afs.link, &vnode->granted_locks);
+			fl->fl_u.afs.state = AFS_LOCK_GRANTED;
+			goto vnode_is_locked_u;
+		}
+
+		if (vnode->lock_type == AFS_LOCK_WRITE) {
+			_debug("instant writelock");
+			list_move_tail(&fl->fl_u.afs.link, &vnode->granted_locks);
+			fl->fl_u.afs.state = AFS_LOCK_GRANTED;
+			goto vnode_is_locked_u;
+		}
+	}
+
+	if (vnode->lock_state != AFS_VNODE_LOCK_NONE)
+		goto need_to_wait;
+
+try_to_lock:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* We don't have a lock on this vnode and we aren't currently waiting
 	 * for one either, so ask the server for a lock.
 	 *
 	 * Note that we need to be careful if we get interrupted by a signal
 	 * after dispatching the request as we may still get the lock, even
 	 * though we don't wait for the reply (it's not too bad a problem - the
+<<<<<<< HEAD
 	 * lock will expire in 10 mins anyway).
+=======
+	 * lock will expire in 5 mins anyway).
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	 */
 	_debug("not locked");
 	vnode->lock_key = key_get(key);
 	vnode->lock_type = type;
+<<<<<<< HEAD
 	vnode->lock_state = AFS_VNODE_LOCK_SETTING;
+=======
+	afs_set_lock_state(vnode, AFS_VNODE_LOCK_SETTING);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	spin_unlock(&vnode->lock);
 
 	ret = afs_set_lock(vnode, key, type); /* RPC */
 
 	spin_lock(&vnode->lock);
 	switch (ret) {
+<<<<<<< HEAD
 	default:
 		goto abort_attempt;
+=======
+	case -EKEYREJECTED:
+	case -EKEYEXPIRED:
+	case -EKEYREVOKED:
+	case -EPERM:
+	case -EACCES:
+		fl->fl_u.afs.state = ret;
+		list_del_init(&fl->fl_u.afs.link);
+		afs_next_locker(vnode, ret);
+		goto error_unlock;
+
+	default:
+		fl->fl_u.afs.state = ret;
+		list_del_init(&fl->fl_u.afs.link);
+		afs_next_locker(vnode, 0);
+		goto error_unlock;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	case -EWOULDBLOCK:
 		/* The server doesn't have a lock-waiting queue, so the client
@@ -494,6 +697,7 @@ static int afs_do_setlk(struct file *file, struct file_lock *fl)
 		_debug("would block");
 		ASSERT(list_empty(&vnode->granted_locks));
 		ASSERTCMP(vnode->pending_locks.next, ==, &fl->fl_u.afs.link);
+<<<<<<< HEAD
 		vnode->lock_state = AFS_VNODE_LOCK_WAITING_FOR_CB;
 		goto need_to_wait;
 
@@ -517,6 +721,25 @@ given_lock:
 	spin_unlock(&vnode->lock);
 
 	ret = posix_lock_file(file, fl, NULL);
+=======
+		goto lock_is_contended;
+
+	case 0:
+		_debug("acquired");
+		afs_set_lock_state(vnode, AFS_VNODE_LOCK_GRANTED);
+		afs_grant_locks(vnode);
+		goto vnode_is_locked_u;
+	}
+
+vnode_is_locked_u:
+	spin_unlock(&vnode->lock);
+vnode_is_locked:
+	/* the lock has been granted by the server... */
+	ASSERTCMP(fl->fl_u.afs.state, ==, AFS_LOCK_GRANTED);
+
+	/* ... but the VFS still needs to distribute access on this client. */
+	ret = locks_lock_file_wait(file, fl);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (ret < 0)
 		goto vfs_rejected_lock;
 
@@ -528,6 +751,7 @@ given_lock:
 	_leave(" = 0");
 	return 0;
 
+<<<<<<< HEAD
 need_to_wait:
 	/* We're going to have to wait.  Either this client doesn't have a lock
 	 * on the server yet and we need to wait for a callback to occur, or
@@ -560,6 +784,63 @@ error_unlock:
 	spin_unlock(&vnode->lock);
 	_leave(" = %d", ret);
 	return ret;
+=======
+lock_is_contended:
+	if (!(fl->fl_flags & FL_SLEEP)) {
+		list_del_init(&fl->fl_u.afs.link);
+		afs_next_locker(vnode, 0);
+		ret = -EAGAIN;
+		goto error_unlock;
+	}
+
+	afs_set_lock_state(vnode, AFS_VNODE_LOCK_WAITING_FOR_CB);
+	queue_delayed_work(afs_lock_manager, &vnode->lock_work, HZ * 5);
+
+need_to_wait:
+	/* We're going to have to wait.  Either this client doesn't have a lock
+	 * on the server yet and we need to wait for a callback to occur, or
+	 * the client does have a lock on the server, but it's shared and we
+	 * need an exclusive lock.
+	 */
+	spin_unlock(&vnode->lock);
+
+	_debug("sleep");
+	ret = wait_event_interruptible(fl->fl_wait,
+				       fl->fl_u.afs.state != AFS_LOCK_PENDING);
+	_debug("wait = %d", ret);
+
+	if (fl->fl_u.afs.state >= 0 && fl->fl_u.afs.state != AFS_LOCK_GRANTED) {
+		spin_lock(&vnode->lock);
+
+		switch (fl->fl_u.afs.state) {
+		case AFS_LOCK_YOUR_TRY:
+			fl->fl_u.afs.state = AFS_LOCK_PENDING;
+			goto try_to_lock;
+		case AFS_LOCK_PENDING:
+			if (ret > 0) {
+				/* We need to retry the lock.  We may not be
+				 * notified by the server if it just expired
+				 * rather than being released.
+				 */
+				ASSERTCMP(vnode->lock_state, ==, AFS_VNODE_LOCK_WAITING_FOR_CB);
+				afs_set_lock_state(vnode, AFS_VNODE_LOCK_SETTING);
+				fl->fl_u.afs.state = AFS_LOCK_PENDING;
+				goto try_to_lock;
+			}
+			goto error_unlock;
+		case AFS_LOCK_GRANTED:
+		default:
+			break;
+		}
+
+		spin_unlock(&vnode->lock);
+	}
+
+	if (fl->fl_u.afs.state == AFS_LOCK_GRANTED)
+		goto vnode_is_locked;
+	ret = fl->fl_u.afs.state;
+	goto error;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 vfs_rejected_lock:
 	/* The VFS rejected the lock we just obtained, so we have to discard
@@ -569,9 +850,19 @@ vfs_rejected_lock:
 	_debug("vfs refused %d", ret);
 	spin_lock(&vnode->lock);
 	list_del_init(&fl->fl_u.afs.link);
+<<<<<<< HEAD
 	if (list_empty(&vnode->granted_locks))
 		afs_defer_unlock(vnode);
 	goto error_unlock;
+=======
+	afs_defer_unlock(vnode);
+
+error_unlock:
+	spin_unlock(&vnode->lock);
+error:
+	_leave(" = %d", ret);
+	return ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /*
@@ -587,11 +878,15 @@ static int afs_do_unlk(struct file *file, struct file_lock *fl)
 	/* Flush all pending writes before doing anything with locks. */
 	vfs_fsync(file, 0);
 
+<<<<<<< HEAD
 	/* only whole-file unlocks are supported */
 	if (fl->fl_start != 0 || fl->fl_end != OFFSET_MAX)
 		return -EINVAL;
 
 	ret = posix_lock_file(file, fl, NULL);
+=======
+	ret = locks_lock_file_wait(file, fl);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	_leave(" = %d [%u]", ret, vnode->lock_state);
 	return ret;
 }
@@ -618,12 +913,24 @@ static int afs_do_getlk(struct file *file, struct file_lock *fl)
 			goto error;
 
 		lock_count = READ_ONCE(vnode->status.lock_count);
+<<<<<<< HEAD
 		if (lock_count > 0)
 			fl->fl_type = F_RDLCK;
 		else
 			fl->fl_type = F_WRLCK;
 		fl->fl_start = 0;
 		fl->fl_end = OFFSET_MAX;
+=======
+		if (lock_count != 0) {
+			if (lock_count > 0)
+				fl->fl_type = F_RDLCK;
+			else
+				fl->fl_type = F_WRLCK;
+			fl->fl_start = 0;
+			fl->fl_end = OFFSET_MAX;
+			fl->fl_pid = 0;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	ret = 0;
@@ -710,7 +1017,15 @@ static void afs_fl_release_private(struct file_lock *fl)
 	_enter("");
 
 	spin_lock(&vnode->lock);
+<<<<<<< HEAD
 	afs_dequeue_lock(vnode, fl);
+=======
+
+	list_del_init(&fl->fl_u.afs.link);
+	if (list_empty(&vnode->granted_locks))
+		afs_defer_unlock(vnode);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	_debug("state %u for %p", vnode->lock_state, vnode);
 	spin_unlock(&vnode->lock);
 }

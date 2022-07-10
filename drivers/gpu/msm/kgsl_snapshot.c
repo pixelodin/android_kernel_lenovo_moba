@@ -218,6 +218,10 @@ static void kgsl_snapshot_put_object(struct kgsl_snapshot_object *obj)
 	list_del(&obj->node);
 
 	obj->entry->memdesc.priv &= ~KGSL_MEMDESC_FROZEN;
+<<<<<<< HEAD
+=======
+	obj->entry->memdesc.priv &= ~KGSL_MEMDESC_SKIP_RECLAIM;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	kgsl_mem_entry_put(obj->entry);
 
 	kfree(obj);
@@ -401,6 +405,10 @@ int kgsl_snapshot_get_object(struct kgsl_snapshot *snapshot,
 
 	return ret;
 err_put:
+<<<<<<< HEAD
+=======
+	entry->memdesc.priv &= ~KGSL_MEMDESC_SKIP_RECLAIM;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	kgsl_mem_entry_put(entry);
 	return ret;
 }
@@ -1331,7 +1339,13 @@ done:
 				snapshot->ib2base);
 
 gmu_only:
+<<<<<<< HEAD
 	complete_all(&snapshot->dump_gate);
 	BUG_ON(!snapshot->device->skip_ib_capture &
 				snapshot->device->force_panic);
+=======
+	BUG_ON(!snapshot->device->skip_ib_capture &
+				snapshot->device->force_panic);
+	complete_all(&snapshot->dump_gate);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }

@@ -912,6 +912,10 @@ static int rcar_drif_g_fmt_sdr_cap(struct file *file, void *priv,
 {
 	struct rcar_drif_sdr *sdr = video_drvdata(file);
 
+<<<<<<< HEAD
+=======
+	memset(f->fmt.sdr.reserved, 0, sizeof(f->fmt.sdr.reserved));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	f->fmt.sdr.pixelformat = sdr->fmt->pixelformat;
 	f->fmt.sdr.buffersize = sdr->fmt->buffersize;
 

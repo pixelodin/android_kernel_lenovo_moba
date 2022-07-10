@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-only
+<<<<<<< HEAD
 /* Copyright (c) 2013-2019, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2013-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  *
  * RMNET Packet Descriptor Framework
  *
@@ -95,6 +99,10 @@ EXPORT_SYMBOL(rmnet_descriptor_add_frag);
 int rmnet_frag_ipv6_skip_exthdr(struct rmnet_frag_descriptor *frag_desc,
 				int start, u8 *nexthdrp, __be16 *fragp)
 {
+<<<<<<< HEAD
+=======
+	u32 frag_size = skb_frag_size(&frag_desc->frag);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u8 nexthdr = *nexthdrp;
 
 	*fragp = 0;
@@ -106,11 +114,25 @@ int rmnet_frag_ipv6_skip_exthdr(struct rmnet_frag_descriptor *frag_desc,
 		if (nexthdr == NEXTHDR_NONE)
 			return -EINVAL;
 
+<<<<<<< HEAD
 		hp = rmnet_frag_data_ptr(frag_desc) + start;
 
 		if (nexthdr == NEXTHDR_FRAGMENT) {
 			__be16 *fp;
 
+=======
+		if (start >= frag_size)
+			return -EINVAL;
+
+		hp = rmnet_frag_data_ptr(frag_desc) + start;
+		if (nexthdr == NEXTHDR_FRAGMENT) {
+			__be16 *fp;
+
+			if (start + offsetof(struct frag_hdr, frag_off) >=
+			    frag_size)
+				return -EINVAL;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			fp = rmnet_frag_data_ptr(frag_desc) + start +
 			     offsetof(struct frag_hdr, frag_off);
 			*fragp = *fp;

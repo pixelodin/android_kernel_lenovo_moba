@@ -402,8 +402,11 @@ config QCOM_MPM
 	  Say yes here to enable the MSM Power Manager interrupt
 	  controller to use as a wakeup interrupt controller.
 
+<<<<<<< HEAD
 endmenu
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 config SIFIVE_PLIC
 	bool "SiFive Platform-Level Interrupt Controller"
 	depends on RISCV
@@ -415,3 +418,8 @@ config SIFIVE_PLIC
 	   interrupt sources are subordinate to the PLIC.
 
 	   If you don't know what to do here, say Y.
+<<<<<<< HEAD
+=======
+
+endmenu
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

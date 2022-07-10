@@ -298,7 +298,11 @@ static int hclge_tm_qs_to_pri_map_cfg(struct hclge_dev *hdev,
 }
 
 static int hclge_tm_q_to_qs_map_cfg(struct hclge_dev *hdev,
+<<<<<<< HEAD
 				    u8 q_id, u16 qs_id)
+=======
+				    u16 q_id, u16 qs_id)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct hclge_nq_to_qs_link_cmd *map;
 	struct hclge_desc desc;
@@ -1162,7 +1166,11 @@ static int hclge_pfc_setup_hw(struct hclge_dev *hdev)
 				HCLGE_RX_MAC_PAUSE_EN_MSK;
 
 	return hclge_pfc_pause_en_cfg(hdev, enable_bitmap,
+<<<<<<< HEAD
 				      hdev->tm_info.hw_pfc_map);
+=======
+				      hdev->tm_info.pfc_en);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /* Each Tc has a 1024 queue sets to backpress, it divides to

@@ -906,11 +906,19 @@ static void ave_rxfifo_reset(struct net_device *ndev)
 
 	/* assert reset */
 	writel(AVE_GRR_RXFFR, priv->base + AVE_GRR);
+<<<<<<< HEAD
 	usleep_range(40, 50);
 
 	/* negate reset */
 	writel(0, priv->base + AVE_GRR);
 	usleep_range(10, 20);
+=======
+	udelay(50);
+
+	/* negate reset */
+	writel(0, priv->base + AVE_GRR);
+	udelay(20);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* negate interrupt status */
 	writel(AVE_GI_RXOVF, priv->base + AVE_GISR);
@@ -1575,7 +1583,11 @@ static int ave_probe(struct platform_device *pdev)
 
 	np = dev->of_node;
 	phy_mode = of_get_phy_mode(np);
+<<<<<<< HEAD
 	if (phy_mode < 0) {
+=======
+	if ((int)phy_mode < 0) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		dev_err(dev, "phy-mode not found\n");
 		return -EINVAL;
 	}

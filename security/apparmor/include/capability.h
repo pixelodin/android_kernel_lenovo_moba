@@ -40,7 +40,11 @@ struct aa_caps {
 
 extern struct aa_sfs_entry aa_sfs_entry_caps[];
 
+<<<<<<< HEAD
 int aa_capable(struct aa_label *label, int cap, int audit);
+=======
+int aa_capable(struct aa_label *label, int cap, unsigned int opts);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 static inline void aa_free_cap_rules(struct aa_caps *caps)
 {

@@ -30,6 +30,10 @@
 #include <linux/seq_file.h>
 #include <linux/vmalloc.h>
 #include <asm/vmap_stack.h>
+<<<<<<< HEAD
+=======
+#include <asm/scs.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 unsigned long irq_err_count;
 
@@ -72,6 +76,10 @@ static void init_irq_stacks(void)
 void __init init_IRQ(void)
 {
 	init_irq_stacks();
+<<<<<<< HEAD
+=======
+	scs_init_irq();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	irqchip_init();
 	if (!handle_arch_irq)
 		panic("No interrupt controller found.");

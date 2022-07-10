@@ -960,10 +960,17 @@ int mwifiex_set_mac_address(struct mwifiex_private *priv,
 
 		mac_addr = old_mac_addr;
 
+<<<<<<< HEAD
 		if (priv->bss_type == MWIFIEX_BSS_TYPE_P2P)
 			mac_addr |= BIT_ULL(MWIFIEX_MAC_LOCAL_ADMIN_BIT);
 
 		if (mwifiex_get_intf_num(priv->adapter, priv->bss_type) > 1) {
+=======
+		if (priv->bss_type == MWIFIEX_BSS_TYPE_P2P) {
+			mac_addr |= BIT_ULL(MWIFIEX_MAC_LOCAL_ADMIN_BIT);
+			mac_addr += priv->bss_num;
+		} else if (priv->adapter->priv[0] != priv) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			/* Set mac address based on bss_type/bss_num */
 			mac_addr ^= BIT_ULL(priv->bss_type + 8);
 			mac_addr += priv->bss_num;

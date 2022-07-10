@@ -10,6 +10,10 @@
 #include <linux/iio/consumer.h>
 #include <asm/dma-iommu.h>
 #include <linux/kobject.h>
+<<<<<<< HEAD
+=======
+#include <linux/power_supply.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define icnss_ipc_log_string(_x...) do {				\
 	if (icnss_ipc_log_context)					\
@@ -148,6 +152,10 @@ enum icnss_driver_state {
 	ICNSS_SSR_REGISTERED,
 	ICNSS_PDR_REGISTERED,
 	ICNSS_PD_RESTART,
+<<<<<<< HEAD
+=======
+	ICNSS_MSA0_ASSIGNED,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ICNSS_WLFW_EXISTS,
 	ICNSS_SHUTDOWN_DONE,
 	ICNSS_HOST_TRIGGERED_PDR,
@@ -157,6 +165,10 @@ enum icnss_driver_state {
 	ICNSS_MODE_ON,
 	ICNSS_BLOCK_SHUTDOWN,
 	ICNSS_PDR,
+<<<<<<< HEAD
+=======
+	ICNSS_DEL_SERVER,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct ce_irq_list {
@@ -181,6 +193,14 @@ struct icnss_clk_info {
 	bool required;
 };
 
+<<<<<<< HEAD
+=======
+struct icnss_battery_level {
+	int lower_battery_threshold;
+	int ldo_voltage;
+};
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct icnss_stats {
 	struct {
 		uint32_t posted;
@@ -275,10 +295,31 @@ struct wlfw_fw_version_info {
 	char fw_build_timestamp[WLFW_MAX_TIMESTAMP_LEN + 1];
 };
 
+<<<<<<< HEAD
+=======
+enum icnss_msa_perm {
+	ICNSS_MSA_PERM_HLOS_ALL = 0,
+	ICNSS_MSA_PERM_WLAN_HW_RW = 1,
+	ICNSS_MSA_PERM_MAX,
+};
+
+#define ICNSS_MAX_VMIDS     4
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct icnss_mem_region_info {
 	uint64_t reg_addr;
 	uint32_t size;
 	uint8_t secure_flag;
+<<<<<<< HEAD
+=======
+	enum icnss_msa_perm perm;
+};
+
+struct icnss_msa_perm_list_t {
+	int vmids[ICNSS_MAX_VMIDS];
+	int perms[ICNSS_MAX_VMIDS];
+	int nelems;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct icnss_priv {
@@ -293,6 +334,10 @@ struct icnss_priv {
 	void __iomem *mem_base_va;
 	struct iommu_domain *iommu_domain;
 	dma_addr_t smmu_iova_ipa_start;
+<<<<<<< HEAD
+=======
+	dma_addr_t smmu_iova_ipa_current;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	size_t smmu_iova_ipa_len;
 	struct qmi_handle qmi;
 	struct list_head event_list;
@@ -354,6 +399,16 @@ struct icnss_priv {
 	void __iomem *hang_event_data_va;
 	uint16_t hang_event_data_len;
 	void *hang_event_data;
+<<<<<<< HEAD
+=======
+	bool is_hyp_enabled;
+	bool psf_supported;
+	struct notifier_block psf_nb;
+	struct power_supply *batt_psy;
+	int last_updated_voltage;
+	struct work_struct soc_update_work;
+	struct workqueue_struct *soc_update_wq;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct icnss_reg_info {

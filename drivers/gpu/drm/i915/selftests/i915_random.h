@@ -25,6 +25,10 @@
 #ifndef __I915_SELFTESTS_RANDOM_H__
 #define __I915_SELFTESTS_RANDOM_H__
 
+<<<<<<< HEAD
+=======
+#include <linux/math64.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/random.h>
 
 #include "../i915_selftest.h"

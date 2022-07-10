@@ -353,6 +353,7 @@ err:
 
 static void get_name(struct mlx4_ib_dev *dev, char *name, int i, int max)
 {
+<<<<<<< HEAD
 	char base_name[9];
 
 	/* pci_name format is: bus:dev:func -> xxxx:yy:zz.n */
@@ -363,6 +364,14 @@ static void get_name(struct mlx4_ib_dev *dev, char *name, int i, int max)
 	 * need to add it to the dev num, so count in the last number will be
 	 * modulo 8 */
 	sprintf(name, "%s%.2d.%d", base_name, (i/8), (i%8));
+=======
+	/* pci_name format is: bus:dev:func -> xxxx:yy:zz.n
+	 * with no ARI only 3 last bits are used so when the fn is higher than 8
+	 * need to add it to the dev num, so count in the last number will be
+	 * modulo 8 */
+	snprintf(name, max, "%.8s%.2d.%d", pci_name(dev->dev->persist->pdev),
+		 i / 8, i % 8);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 struct mlx4_port {

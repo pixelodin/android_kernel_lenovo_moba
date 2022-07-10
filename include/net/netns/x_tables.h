@@ -11,11 +11,17 @@ struct netns_xt {
 	struct list_head tables[NFPROTO_NUMPROTO];
 	bool notrack_deprecated_warning;
 	bool clusterip_deprecated_warning;
+<<<<<<< HEAD
 #if defined(CONFIG_BRIDGE_NF_EBTABLES) || \
     defined(CONFIG_BRIDGE_NF_EBTABLES_MODULE)
 	struct ebt_table *broute_table;
 	struct ebt_table *frame_filter;
 	struct ebt_table *frame_nat;
 #endif
+=======
+	struct ebt_table *broute_table;
+	struct ebt_table *frame_filter;
+	struct ebt_table *frame_nat;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 #endif

@@ -105,6 +105,11 @@ config MANDATORY_FILE_LOCKING
 
 source "fs/crypto/Kconfig"
 
+<<<<<<< HEAD
+=======
+source "fs/verity/Kconfig"
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 source "fs/notify/Kconfig"
 
 source "fs/quota/Kconfig"
@@ -112,6 +117,10 @@ source "fs/quota/Kconfig"
 source "fs/autofs/Kconfig"
 source "fs/fuse/Kconfig"
 source "fs/overlayfs/Kconfig"
+<<<<<<< HEAD
+=======
+source "fs/incfs/Kconfig"
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 menu "Caches"
 
@@ -134,7 +143,10 @@ menu "DOS/FAT/NT Filesystems"
 
 source "fs/fat/Kconfig"
 source "fs/ntfs/Kconfig"
+<<<<<<< HEAD
 source "fs/exfat/Kconfig"
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 endmenu
 endif # BLOCK
@@ -315,5 +327,9 @@ endif # NETWORK_FILESYSTEMS
 
 source "fs/nls/Kconfig"
 source "fs/dlm/Kconfig"
+<<<<<<< HEAD
+=======
+source "fs/unicode/Kconfig"
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 endmenu

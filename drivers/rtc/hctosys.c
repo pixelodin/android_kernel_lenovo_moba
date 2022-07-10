@@ -24,7 +24,11 @@
  * the best guess is to add 0.5s.
  */
 
+<<<<<<< HEAD
 static int __init rtc_hctosys(void)
+=======
+int rtc_hctosys(void)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	int err = -ENODEV;
 	struct rtc_time tm;
@@ -73,5 +77,8 @@ err_open:
 
 	return err;
 }
+<<<<<<< HEAD
 
 late_initcall(rtc_hctosys);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

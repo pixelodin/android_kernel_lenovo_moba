@@ -37,6 +37,10 @@
 
 struct quirk_entry {
 	bool touchpad_led;
+<<<<<<< HEAD
+=======
+	bool kbd_led_not_present;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	bool kbd_led_levels_off_1;
 	bool kbd_missing_ac_tag;
 
@@ -77,6 +81,13 @@ static struct quirk_entry quirk_dell_latitude_e6410 = {
 	.kbd_led_levels_off_1 = true,
 };
 
+<<<<<<< HEAD
+=======
+static struct quirk_entry quirk_dell_inspiron_1012 = {
+	.kbd_led_not_present = true,
+};
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static struct platform_driver platform_driver = {
 	.driver = {
 		.name = "dell-laptop",
@@ -314,6 +325,27 @@ static const struct dmi_system_id dell_quirks[] __initconst = {
 		},
 		.driver_data = &quirk_dell_latitude_e6410,
 	},
+<<<<<<< HEAD
+=======
+	{
+		.callback = dmi_matched,
+		.ident = "Dell Inspiron 1012",
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1012"),
+		},
+		.driver_data = &quirk_dell_inspiron_1012,
+	},
+	{
+		.callback = dmi_matched,
+		.ident = "Dell Inspiron 1018",
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "Dell Inc."),
+			DMI_MATCH(DMI_PRODUCT_NAME, "Inspiron 1018"),
+		},
+		.driver_data = &quirk_dell_inspiron_1012,
+	},
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	{ }
 };
 
@@ -1497,6 +1529,12 @@ static void kbd_init(void)
 {
 	int ret;
 
+<<<<<<< HEAD
+=======
+	if (quirks && quirks->kbd_led_not_present)
+		return;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = kbd_init_info();
 	kbd_init_tokens();
 

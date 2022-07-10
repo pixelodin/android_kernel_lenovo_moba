@@ -77,6 +77,7 @@ static int gaff_init(struct hid_device *hid)
 {
 	struct gaff_device *gaff;
 	struct hid_report *report;
+<<<<<<< HEAD
 	struct hid_input *hidinput = list_entry(hid->inputs.next,
 						struct hid_input, list);
 	struct list_head *report_list =
@@ -85,6 +86,22 @@ static int gaff_init(struct hid_device *hid)
 	struct input_dev *dev = hidinput->input;
 	int error;
 
+=======
+	struct hid_input *hidinput;
+	struct list_head *report_list =
+			&hid->report_enum[HID_OUTPUT_REPORT].report_list;
+	struct list_head *report_ptr = report_list;
+	struct input_dev *dev;
+	int error;
+
+	if (list_empty(&hid->inputs)) {
+		hid_err(hid, "no inputs found\n");
+		return -ENODEV;
+	}
+	hidinput = list_entry(hid->inputs.next, struct hid_input, list);
+	dev = hidinput->input;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (list_empty(report_list)) {
 		hid_err(hid, "no output reports found\n");
 		return -ENODEV;

@@ -895,14 +895,27 @@ static void
 mmci_data_irq(struct mmci_host *host, struct mmc_data *data,
 	      unsigned int status)
 {
+<<<<<<< HEAD
+=======
+	unsigned int status_err;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Make sure we have data to handle */
 	if (!data)
 		return;
 
 	/* First check for errors */
+<<<<<<< HEAD
 	if (status & (MCI_DATACRCFAIL | MCI_DATATIMEOUT |
 		      host->variant->start_err |
 		      MCI_TXUNDERRUN | MCI_RXOVERRUN)) {
+=======
+	status_err = status & (host->variant->start_err |
+			       MCI_DATACRCFAIL | MCI_DATATIMEOUT |
+			       MCI_TXUNDERRUN | MCI_RXOVERRUN);
+
+	if (status_err) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		u32 remain, success;
 
 		/* Terminate the DMA transfer */
@@ -922,6 +935,7 @@ mmci_data_irq(struct mmci_host *host, struct mmc_data *data,
 		success = data->blksz * data->blocks - remain;
 
 		dev_dbg(mmc_dev(host->mmc), "MCI ERROR IRQ, status 0x%08x at 0x%08x\n",
+<<<<<<< HEAD
 			status, success);
 		if (status & MCI_DATACRCFAIL) {
 			/* Last block was not successful */
@@ -934,6 +948,20 @@ mmci_data_irq(struct mmci_host *host, struct mmc_data *data,
 		} else if (status & MCI_TXUNDERRUN) {
 			data->error = -EIO;
 		} else if (status & MCI_RXOVERRUN) {
+=======
+			status_err, success);
+		if (status_err & MCI_DATACRCFAIL) {
+			/* Last block was not successful */
+			success -= 1;
+			data->error = -EILSEQ;
+		} else if (status_err & MCI_DATATIMEOUT) {
+			data->error = -ETIMEDOUT;
+		} else if (status_err & MCI_STARTBITERR) {
+			data->error = -ECOMM;
+		} else if (status_err & MCI_TXUNDERRUN) {
+			data->error = -EIO;
+		} else if (status_err & MCI_RXOVERRUN) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			if (success > host->variant->fifosize)
 				success -= host->variant->fifosize;
 			else
@@ -1790,7 +1818,11 @@ static int mmci_probe(struct amba_device *dev,
 			goto clk_disable;
 	}
 
+<<<<<<< HEAD
 	writel(MCI_IRQENABLE, host->base + MMCIMASK0);
+=======
+	writel(MCI_IRQENABLE | variant->start_err, host->base + MMCIMASK0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	amba_set_drvdata(dev, mmc);
 
@@ -1877,7 +1909,12 @@ static void mmci_restore(struct mmci_host *host)
 		writel(host->datactrl_reg, host->base + MMCIDATACTRL);
 		writel(host->pwr_reg, host->base + MMCIPOWER);
 	}
+<<<<<<< HEAD
 	writel(MCI_IRQENABLE, host->base + MMCIMASK0);
+=======
+	writel(MCI_IRQENABLE | host->variant->start_err,
+	       host->base + MMCIMASK0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mmci_reg_delay(host);
 
 	spin_unlock_irqrestore(&host->lock, flags);

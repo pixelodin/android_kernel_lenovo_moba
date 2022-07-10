@@ -71,7 +71,11 @@
 		};
 	};
 
+<<<<<<< HEAD
 	cpu_opp_table: cpu_opp_table {
+=======
+	cpu_opp_table: cpu-opp-table {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		compatible = "operating-points-v2";
 		opp-shared;
 		opp00 {
@@ -124,7 +128,11 @@
 			     <1 10 0xf08>;
 	};
 
+<<<<<<< HEAD
 	amba_apu: amba_apu@0 {
+=======
+	amba_apu: amba-apu@0 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		compatible = "simple-bus";
 		#address-cells = <2>;
 		#size-cells = <1>;

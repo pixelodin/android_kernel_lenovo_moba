@@ -2,6 +2,21 @@
 # fbdev configuration
 #
 
+<<<<<<< HEAD
+=======
+config FB_CMDLINE
+	bool
+
+config FB_NOTIFY
+	bool
+
+config FB_CLPS711X_OLD
+	tristate
+	select FB_CFB_FILLRECT
+	select FB_CFB_COPYAREA
+	select FB_CFB_IMAGEBLIT
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 menuconfig FB
 	tristate "Support for frame buffer devices"
 	select FB_CMDLINE
@@ -54,12 +69,15 @@ config FIRMWARE_EDID
 	 combination with certain motherboards and monitors are known to
 	 suffer from this problem.
 
+<<<<<<< HEAD
 config FB_CMDLINE
 	bool
 
 config FB_NOTIFY
 	bool
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 config FB_DDC
        tristate
        depends on FB
@@ -329,12 +347,15 @@ config FB_ACORN
 	  hardware found in Acorn RISC PCs and other ARM-based machines.  If
 	  unsure, say N.
 
+<<<<<<< HEAD
 config FB_CLPS711X_OLD
 	tristate
 	select FB_CFB_FILLRECT
 	select FB_CFB_COPYAREA
 	select FB_CFB_IMAGEBLIT
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 config FB_CLPS711X
 	tristate "CLPS711X LCD support"
 	depends on FB && (ARCH_CLPS711X || COMPILE_TEST)
@@ -1456,7 +1477,10 @@ if FB_VIA
 
 config FB_VIA_DIRECT_PROCFS
 	bool "direct hardware access via procfs (DEPRECATED)(DANGEROUS)"
+<<<<<<< HEAD
 	depends on FB_VIA
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	default n
 	help
 	  Allow direct hardware access to some output registers via procfs.
@@ -1466,7 +1490,10 @@ config FB_VIA_DIRECT_PROCFS
 
 config FB_VIA_X_COMPATIBILITY
 	bool "X server compatibility"
+<<<<<<< HEAD
 	depends on FB_VIA
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	default n
 	help
 	  This option reduces the functionality (power saving, ...) of the
@@ -2224,6 +2251,22 @@ config FB_PRE_INIT_FB
 	  Select this option if display contents should be inherited as set by
 	  the bootloader.
 
+<<<<<<< HEAD
+=======
+config FB_MSM
+	tristate "MSM Framebuffer support"
+	depends on FB && ARCH_QCOM
+	select FB_CFB_FILLRECT
+	select FB_CFB_COPYAREA
+	select FB_CFB_IMAGEBLIT
+	select SYNC_FILE
+	help
+	 The MSM driver implements a frame buffer interface to
+	 provide access to the display hardware and provide
+	 a way for users to display graphics
+	 on connected display panels.
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 config FB_MX3
 	tristate "MX3 Framebuffer support"
 	depends on FB && MX3_IPU
@@ -2308,10 +2351,13 @@ config FB_SIMPLE
 	  Configuration re: surface address, size, and format must be provided
 	  through device tree, or plain old platform data.
 
+<<<<<<< HEAD
 source "drivers/video/fbdev/omap/Kconfig"
 source "drivers/video/fbdev/omap2/Kconfig"
 source "drivers/video/fbdev/mmp/Kconfig"
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 config FB_SSD1307
 	tristate "Solomon SSD1307 framebuffer support"
 	depends on FB && I2C
@@ -2341,3 +2387,11 @@ config FB_SM712
 	  This driver is also available as a module. The module will be
 	  called sm712fb. If you want to compile it as a module, say M
 	  here and read <file:Documentation/kbuild/modules.txt>.
+<<<<<<< HEAD
+=======
+
+source "drivers/video/fbdev/omap/Kconfig"
+source "drivers/video/fbdev/omap2/Kconfig"
+source "drivers/video/fbdev/mmp/Kconfig"
+source "drivers/video/fbdev/msm/Kconfig"
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

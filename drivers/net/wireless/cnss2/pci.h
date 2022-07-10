@@ -77,6 +77,10 @@ struct cnss_pci_data {
 	u8 drv_connected_last;
 	u16 def_link_speed;
 	u16 def_link_width;
+<<<<<<< HEAD
+=======
+	struct completion wake_event;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u8 monitor_wake_intr;
 	struct iommu_domain *iommu_domain;
 	u8 smmu_s1_enable;
@@ -165,6 +169,10 @@ static inline int cnss_pci_get_drv_connected(void *bus_priv)
 int cnss_pci_check_link_status(struct cnss_pci_data *pci_priv);
 int cnss_suspend_pci_link(struct cnss_pci_data *pci_priv);
 int cnss_resume_pci_link(struct cnss_pci_data *pci_priv);
+<<<<<<< HEAD
+=======
+int cnss_pci_recover_link_down(struct cnss_pci_data *pci_priv);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 int cnss_pci_init(struct cnss_plat_data *plat_priv);
 void cnss_pci_deinit(struct cnss_plat_data *plat_priv);
 void cnss_pci_add_fw_prefix_name(struct cnss_pci_data *pci_priv,
@@ -175,6 +183,10 @@ void cnss_pci_free_qdss_mem(struct cnss_pci_data *pci_priv);
 int cnss_pci_load_m3(struct cnss_pci_data *pci_priv);
 int cnss_pci_start_mhi(struct cnss_pci_data *pci_priv);
 void cnss_pci_collect_dump_info(struct cnss_pci_data *pci_priv, bool in_panic);
+<<<<<<< HEAD
+=======
+void cnss_pci_device_crashed(struct cnss_pci_data *pci_priv);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 void cnss_pci_clear_dump_info(struct cnss_pci_data *pci_priv);
 u32 cnss_pci_get_wake_msi(struct cnss_pci_data *pci_priv);
 int cnss_pci_force_fw_assert_hdlr(struct cnss_pci_data *pci_priv);

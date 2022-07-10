@@ -25,7 +25,10 @@
 #include <linux/regulator/driver.h>
 #include <linux/regulator/machine.h>
 #include <linux/regulator/of_regulator.h>
+<<<<<<< HEAD
 #include <linux/time.h>
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define PMIC_VER_8941				0x01
 #define PMIC_VERSION_REG			0x0105
@@ -916,9 +919,12 @@ static int qpnp_pon_input_dispatch(struct qpnp_pon *pon, u32 pon_type)
 	uint pon_rt_sts;
 	u64 elapsed_us;
 	int rc;
+<<<<<<< HEAD
 	struct timeval timestamp;
 	struct tm tm;
 	char buff[255];
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	cfg = qpnp_get_cfg(pon, pon_type);
 	if (!cfg)
@@ -945,6 +951,7 @@ static int qpnp_pon_input_dispatch(struct qpnp_pon *pon, u32 pon_type)
 	switch (cfg->pon_type) {
 	case PON_KPDPWR:
 		pon_rt_bit = QPNP_PON_KPDPWR_N_SET;
+<<<<<<< HEAD
 		/* get the time stamp in readable format to print*/
 		do_gettimeofday(&timestamp);
 		time_to_tm((time_t)(timestamp.tv_sec), 0, &tm);
@@ -955,6 +962,8 @@ static int qpnp_pon_input_dispatch(struct qpnp_pon *pon, u32 pon_type)
 
 		pr_info("Report pwrkey %s event at: %s\n", pon_rt_bit &
 			pon_rt_sts ? "press" : "release", buff);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 	case PON_RESIN:
 		pon_rt_bit = QPNP_PON_RESIN_N_SET;
@@ -995,6 +1004,7 @@ static int qpnp_pon_input_dispatch(struct qpnp_pon *pon, u32 pon_type)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int qpnp_pon_input_dispatch_vol(struct qpnp_pon *pon, u32 pon_type)
 {
 	struct qpnp_pon_config *cfg = NULL;
@@ -1035,6 +1045,8 @@ static int qpnp_pon_input_dispatch_vol(struct qpnp_pon *pon, u32 pon_type)
 }
 
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static irqreturn_t qpnp_kpdpwr_irq(int irq, void *_pon)
 {
 	int rc;
@@ -1049,7 +1061,10 @@ static irqreturn_t qpnp_kpdpwr_irq(int irq, void *_pon)
 
 static irqreturn_t qpnp_kpdpwr_bark_irq(int irq, void *_pon)
 {
+<<<<<<< HEAD
 	pr_err("kpdpwr bark irq is comming..\n");
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return IRQ_HANDLED;
 }
 
@@ -1067,7 +1082,10 @@ static irqreturn_t qpnp_resin_irq(int irq, void *_pon)
 
 static irqreturn_t qpnp_kpdpwr_resin_bark_irq(int irq, void *_pon)
 {
+<<<<<<< HEAD
 	pr_err("kpdpwr and resin bark irq is comming..\n");
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return IRQ_HANDLED;
 }
 
@@ -1970,6 +1988,7 @@ static struct kernel_param_ops dload_on_uvlo_ops = {
 
 module_param_cb(dload_on_uvlo, &dload_on_uvlo_ops, &dload_on_uvlo, 0600);
 
+<<<<<<< HEAD
 static bool dload_on_debug;
 
 static int qpnp_pon_dload_on_debug_get(char *buf, const struct kernel_param *kp)
@@ -2019,6 +2038,8 @@ static struct kernel_param_ops dload_on_debug_ops = {
 
 module_param_cb(dload_on_debug, &dload_on_debug_ops, &dload_on_debug, 0644);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #if defined(CONFIG_DEBUG_FS)
 
 static int qpnp_pon_debugfs_uvlo_get(void *data, u64 *val)
@@ -2484,7 +2505,10 @@ static int qpnp_pon_probe(struct platform_device *pdev)
 
 	qpnp_pon_debugfs_init(pon);
 
+<<<<<<< HEAD
 	qpnp_pon_input_dispatch_vol(pon, PON_RESIN);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 }
 

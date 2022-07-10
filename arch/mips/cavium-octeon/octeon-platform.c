@@ -501,7 +501,11 @@ static void __init octeon_fdt_set_phy(int eth, int phy_addr)
 	if (phy_addr >= 256 && alt_phy > 0) {
 		const struct fdt_property *phy_prop;
 		struct fdt_property *alt_prop;
+<<<<<<< HEAD
 		u32 phy_handle_name;
+=======
+		fdt32_t phy_handle_name;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		/* Use the alt phy node instead.*/
 		phy_prop = fdt_get_property(initial_boot_params, eth, "phy-handle", NULL);

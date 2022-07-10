@@ -164,6 +164,12 @@ struct stm32_dcmi {
 	int				errors_count;
 	int				overrun_count;
 	int				buffers_count;
+<<<<<<< HEAD
+=======
+
+	/* Ensure DMA operations atomicity */
+	struct mutex			dma_lock;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 static inline struct stm32_dcmi *notifier_to_dcmi(struct v4l2_async_notifier *n)
@@ -314,6 +320,16 @@ static int dcmi_start_dma(struct stm32_dcmi *dcmi,
 		return ret;
 	}
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Avoid call of dmaengine_terminate_all() between
+	 * dmaengine_prep_slave_single() and dmaengine_submit()
+	 * by locking the whole DMA submission sequence
+	 */
+	mutex_lock(&dcmi->dma_lock);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Prepare a DMA transaction */
 	desc = dmaengine_prep_slave_single(dcmi->dma_chan, buf->paddr,
 					   buf->size,
@@ -322,6 +338,10 @@ static int dcmi_start_dma(struct stm32_dcmi *dcmi,
 	if (!desc) {
 		dev_err(dcmi->dev, "%s: DMA dmaengine_prep_slave_single failed for buffer phy=%pad size=%zu\n",
 			__func__, &buf->paddr, buf->size);
+<<<<<<< HEAD
+=======
+		mutex_unlock(&dcmi->dma_lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EINVAL;
 	}
 
@@ -333,9 +353,18 @@ static int dcmi_start_dma(struct stm32_dcmi *dcmi,
 	dcmi->dma_cookie = dmaengine_submit(desc);
 	if (dma_submit_error(dcmi->dma_cookie)) {
 		dev_err(dcmi->dev, "%s: DMA submission failed\n", __func__);
+<<<<<<< HEAD
 		return -ENXIO;
 	}
 
+=======
+		mutex_unlock(&dcmi->dma_lock);
+		return -ENXIO;
+	}
+
+	mutex_unlock(&dcmi->dma_lock);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	dma_async_issue_pending(dcmi->dma_chan);
 
 	return 0;
@@ -570,9 +599,15 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
 	int ret;
 
 	ret = pm_runtime_get_sync(dcmi->dev);
+<<<<<<< HEAD
 	if (ret) {
 		dev_err(dcmi->dev, "%s: Failed to start streaming, cannot get sync\n",
 			__func__);
+=======
+	if (ret < 0) {
+		dev_err(dcmi->dev, "%s: Failed to start streaming, cannot get sync (%d)\n",
+			__func__, ret);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto err_release_buffers;
 	}
 
@@ -717,7 +752,13 @@ static void dcmi_stop_streaming(struct vb2_queue *vq)
 	spin_unlock_irq(&dcmi->irqlock);
 
 	/* Stop all pending DMA operations */
+<<<<<<< HEAD
 	dmaengine_terminate_all(dcmi->dma_chan);
+=======
+	mutex_lock(&dcmi->dma_lock);
+	dmaengine_terminate_all(dcmi->dma_chan);
+	mutex_unlock(&dcmi->dma_lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	pm_runtime_put(dcmi->dev);
 
@@ -1719,6 +1760,10 @@ static int dcmi_probe(struct platform_device *pdev)
 
 	spin_lock_init(&dcmi->irqlock);
 	mutex_init(&dcmi->lock);
+<<<<<<< HEAD
+=======
+	mutex_init(&dcmi->dma_lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	init_completion(&dcmi->complete);
 	INIT_LIST_HEAD(&dcmi->buffers);
 

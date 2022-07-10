@@ -162,8 +162,11 @@ COND_SYSCALL(syslog);
 
 /* kernel/sched/core.c */
 
+<<<<<<< HEAD
 /* kernel/signal.c */
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* kernel/sys.c */
 COND_SYSCALL(setregid);
 COND_SYSCALL(setgid);

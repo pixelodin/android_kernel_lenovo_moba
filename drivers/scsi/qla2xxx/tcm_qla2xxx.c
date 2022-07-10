@@ -926,6 +926,7 @@ static ssize_t tcm_qla2xxx_tpg_enable_show(struct config_item *item,
 			atomic_read(&tpg->lport_tpg_enabled));
 }
 
+<<<<<<< HEAD
 static void tcm_qla2xxx_depend_tpg(struct work_struct *work)
 {
 	struct tcm_qla2xxx_tpg *base_tpg = container_of(work,
@@ -954,10 +955,19 @@ static void tcm_qla2xxx_undepend_tpg(struct work_struct *work)
 	complete(&base_tpg->tpg_base_comp);
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static ssize_t tcm_qla2xxx_tpg_enable_store(struct config_item *item,
 		const char *page, size_t count)
 {
 	struct se_portal_group *se_tpg = to_tpg(item);
+<<<<<<< HEAD
+=======
+	struct se_wwn *se_wwn = se_tpg->se_tpg_wwn;
+	struct tcm_qla2xxx_lport *lport = container_of(se_wwn,
+			struct tcm_qla2xxx_lport, lport_wwn);
+	struct scsi_qla_host *vha = lport->qla_vha;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct tcm_qla2xxx_tpg *tpg = container_of(se_tpg,
 			struct tcm_qla2xxx_tpg, se_tpg);
 	unsigned long op;
@@ -976,11 +986,17 @@ static ssize_t tcm_qla2xxx_tpg_enable_store(struct config_item *item,
 		if (atomic_read(&tpg->lport_tpg_enabled))
 			return -EEXIST;
 
+<<<<<<< HEAD
 		INIT_WORK(&tpg->tpg_base_work, tcm_qla2xxx_depend_tpg);
+=======
+		atomic_set(&tpg->lport_tpg_enabled, 1);
+		qlt_enable_vha(vha);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	} else {
 		if (!atomic_read(&tpg->lport_tpg_enabled))
 			return count;
 
+<<<<<<< HEAD
 		INIT_WORK(&tpg->tpg_base_work, tcm_qla2xxx_undepend_tpg);
 	}
 	init_completion(&tpg->tpg_base_comp);
@@ -994,6 +1010,12 @@ static ssize_t tcm_qla2xxx_tpg_enable_store(struct config_item *item,
 		if (atomic_read(&tpg->lport_tpg_enabled))
 			return -EPERM;
 	}
+=======
+		atomic_set(&tpg->lport_tpg_enabled, 0);
+		qlt_stop_phase1(vha->vha_tgt.qla_tgt);
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return count;
 }
 

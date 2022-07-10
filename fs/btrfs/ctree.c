@@ -337,12 +337,18 @@ u64 btrfs_get_tree_mod_seq(struct btrfs_fs_info *fs_info,
 			   struct seq_list *elem)
 {
 	write_lock(&fs_info->tree_mod_log_lock);
+<<<<<<< HEAD
 	spin_lock(&fs_info->tree_mod_seq_lock);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!elem->seq) {
 		elem->seq = btrfs_inc_tree_mod_seq(fs_info);
 		list_add_tail(&elem->list, &fs_info->tree_mod_seq_list);
 	}
+<<<<<<< HEAD
 	spin_unlock(&fs_info->tree_mod_seq_lock);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	write_unlock(&fs_info->tree_mod_log_lock);
 
 	return elem->seq;
@@ -362,7 +368,11 @@ void btrfs_put_tree_mod_seq(struct btrfs_fs_info *fs_info,
 	if (!seq_putting)
 		return;
 
+<<<<<<< HEAD
 	spin_lock(&fs_info->tree_mod_seq_lock);
+=======
+	write_lock(&fs_info->tree_mod_log_lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	list_del(&elem->list);
 	elem->seq = 0;
 
@@ -373,24 +383,38 @@ void btrfs_put_tree_mod_seq(struct btrfs_fs_info *fs_info,
 				 * blocker with lower sequence number exists, we
 				 * cannot remove anything from the log
 				 */
+<<<<<<< HEAD
 				spin_unlock(&fs_info->tree_mod_seq_lock);
+=======
+				write_unlock(&fs_info->tree_mod_log_lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				return;
 			}
 			min_seq = cur_elem->seq;
 		}
 	}
+<<<<<<< HEAD
 	spin_unlock(&fs_info->tree_mod_seq_lock);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/*
 	 * anything that's lower than the lowest existing (read: blocked)
 	 * sequence number can be removed from the tree.
 	 */
+<<<<<<< HEAD
 	write_lock(&fs_info->tree_mod_log_lock);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	tm_root = &fs_info->tree_mod_log;
 	for (node = rb_first(tm_root); node; node = next) {
 		next = rb_next(node);
 		tm = rb_entry(node, struct tree_mod_elem, node);
+<<<<<<< HEAD
 		if (tm->seq > min_seq)
+=======
+		if (tm->seq >= min_seq)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			continue;
 		rb_erase(node, tm_root);
 		kfree(tm);
@@ -3031,6 +3055,13 @@ int btrfs_search_old_slot(struct btrfs_root *root, const struct btrfs_key *key,
 
 again:
 	b = get_old_root(root, time_seq);
+<<<<<<< HEAD
+=======
+	if (!b) {
+		ret = -EIO;
+		goto done;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	level = btrfs_header_level(b);
 	p->locks[level] = BTRFS_READ_LOCK;
 

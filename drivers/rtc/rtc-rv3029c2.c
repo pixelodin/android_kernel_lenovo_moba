@@ -282,6 +282,7 @@ static int rv3029_eeprom_read(struct device *dev, u8 reg,
 static int rv3029_eeprom_write(struct device *dev, u8 reg,
 			       u8 const buf[], size_t len)
 {
+<<<<<<< HEAD
 	int ret;
 	size_t i;
 	u8 tmp;
@@ -289,6 +290,15 @@ static int rv3029_eeprom_write(struct device *dev, u8 reg,
 	ret = rv3029_eeprom_enter(dev);
 	if (ret < 0)
 		return ret;
+=======
+	int ret, err;
+	size_t i;
+	u8 tmp;
+
+	err = rv3029_eeprom_enter(dev);
+	if (err < 0)
+		return err;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	for (i = 0; i < len; i++, reg++) {
 		ret = rv3029_read_regs(dev, reg, &tmp, 1);
@@ -304,11 +314,19 @@ static int rv3029_eeprom_write(struct device *dev, u8 reg,
 			break;
 	}
 
+<<<<<<< HEAD
 	ret = rv3029_eeprom_exit(dev);
 	if (ret < 0)
 		return ret;
 
 	return 0;
+=======
+	err = rv3029_eeprom_exit(dev);
+	if (err < 0)
+		return err;
+
+	return ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int rv3029_eeprom_update_bits(struct device *dev,

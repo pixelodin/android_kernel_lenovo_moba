@@ -629,6 +629,10 @@ static void reiserfs_put_super(struct super_block *s)
 	reiserfs_write_unlock(s);
 	mutex_destroy(&REISERFS_SB(s)->lock);
 	destroy_workqueue(REISERFS_SB(s)->commit_wq);
+<<<<<<< HEAD
+=======
+	kfree(REISERFS_SB(s)->s_jdev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	kfree(s->s_fs_info);
 	s->s_fs_info = NULL;
 }
@@ -1953,7 +1957,11 @@ static int reiserfs_fill_super(struct super_block *s, void *data, int silent)
 		if (!sbi->s_jdev) {
 			SWARN(silent, s, "", "Cannot allocate memory for "
 				"journal device name");
+<<<<<<< HEAD
 			goto error;
+=======
+			goto error_unlocked;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 	}
 #ifdef CONFIG_QUOTA
@@ -2052,6 +2060,11 @@ static int reiserfs_fill_super(struct super_block *s, void *data, int silent)
 	if (replay_only(s))
 		goto error_unlocked;
 
+<<<<<<< HEAD
+=======
+	s->s_xattr = reiserfs_xattr_handlers;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (bdev_read_only(s->s_bdev) && !sb_rdonly(s)) {
 		SWARN(silent, s, "clm-7000",
 		      "Detected readonly device, marking FS readonly");
@@ -2241,6 +2254,10 @@ error_unlocked:
 			kfree(qf_names[j]);
 	}
 #endif
+<<<<<<< HEAD
+=======
+	kfree(sbi->s_jdev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	kfree(sbi);
 
 	s->s_fs_info = NULL;

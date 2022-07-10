@@ -277,7 +277,11 @@ static void fdp_nci_i2c_read_device_properties(struct device *dev,
 						  *fw_vsc_cfg, len);
 
 		if (r) {
+<<<<<<< HEAD
 			devm_kfree(dev, fw_vsc_cfg);
+=======
+			devm_kfree(dev, *fw_vsc_cfg);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			goto vsc_read_err;
 		}
 	} else {

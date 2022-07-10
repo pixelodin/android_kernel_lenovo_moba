@@ -222,7 +222,11 @@ int ishtp_hid_probe(unsigned int cur_hid_dev,
 err_hid_device:
 	kfree(hid_data);
 err_hid_data:
+<<<<<<< HEAD
 	kfree(hid);
+=======
+	hid_destroy_device(hid);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return rv;
 }
 

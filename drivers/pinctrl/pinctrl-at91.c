@@ -1574,6 +1574,7 @@ void at91_pinctrl_gpio_resume(void)
 #define gpio_irq_set_wake	NULL
 #endif /* CONFIG_PM */
 
+<<<<<<< HEAD
 static struct irq_chip gpio_irqchip = {
 	.name		= "GPIO",
 	.irq_ack	= gpio_irq_ack,
@@ -1584,6 +1585,8 @@ static struct irq_chip gpio_irqchip = {
 	.irq_set_wake	= gpio_irq_set_wake,
 };
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static void gpio_irq_handler(struct irq_desc *desc)
 {
 	struct irq_chip *chip = irq_desc_get_chip(desc);
@@ -1624,12 +1627,31 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
 	struct gpio_chip	*gpiochip_prev = NULL;
 	struct at91_gpio_chip   *prev = NULL;
 	struct irq_data		*d = irq_get_irq_data(at91_gpio->pioc_virq);
+<<<<<<< HEAD
 	int ret, i;
 
 	at91_gpio->pioc_hwirq = irqd_to_hwirq(d);
 
 	/* Setup proper .irq_set_type function */
 	gpio_irqchip.irq_set_type = at91_gpio->ops->irq_type;
+=======
+	struct irq_chip		*gpio_irqchip;
+	int ret, i;
+
+	gpio_irqchip = devm_kzalloc(&pdev->dev, sizeof(*gpio_irqchip), GFP_KERNEL);
+	if (!gpio_irqchip)
+		return -ENOMEM;
+
+	at91_gpio->pioc_hwirq = irqd_to_hwirq(d);
+
+	gpio_irqchip->name = "GPIO";
+	gpio_irqchip->irq_ack = gpio_irq_ack;
+	gpio_irqchip->irq_disable = gpio_irq_mask;
+	gpio_irqchip->irq_mask = gpio_irq_mask;
+	gpio_irqchip->irq_unmask = gpio_irq_unmask;
+	gpio_irqchip->irq_set_wake = gpio_irq_set_wake,
+	gpio_irqchip->irq_set_type = at91_gpio->ops->irq_type;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Disable irqs of this PIO controller */
 	writel_relaxed(~0, at91_gpio->regbase + PIO_IDR);
@@ -1640,7 +1662,11 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
 	 * interrupt.
 	 */
 	ret = gpiochip_irqchip_add(&at91_gpio->chip,
+<<<<<<< HEAD
 				   &gpio_irqchip,
+=======
+				   gpio_irqchip,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				   0,
 				   handle_edge_irq,
 				   IRQ_TYPE_NONE);
@@ -1658,7 +1684,11 @@ static int at91_gpio_of_irq_setup(struct platform_device *pdev,
 	if (!gpiochip_prev) {
 		/* Then register the chain on the parent IRQ */
 		gpiochip_set_chained_irqchip(&at91_gpio->chip,
+<<<<<<< HEAD
 					     &gpio_irqchip,
+=======
+					     gpio_irqchip,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 					     at91_gpio->pioc_virq,
 					     gpio_irq_handler);
 		return 0;

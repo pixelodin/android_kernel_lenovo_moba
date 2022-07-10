@@ -10,4 +10,7 @@ obj-$(CONFIG_TYPEC_TPS6598X)	+= tps6598x.o
 obj-$(CONFIG_TYPEC)		+= mux/
 obj-$(CONFIG_TYPEC_TCPCI)	+= tcpci.o
 obj-$(CONFIG_TYPEC_RT1711H)	+= tcpci_rt1711h.o
+<<<<<<< HEAD
 obj-$(CONFIG_PRODUCT_MOBA)	+= FUSB_ONSEMI302/
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

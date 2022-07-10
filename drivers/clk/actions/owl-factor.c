@@ -64,11 +64,18 @@ static unsigned int _get_table_val(const struct clk_factor_table *table,
 	return val;
 }
 
+<<<<<<< HEAD
 static int clk_val_best(struct clk_hw *hw, unsigned long rate,
 			unsigned long *best_parent_rate)
 {
 	struct owl_factor *factor = hw_to_owl_factor(hw);
 	struct owl_factor_hw *factor_hw = &factor->factor_hw;
+=======
+static int owl_clk_val_best(const struct owl_factor_hw *factor_hw,
+			struct clk_hw *hw, unsigned long rate,
+			unsigned long *best_parent_rate)
+{
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	const struct clk_factor_table *clkt = factor_hw->table;
 	unsigned long parent_rate, try_parent_rate, best = 0, cur_rate;
 	unsigned long parent_rate_saved = *best_parent_rate;
@@ -126,7 +133,11 @@ long owl_factor_helper_round_rate(struct owl_clk_common *common,
 	const struct clk_factor_table *clkt = factor_hw->table;
 	unsigned int val, mul = 0, div = 1;
 
+<<<<<<< HEAD
 	val = clk_val_best(&common->hw, rate, parent_rate);
+=======
+	val = owl_clk_val_best(factor_hw, &common->hw, rate, parent_rate);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	_get_table_div_mul(clkt, val, &mul, &div);
 
 	return *parent_rate * mul / div;

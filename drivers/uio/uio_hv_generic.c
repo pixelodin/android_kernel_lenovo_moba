@@ -131,11 +131,19 @@ static int hv_uio_ring_mmap(struct file *filp, struct kobject *kobj,
 		= container_of(kobj, struct vmbus_channel, kobj);
 	struct hv_device *dev = channel->primary_channel->device_obj;
 	u16 q_idx = channel->offermsg.offer.sub_channel_index;
+<<<<<<< HEAD
+=======
+	void *ring_buffer = page_address(channel->ringbuffer_page);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	dev_dbg(&dev->device, "mmap channel %u pages %#lx at %#lx\n",
 		q_idx, vma_pages(vma), vma->vm_pgoff);
 
+<<<<<<< HEAD
 	return vm_iomap_memory(vma, virt_to_phys(channel->ringbuffer_pages),
+=======
+	return vm_iomap_memory(vma, virt_to_phys(ring_buffer),
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			       channel->ringbuffer_pagecount << PAGE_SHIFT);
 }
 
@@ -224,7 +232,11 @@ hv_uio_probe(struct hv_device *dev,
 	/* mem resources */
 	pdata->info.mem[TXRX_RING_MAP].name = "txrx_rings";
 	pdata->info.mem[TXRX_RING_MAP].addr
+<<<<<<< HEAD
 		= (uintptr_t)dev->channel->ringbuffer_pages;
+=======
+		= (uintptr_t)page_address(dev->channel->ringbuffer_page);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pdata->info.mem[TXRX_RING_MAP].size
 		= dev->channel->ringbuffer_pagecount << PAGE_SHIFT;
 	pdata->info.mem[TXRX_RING_MAP].memtype = UIO_MEM_LOGICAL;

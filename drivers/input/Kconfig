@@ -213,8 +213,11 @@ source "drivers/input/misc/Kconfig"
 
 source "drivers/input/rmi4/Kconfig"
 
+<<<<<<< HEAD
 source "drivers/input/snt8100fsr/Kconfig"
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 endif
 
 menu "Hardware I/O ports"
@@ -225,7 +228,10 @@ source "drivers/input/gameport/Kconfig"
 
 endmenu
 
+<<<<<<< HEAD
 source "drivers/input/fingerprint/Kconfig"
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 endmenu
 

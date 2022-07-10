@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2019-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #define pr_fmt(fmt) "AXI: %s(): " fmt, __func__
@@ -21,7 +25,10 @@
 #include "msm_bus_core.h"
 #include "msm_bus_rpmh.h"
 
+<<<<<<< HEAD
 #define CREATE_TRACE_POINTS
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <trace/events/trace_msm_bus.h>
 
 #define MAX_BUFF_SIZE 4096

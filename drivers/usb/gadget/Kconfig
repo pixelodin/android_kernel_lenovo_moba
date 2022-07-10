@@ -412,6 +412,10 @@ config USB_CONFIGFS_F_FS
 config USB_CONFIGFS_F_ACC
 	bool "Accessory gadget"
 	depends on USB_CONFIGFS
+<<<<<<< HEAD
+=======
+	depends on HID=y
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	select USB_F_ACC
 	help
 	  USB gadget Accessory support
@@ -615,6 +619,7 @@ config USB_CONFIGFS_F_PTP
 	  at the file level. Thus exposing the relevant content but hiding
 	  the system/restricted files.
 
+<<<<<<< HEAD
 choice
 	tristate "USB Gadget precomposed configurations"
 	default USB_ETH
@@ -645,4 +650,8 @@ source "drivers/usb/gadget/legacy/Kconfig"
 
 endchoice
 
+=======
+source "drivers/usb/gadget/legacy/Kconfig"
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 endif # USB_GADGET

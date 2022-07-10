@@ -162,10 +162,20 @@ static void cpu_map_kthread_stop(struct work_struct *work)
 static struct sk_buff *cpu_map_build_skb(struct bpf_cpu_map_entry *rcpu,
 					 struct xdp_frame *xdpf)
 {
+<<<<<<< HEAD
+=======
+	unsigned int hard_start_headroom;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	unsigned int frame_size;
 	void *pkt_data_start;
 	struct sk_buff *skb;
 
+<<<<<<< HEAD
+=======
+	/* Part of headroom was reserved to xdpf */
+	hard_start_headroom = sizeof(struct xdp_frame) +  xdpf->headroom;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* build_skb need to place skb_shared_info after SKB end, and
 	 * also want to know the memory "truesize".  Thus, need to
 	 * know the memory frame size backing xdp_buff.
@@ -183,15 +193,26 @@ static struct sk_buff *cpu_map_build_skb(struct bpf_cpu_map_entry *rcpu,
 	 * is not at a fixed memory location, with mixed length
 	 * packets, which is bad for cache-line hotness.
 	 */
+<<<<<<< HEAD
 	frame_size = SKB_DATA_ALIGN(xdpf->len) + xdpf->headroom +
 		SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
 
 	pkt_data_start = xdpf->data - xdpf->headroom;
+=======
+	frame_size = SKB_DATA_ALIGN(xdpf->len + hard_start_headroom) +
+		SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+
+	pkt_data_start = xdpf->data - hard_start_headroom;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	skb = build_skb(pkt_data_start, frame_size);
 	if (!skb)
 		return NULL;
 
+<<<<<<< HEAD
 	skb_reserve(skb, xdpf->headroom);
+=======
+	skb_reserve(skb, hard_start_headroom);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	__skb_put(skb, xdpf->len);
 	if (xdpf->metasize)
 		skb_metadata_set(skb, xdpf->metasize);
@@ -205,6 +226,12 @@ static struct sk_buff *cpu_map_build_skb(struct bpf_cpu_map_entry *rcpu,
 	 * - RX ring dev queue index	(skb_record_rx_queue)
 	 */
 
+<<<<<<< HEAD
+=======
+	/* Allow SKB to reuse area used by xdp_frame */
+	xdp_scrub_frame(xdpf);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return skb;
 }
 

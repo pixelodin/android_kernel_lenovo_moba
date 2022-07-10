@@ -778,6 +778,39 @@ iwl_mvm_tx_tso_segment(struct sk_buff *skb, unsigned int num_subframes,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static unsigned int iwl_mvm_max_amsdu_size(struct iwl_mvm *mvm,
+					   struct ieee80211_sta *sta,
+					   unsigned int tid)
+{
+	struct iwl_mvm_sta *mvmsta = iwl_mvm_sta_from_mac80211(sta);
+	enum nl80211_band band = mvmsta->vif->bss_conf.chandef.chan->band;
+	u8 ac = tid_to_mac80211_ac[tid];
+	unsigned int txf;
+	int lmac = IWL_LMAC_24G_INDEX;
+
+	if (iwl_mvm_is_cdb_supported(mvm) &&
+	    band == NL80211_BAND_5GHZ)
+		lmac = IWL_LMAC_5G_INDEX;
+
+	/* For HE redirect to trigger based fifos */
+	if (sta->he_cap.has_he && !WARN_ON(!iwl_mvm_has_new_tx_api(mvm)))
+		ac += 4;
+
+	txf = iwl_mvm_mac_ac_to_tx_fifo(mvm, ac);
+
+	/*
+	 * Don't send an AMSDU that will be longer than the TXF.
+	 * Add a security margin of 256 for the TX command + headers.
+	 * We also want to have the start of the next packet inside the
+	 * fifo to be able to send bursts.
+	 */
+	return min_t(unsigned int, mvmsta->max_amsdu_len,
+		     mvm->fwrt.smem_cfg.lmac[lmac].txfifo_size[txf] - 256);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int iwl_mvm_tx_tso(struct iwl_mvm *mvm, struct sk_buff *skb,
 			  struct ieee80211_tx_info *info,
 			  struct ieee80211_sta *sta,
@@ -790,7 +823,11 @@ static int iwl_mvm_tx_tso(struct iwl_mvm *mvm, struct sk_buff *skb,
 	u16 snap_ip_tcp, pad;
 	unsigned int dbg_max_amsdu_len;
 	netdev_features_t netdev_flags = NETIF_F_CSUM_MASK | NETIF_F_SG;
+<<<<<<< HEAD
 	u8 tid, txf;
+=======
+	u8 tid;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	snap_ip_tcp = 8 + skb_transport_header(skb) - skb_network_header(skb) +
 		tcp_hdrlen(skb);
@@ -829,6 +866,7 @@ static int iwl_mvm_tx_tso(struct iwl_mvm *mvm, struct sk_buff *skb,
 	    !(mvmsta->amsdu_enabled & BIT(tid)))
 		return iwl_mvm_tx_tso_segment(skb, 1, netdev_flags, mpdus_skb);
 
+<<<<<<< HEAD
 	max_amsdu_len = mvmsta->max_amsdu_len;
 
 	/* the Tx FIFO to which this A-MSDU will be routed */
@@ -843,6 +881,9 @@ static int iwl_mvm_tx_tso(struct iwl_mvm *mvm, struct sk_buff *skb,
 	max_amsdu_len = min_t(unsigned int, max_amsdu_len,
 			      mvm->fwrt.smem_cfg.lmac[0].txfifo_size[txf] -
 			      256);
+=======
+	max_amsdu_len = iwl_mvm_max_amsdu_size(mvm, sta, tid);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (unlikely(dbg_max_amsdu_len))
 		max_amsdu_len = min_t(unsigned int, max_amsdu_len,
@@ -1438,6 +1479,17 @@ static void iwl_mvm_rx_tx_cmd_single(struct iwl_mvm *mvm,
 			break;
 		}
 
+<<<<<<< HEAD
+=======
+		/*
+		 * If we are freeing multiple frames, mark all the frames
+		 * but the first one as acked, since they were acknowledged
+		 * before
+		 * */
+		if (skb_freed > 1)
+			info->flags |= IEEE80211_TX_STAT_ACK;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		iwl_mvm_tx_status_check_trigger(mvm, status);
 
 		info->status.rates[0].count = tx_resp->failure_frame + 1;

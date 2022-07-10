@@ -329,6 +329,12 @@ struct cached_dev {
 	 */
 	atomic_t		has_dirty;
 
+<<<<<<< HEAD
+=======
+#define BCH_CACHE_READA_ALL		0
+#define BCH_CACHE_READA_META_ONLY	1
+	unsigned int		cache_readahead_policy;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct bch_ratelimit	writeback_rate;
 	struct delayed_work	writeback_rate_update;
 
@@ -959,7 +965,11 @@ bool bch_cached_dev_error(struct cached_dev *dc);
 __printf(2, 3)
 bool bch_cache_set_error(struct cache_set *c, const char *fmt, ...);
 
+<<<<<<< HEAD
 void bch_prio_write(struct cache *ca);
+=======
+int bch_prio_write(struct cache *ca, bool wait);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 void bch_write_bdev_super(struct cached_dev *dc, struct closure *parent);
 
 extern struct workqueue_struct *bcache_wq;

@@ -899,7 +899,11 @@ static int switchtec_ntb_init_sndev(struct switchtec_ntb *sndev)
 		}
 
 		sndev->peer_partition = ffs(tpart_vec) - 1;
+<<<<<<< HEAD
 		if (!(part_map & (1 << sndev->peer_partition))) {
+=======
+		if (!(part_map & (1ULL << sndev->peer_partition))) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			dev_err(&sndev->stdev->dev,
 				"ntb target partition is not NT partition\n");
 			return -ENODEV;
@@ -1120,7 +1124,11 @@ static int crosslink_enum_partition(struct switchtec_ntb *sndev,
 
 		dev_dbg(&sndev->stdev->dev,
 			"Crosslink BAR%d addr: %llx\n",
+<<<<<<< HEAD
 			i, bar_addr);
+=======
+			i*2, bar_addr);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		if (bar_addr != bar_space * i)
 			continue;

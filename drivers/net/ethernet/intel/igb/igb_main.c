@@ -2064,7 +2064,12 @@ static void igb_check_swap_media(struct igb_adapter *adapter)
 	if ((hw->phy.media_type == e1000_media_type_copper) &&
 	    (!(connsw & E1000_CONNSW_AUTOSENSE_EN))) {
 		swap_now = true;
+<<<<<<< HEAD
 	} else if (!(connsw & E1000_CONNSW_SERDESD)) {
+=======
+	} else if ((hw->phy.media_type != e1000_media_type_copper) &&
+		   !(connsw & E1000_CONNSW_SERDESD)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/* copper signal takes time to appear */
 		if (adapter->copper_tries < 4) {
 			adapter->copper_tries++;

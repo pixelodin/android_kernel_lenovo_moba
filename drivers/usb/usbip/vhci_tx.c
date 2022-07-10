@@ -5,6 +5,10 @@
 
 #include <linux/kthread.h>
 #include <linux/slab.h>
+<<<<<<< HEAD
+=======
+#include <linux/scatterlist.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #include "usbip_common.h"
 #include "vhci.h"
@@ -50,6 +54,7 @@ static struct vhci_priv *dequeue_from_priv_tx(struct vhci_device *vdev)
 
 static int vhci_send_cmd_submit(struct vhci_device *vdev)
 {
+<<<<<<< HEAD
 	struct vhci_priv *priv = NULL;
 
 	struct msghdr msg;
@@ -57,12 +62,29 @@ static int vhci_send_cmd_submit(struct vhci_device *vdev)
 	size_t txsize;
 
 	size_t total_size = 0;
+=======
+	struct usbip_iso_packet_descriptor *iso_buffer = NULL;
+	struct vhci_priv *priv = NULL;
+	struct scatterlist *sg;
+
+	struct msghdr msg;
+	struct kvec *iov;
+	size_t txsize;
+
+	size_t total_size = 0;
+	int iovnum;
+	int err = -ENOMEM;
+	int i;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	while ((priv = dequeue_from_priv_tx(vdev)) != NULL) {
 		int ret;
 		struct urb *urb = priv->urb;
 		struct usbip_header pdu_header;
+<<<<<<< HEAD
 		struct usbip_iso_packet_descriptor *iso_buffer = NULL;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		txsize = 0;
 		memset(&pdu_header, 0, sizeof(pdu_header));
@@ -72,6 +94,7 @@ static int vhci_send_cmd_submit(struct vhci_device *vdev)
 		usbip_dbg_vhci_tx("setup txdata urb seqnum %lu\n",
 				  priv->seqnum);
 
+<<<<<<< HEAD
 		/* 1. setup usbip_header */
 		setup_cmd_submit_pdu(&pdu_header, urb);
 		usbip_header_correct_endian(&pdu_header, 1);
@@ -84,6 +107,47 @@ static int vhci_send_cmd_submit(struct vhci_device *vdev)
 		if (!usb_pipein(urb->pipe) && urb->transfer_buffer_length > 0) {
 			iov[1].iov_base = urb->transfer_buffer;
 			iov[1].iov_len  = urb->transfer_buffer_length;
+=======
+		if (urb->num_sgs && usb_pipeout(urb->pipe))
+			iovnum = 2 + urb->num_sgs;
+		else
+			iovnum = 3;
+
+		iov = kcalloc(iovnum, sizeof(*iov), GFP_KERNEL);
+		if (!iov) {
+			usbip_event_add(&vdev->ud, SDEV_EVENT_ERROR_MALLOC);
+			return -ENOMEM;
+		}
+
+		if (urb->num_sgs)
+			urb->transfer_flags |= URB_DMA_MAP_SG;
+
+		/* 1. setup usbip_header */
+		setup_cmd_submit_pdu(&pdu_header, urb);
+		usbip_header_correct_endian(&pdu_header, 1);
+		iovnum = 0;
+
+		iov[iovnum].iov_base = &pdu_header;
+		iov[iovnum].iov_len  = sizeof(pdu_header);
+		txsize += sizeof(pdu_header);
+		iovnum++;
+
+		/* 2. setup transfer buffer */
+		if (!usb_pipein(urb->pipe) && urb->transfer_buffer_length > 0) {
+			if (urb->num_sgs &&
+				      !usb_endpoint_xfer_isoc(&urb->ep->desc)) {
+				for_each_sg(urb->sg, sg, urb->num_sgs, i) {
+					iov[iovnum].iov_base = sg_virt(sg);
+					iov[iovnum].iov_len = sg->length;
+					iovnum++;
+				}
+			} else {
+				iov[iovnum].iov_base = urb->transfer_buffer;
+				iov[iovnum].iov_len  =
+						urb->transfer_buffer_length;
+				iovnum++;
+			}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			txsize += urb->transfer_buffer_length;
 		}
 
@@ -95,6 +159,7 @@ static int vhci_send_cmd_submit(struct vhci_device *vdev)
 			if (!iso_buffer) {
 				usbip_event_add(&vdev->ud,
 						SDEV_EVENT_ERROR_MALLOC);
+<<<<<<< HEAD
 				return -1;
 			}
 
@@ -113,12 +178,48 @@ static int vhci_send_cmd_submit(struct vhci_device *vdev)
 		}
 
 		kfree(iso_buffer);
+=======
+				goto err_iso_buffer;
+			}
+
+			iov[iovnum].iov_base = iso_buffer;
+			iov[iovnum].iov_len  = len;
+			iovnum++;
+			txsize += len;
+		}
+
+		ret = kernel_sendmsg(vdev->ud.tcp_socket, &msg, iov, iovnum,
+				     txsize);
+		if (ret != txsize) {
+			pr_err("sendmsg failed!, ret=%d for %zd\n", ret,
+			       txsize);
+			usbip_event_add(&vdev->ud, VDEV_EVENT_ERROR_TCP);
+			err = -EPIPE;
+			goto err_tx;
+		}
+
+		kfree(iov);
+		/* This is only for isochronous case */
+		kfree(iso_buffer);
+		iso_buffer = NULL;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		usbip_dbg_vhci_tx("send txdata\n");
 
 		total_size += txsize;
 	}
 
 	return total_size;
+<<<<<<< HEAD
+=======
+
+err_tx:
+	kfree(iso_buffer);
+err_iso_buffer:
+	kfree(iov);
+
+	return err;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static struct vhci_unlink *dequeue_from_unlink_tx(struct vhci_device *vdev)

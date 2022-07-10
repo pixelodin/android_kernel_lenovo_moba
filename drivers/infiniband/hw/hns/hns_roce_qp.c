@@ -31,6 +31,10 @@
  * SOFTWARE.
  */
 
+<<<<<<< HEAD
+=======
+#include <linux/pci.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/platform_device.h>
 #include <rdma/ib_addr.h>
 #include <rdma/ib_umem.h>
@@ -261,7 +265,10 @@ void hns_roce_qp_free(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp)
 			hns_roce_table_put(hr_dev, &qp_table->trrl_table,
 					   hr_qp->qpn);
 		hns_roce_table_put(hr_dev, &qp_table->irrl_table, hr_qp->qpn);
+<<<<<<< HEAD
 		hns_roce_table_put(hr_dev, &qp_table->qp_table, hr_qp->qpn);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 }
 EXPORT_SYMBOL_GPL(hns_roce_qp_free);
@@ -372,6 +379,19 @@ static int hns_roce_set_user_sq_size(struct hns_roce_dev *hr_dev,
 	if (hr_qp->sq.max_gs > 2)
 		hr_qp->sge.sge_cnt = roundup_pow_of_two(hr_qp->sq.wqe_cnt *
 							(hr_qp->sq.max_gs - 2));
+<<<<<<< HEAD
+=======
+
+	if ((hr_qp->sq.max_gs > 2) && (hr_dev->pci_dev->revision == 0x20)) {
+		if (hr_qp->sge.sge_cnt > hr_dev->caps.max_extend_sg) {
+			dev_err(hr_dev->dev,
+				"The extended sge cnt error! sge_cnt=%d\n",
+				hr_qp->sge.sge_cnt);
+			return -EINVAL;
+		}
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	hr_qp->sge.sge_shift = 4;
 
 	/* Get buf size, SQ and RQ  are aligned to page_szie */
@@ -465,6 +485,17 @@ static int hns_roce_set_kernel_sq_size(struct hns_roce_dev *hr_dev,
 		hr_qp->sge.sge_shift = 4;
 	}
 
+<<<<<<< HEAD
+=======
+	if ((hr_qp->sq.max_gs > 2) && hr_dev->pci_dev->revision == 0x20) {
+		if (hr_qp->sge.sge_cnt > hr_dev->caps.max_extend_sg) {
+			dev_err(dev, "The extended sge cnt error! sge_cnt=%d\n",
+				hr_qp->sge.sge_cnt);
+			return -EINVAL;
+		}
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Get buf size, SQ and RQ are aligned to PAGE_SIZE */
 	page_size = 1 << (hr_dev->caps.mtt_buf_pg_sz + PAGE_SHIFT);
 	hr_qp->sq.offset = 0;
@@ -503,7 +534,12 @@ static int hns_roce_qp_has_sq(struct ib_qp_init_attr *attr)
 static int hns_roce_qp_has_rq(struct ib_qp_init_attr *attr)
 {
 	if (attr->qp_type == IB_QPT_XRC_INI ||
+<<<<<<< HEAD
 	    attr->qp_type == IB_QPT_XRC_TGT || attr->srq)
+=======
+	    attr->qp_type == IB_QPT_XRC_TGT || attr->srq ||
+	    !attr->cap.max_recv_wr)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return 0;
 
 	return 1;
@@ -1106,14 +1142,29 @@ int hns_roce_init_qp_table(struct hns_roce_dev *hr_dev)
 {
 	struct hns_roce_qp_table *qp_table = &hr_dev->qp_table;
 	int reserved_from_top = 0;
+<<<<<<< HEAD
+=======
+	int reserved_from_bot;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int ret;
 
 	spin_lock_init(&qp_table->lock);
 	INIT_RADIX_TREE(&hr_dev->qp_table_tree, GFP_ATOMIC);
 
+<<<<<<< HEAD
 	/* A port include two SQP, six port total 12 */
 	ret = hns_roce_bitmap_init(&qp_table->bitmap, hr_dev->caps.num_qps,
 				   hr_dev->caps.num_qps - 1, SQP_NUM,
+=======
+	/* In hw v1, a port include two SQP, six ports total 12 */
+	if (hr_dev->caps.max_sq_sg <= 2)
+		reserved_from_bot = SQP_NUM;
+	else
+		reserved_from_bot = hr_dev->caps.reserved_qps;
+
+	ret = hns_roce_bitmap_init(&qp_table->bitmap, hr_dev->caps.num_qps,
+				   hr_dev->caps.num_qps - 1, reserved_from_bot,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				   reserved_from_top);
 	if (ret) {
 		dev_err(hr_dev->dev, "qp bitmap init failed!error=%d\n",

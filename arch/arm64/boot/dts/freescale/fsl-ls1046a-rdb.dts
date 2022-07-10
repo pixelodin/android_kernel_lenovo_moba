@@ -57,12 +57,20 @@
 		reg = <0x4c>;
 	};
 
+<<<<<<< HEAD
 	eeprom@56 {
+=======
+	eeprom@52 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		compatible = "atmel,24c512";
 		reg = <0x52>;
 	};
 
+<<<<<<< HEAD
 	eeprom@57 {
+=======
+	eeprom@53 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		compatible = "atmel,24c512";
 		reg = <0x53>;
 	};

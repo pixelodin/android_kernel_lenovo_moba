@@ -17,6 +17,10 @@
 	compatible = "digi,connectcore-ccxmx51-som", "fsl,imx51";
 
 	memory@90000000 {
+<<<<<<< HEAD
+=======
+		device_type = "memory";
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		reg = <0x90000000 0x08000000>;
 	};
 };

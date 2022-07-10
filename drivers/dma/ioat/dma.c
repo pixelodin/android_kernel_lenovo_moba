@@ -388,10 +388,18 @@ ioat_alloc_ring(struct dma_chan *c, int order, gfp_t flags)
 
 		descs->virt = dma_alloc_coherent(to_dev(ioat_chan),
 						 SZ_2M, &descs->hw, flags);
+<<<<<<< HEAD
 		if (!descs->virt && (i > 0)) {
 			int idx;
 
 			for (idx = 0; idx < i; idx++) {
+=======
+		if (!descs->virt) {
+			int idx;
+
+			for (idx = 0; idx < i; idx++) {
+				descs = &ioat_chan->descs[idx];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				dma_free_coherent(to_dev(ioat_chan), SZ_2M,
 						  descs->virt, descs->hw);
 				descs->virt = NULL;

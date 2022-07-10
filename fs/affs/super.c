@@ -561,6 +561,7 @@ affs_remount(struct super_block *sb, int *flags, char *data)
 	int			 root_block;
 	unsigned long		 mount_flags;
 	int			 res = 0;
+<<<<<<< HEAD
 	char			*new_opts;
 	char			 volume[32];
 	char			*prefix = NULL;
@@ -569,6 +570,11 @@ affs_remount(struct super_block *sb, int *flags, char *data)
 	if (data && !new_opts)
 		return -ENOMEM;
 
+=======
+	char			 volume[32];
+	char			*prefix = NULL;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pr_debug("%s(flags=0x%x,opts=\"%s\")\n", __func__, *flags, data);
 
 	sync_filesystem(sb);
@@ -579,7 +585,10 @@ affs_remount(struct super_block *sb, int *flags, char *data)
 			   &blocksize, &prefix, volume,
 			   &mount_flags)) {
 		kfree(prefix);
+<<<<<<< HEAD
 		kfree(new_opts);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EINVAL;
 	}
 

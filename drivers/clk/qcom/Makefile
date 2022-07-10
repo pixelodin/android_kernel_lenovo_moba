@@ -19,6 +19,10 @@ clk-qcom-$(CONFIG_QCOM_GDSC) += gdsc.o
 # Keep alphabetically sorted by config
 obj-$(CONFIG_APQ_GCC_8084) += gcc-apq8084.o
 obj-$(CONFIG_APQ_MMCC_8084) += mmcc-apq8084.o
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_CLOCK_CPU_OSM_660) += clk-cpu-osm-660.o
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 obj-$(CONFIG_IPQ_GCC_4019) += gcc-ipq4019.o
 obj-$(CONFIG_IPQ_GCC_806X) += gcc-ipq806x.o
 obj-$(CONFIG_IPQ_GCC_8074) += gcc-ipq8074.o
@@ -49,13 +53,29 @@ obj-$(CONFIG_QCOM_CLK_APCS_MSM8916) += apcs-msm8916.o
 obj-$(CONFIG_QCOM_CLK_RPM) += clk-rpm.o
 obj-$(CONFIG_QCOM_CLK_RPMH) += clk-rpmh.o
 obj-$(CONFIG_QCOM_CLK_SMD_RPM) += clk-smd-rpm.o
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_QM_DISPCC_SCUBA) += dispcc-scuba.o
+obj-$(CONFIG_QM_GCC_SCUBA) += gcc-scuba.o
+obj-$(CONFIG_QM_GPUCC_SCUBA) += gpucc-scuba.o
+obj-$(CONFIG_QM_DEBUGCC_SCUBA) += debugcc-scuba.o
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 obj-$(CONFIG_SDM_CAMCC_LAGOON) += camcc-lagoon.o
 obj-$(CONFIG_SDM_DEBUGCC_LAGOON) += debugcc-lagoon.o
 obj-$(CONFIG_SDM_DISPCC_845) += dispcc-sdm845.o
 obj-$(CONFIG_SDM_DISPCC_LAGOON) += dispcc-lagoon.o
+<<<<<<< HEAD
 obj-$(CONFIG_SDM_GCC_845) += gcc-sdm845.o
 obj-$(CONFIG_SDM_GCC_LAGOON) += gcc-lagoon.o
 obj-$(CONFIG_SDM_GPUCC_LAGOON) += gpucc-lagoon.o
+=======
+obj-$(CONFIG_SDM_GCC_660) += gcc-sdm660.o
+obj-$(CONFIG_SDM_GCC_845) += gcc-sdm845.o
+obj-$(CONFIG_SDM_GCC_LAGOON) += gcc-lagoon.o
+obj-$(CONFIG_SDM_GPUCC_660) += gpucc-sdm660.o
+obj-$(CONFIG_SDM_GPUCC_LAGOON) += gpucc-lagoon.o
+obj-$(CONFIG_SDM_MMCC_660) += mmcc-sdm660.o
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 obj-$(CONFIG_SDM_NPUCC_LAGOON) += npucc-lagoon.o
 obj-$(CONFIG_SDM_VIDEOCC_845) += videocc-sdm845.o
 obj-$(CONFIG_SDM_VIDEOCC_LAGOON) += videocc-lagoon.o
@@ -71,3 +91,7 @@ obj-$(CONFIG_SM_GPUCC_LITO) += gpucc-lito.o
 obj-$(CONFIG_SM_NPUCC_LITO) += npucc-lito.o
 obj-$(CONFIG_SM_VIDEOCC_LITO) += videocc-lito.o
 obj-$(CONFIG_SPMI_PMIC_CLKDIV) += clk-spmi-pmic-div.o
+<<<<<<< HEAD
+=======
+obj-y += mdss/
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

@@ -246,6 +246,12 @@ static int __init at91_shdwc_probe(struct platform_device *pdev)
 	if (!pdev->dev.of_node)
 		return -ENODEV;
 
+<<<<<<< HEAD
+=======
+	if (at91_shdwc)
+		return -EBUSY;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	at91_shdwc = devm_kzalloc(&pdev->dev, sizeof(*at91_shdwc), GFP_KERNEL);
 	if (!at91_shdwc)
 		return -ENOMEM;

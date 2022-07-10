@@ -11,6 +11,10 @@
 #include <linux/of.h>
 #include <linux/pinctrl/pinctrl.h>
 #include <linux/pinctrl/pinconf.h>
+<<<<<<< HEAD
+=======
+#include <linux/pinctrl/pinconf-generic.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/pinctrl/pinmux.h>
 #include <linux/pinctrl/consumer.h>
 #include <linux/pinctrl/machine.h>
@@ -73,6 +77,7 @@ static int rt2880_get_group_pins(struct pinctrl_dev *pctrldev,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int rt2880_pinctrl_dt_node_to_map(struct pinctrl_dev *pctrldev,
 					 struct device_node *np_config,
 					 struct pinctrl_map **map,
@@ -109,12 +114,19 @@ static int rt2880_pinctrl_dt_node_to_map(struct pinctrl_dev *pctrldev,
 	return 0;
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static const struct pinctrl_ops rt2880_pctrl_ops = {
 	.get_groups_count	= rt2880_get_group_count,
 	.get_group_name		= rt2880_get_group_name,
 	.get_group_pins		= rt2880_get_group_pins,
+<<<<<<< HEAD
 	.dt_node_to_map		= rt2880_pinctrl_dt_node_to_map,
 	.dt_free_map		= pinctrl_utils_free_map,
+=======
+	.dt_node_to_map		= pinconf_generic_dt_node_to_map_all,
+	.dt_free_map		= pinconf_generic_dt_free_map,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 static int rt2880_pmx_func_count(struct pinctrl_dev *pctrldev)

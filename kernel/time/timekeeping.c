@@ -1215,6 +1215,7 @@ int get_device_system_crosststamp(int (*get_time_fn)
 EXPORT_SYMBOL_GPL(get_device_system_crosststamp);
 
 /**
+<<<<<<< HEAD
  * do_gettimeofday - Returns the time of day in a timeval
  * @tv:		pointer to the timeval to be set
  *
@@ -1231,6 +1232,8 @@ void do_gettimeofday(struct timeval *tv)
 EXPORT_SYMBOL(do_gettimeofday);
 
 /**
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * do_settimeofday64 - Sets the time of day.
  * @ts:     pointer to the timespec64 variable containing the new time
  *
@@ -2177,6 +2180,7 @@ void getboottime64(struct timespec64 *ts)
 }
 EXPORT_SYMBOL_GPL(getboottime64);
 
+<<<<<<< HEAD
 unsigned long get_seconds(void)
 {
 	struct timekeeper *tk = &tk_core.timekeeper;
@@ -2185,6 +2189,8 @@ unsigned long get_seconds(void)
 }
 EXPORT_SYMBOL(get_seconds);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 void ktime_get_coarse_real_ts64(struct timespec64 *ts)
 {
 	struct timekeeper *tk = &tk_core.timekeeper;

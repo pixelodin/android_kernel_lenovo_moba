@@ -75,5 +75,9 @@ ENDPROC(__arch_copy_from_user)
 	.section .fixup,"ax"
 	.align	2
 9998:	sub	x0, end, dst			// bytes not copied
+<<<<<<< HEAD
+=======
+	uaccess_disable_not_uao x3, x4
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret
 	.previous

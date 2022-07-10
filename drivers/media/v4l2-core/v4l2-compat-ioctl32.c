@@ -1177,11 +1177,16 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
 	u32 aux_space;
 	int compatible_arg = 1;
 	long err = 0;
+<<<<<<< HEAD
+=======
+	unsigned int ncmd;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/*
 	 * 1. When struct size is different, converts the command.
 	 */
 	switch (cmd) {
+<<<<<<< HEAD
 	case VIDIOC_G_FMT32: cmd = VIDIOC_G_FMT; break;
 	case VIDIOC_S_FMT32: cmd = VIDIOC_S_FMT; break;
 	case VIDIOC_QUERYBUF32: cmd = VIDIOC_QUERYBUF; break;
@@ -1207,6 +1212,34 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
 	case VIDIOC_PREPARE_BUF32: cmd = VIDIOC_PREPARE_BUF; break;
 	case VIDIOC_G_EDID32: cmd = VIDIOC_G_EDID; break;
 	case VIDIOC_S_EDID32: cmd = VIDIOC_S_EDID; break;
+=======
+	case VIDIOC_G_FMT32: ncmd = VIDIOC_G_FMT; break;
+	case VIDIOC_S_FMT32: ncmd = VIDIOC_S_FMT; break;
+	case VIDIOC_QUERYBUF32: ncmd = VIDIOC_QUERYBUF; break;
+	case VIDIOC_G_FBUF32: ncmd = VIDIOC_G_FBUF; break;
+	case VIDIOC_S_FBUF32: ncmd = VIDIOC_S_FBUF; break;
+	case VIDIOC_QBUF32: ncmd = VIDIOC_QBUF; break;
+	case VIDIOC_DQBUF32: ncmd = VIDIOC_DQBUF; break;
+	case VIDIOC_ENUMSTD32: ncmd = VIDIOC_ENUMSTD; break;
+	case VIDIOC_ENUMINPUT32: ncmd = VIDIOC_ENUMINPUT; break;
+	case VIDIOC_TRY_FMT32: ncmd = VIDIOC_TRY_FMT; break;
+	case VIDIOC_G_EXT_CTRLS32: ncmd = VIDIOC_G_EXT_CTRLS; break;
+	case VIDIOC_S_EXT_CTRLS32: ncmd = VIDIOC_S_EXT_CTRLS; break;
+	case VIDIOC_TRY_EXT_CTRLS32: ncmd = VIDIOC_TRY_EXT_CTRLS; break;
+	case VIDIOC_DQEVENT32: ncmd = VIDIOC_DQEVENT; break;
+	case VIDIOC_OVERLAY32: ncmd = VIDIOC_OVERLAY; break;
+	case VIDIOC_STREAMON32: ncmd = VIDIOC_STREAMON; break;
+	case VIDIOC_STREAMOFF32: ncmd = VIDIOC_STREAMOFF; break;
+	case VIDIOC_G_INPUT32: ncmd = VIDIOC_G_INPUT; break;
+	case VIDIOC_S_INPUT32: ncmd = VIDIOC_S_INPUT; break;
+	case VIDIOC_G_OUTPUT32: ncmd = VIDIOC_G_OUTPUT; break;
+	case VIDIOC_S_OUTPUT32: ncmd = VIDIOC_S_OUTPUT; break;
+	case VIDIOC_CREATE_BUFS32: ncmd = VIDIOC_CREATE_BUFS; break;
+	case VIDIOC_PREPARE_BUF32: ncmd = VIDIOC_PREPARE_BUF; break;
+	case VIDIOC_G_EDID32: ncmd = VIDIOC_G_EDID; break;
+	case VIDIOC_S_EDID32: ncmd = VIDIOC_S_EDID; break;
+	default: ncmd = cmd; break;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	/*
@@ -1215,11 +1248,19 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
 	 * argument into it.
 	 */
 	switch (cmd) {
+<<<<<<< HEAD
 	case VIDIOC_OVERLAY:
 	case VIDIOC_STREAMON:
 	case VIDIOC_STREAMOFF:
 	case VIDIOC_S_INPUT:
 	case VIDIOC_S_OUTPUT:
+=======
+	case VIDIOC_OVERLAY32:
+	case VIDIOC_STREAMON32:
+	case VIDIOC_STREAMOFF32:
+	case VIDIOC_S_INPUT32:
+	case VIDIOC_S_OUTPUT32:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		err = alloc_userspace(sizeof(unsigned int), 0, &new_p64);
 		if (!err && assign_in_user((unsigned int __user *)new_p64,
 					   (compat_uint_t __user *)p32))
@@ -1227,23 +1268,39 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
 		compatible_arg = 0;
 		break;
 
+<<<<<<< HEAD
 	case VIDIOC_G_INPUT:
 	case VIDIOC_G_OUTPUT:
+=======
+	case VIDIOC_G_INPUT32:
+	case VIDIOC_G_OUTPUT32:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		err = alloc_userspace(sizeof(unsigned int), 0, &new_p64);
 		compatible_arg = 0;
 		break;
 
+<<<<<<< HEAD
 	case VIDIOC_G_EDID:
 	case VIDIOC_S_EDID:
+=======
+	case VIDIOC_G_EDID32:
+	case VIDIOC_S_EDID32:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		err = alloc_userspace(sizeof(struct v4l2_edid), 0, &new_p64);
 		if (!err)
 			err = get_v4l2_edid32(new_p64, p32);
 		compatible_arg = 0;
 		break;
 
+<<<<<<< HEAD
 	case VIDIOC_G_FMT:
 	case VIDIOC_S_FMT:
 	case VIDIOC_TRY_FMT:
+=======
+	case VIDIOC_G_FMT32:
+	case VIDIOC_S_FMT32:
+	case VIDIOC_TRY_FMT32:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		err = bufsize_v4l2_format(p32, &aux_space);
 		if (!err)
 			err = alloc_userspace(sizeof(struct v4l2_format),
@@ -1256,7 +1313,11 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
 		compatible_arg = 0;
 		break;
 
+<<<<<<< HEAD
 	case VIDIOC_CREATE_BUFS:
+=======
+	case VIDIOC_CREATE_BUFS32:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		err = bufsize_v4l2_create(p32, &aux_space);
 		if (!err)
 			err = alloc_userspace(sizeof(struct v4l2_create_buffers),
@@ -1269,10 +1330,17 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
 		compatible_arg = 0;
 		break;
 
+<<<<<<< HEAD
 	case VIDIOC_PREPARE_BUF:
 	case VIDIOC_QUERYBUF:
 	case VIDIOC_QBUF:
 	case VIDIOC_DQBUF:
+=======
+	case VIDIOC_PREPARE_BUF32:
+	case VIDIOC_QUERYBUF32:
+	case VIDIOC_QBUF32:
+	case VIDIOC_DQBUF32:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		err = bufsize_v4l2_buffer(p32, &aux_space);
 		if (!err)
 			err = alloc_userspace(sizeof(struct v4l2_buffer),
@@ -1285,7 +1353,11 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
 		compatible_arg = 0;
 		break;
 
+<<<<<<< HEAD
 	case VIDIOC_S_FBUF:
+=======
+	case VIDIOC_S_FBUF32:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		err = alloc_userspace(sizeof(struct v4l2_framebuffer), 0,
 				      &new_p64);
 		if (!err)
@@ -1293,13 +1365,21 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
 		compatible_arg = 0;
 		break;
 
+<<<<<<< HEAD
 	case VIDIOC_G_FBUF:
+=======
+	case VIDIOC_G_FBUF32:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		err = alloc_userspace(sizeof(struct v4l2_framebuffer), 0,
 				      &new_p64);
 		compatible_arg = 0;
 		break;
 
+<<<<<<< HEAD
 	case VIDIOC_ENUMSTD:
+=======
+	case VIDIOC_ENUMSTD32:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		err = alloc_userspace(sizeof(struct v4l2_standard), 0,
 				      &new_p64);
 		if (!err)
@@ -1307,16 +1387,26 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
 		compatible_arg = 0;
 		break;
 
+<<<<<<< HEAD
 	case VIDIOC_ENUMINPUT:
+=======
+	case VIDIOC_ENUMINPUT32:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		err = alloc_userspace(sizeof(struct v4l2_input), 0, &new_p64);
 		if (!err)
 			err = get_v4l2_input32(new_p64, p32);
 		compatible_arg = 0;
 		break;
 
+<<<<<<< HEAD
 	case VIDIOC_G_EXT_CTRLS:
 	case VIDIOC_S_EXT_CTRLS:
 	case VIDIOC_TRY_EXT_CTRLS:
+=======
+	case VIDIOC_G_EXT_CTRLS32:
+	case VIDIOC_S_EXT_CTRLS32:
+	case VIDIOC_TRY_EXT_CTRLS32:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		err = bufsize_v4l2_ext_controls(p32, &aux_space);
 		if (!err)
 			err = alloc_userspace(sizeof(struct v4l2_ext_controls),
@@ -1328,7 +1418,11 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
 		}
 		compatible_arg = 0;
 		break;
+<<<<<<< HEAD
 	case VIDIOC_DQEVENT:
+=======
+	case VIDIOC_DQEVENT32:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		err = alloc_userspace(sizeof(struct v4l2_event), 0, &new_p64);
 		compatible_arg = 0;
 		break;
@@ -1346,9 +1440,15 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
 	 * Otherwise, it will pass the newly allocated @new_p64 argument.
 	 */
 	if (compatible_arg)
+<<<<<<< HEAD
 		err = native_ioctl(file, cmd, (unsigned long)p32);
 	else
 		err = native_ioctl(file, cmd, (unsigned long)new_p64);
+=======
+		err = native_ioctl(file, ncmd, (unsigned long)p32);
+	else
+		err = native_ioctl(file, ncmd, (unsigned long)new_p64);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (err == -ENOTTY)
 		return err;
@@ -1364,6 +1464,7 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
 	 * the blocks to maximum allowed value.
 	 */
 	switch (cmd) {
+<<<<<<< HEAD
 	case VIDIOC_G_EXT_CTRLS:
 	case VIDIOC_S_EXT_CTRLS:
 	case VIDIOC_TRY_EXT_CTRLS:
@@ -1371,6 +1472,15 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
 			err = -EFAULT;
 		break;
 	case VIDIOC_S_EDID:
+=======
+	case VIDIOC_G_EXT_CTRLS32:
+	case VIDIOC_S_EXT_CTRLS32:
+	case VIDIOC_TRY_EXT_CTRLS32:
+		if (put_v4l2_ext_controls32(file, new_p64, p32))
+			err = -EFAULT;
+		break;
+	case VIDIOC_S_EDID32:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (put_v4l2_edid32(new_p64, p32))
 			err = -EFAULT;
 		break;
@@ -1383,15 +1493,23 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
 	 * the original 32 bits structure.
 	 */
 	switch (cmd) {
+<<<<<<< HEAD
 	case VIDIOC_S_INPUT:
 	case VIDIOC_S_OUTPUT:
 	case VIDIOC_G_INPUT:
 	case VIDIOC_G_OUTPUT:
+=======
+	case VIDIOC_S_INPUT32:
+	case VIDIOC_S_OUTPUT32:
+	case VIDIOC_G_INPUT32:
+	case VIDIOC_G_OUTPUT32:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (assign_in_user((compat_uint_t __user *)p32,
 				   ((unsigned int __user *)new_p64)))
 			err = -EFAULT;
 		break;
 
+<<<<<<< HEAD
 	case VIDIOC_G_FBUF:
 		err = put_v4l2_framebuffer32(new_p64, p32);
 		break;
@@ -1426,6 +1544,42 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
 		break;
 
 	case VIDIOC_ENUMINPUT:
+=======
+	case VIDIOC_G_FBUF32:
+		err = put_v4l2_framebuffer32(new_p64, p32);
+		break;
+
+	case VIDIOC_DQEVENT32:
+		err = put_v4l2_event32(new_p64, p32);
+		break;
+
+	case VIDIOC_G_EDID32:
+		err = put_v4l2_edid32(new_p64, p32);
+		break;
+
+	case VIDIOC_G_FMT32:
+	case VIDIOC_S_FMT32:
+	case VIDIOC_TRY_FMT32:
+		err = put_v4l2_format32(new_p64, p32);
+		break;
+
+	case VIDIOC_CREATE_BUFS32:
+		err = put_v4l2_create32(new_p64, p32);
+		break;
+
+	case VIDIOC_PREPARE_BUF32:
+	case VIDIOC_QUERYBUF32:
+	case VIDIOC_QBUF32:
+	case VIDIOC_DQBUF32:
+		err = put_v4l2_buffer32(new_p64, p32);
+		break;
+
+	case VIDIOC_ENUMSTD32:
+		err = put_v4l2_standard32(new_p64, p32);
+		break;
+
+	case VIDIOC_ENUMINPUT32:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		err = put_v4l2_input32(new_p64, p32);
 		break;
 	}

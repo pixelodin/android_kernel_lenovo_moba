@@ -196,12 +196,20 @@
 			clock-names = "fck";
 			#address-cells = <1>;
 			#size-cells = <1>;
+<<<<<<< HEAD
 			ranges = <0x0 0x58000 0x4000>;
+=======
+			ranges = <0x0 0x58000 0x5000>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 			hsi: hsi@0 {
 				compatible = "ti,omap4-hsi";
 				reg = <0x0 0x4000>,
+<<<<<<< HEAD
 				      <0x4a05c000 0x1000>;
+=======
+				      <0x5000 0x1000>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				reg-names = "sys", "gdd";
 
 				clocks = <&l3_init_clkctrl OMAP4_HSI_CLKCTRL 0>;

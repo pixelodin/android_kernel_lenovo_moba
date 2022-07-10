@@ -140,6 +140,10 @@ static int ten_thousand = 10000;
 #ifdef CONFIG_PERF_EVENTS
 static int six_hundred_forty_kb = 640 * 1024;
 #endif
+<<<<<<< HEAD
+=======
+static int max_kswapd_threads = MAX_KSWAPD_THREADS;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int two_hundred_fifty_five = 255;
 static int __maybe_unused two_hundred_million = 200000000;
 
@@ -147,6 +151,18 @@ static int __maybe_unused two_hundred_million = 200000000;
 const int sched_user_hint_max = 1000;
 static unsigned int ns_per_sec = NSEC_PER_SEC;
 static unsigned int one_hundred_thousand = 100000;
+<<<<<<< HEAD
+=======
+/*
+ * CFS task prio range is [100 ... 139]
+ * 120 is the default prio.
+ * RTG boost range is [100 ... 119] because giving
+ * boost for [120 .. 139] does not make sense.
+ * 99 means disabled and it is the default value.
+ */
+static unsigned int min_cfs_boost_prio = 99;
+static unsigned int max_cfs_boost_prio = 119;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif
 /* this is needed for the proc_doulongvec_minmax of vm_dirty_bytes */
 static unsigned long dirty_bytes_min = 2 * PAGE_SIZE;
@@ -558,7 +574,29 @@ static struct ctl_table kern_table[] = {
 		.mode		= 0644,
 		.proc_handler   = proc_dointvec_minmax,
 		.extra1		= &zero,
+<<<<<<< HEAD
 		.extra2		= &two,
+=======
+		.extra2		= &four,
+	},
+	{
+		.procname	= "walt_rtg_cfs_boost_prio",
+		.data		= &sysctl_walt_rtg_cfs_boost_prio,
+		.maxlen		= sizeof(unsigned int),
+		.mode		= 0644,
+		.proc_handler   = proc_dointvec_minmax,
+		.extra1		= &min_cfs_boost_prio,
+		.extra2		= &max_cfs_boost_prio,
+	},
+	{
+		.procname	= "walt_low_latency_task_boost",
+		.data		= &sysctl_walt_low_latency_task_boost,
+		.maxlen		= sizeof(unsigned int),
+		.mode		= 0644,
+		.proc_handler   = proc_dointvec_minmax,
+		.extra1		= &zero,
+		.extra2		= &one,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 #endif
 #ifdef CONFIG_SCHED_DEBUG
@@ -701,6 +739,25 @@ static struct ctl_table kern_table[] = {
 		.mode		= 0644,
 		.proc_handler	= sched_rr_handler,
 	},
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_UCLAMP_TASK
+	{
+		.procname	= "sched_util_clamp_min",
+		.data		= &sysctl_sched_uclamp_util_min,
+		.maxlen		= sizeof(unsigned int),
+		.mode		= 0644,
+		.proc_handler	= sysctl_sched_uclamp_handler,
+	},
+	{
+		.procname	= "sched_util_clamp_max",
+		.data		= &sysctl_sched_uclamp_util_max,
+		.maxlen		= sizeof(unsigned int),
+		.mode		= 0644,
+		.proc_handler	= sysctl_sched_uclamp_handler,
+	},
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #ifdef CONFIG_SCHED_AUTOGROUP
 	{
 		.procname	= "sched_autogroup_enabled",
@@ -738,6 +795,20 @@ static struct ctl_table kern_table[] = {
 		.extra1		= &zero,
 		.extra2		= &two_hundred_fifty_five,
 	},
+<<<<<<< HEAD
+=======
+#if defined(CONFIG_ENERGY_MODEL) && defined(CONFIG_CPU_FREQ_GOV_SCHEDUTIL)
+	{
+		.procname	= "sched_energy_aware",
+		.data		= &sysctl_sched_energy_aware,
+		.maxlen		= sizeof(unsigned int),
+		.mode		= 0644,
+		.proc_handler	= sched_energy_aware_handler,
+		.extra1		= &zero,
+		.extra2		= &one,
+	},
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #ifdef CONFIG_PROVE_LOCKING
 	{
 		.procname	= "prove_locking",
@@ -1724,7 +1795,11 @@ static struct ctl_table vm_table[] = {
 		.procname	= "drop_caches",
 		.data		= &sysctl_drop_caches,
 		.maxlen		= sizeof(int),
+<<<<<<< HEAD
 		.mode		= 0644,
+=======
+		.mode		= 0200,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.proc_handler	= drop_caches_sysctl_handler,
 		.extra1		= &one,
 		.extra2		= &four,
@@ -1774,6 +1849,18 @@ static struct ctl_table vm_table[] = {
 		.extra1		= &zero,
 	},
 	{
+<<<<<<< HEAD
+=======
+		.procname	= "kswapd_threads",
+		.data		= &kswapd_threads,
+		.maxlen		= sizeof(kswapd_threads),
+		.mode		= 0644,
+		.proc_handler	= kswapd_threads_sysctl_handler,
+		.extra1		= &one,
+		.extra2		= &max_kswapd_threads,
+	},
+	{
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.procname	= "watermark_scale_factor",
 		.data		= &watermark_scale_factor,
 		.maxlen		= sizeof(watermark_scale_factor),

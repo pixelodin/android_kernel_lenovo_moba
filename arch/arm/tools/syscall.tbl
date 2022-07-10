@@ -414,3 +414,8 @@
 397	common	statx			sys_statx
 398	common	rseq			sys_rseq
 399	common	io_pgetevents		sys_io_pgetevents
+<<<<<<< HEAD
+=======
+424	common  pidfd_send_signal	sys_pidfd_send_signal
+434	common	pidfd_open		sys_pidfd_open
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

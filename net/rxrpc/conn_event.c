@@ -453,16 +453,24 @@ again:
 /*
  * connection-level event processor
  */
+<<<<<<< HEAD
 void rxrpc_process_connection(struct work_struct *work)
 {
 	struct rxrpc_connection *conn =
 		container_of(work, struct rxrpc_connection, processor);
+=======
+static void rxrpc_do_process_connection(struct rxrpc_connection *conn)
+{
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct sk_buff *skb;
 	u32 abort_code = RX_PROTOCOL_ERROR;
 	int ret;
 
+<<<<<<< HEAD
 	rxrpc_see_connection(conn);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (test_and_clear_bit(RXRPC_CONN_EV_CHALLENGE, &conn->events))
 		rxrpc_secure_connection(conn);
 
@@ -490,18 +498,48 @@ void rxrpc_process_connection(struct work_struct *work)
 		}
 	}
 
+<<<<<<< HEAD
 out:
 	rxrpc_put_connection(conn);
 	_leave("");
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return;
 
 requeue_and_leave:
 	skb_queue_head(&conn->rx_queue, skb);
+<<<<<<< HEAD
 	goto out;
+=======
+	return;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 protocol_error:
 	if (rxrpc_abort_connection(conn, ret, abort_code) < 0)
 		goto requeue_and_leave;
 	rxrpc_free_skb(skb, rxrpc_skb_rx_freed);
+<<<<<<< HEAD
 	goto out;
 }
+=======
+	return;
+}
+
+void rxrpc_process_connection(struct work_struct *work)
+{
+	struct rxrpc_connection *conn =
+		container_of(work, struct rxrpc_connection, processor);
+
+	rxrpc_see_connection(conn);
+
+	if (__rxrpc_use_local(conn->params.local)) {
+		rxrpc_do_process_connection(conn);
+		rxrpc_unuse_local(conn->params.local);
+	}
+
+	rxrpc_put_connection(conn);
+	_leave("");
+	return;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

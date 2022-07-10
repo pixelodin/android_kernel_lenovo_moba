@@ -28,6 +28,7 @@
 #include <linux/cdev.h>
 #include "input-compat.h"
 
+<<<<<<< HEAD
 enum evdev_clock_type {
 	EV_CLK_REAL = 0,
 	EV_CLK_MONO,
@@ -35,6 +36,8 @@ enum evdev_clock_type {
 	EV_CLK_MAX
 };
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct evdev {
 	int open;
 	struct input_handle handle;
@@ -56,7 +59,11 @@ struct evdev_client {
 	struct fasync_struct *fasync;
 	struct evdev *evdev;
 	struct list_head node;
+<<<<<<< HEAD
 	unsigned int clk_type;
+=======
+	enum input_clock_type clk_type;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	bool revoked;
 	unsigned long *evmasks[EV_CNT];
 	unsigned int bufsize;
@@ -152,6 +159,7 @@ static void __evdev_flush_queue(struct evdev_client *client, unsigned int type)
 
 static void __evdev_queue_syn_dropped(struct evdev_client *client)
 {
+<<<<<<< HEAD
 	struct input_event ev;
 	ktime_t time;
 	struct timespec64 ts;
@@ -163,6 +171,12 @@ static void __evdev_queue_syn_dropped(struct evdev_client *client)
 				ktime_get_boottime();
 
 	ts = ktime_to_timespec64(time);
+=======
+	ktime_t *ev_time = input_get_timestamp(client->evdev->handle.dev);
+	struct timespec64 ts = ktime_to_timespec64(ev_time[client->clk_type]);
+	struct input_event ev;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ev.input_event_sec = ts.tv_sec;
 	ev.input_event_usec = ts.tv_nsec / NSEC_PER_USEC;
 	ev.type = EV_SYN;
@@ -191,11 +205,16 @@ static void evdev_queue_syn_dropped(struct evdev_client *client)
 static int evdev_set_clk_type(struct evdev_client *client, unsigned int clkid)
 {
 	unsigned long flags;
+<<<<<<< HEAD
 	unsigned int clk_type;
+=======
+	enum input_clock_type clk_type;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	switch (clkid) {
 
 	case CLOCK_REALTIME:
+<<<<<<< HEAD
 		clk_type = EV_CLK_REAL;
 		break;
 	case CLOCK_MONOTONIC:
@@ -203,6 +222,15 @@ static int evdev_set_clk_type(struct evdev_client *client, unsigned int clkid)
 		break;
 	case CLOCK_BOOTTIME:
 		clk_type = EV_CLK_BOOT;
+=======
+		clk_type = INPUT_CLK_REAL;
+		break;
+	case CLOCK_MONOTONIC:
+		clk_type = INPUT_CLK_MONO;
+		break;
+	case CLOCK_BOOTTIME:
+		clk_type = INPUT_CLK_BOOT;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 	default:
 		return -EINVAL;
@@ -241,6 +269,7 @@ static void __pass_event(struct evdev_client *client,
 		 */
 		client->tail = (client->head - 2) & (client->bufsize - 1);
 
+<<<<<<< HEAD
 		client->buffer[client->tail].input_event_sec =
 						event->input_event_sec;
 		client->buffer[client->tail].input_event_usec =
@@ -248,6 +277,15 @@ static void __pass_event(struct evdev_client *client,
 		client->buffer[client->tail].type = EV_SYN;
 		client->buffer[client->tail].code = SYN_DROPPED;
 		client->buffer[client->tail].value = 0;
+=======
+		client->buffer[client->tail] = (struct input_event) {
+			.input_event_sec = event->input_event_sec,
+			.input_event_usec = event->input_event_usec,
+			.type = EV_SYN,
+			.code = SYN_DROPPED,
+			.value = 0,
+		};
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		client->packet_head = client->tail;
 	}
@@ -310,12 +348,16 @@ static void evdev_events(struct input_handle *handle,
 {
 	struct evdev *evdev = handle->private;
 	struct evdev_client *client;
+<<<<<<< HEAD
 	ktime_t ev_time[EV_CLK_MAX];
 
 	ev_time[EV_CLK_MONO] = ktime_get();
 	ev_time[EV_CLK_REAL] = ktime_mono_to_real(ev_time[EV_CLK_MONO]);
 	ev_time[EV_CLK_BOOT] = ktime_mono_to_any(ev_time[EV_CLK_MONO],
 						 TK_OFFS_BOOT);
+=======
+	ktime_t *ev_time = input_get_timestamp(handle->dev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	rcu_read_lock();
 

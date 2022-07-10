@@ -5112,6 +5112,10 @@ int x86_decode_insn(struct x86_emulate_ctxt *ctxt, void *insn, int insn_len)
 	ctxt->fetch.ptr = ctxt->fetch.data;
 	ctxt->fetch.end = ctxt->fetch.data + insn_len;
 	ctxt->opcode_len = 1;
+<<<<<<< HEAD
+=======
+	ctxt->intercept = x86_intercept_none;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (insn_len > 0)
 		memcpy(ctxt->fetch.data, insn, insn_len);
 	else {
@@ -5164,6 +5168,7 @@ int x86_decode_insn(struct x86_emulate_ctxt *ctxt, void *insn, int insn_len)
 				ctxt->ad_bytes = def_ad_bytes ^ 6;
 			break;
 		case 0x26:	/* ES override */
+<<<<<<< HEAD
 		case 0x2e:	/* CS override */
 		case 0x36:	/* SS override */
 		case 0x3e:	/* DS override */
@@ -5174,6 +5179,30 @@ int x86_decode_insn(struct x86_emulate_ctxt *ctxt, void *insn, int insn_len)
 		case 0x65:	/* GS override */
 			has_seg_override = true;
 			ctxt->seg_override = ctxt->b & 7;
+=======
+			has_seg_override = true;
+			ctxt->seg_override = VCPU_SREG_ES;
+			break;
+		case 0x2e:	/* CS override */
+			has_seg_override = true;
+			ctxt->seg_override = VCPU_SREG_CS;
+			break;
+		case 0x36:	/* SS override */
+			has_seg_override = true;
+			ctxt->seg_override = VCPU_SREG_SS;
+			break;
+		case 0x3e:	/* DS override */
+			has_seg_override = true;
+			ctxt->seg_override = VCPU_SREG_DS;
+			break;
+		case 0x64:	/* FS override */
+			has_seg_override = true;
+			ctxt->seg_override = VCPU_SREG_FS;
+			break;
+		case 0x65:	/* GS override */
+			has_seg_override = true;
+			ctxt->seg_override = VCPU_SREG_GS;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			break;
 		case 0x40 ... 0x4f: /* REX */
 			if (mode != X86EMUL_MODE_PROT64)
@@ -5257,10 +5286,22 @@ done_prefixes:
 			}
 			break;
 		case Escape:
+<<<<<<< HEAD
 			if (ctxt->modrm > 0xbf)
 				opcode = opcode.u.esc->high[ctxt->modrm - 0xc0];
 			else
 				opcode = opcode.u.esc->op[(ctxt->modrm >> 3) & 7];
+=======
+			if (ctxt->modrm > 0xbf) {
+				size_t size = ARRAY_SIZE(opcode.u.esc->high);
+				u32 index = array_index_nospec(
+					ctxt->modrm - 0xc0, size);
+
+				opcode = opcode.u.esc->high[index];
+			} else {
+				opcode = opcode.u.esc->op[(ctxt->modrm >> 3) & 7];
+			}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			break;
 		case InstrDual:
 			if ((ctxt->modrm >> 6) == 3)

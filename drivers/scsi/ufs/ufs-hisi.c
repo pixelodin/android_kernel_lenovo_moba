@@ -540,6 +540,17 @@ static int ufs_hisi_init_common(struct ufs_hba *hba)
 	if (!host)
 		return -ENOMEM;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Inline crypto is currently broken with ufs-hisi because the keyslots
+	 * overlap with the vendor-specific SYS CTRL registers -- and even if
+	 * software uses only non-overlapping keyslots, the kernel crashes when
+	 * programming a key or a UFS error occurs on the first encrypted I/O.
+	 */
+	hba->quirks |= UFSHCD_QUIRK_BROKEN_CRYPTO;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	host->hba = hba;
 	ufshcd_set_variant(hba, host);
 

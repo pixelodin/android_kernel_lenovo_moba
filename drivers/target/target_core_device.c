@@ -85,7 +85,11 @@ transport_lookup_cmd_lun(struct se_cmd *se_cmd, u64 unpacked_lun)
 			goto out_unlock;
 		}
 
+<<<<<<< HEAD
 		se_cmd->se_lun = rcu_dereference(deve->se_lun);
+=======
+		se_cmd->se_lun = se_lun;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		se_cmd->pr_res_key = deve->pr_res_key;
 		se_cmd->orig_fe_lun = unpacked_lun;
 		se_cmd->se_cmd_flags |= SCF_SE_LUN_CMD;
@@ -176,7 +180,11 @@ int transport_lookup_tmr_lun(struct se_cmd *se_cmd, u64 unpacked_lun)
 			goto out_unlock;
 		}
 
+<<<<<<< HEAD
 		se_cmd->se_lun = rcu_dereference(deve->se_lun);
+=======
+		se_cmd->se_lun = se_lun;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		se_cmd->pr_res_key = deve->pr_res_key;
 		se_cmd->orig_fe_lun = unpacked_lun;
 		se_cmd->se_cmd_flags |= SCF_SE_LUN_CMD;
@@ -1129,6 +1137,7 @@ passthrough_parse_cdb(struct se_cmd *cmd,
 	unsigned int size;
 
 	/*
+<<<<<<< HEAD
 	 * Clear a lun set in the cdb if the initiator talking to use spoke
 	 * and old standards version, as we can't assume the underlying device
 	 * won't choke up on it.
@@ -1150,6 +1159,8 @@ passthrough_parse_cdb(struct se_cmd *cmd,
 	}
 
 	/*
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	 * For REPORT LUNS we always need to emulate the response, for everything
 	 * else, pass it up.
 	 */

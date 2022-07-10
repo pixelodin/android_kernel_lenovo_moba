@@ -274,6 +274,10 @@ struct netsec_priv {
 	struct clk *clk;
 	u32 msg_enable;
 	u32 freq;
+<<<<<<< HEAD
+=======
+	u32 phy_addr;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	bool rx_cksum_offload_flag;
 };
 
@@ -431,9 +435,18 @@ static int netsec_mac_update_to_phy_state(struct netsec_priv *priv)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int netsec_phy_write(struct mii_bus *bus,
 			    int phy_addr, int reg, u16 val)
 {
+=======
+static int netsec_phy_read(struct mii_bus *bus, int phy_addr, int reg_addr);
+
+static int netsec_phy_write(struct mii_bus *bus,
+			    int phy_addr, int reg, u16 val)
+{
+	int status;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct netsec_priv *priv = bus->priv;
 
 	if (netsec_mac_write(priv, GMAC_REG_GDR, val))
@@ -446,8 +459,24 @@ static int netsec_phy_write(struct mii_bus *bus,
 			      GMAC_REG_SHIFT_CR_GAR)))
 		return -ETIMEDOUT;
 
+<<<<<<< HEAD
 	return netsec_mac_wait_while_busy(priv, GMAC_REG_GAR,
 					  NETSEC_GMAC_GAR_REG_GB);
+=======
+	status = netsec_mac_wait_while_busy(priv, GMAC_REG_GAR,
+					    NETSEC_GMAC_GAR_REG_GB);
+
+	/* Developerbox implements RTL8211E PHY and there is
+	 * a compatibility problem with F_GMAC4.
+	 * RTL8211E expects MDC clock must be kept toggling for several
+	 * clock cycle with MDIO high before entering the IDLE state.
+	 * To meet this requirement, netsec driver needs to issue dummy
+	 * read(e.g. read PHYID1(offset 0x2) register) right after write.
+	 */
+	netsec_phy_read(bus, phy_addr, MII_PHYSID1);
+
+	return status;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int netsec_phy_read(struct mii_bus *bus, int phy_addr, int reg_addr)
@@ -1346,11 +1375,19 @@ static int netsec_netdev_stop(struct net_device *ndev)
 	netsec_uninit_pkt_dring(priv, NETSEC_RING_TX);
 	netsec_uninit_pkt_dring(priv, NETSEC_RING_RX);
 
+<<<<<<< HEAD
 	ret = netsec_reset_hardware(priv, false);
 
 	phy_stop(ndev->phydev);
 	phy_disconnect(ndev->phydev);
 
+=======
+	phy_stop(ndev->phydev);
+	phy_disconnect(ndev->phydev);
+
+	ret = netsec_reset_hardware(priv, false);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pm_runtime_put_sync(priv->dev);
 
 	return ret;
@@ -1360,6 +1397,10 @@ static int netsec_netdev_init(struct net_device *ndev)
 {
 	struct netsec_priv *priv = netdev_priv(ndev);
 	int ret;
+<<<<<<< HEAD
+=======
+	u16 data;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	ret = netsec_alloc_dring(priv, NETSEC_RING_TX);
 	if (ret)
@@ -1369,6 +1410,14 @@ static int netsec_netdev_init(struct net_device *ndev)
 	if (ret)
 		goto err1;
 
+<<<<<<< HEAD
+=======
+	/* set phy power down */
+	data = netsec_phy_read(priv->mii_bus, priv->phy_addr, MII_BMCR) |
+		BMCR_PDOWN;
+	netsec_phy_write(priv->mii_bus, priv->phy_addr, MII_BMCR, data);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = netsec_reset_hardware(priv, true);
 	if (ret)
 		goto err2;
@@ -1418,7 +1467,11 @@ static const struct net_device_ops netsec_netdev_ops = {
 };
 
 static int netsec_of_probe(struct platform_device *pdev,
+<<<<<<< HEAD
 			   struct netsec_priv *priv)
+=======
+			   struct netsec_priv *priv, u32 *phy_addr)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	priv->phy_np = of_parse_phandle(pdev->dev.of_node, "phy-handle", 0);
 	if (!priv->phy_np) {
@@ -1426,6 +1479,11 @@ static int netsec_of_probe(struct platform_device *pdev,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	*phy_addr = of_mdio_parse_addr(&pdev->dev, priv->phy_np);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	priv->clk = devm_clk_get(&pdev->dev, NULL); /* get by 'phy_ref_clk' */
 	if (IS_ERR(priv->clk)) {
 		dev_err(&pdev->dev, "phy_ref_clk not found\n");
@@ -1581,7 +1639,11 @@ static int netsec_probe(struct platform_device *pdev)
 			   NETIF_MSG_LINK | NETIF_MSG_PROBE;
 
 	priv->phy_interface = device_get_phy_mode(&pdev->dev);
+<<<<<<< HEAD
 	if (priv->phy_interface < 0) {
+=======
+	if ((int)priv->phy_interface < 0) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		dev_err(&pdev->dev, "missing required property 'phy-mode'\n");
 		ret = -ENODEV;
 		goto free_ndev;
@@ -1626,12 +1688,21 @@ static int netsec_probe(struct platform_device *pdev)
 	}
 
 	if (dev_of_node(&pdev->dev))
+<<<<<<< HEAD
 		ret = netsec_of_probe(pdev, priv);
+=======
+		ret = netsec_of_probe(pdev, priv, &phy_addr);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	else
 		ret = netsec_acpi_probe(pdev, priv, &phy_addr);
 	if (ret)
 		goto free_ndev;
 
+<<<<<<< HEAD
+=======
+	priv->phy_addr = phy_addr;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!priv->freq) {
 		dev_err(&pdev->dev, "missing PHY reference clock frequency\n");
 		ret = -ENODEV;

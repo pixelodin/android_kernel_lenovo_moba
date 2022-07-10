@@ -143,15 +143,24 @@ static int at91_pm_config_ws(unsigned int pm_mode, bool set)
 
 			/* Check if enabled on SHDWC. */
 			if (wsi->shdwc_mr_bit && !(val & wsi->shdwc_mr_bit))
+<<<<<<< HEAD
 				goto put_node;
+=======
+				goto put_device;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 			mode |= wsi->pmc_fsmr_bit;
 			if (wsi->set_polarity)
 				polarity |= wsi->pmc_fsmr_bit;
 		}
 
+<<<<<<< HEAD
 put_node:
 		of_node_put(np);
+=======
+put_device:
+		put_device(&pdev->dev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	if (mode) {

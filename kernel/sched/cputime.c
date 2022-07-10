@@ -763,7 +763,11 @@ void vtime_account_system(struct task_struct *tsk)
 
 	write_seqcount_begin(&vtime->seqcount);
 	/* We might have scheduled out from guest path */
+<<<<<<< HEAD
 	if (current->flags & PF_VCPU)
+=======
+	if (tsk->flags & PF_VCPU)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		vtime_account_guest(tsk, vtime);
 	else
 		__vtime_account_system(tsk, vtime);
@@ -806,7 +810,11 @@ void vtime_guest_enter(struct task_struct *tsk)
 	 */
 	write_seqcount_begin(&vtime->seqcount);
 	__vtime_account_system(tsk, vtime);
+<<<<<<< HEAD
 	current->flags |= PF_VCPU;
+=======
+	tsk->flags |= PF_VCPU;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	write_seqcount_end(&vtime->seqcount);
 }
 EXPORT_SYMBOL_GPL(vtime_guest_enter);
@@ -817,7 +825,11 @@ void vtime_guest_exit(struct task_struct *tsk)
 
 	write_seqcount_begin(&vtime->seqcount);
 	vtime_account_guest(tsk, vtime);
+<<<<<<< HEAD
 	current->flags &= ~PF_VCPU;
+=======
+	tsk->flags &= ~PF_VCPU;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	write_seqcount_end(&vtime->seqcount);
 }
 EXPORT_SYMBOL_GPL(vtime_guest_exit);

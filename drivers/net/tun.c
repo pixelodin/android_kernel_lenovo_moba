@@ -319,8 +319,13 @@ static void tun_napi_init(struct tun_struct *tun, struct tun_file *tfile,
 	tfile->napi_enabled = napi_en;
 	tfile->napi_frags_enabled = napi_en && napi_frags;
 	if (napi_en) {
+<<<<<<< HEAD
 		netif_napi_add(tun->dev, &tfile->napi, tun_napi_poll,
 			       NAPI_POLL_WEIGHT);
+=======
+		netif_tx_napi_add(tun->dev, &tfile->napi, tun_napi_poll,
+				  NAPI_POLL_WEIGHT);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		napi_enable(&tfile->napi);
 	}
 }
@@ -1904,6 +1909,13 @@ drop:
 			if (ret != XDP_PASS) {
 				rcu_read_unlock();
 				local_bh_enable();
+<<<<<<< HEAD
+=======
+				if (frags) {
+					tfile->napi.skb = NULL;
+					mutex_unlock(&tfile->napi_mutex);
+				}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				return total_len;
 			}
 		}

@@ -91,6 +91,10 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.rx_ring_fill_level = HTT_RX_RING_FILL_LEVEL,
 		.shadow_reg_support = false,
 		.rri_on_ddr = false,
+<<<<<<< HEAD
+=======
+		.hw_filter_reset_required = true,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	{
 		.id = QCA988X_HW_2_0_VERSION,
@@ -124,6 +128,10 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.per_ce_irq = false,
 		.shadow_reg_support = false,
 		.rri_on_ddr = false,
+<<<<<<< HEAD
+=======
+		.hw_filter_reset_required = true,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	{
 		.id = QCA9887_HW_1_0_VERSION,
@@ -157,6 +165,10 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.per_ce_irq = false,
 		.shadow_reg_support = false,
 		.rri_on_ddr = false,
+<<<<<<< HEAD
+=======
+		.hw_filter_reset_required = true,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	{
 		.id = QCA6174_HW_2_1_VERSION,
@@ -189,6 +201,10 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.per_ce_irq = false,
 		.shadow_reg_support = false,
 		.rri_on_ddr = false,
+<<<<<<< HEAD
+=======
+		.hw_filter_reset_required = true,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	{
 		.id = QCA6174_HW_2_1_VERSION,
@@ -221,6 +237,10 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.per_ce_irq = false,
 		.shadow_reg_support = false,
 		.rri_on_ddr = false,
+<<<<<<< HEAD
+=======
+		.hw_filter_reset_required = true,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	{
 		.id = QCA6174_HW_3_0_VERSION,
@@ -253,6 +273,10 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.per_ce_irq = false,
 		.shadow_reg_support = false,
 		.rri_on_ddr = false,
+<<<<<<< HEAD
+=======
+		.hw_filter_reset_required = true,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	{
 		.id = QCA6174_HW_3_2_VERSION,
@@ -288,6 +312,10 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.per_ce_irq = false,
 		.shadow_reg_support = false,
 		.rri_on_ddr = false,
+<<<<<<< HEAD
+=======
+		.hw_filter_reset_required = true,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	{
 		.id = QCA99X0_HW_2_0_DEV_VERSION,
@@ -326,6 +354,10 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.per_ce_irq = false,
 		.shadow_reg_support = false,
 		.rri_on_ddr = false,
+<<<<<<< HEAD
+=======
+		.hw_filter_reset_required = true,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	{
 		.id = QCA9984_HW_1_0_DEV_VERSION,
@@ -369,6 +401,10 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.per_ce_irq = false,
 		.shadow_reg_support = false,
 		.rri_on_ddr = false,
+<<<<<<< HEAD
+=======
+		.hw_filter_reset_required = true,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	{
 		.id = QCA9888_HW_2_0_DEV_VERSION,
@@ -411,6 +447,10 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.per_ce_irq = false,
 		.shadow_reg_support = false,
 		.rri_on_ddr = false,
+<<<<<<< HEAD
+=======
+		.hw_filter_reset_required = true,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	{
 		.id = QCA9377_HW_1_0_DEV_VERSION,
@@ -443,6 +483,10 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.per_ce_irq = false,
 		.shadow_reg_support = false,
 		.rri_on_ddr = false,
+<<<<<<< HEAD
+=======
+		.hw_filter_reset_required = true,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	{
 		.id = QCA9377_HW_1_1_DEV_VERSION,
@@ -477,6 +521,10 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.per_ce_irq = false,
 		.shadow_reg_support = false,
 		.rri_on_ddr = false,
+<<<<<<< HEAD
+=======
+		.hw_filter_reset_required = true,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	{
 		.id = QCA4019_HW_1_0_DEV_VERSION,
@@ -516,6 +564,10 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.per_ce_irq = false,
 		.shadow_reg_support = false,
 		.rri_on_ddr = false,
+<<<<<<< HEAD
+=======
+		.hw_filter_reset_required = true,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	{
 		.id = WCN3990_HW_1_0_DEV_VERSION,
@@ -532,7 +584,11 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.hw_ops = &wcn3990_ops,
 		.decap_align_bytes = 1,
 		.num_peers = TARGET_HL_10_TLV_NUM_PEERS,
+<<<<<<< HEAD
 		.n_cipher_suites = 8,
+=======
+		.n_cipher_suites = 11,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.ast_skid_limit = TARGET_HL_10_TLV_AST_SKID_LIMIT,
 		.num_wds_entries = TARGET_HL_10_TLV_NUM_WDS_ENTRIES,
 		.target_64bit = true,
@@ -540,6 +596,10 @@ static const struct ath10k_hw_params ath10k_hw_params_list[] = {
 		.per_ce_irq = true,
 		.shadow_reg_support = true,
 		.rri_on_ddr = true,
+<<<<<<< HEAD
+=======
+		.hw_filter_reset_required = false,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 };
 
@@ -2406,7 +2466,12 @@ int ath10k_core_start(struct ath10k *ar, enum ath10k_firmware_mode mode,
 	 * possible to implicitly make it correct by creating a dummy vdev and
 	 * then deleting it.
 	 */
+<<<<<<< HEAD
 	if (mode == ATH10K_FIRMWARE_MODE_NORMAL) {
+=======
+	if (ar->hw_params.hw_filter_reset_required &&
+	    mode == ATH10K_FIRMWARE_MODE_NORMAL) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		status = ath10k_core_reset_rx_filter(ar);
 		if (status) {
 			ath10k_err(ar,

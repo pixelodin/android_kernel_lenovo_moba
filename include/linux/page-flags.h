@@ -272,7 +272,11 @@ static inline int TestClearPage##uname(struct page *page) { return 0; }
 
 __PAGEFLAG(Locked, locked, PF_NO_TAIL)
 PAGEFLAG(Waiters, waiters, PF_ONLY_HEAD) __CLEARPAGEFLAG(Waiters, waiters, PF_ONLY_HEAD)
+<<<<<<< HEAD
 PAGEFLAG(Error, error, PF_NO_COMPOUND) TESTCLEARFLAG(Error, error, PF_NO_COMPOUND)
+=======
+PAGEFLAG(Error, error, PF_NO_TAIL) TESTCLEARFLAG(Error, error, PF_NO_TAIL)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 PAGEFLAG(Referenced, referenced, PF_HEAD)
 	TESTCLEARFLAG(Referenced, referenced, PF_HEAD)
 	__SETPAGEFLAG(Referenced, referenced, PF_HEAD)
@@ -580,12 +584,37 @@ static inline int PageTransCompound(struct page *page)
  *
  * Unlike PageTransCompound, this is safe to be called only while
  * split_huge_pmd() cannot run from under us, like if protected by the
+<<<<<<< HEAD
  * MMU notifier, otherwise it may result in page->_mapcount < 0 false
  * positives.
  */
 static inline int PageTransCompoundMap(struct page *page)
 {
 	return PageTransCompound(page) && atomic_read(&page->_mapcount) < 0;
+=======
+ * MMU notifier, otherwise it may result in page->_mapcount check false
+ * positives.
+ *
+ * We have to treat page cache THP differently since every subpage of it
+ * would get _mapcount inc'ed once it is PMD mapped.  But, it may be PTE
+ * mapped in the current process so comparing subpage's _mapcount to
+ * compound_mapcount to filter out PTE mapped case.
+ */
+static inline int PageTransCompoundMap(struct page *page)
+{
+	struct page *head;
+
+	if (!PageTransCompound(page))
+		return 0;
+
+	if (PageAnon(page))
+		return atomic_read(&page->_mapcount) < 0;
+
+	head = compound_head(page);
+	/* File THP is PMD mapped and not PTE mapped */
+	return atomic_read(&page->_mapcount) ==
+	       atomic_read(compound_mapcount_ptr(head));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /*

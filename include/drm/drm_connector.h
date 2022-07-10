@@ -1192,6 +1192,10 @@ int drm_connector_init(struct drm_device *dev,
 		       struct drm_connector *connector,
 		       const struct drm_connector_funcs *funcs,
 		       int connector_type);
+<<<<<<< HEAD
+=======
+void drm_connector_attach_edid_property(struct drm_connector *connector);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 int drm_connector_register(struct drm_connector *connector);
 void drm_connector_unregister(struct drm_connector *connector);
 int drm_connector_attach_encoder(struct drm_connector *connector,

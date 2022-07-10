@@ -22,6 +22,7 @@ struct xt_nflog_info {
 	char		prefix[64];
 };
 
+<<<<<<< HEAD
 struct xt_nflog_info_v1 {
 	/* 'len' will be used iff you set XT_NFLOG_F_COPY_LEN in flags */
 	__u32	len;
@@ -33,4 +34,6 @@ struct xt_nflog_info_v1 {
 	__u16	layer;
 };
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif /* _XT_NFLOG_TARGET */

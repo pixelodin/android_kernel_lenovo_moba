@@ -655,10 +655,20 @@ static ssize_t cyc_threshold_store(struct device *dev,
 
 	if (kstrtoul(buf, 16, &val))
 		return -EINVAL;
+<<<<<<< HEAD
 	if (val < drvdata->ccitmin)
 		return -EINVAL;
 
 	config->ccctlr = val & ETM_CYC_THRESHOLD_MASK;
+=======
+
+	/* mask off max threshold before checking min value */
+	val &= ETM_CYC_THRESHOLD_MASK;
+	if (val < drvdata->ccitmin)
+		return -EINVAL;
+
+	config->ccctlr = val;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return size;
 }
 static DEVICE_ATTR_RW(cyc_threshold);
@@ -689,6 +699,7 @@ static ssize_t bb_ctrl_store(struct device *dev,
 		return -EINVAL;
 	if (!drvdata->nr_addr_cmp)
 		return -EINVAL;
+<<<<<<< HEAD
 	/*
 	 * Bit[7:0] selects which address range comparator is used for
 	 * branch broadcast control.
@@ -697,6 +708,18 @@ static ssize_t bb_ctrl_store(struct device *dev,
 		return -EINVAL;
 
 	config->bb_ctrl = val;
+=======
+
+	/*
+	 * Bit[8] controls include(1) / exclude(0), bits[0-7] select
+	 * individual range comparators. If include then at least 1
+	 * range must be selected.
+	 */
+	if ((val & BIT(8)) && (BMVAL(val, 0, 7) == 0))
+		return -EINVAL;
+
+	config->bb_ctrl = val & GENMASK(8, 0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return size;
 }
 static DEVICE_ATTR_RW(bb_ctrl);
@@ -1329,8 +1352,13 @@ static ssize_t seq_event_store(struct device *dev,
 
 	spin_lock(&drvdata->spinlock);
 	idx = config->seq_idx;
+<<<<<<< HEAD
 	/* RST, bits[7:0] */
 	config->seq_ctrl[idx] = val & 0xFF;
+=======
+	/* Seq control has two masks B[15:8] F[7:0] */
+	config->seq_ctrl[idx] = val & 0xFFFF;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	spin_unlock(&drvdata->spinlock);
 	return size;
 }
@@ -1585,7 +1613,11 @@ static ssize_t res_ctrl_store(struct device *dev,
 	if (idx % 2 != 0)
 		/* PAIRINV, bit[21] */
 		val &= ~BIT(21);
+<<<<<<< HEAD
 	config->res_ctrl[idx] = val;
+=======
+	config->res_ctrl[idx] = val & GENMASK(21, 0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	spin_unlock(&drvdata->spinlock);
 	return size;
 }

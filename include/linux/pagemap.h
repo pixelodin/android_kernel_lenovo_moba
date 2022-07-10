@@ -239,7 +239,11 @@ static inline gfp_t readahead_gfp_mask(struct address_space *x)
 	return mapping_gfp_mask(x) | __GFP_NORETRY | __GFP_NOWARN;
 }
 
+<<<<<<< HEAD
 typedef int filler_t(struct file *, struct page *);
+=======
+typedef int filler_t(void *, struct page *);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 pgoff_t page_cache_next_hole(struct address_space *mapping,
 			     pgoff_t index, unsigned long max_scan);
@@ -537,6 +541,11 @@ static inline int wait_on_page_locked_killable(struct page *page)
 	return wait_on_page_bit_killable(compound_head(page), PG_locked);
 }
 
+<<<<<<< HEAD
+=======
+extern void put_and_wait_on_page_locked(struct page *page);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* 
  * Wait for a page to complete writeback
  */

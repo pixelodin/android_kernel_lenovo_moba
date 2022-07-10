@@ -23,6 +23,11 @@ struct ahci_host_priv;
 struct platform_device;
 struct scsi_host_template;
 
+<<<<<<< HEAD
+=======
+int ahci_platform_enable_phys(struct ahci_host_priv *hpriv);
+void ahci_platform_disable_phys(struct ahci_host_priv *hpriv);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 int ahci_platform_enable_clks(struct ahci_host_priv *hpriv);
 void ahci_platform_disable_clks(struct ahci_host_priv *hpriv);
 int ahci_platform_enable_regulators(struct ahci_host_priv *hpriv);

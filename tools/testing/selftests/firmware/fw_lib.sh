@@ -28,6 +28,15 @@ test_modprobe()
 
 check_mods()
 {
+<<<<<<< HEAD
+=======
+	local uid=$(id -u)
+	if [ $uid -ne 0 ]; then
+		echo "skip all tests: must be run as root" >&2
+		exit $ksft_skip
+	fi
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	trap "test_modprobe" EXIT
 	if [ ! -d $DIR ]; then
 		modprobe test_firmware

@@ -1921,12 +1921,16 @@ static int atmel_sha_hmac_setkey(struct crypto_ahash *tfm, const u8 *key,
 {
 	struct atmel_sha_hmac_ctx *hmac = crypto_ahash_ctx(tfm);
 
+<<<<<<< HEAD
 	if (atmel_sha_hmac_key_set(&hmac->hkey, key, keylen)) {
 		crypto_ahash_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
 		return -EINVAL;
 	}
 
 	return 0;
+=======
+	return atmel_sha_hmac_key_set(&hmac->hkey, key, keylen);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int atmel_sha_hmac_init(struct ahash_request *req)
@@ -2215,7 +2219,11 @@ static struct ahash_alg sha_hmac_algs[] = {
 },
 };
 
+<<<<<<< HEAD
 #ifdef CONFIG_CRYPTO_DEV_ATMEL_AUTHENC
+=======
+#if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* authenc functions */
 
 static int atmel_sha_authenc_init2(struct atmel_sha_dev *dd);

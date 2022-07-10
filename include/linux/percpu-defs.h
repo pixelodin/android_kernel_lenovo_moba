@@ -176,8 +176,12 @@
  * Declaration/definition used for per-CPU variables that should be accessed
  * as decrypted when memory encryption is enabled in the guest.
  */
+<<<<<<< HEAD
 #if defined(CONFIG_VIRTUALIZATION) && defined(CONFIG_AMD_MEM_ENCRYPT)
 
+=======
+#ifdef CONFIG_AMD_MEM_ENCRYPT
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define DECLARE_PER_CPU_DECRYPTED(type, name)				\
 	DECLARE_PER_CPU_SECTION(type, name, "..decrypted")
 

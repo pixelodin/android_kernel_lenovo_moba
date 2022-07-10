@@ -58,13 +58,21 @@
 		clock-accuracy = <100>;
 	};
 
+<<<<<<< HEAD
 	dpdma_clk: dpdma_clk {
+=======
+	dpdma_clk: dpdma-clk {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		compatible = "fixed-clock";
 		#clock-cells = <0x0>;
 		clock-frequency = <533000000>;
 	};
 
+<<<<<<< HEAD
 	drm_clock: drm_clock {
+=======
+	drm_clock: drm-clock {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		compatible = "fixed-clock";
 		#clock-cells = <0x0>;
 		clock-frequency = <262750000>;

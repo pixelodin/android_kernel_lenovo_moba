@@ -52,6 +52,11 @@
 #define RATE_AUTO	12
 
 #define MAX_RATE			12
+<<<<<<< HEAD
+=======
+#define VNT_B_RATES	(BIT(RATE_1M) | BIT(RATE_2M) |\
+			BIT(RATE_5M) | BIT(RATE_11M))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /*
  * device specific
@@ -259,6 +264,10 @@ struct vnt_private {
 	u8 mac_hw;
 	/* netdev */
 	struct usb_device *usb;
+<<<<<<< HEAD
+=======
+	struct usb_interface *intf;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	u64 tsf_time;
 	u8 rx_rate;

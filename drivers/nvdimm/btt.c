@@ -1260,11 +1260,19 @@ static int btt_read_pg(struct btt *btt, struct bio_integrity_payload *bip,
 
 		ret = btt_data_read(arena, page, off, postmap, cur_len);
 		if (ret) {
+<<<<<<< HEAD
 			int rc;
 
 			/* Media error - set the e_flag */
 			rc = btt_map_write(arena, premap, postmap, 0, 1,
 				NVDIMM_IO_ATOMIC);
+=======
+			/* Media error - set the e_flag */
+			if (btt_map_write(arena, premap, postmap, 0, 1, NVDIMM_IO_ATOMIC))
+				dev_warn_ratelimited(to_dev(arena),
+					"Error persistently tracking bad blocks at %#x\n",
+					premap);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			goto out_rtt;
 		}
 

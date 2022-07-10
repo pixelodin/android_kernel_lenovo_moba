@@ -877,7 +877,11 @@ static ssize_t sock_read_iter(struct kiocb *iocb, struct iov_iter *to)
 			     .msg_iocb = iocb};
 	ssize_t res;
 
+<<<<<<< HEAD
 	if (file->f_flags & O_NONBLOCK)
+=======
+	if (file->f_flags & O_NONBLOCK || (iocb->ki_flags & IOCB_NOWAIT))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		msg.msg_flags = MSG_DONTWAIT;
 
 	if (iocb->ki_pos != 0)
@@ -902,7 +906,11 @@ static ssize_t sock_write_iter(struct kiocb *iocb, struct iov_iter *from)
 	if (iocb->ki_pos != 0)
 		return -ESPIPE;
 
+<<<<<<< HEAD
 	if (file->f_flags & O_NONBLOCK)
+=======
+	if (file->f_flags & O_NONBLOCK || (iocb->ki_flags & IOCB_NOWAIT))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		msg.msg_flags = MSG_DONTWAIT;
 
 	if (sock->type == SOCK_SEQPACKET)
@@ -3261,6 +3269,10 @@ static int compat_sock_ioctl_trans(struct file *file, struct socket *sock,
 	case SIOCSARP:
 	case SIOCGARP:
 	case SIOCDARP:
+<<<<<<< HEAD
+=======
+	case SIOCOUTQNSD:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	case SIOCATMARK:
 		return sock_do_ioctl(net, sock, cmd, arg);
 	}

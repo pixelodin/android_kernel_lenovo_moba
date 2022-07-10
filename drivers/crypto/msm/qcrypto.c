@@ -2,7 +2,11 @@
 /*
  * QTI Crypto driver
  *
+<<<<<<< HEAD
  * Copyright (c) 2010-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2010-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include <linux/module.h>
@@ -5523,7 +5527,11 @@ static int _qcrypto_debug_init(void)
 
 	_debug_dent = debugfs_create_dir("qcrypto", NULL);
 	if (IS_ERR(_debug_dent)) {
+<<<<<<< HEAD
 		pr_err("qcrypto debugfs_create_dir fail, error %ld\n",
+=======
+		pr_debug("qcrypto debugfs_create_dir fail, error %ld\n",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				PTR_ERR(_debug_dent));
 		return PTR_ERR(_debug_dent);
 	}
@@ -5533,7 +5541,11 @@ static int _qcrypto_debug_init(void)
 	dent = debugfs_create_file(name, 0644, _debug_dent,
 				&_debug_qcrypto, &_debug_stats_ops);
 	if (dent == NULL) {
+<<<<<<< HEAD
 		pr_err("qcrypto debugfs_create_file fail, error %ld\n",
+=======
+		pr_debug("qcrypto debugfs_create_file fail, error %ld\n",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				PTR_ERR(dent));
 		rc = PTR_ERR(dent);
 		goto err;
@@ -5546,12 +5558,18 @@ err:
 
 static int __init _qcrypto_init(void)
 {
+<<<<<<< HEAD
 	int rc;
 	struct crypto_priv *pcp = &qcrypto_dev;
 
 	rc = _qcrypto_debug_init();
 	if (rc)
 		return rc;
+=======
+	struct crypto_priv *pcp = &qcrypto_dev;
+
+	_qcrypto_debug_init();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	INIT_LIST_HEAD(&pcp->alg_list);
 	INIT_LIST_HEAD(&pcp->engine_list);
 	init_llist_head(&pcp->ordered_resp_list);

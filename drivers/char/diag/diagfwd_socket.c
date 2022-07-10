@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-only
+<<<<<<< HEAD
 /* Copyright (c) 2015-2019, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2015-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include <linux/slab.h>
@@ -1133,7 +1137,11 @@ int diag_socket_init(void)
 		nb = &restart_notifiers[i];
 		handle = subsys_notif_register_notifier(nb->name, &nb->nb);
 		DIAG_LOG(DIAG_DEBUG_PERIPHERALS,
+<<<<<<< HEAD
 			 "%s: registering notifier for '%s', handle=%p\n",
+=======
+			 "%s: registering notifier for '%s', handle=%pK\n",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			 __func__, nb->name, handle);
 	}
 

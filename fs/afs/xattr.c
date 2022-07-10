@@ -50,7 +50,11 @@ static int afs_xattr_get_cell(const struct xattr_handler *handler,
 		return namelen;
 	if (namelen > size)
 		return -ERANGE;
+<<<<<<< HEAD
 	memcpy(buffer, cell->name, size);
+=======
+	memcpy(buffer, cell->name, namelen);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return namelen;
 }
 
@@ -104,7 +108,11 @@ static int afs_xattr_get_volume(const struct xattr_handler *handler,
 		return namelen;
 	if (namelen > size)
 		return -ERANGE;
+<<<<<<< HEAD
 	memcpy(buffer, volname, size);
+=======
+	memcpy(buffer, volname, namelen);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return namelen;
 }
 

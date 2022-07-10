@@ -8,7 +8,11 @@
 #include <linux/cpu.h>
 #include <linux/irq.h>
 
+<<<<<<< HEAD
 #define IRQ_MATRIX_SIZE	(BITS_TO_LONGS(IRQ_MATRIX_BITS) * sizeof(unsigned long))
+=======
+#define IRQ_MATRIX_SIZE	(BITS_TO_LONGS(IRQ_MATRIX_BITS))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 struct cpumap {
 	unsigned int		available;

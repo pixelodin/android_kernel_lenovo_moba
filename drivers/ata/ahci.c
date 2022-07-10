@@ -96,6 +96,10 @@ enum board_ids {
 
 static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent);
 static void ahci_remove_one(struct pci_dev *dev);
+<<<<<<< HEAD
+=======
+static void ahci_shutdown_one(struct pci_dev *dev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int ahci_vt8251_hardreset(struct ata_link *link, unsigned int *class,
 				 unsigned long deadline);
 static int ahci_avn_hardreset(struct ata_link *link, unsigned int *class,
@@ -609,6 +613,10 @@ static struct pci_driver ahci_pci_driver = {
 	.id_table		= ahci_pci_tbl,
 	.probe			= ahci_init_one,
 	.remove			= ahci_remove_one,
+<<<<<<< HEAD
+=======
+	.shutdown		= ahci_shutdown_one,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.driver = {
 		.pm		= &ahci_pci_pm_ops,
 	},
@@ -1897,6 +1905,14 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static void ahci_shutdown_one(struct pci_dev *pdev)
+{
+	ata_pci_shutdown_one(pdev);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static void ahci_remove_one(struct pci_dev *pdev)
 {
 	pm_runtime_get_noresume(&pdev->dev);

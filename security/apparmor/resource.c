@@ -124,7 +124,11 @@ int aa_task_setrlimit(struct aa_label *label, struct task_struct *task,
 	 */
 
 	if (label != peer &&
+<<<<<<< HEAD
 	    aa_capable(label, CAP_SYS_RESOURCE, SECURITY_CAP_NOAUDIT) != 0)
+=======
+	    aa_capable(label, CAP_SYS_RESOURCE, CAP_OPT_NOAUDIT) != 0)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		error = fn_for_each(label, profile,
 				audit_resource(profile, resource,
 					       new_rlim->rlim_max, peer,

@@ -261,6 +261,10 @@ static int hfsplus_setattr(struct dentry *dentry, struct iattr *attr)
 		}
 		truncate_setsize(inode, attr->ia_size);
 		hfsplus_file_truncate(inode);
+<<<<<<< HEAD
+=======
+		inode->i_mtime = inode->i_ctime = current_time(inode);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	setattr_copy(inode, attr);

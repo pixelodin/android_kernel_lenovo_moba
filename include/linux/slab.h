@@ -297,11 +297,50 @@ static inline void __check_heap_object(const void *ptr, unsigned long n,
 #define SLAB_OBJ_MIN_SIZE      (KMALLOC_MIN_SIZE < 16 ? \
                                (KMALLOC_MIN_SIZE) : 16)
 
+<<<<<<< HEAD
 #ifndef CONFIG_SLOB
 extern struct kmem_cache *kmalloc_caches[KMALLOC_SHIFT_HIGH + 1];
 #ifdef CONFIG_ZONE_DMA
 extern struct kmem_cache *kmalloc_dma_caches[KMALLOC_SHIFT_HIGH + 1];
 #endif
+=======
+/*
+ * Whenever changing this, take care of that kmalloc_type() and
+ * create_kmalloc_caches() still work as intended.
+ */
+enum kmalloc_cache_type {
+	KMALLOC_NORMAL = 0,
+	KMALLOC_RECLAIM,
+#ifdef CONFIG_ZONE_DMA
+	KMALLOC_DMA,
+#endif
+	NR_KMALLOC_TYPES
+};
+
+#ifndef CONFIG_SLOB
+extern struct kmem_cache *
+kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1];
+
+static __always_inline enum kmalloc_cache_type kmalloc_type(gfp_t flags)
+{
+#ifdef CONFIG_ZONE_DMA
+	/*
+	 * The most common case is KMALLOC_NORMAL, so test for it
+	 * with a single branch for both flags.
+	 */
+	if (likely((flags & (__GFP_DMA | __GFP_RECLAIMABLE)) == 0))
+		return KMALLOC_NORMAL;
+
+	/*
+	 * At least one of the flags has to be set. If both are, __GFP_DMA
+	 * is more important.
+	 */
+	return flags & __GFP_DMA ? KMALLOC_DMA : KMALLOC_RECLAIM;
+#else
+	return flags & __GFP_RECLAIMABLE ? KMALLOC_RECLAIM : KMALLOC_NORMAL;
+#endif
+}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /*
  * Figure out which kmalloc slab an allocation of a certain size
@@ -415,7 +454,11 @@ static __always_inline void *kmem_cache_alloc_trace(struct kmem_cache *s,
 {
 	void *ret = kmem_cache_alloc(s, flags);
 
+<<<<<<< HEAD
 	kasan_kmalloc(s, ret, size, flags);
+=======
+	ret = kasan_kmalloc(s, ret, size, flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return ret;
 }
 
@@ -426,7 +469,11 @@ kmem_cache_alloc_node_trace(struct kmem_cache *s,
 {
 	void *ret = kmem_cache_alloc_node(s, gfpflags, node);
 
+<<<<<<< HEAD
 	kasan_kmalloc(s, ret, size, gfpflags);
+=======
+	ret = kasan_kmalloc(s, ret, size, gfpflags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return ret;
 }
 #endif /* CONFIG_TRACING */
@@ -503,6 +550,7 @@ static __always_inline void *kmalloc_large(size_t size, gfp_t flags)
 static __always_inline void *kmalloc(size_t size, gfp_t flags)
 {
 	if (__builtin_constant_p(size)) {
+<<<<<<< HEAD
 		if (size > KMALLOC_MAX_CACHE_SIZE)
 			return kmalloc_large(size, flags);
 #ifndef CONFIG_SLOB
@@ -515,6 +563,22 @@ static __always_inline void *kmalloc(size_t size, gfp_t flags)
 			return kmem_cache_alloc_trace(kmalloc_caches[index],
 					flags, size);
 		}
+=======
+#ifndef CONFIG_SLOB
+		unsigned int index;
+#endif
+		if (size > KMALLOC_MAX_CACHE_SIZE)
+			return kmalloc_large(size, flags);
+#ifndef CONFIG_SLOB
+		index = kmalloc_index(size);
+
+		if (!index)
+			return ZERO_SIZE_PTR;
+
+		return kmem_cache_alloc_trace(
+				kmalloc_caches[kmalloc_type(flags)][index],
+				flags, size);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif
 	}
 	return __kmalloc(size, flags);
@@ -544,13 +608,22 @@ static __always_inline void *kmalloc_node(size_t size, gfp_t flags, int node)
 {
 #ifndef CONFIG_SLOB
 	if (__builtin_constant_p(size) &&
+<<<<<<< HEAD
 		size <= KMALLOC_MAX_CACHE_SIZE && !(flags & GFP_DMA)) {
+=======
+		size <= KMALLOC_MAX_CACHE_SIZE) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		unsigned int i = kmalloc_index(size);
 
 		if (!i)
 			return ZERO_SIZE_PTR;
 
+<<<<<<< HEAD
 		return kmem_cache_alloc_node_trace(kmalloc_caches[i],
+=======
+		return kmem_cache_alloc_node_trace(
+				kmalloc_caches[kmalloc_type(flags)][i],
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 						flags, node, size);
 	}
 #endif

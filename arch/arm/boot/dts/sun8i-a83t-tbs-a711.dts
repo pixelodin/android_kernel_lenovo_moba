@@ -171,6 +171,10 @@
 	vqmmc-supply = <&reg_dldo1>;
 	non-removable;
 	wakeup-source;
+<<<<<<< HEAD
+=======
+	keep-power-in-suspend;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	status = "okay";
 
 	brcmf: wifi@1 {

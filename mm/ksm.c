@@ -870,6 +870,7 @@ static int remove_stable_node(struct stable_node *stable_node)
 		return 0;
 	}
 
+<<<<<<< HEAD
 	if (WARN_ON_ONCE(page_mapped(page))) {
 		/*
 		 * This should not happen: but if it does, just refuse to let
@@ -877,6 +878,15 @@ static int remove_stable_node(struct stable_node *stable_node)
 		 */
 		err = -EBUSY;
 	} else {
+=======
+	/*
+	 * Page could be still mapped if this races with __mmput() running in
+	 * between ksm_exit() and exit_mmap(). Just refuse to let
+	 * merge_across_nodes/max_page_sharing be switched.
+	 */
+	err = -EBUSY;
+	if (!page_mapped(page)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/*
 		 * The stable node did not yet appear stale to get_ksm_page(),
 		 * since that allows for an unmapped ksm page to be recognized

@@ -44,7 +44,11 @@ static inline unsigned long __xchg(unsigned long x, volatile void *ptr,
 	__asm__ __volatile__ (
 	"1:	%0 = memw_locked(%1);\n"    /*  load into retval */
 	"	memw_locked(%1,P0) = %2;\n" /*  store into memory */
+<<<<<<< HEAD
 	"	if !P0 jump 1b;\n"
+=======
+	"	if (!P0) jump 1b;\n"
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	: "=&r" (retval)
 	: "r" (ptr), "r" (x)
 	: "memory", "p0"

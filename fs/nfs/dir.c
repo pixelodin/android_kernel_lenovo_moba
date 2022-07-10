@@ -162,6 +162,20 @@ typedef struct {
 	bool eof;
 } nfs_readdir_descriptor_t;
 
+<<<<<<< HEAD
+=======
+static
+void nfs_readdir_init_array(struct page *page)
+{
+	struct nfs_cache_array *array;
+
+	array = kmap_atomic(page);
+	memset(array, 0, sizeof(struct nfs_cache_array));
+	array->eof_index = -1;
+	kunmap_atomic(array);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * we are freeing strings created by nfs_add_to_readdir_array()
  */
@@ -174,6 +188,10 @@ void nfs_readdir_clear_array(struct page *page)
 	array = kmap_atomic(page);
 	for (i = 0; i < array->size; i++)
 		kfree(array->array[i].string.name);
+<<<<<<< HEAD
+=======
+	array->size = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	kunmap_atomic(array);
 }
 
@@ -610,6 +628,11 @@ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page, 
 	int status = -ENOMEM;
 	unsigned int array_size = ARRAY_SIZE(pages);
 
+<<<<<<< HEAD
+=======
+	nfs_readdir_init_array(page);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	entry.prev_cookie = 0;
 	entry.cookie = desc->last_cookie;
 	entry.eof = 0;
@@ -626,8 +649,11 @@ int nfs_readdir_xdr_to_array(nfs_readdir_descriptor_t *desc, struct page *page, 
 	}
 
 	array = kmap(page);
+<<<<<<< HEAD
 	memset(array, 0, sizeof(struct nfs_cache_array));
 	array->eof_index = -1;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	status = nfs_readdir_alloc_pages(pages, array_size);
 	if (status < 0)
@@ -682,6 +708,10 @@ int nfs_readdir_filler(void *data, struct page* page)
 	unlock_page(page);
 	return 0;
  error:
+<<<<<<< HEAD
+=======
+	nfs_readdir_clear_array(page);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	unlock_page(page);
 	return ret;
 }
@@ -689,8 +719,11 @@ int nfs_readdir_filler(void *data, struct page* page)
 static
 void cache_page_release(nfs_readdir_descriptor_t *desc)
 {
+<<<<<<< HEAD
 	if (!desc->page->mapping)
 		nfs_readdir_clear_array(desc->page);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	put_page(desc->page);
 	desc->page = NULL;
 }
@@ -704,19 +737,41 @@ struct page *get_cache_page(nfs_readdir_descriptor_t *desc)
 
 /*
  * Returns 0 if desc->dir_cookie was found on page desc->page_index
+<<<<<<< HEAD
  */
 static
 int find_cache_page(nfs_readdir_descriptor_t *desc)
+=======
+ * and locks the page to prevent removal from the page cache.
+ */
+static
+int find_and_lock_cache_page(nfs_readdir_descriptor_t *desc)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	int res;
 
 	desc->page = get_cache_page(desc);
 	if (IS_ERR(desc->page))
 		return PTR_ERR(desc->page);
+<<<<<<< HEAD
 
 	res = nfs_readdir_search_array(desc);
 	if (res != 0)
 		cache_page_release(desc);
+=======
+	res = lock_page_killable(desc->page);
+	if (res != 0)
+		goto error;
+	res = -EAGAIN;
+	if (desc->page->mapping != NULL) {
+		res = nfs_readdir_search_array(desc);
+		if (res == 0)
+			return 0;
+	}
+	unlock_page(desc->page);
+error:
+	cache_page_release(desc);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return res;
 }
 
@@ -731,7 +786,11 @@ int readdir_search_pagecache(nfs_readdir_descriptor_t *desc)
 		desc->last_cookie = 0;
 	}
 	do {
+<<<<<<< HEAD
 		res = find_cache_page(desc);
+=======
+		res = find_and_lock_cache_page(desc);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	} while (res == -EAGAIN);
 	return res;
 }
@@ -770,7 +829,10 @@ int nfs_do_filldir(nfs_readdir_descriptor_t *desc)
 		desc->eof = true;
 
 	kunmap(desc->page);
+<<<<<<< HEAD
 	cache_page_release(desc);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	dfprintk(DIRCACHE, "NFS: nfs_do_filldir() filling ended @ cookie %Lu; returning = %d\n",
 			(unsigned long long)*desc->dir_cookie, res);
 	return res;
@@ -816,13 +878,22 @@ int uncached_readdir(nfs_readdir_descriptor_t *desc)
 
 	status = nfs_do_filldir(desc);
 
+<<<<<<< HEAD
+=======
+ out_release:
+	nfs_readdir_clear_array(desc->page);
+	cache_page_release(desc);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  out:
 	dfprintk(DIRCACHE, "NFS: %s: returns %d\n",
 			__func__, status);
 	return status;
+<<<<<<< HEAD
  out_release:
 	cache_page_release(desc);
 	goto out;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /* The file offset position represents the dirent entry number.  A
@@ -887,6 +958,11 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
 			break;
 
 		res = nfs_do_filldir(desc);
+<<<<<<< HEAD
+=======
+		unlock_page(desc->page);
+		cache_page_release(desc);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (res < 0)
 			break;
 	} while (!desc->eof);

@@ -141,6 +141,10 @@ void __next_reserved_mem_region(u64 *idx, phys_addr_t *out_start,
 void __memblock_free_early(phys_addr_t base, phys_addr_t size);
 void __memblock_free_late(phys_addr_t base, phys_addr_t size);
 void create_pgtable_mapping(phys_addr_t start, phys_addr_t end);
+<<<<<<< HEAD
+=======
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /**
  * for_each_mem_range - iterate through memblock areas from type_a and not
  * included in type_b. Or just type_a if type_b is NULL.
@@ -265,6 +269,7 @@ void __next_mem_pfn_range(int *idx, int nid, unsigned long *out_start_pfn,
 	for_each_mem_range_rev(i, &memblock.memory, &memblock.reserved,	\
 			       nid, flags, p_start, p_end, p_nid)
 
+<<<<<<< HEAD
 /**
  * for_each_resv_unavail_range - iterate through reserved and unavailable memory
  * @i: u64 used as loop variable
@@ -280,6 +285,8 @@ void __next_mem_pfn_range(int *idx, int nid, unsigned long *out_start_pfn,
 	for_each_mem_range(i, &memblock.reserved, &memblock.memory,	\
 			   NUMA_NO_NODE, MEMBLOCK_NONE, p_start, p_end, NULL)
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static inline void memblock_set_region_flags(struct memblock_region *r,
 					     enum memblock_flags flags)
 {
@@ -342,6 +349,10 @@ static inline bool memblock_bottom_up(void)
 /* Flags for memblock_alloc_base() amd __memblock_alloc_base() */
 #define MEMBLOCK_ALLOC_ANYWHERE	(~(phys_addr_t)0)
 #define MEMBLOCK_ALLOC_ACCESSIBLE	0
+<<<<<<< HEAD
+=======
+#define MEMBLOCK_ALLOC_KASAN		1
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 phys_addr_t __init memblock_alloc_range(phys_addr_t size, phys_addr_t align,
 					phys_addr_t start, phys_addr_t end,

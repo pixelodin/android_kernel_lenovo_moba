@@ -387,7 +387,10 @@ struct dmar_rmrr_unit {
 	u64	end_address;		/* reserved end address */
 	struct dmar_dev_scope *devices;	/* target devices */
 	int	devices_cnt;		/* target device count */
+<<<<<<< HEAD
 	struct iommu_resv_region *resv; /* reserved region handle */
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct dmar_atsr_unit {
@@ -3387,9 +3390,18 @@ static int __init init_dmars(void)
 		iommu_identity_mapping |= IDENTMAP_ALL;
 
 #ifdef CONFIG_INTEL_IOMMU_BROKEN_GFX_WA
+<<<<<<< HEAD
 	iommu_identity_mapping |= IDENTMAP_GFX;
 #endif
 
+=======
+	dmar_map_gfx = 0;
+#endif
+
+	if (!dmar_map_gfx)
+		iommu_identity_mapping |= IDENTMAP_GFX;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	check_tylersburg_isoch();
 
 	if (iommu_identity_mapping) {
@@ -3996,10 +4008,18 @@ static void quirk_ioat_snb_local_iommu(struct pci_dev *pdev)
 
 	/* we know that the this iommu should be at offset 0xa000 from vtbar */
 	drhd = dmar_find_matched_drhd_unit(pdev);
+<<<<<<< HEAD
 	if (WARN_TAINT_ONCE(!drhd || drhd->reg_base_addr - vtbar != 0xa000,
 			    TAINT_FIRMWARE_WORKAROUND,
 			    "BIOS assigned incorrect VT-d unit for Intel(R) QuickData Technology device\n"))
 		pdev->dev.archdata.iommu = DUMMY_DEVICE_DOMAIN_INFO;
+=======
+	if (!drhd || drhd->reg_base_addr - vtbar != 0xa000) {
+		pr_warn_once(FW_BUG "BIOS assigned incorrect VT-d unit for Intel(R) QuickData Technology device\n");
+		add_taint(TAINT_FIRMWARE_WORKAROUND, LOCKDEP_STILL_OK);
+		pdev->dev.archdata.iommu = DUMMY_DEVICE_DOMAIN_INFO;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 DECLARE_PCI_FIXUP_ENABLE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_IOAT_SNB, quirk_ioat_snb_local_iommu);
 
@@ -4182,7 +4202,10 @@ static inline void init_iommu_pm_ops(void) {}
 int __init dmar_parse_one_rmrr(struct acpi_dmar_header *header, void *arg)
 {
 	struct acpi_dmar_reserved_memory *rmrr;
+<<<<<<< HEAD
 	int prot = DMA_PTE_READ|DMA_PTE_WRITE;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct dmar_rmrr_unit *rmrru;
 	size_t length;
 
@@ -4196,22 +4219,32 @@ int __init dmar_parse_one_rmrr(struct acpi_dmar_header *header, void *arg)
 	rmrru->end_address = rmrr->end_address;
 
 	length = rmrr->end_address - rmrr->base_address + 1;
+<<<<<<< HEAD
 	rmrru->resv = iommu_alloc_resv_region(rmrr->base_address, length, prot,
 					      IOMMU_RESV_DIRECT);
 	if (!rmrru->resv)
 		goto free_rmrru;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	rmrru->devices = dmar_alloc_dev_scope((void *)(rmrr + 1),
 				((void *)rmrr) + rmrr->header.length,
 				&rmrru->devices_cnt);
 	if (rmrru->devices_cnt && rmrru->devices == NULL)
+<<<<<<< HEAD
 		goto free_all;
+=======
+		goto free_rmrru;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	list_add(&rmrru->list, &dmar_rmrr_units);
 
 	return 0;
+<<<<<<< HEAD
 free_all:
 	kfree(rmrru->resv);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 free_rmrru:
 	kfree(rmrru);
 out:
@@ -4429,7 +4462,10 @@ static void intel_iommu_free_dmars(void)
 	list_for_each_entry_safe(rmrru, rmrr_n, &dmar_rmrr_units, list) {
 		list_del(&rmrru->list);
 		dmar_free_dev_scope(&rmrru->devices, &rmrru->devices_cnt);
+<<<<<<< HEAD
 		kfree(rmrru->resv);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		kfree(rmrru);
 	}
 
@@ -5149,8 +5185,15 @@ static phys_addr_t intel_iommu_iova_to_phys(struct iommu_domain *domain,
 	u64 phys = 0;
 
 	pte = pfn_to_dma_pte(dmar_domain, iova >> VTD_PAGE_SHIFT, &level);
+<<<<<<< HEAD
 	if (pte)
 		phys = dma_pte_addr(pte);
+=======
+	if (pte && dma_pte_present(pte))
+		phys = dma_pte_addr(pte) +
+			(iova & (BIT_MASK(level_to_offset_bits(level) +
+						VTD_PAGE_SHIFT) - 1));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return phys;
 }
@@ -5203,11 +5246,16 @@ static void intel_iommu_remove_device(struct device *dev)
 static void intel_iommu_get_resv_regions(struct device *device,
 					 struct list_head *head)
 {
+<<<<<<< HEAD
+=======
+	int prot = DMA_PTE_READ | DMA_PTE_WRITE;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct iommu_resv_region *reg;
 	struct dmar_rmrr_unit *rmrr;
 	struct device *i_dev;
 	int i;
 
+<<<<<<< HEAD
 	rcu_read_lock();
 	for_each_rmrr_units(rmrr) {
 		for_each_active_dev_scope(rmrr->devices, rmrr->devices_cnt,
@@ -5219,6 +5267,29 @@ static void intel_iommu_get_resv_regions(struct device *device,
 		}
 	}
 	rcu_read_unlock();
+=======
+	down_read(&dmar_global_lock);
+	for_each_rmrr_units(rmrr) {
+		for_each_active_dev_scope(rmrr->devices, rmrr->devices_cnt,
+					  i, i_dev) {
+			struct iommu_resv_region *resv;
+			size_t length;
+
+			if (i_dev != device)
+				continue;
+
+			length = rmrr->end_address - rmrr->base_address + 1;
+			resv = iommu_alloc_resv_region(rmrr->base_address,
+						       length, prot,
+						       IOMMU_RESV_DIRECT);
+			if (!resv)
+				break;
+
+			list_add_tail(&resv->list, head);
+		}
+	}
+	up_read(&dmar_global_lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	reg = iommu_alloc_resv_region(IOAPIC_RANGE_START,
 				      IOAPIC_RANGE_END - IOAPIC_RANGE_START + 1,
@@ -5233,10 +5304,15 @@ static void intel_iommu_put_resv_regions(struct device *dev,
 {
 	struct iommu_resv_region *entry, *next;
 
+<<<<<<< HEAD
 	list_for_each_entry_safe(entry, next, head, list) {
 		if (entry->type == IOMMU_RESV_MSI)
 			kfree(entry);
 	}
+=======
+	list_for_each_entry_safe(entry, next, head, list)
+		kfree(entry);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 #ifdef CONFIG_INTEL_IOMMU_SVM

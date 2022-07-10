@@ -100,6 +100,10 @@ struct name_table {
 	struct hlist_head services[TIPC_NAMETBL_SIZE];
 	struct list_head node_scope;
 	struct list_head cluster_scope;
+<<<<<<< HEAD
+=======
+	rwlock_t cluster_scope_lock;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u32 local_publ_count;
 };
 

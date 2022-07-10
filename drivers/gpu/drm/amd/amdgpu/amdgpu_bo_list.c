@@ -264,7 +264,11 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
 
 	r = amdgpu_bo_create_list_entry_array(&args->in, &info);
 	if (r)
+<<<<<<< HEAD
 		goto error_free;
+=======
+		return r;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	switch (args->in.operation) {
 	case AMDGPU_BO_LIST_OP_CREATE:
@@ -277,8 +281,12 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
 		r = idr_alloc(&fpriv->bo_list_handles, list, 1, 0, GFP_KERNEL);
 		mutex_unlock(&fpriv->bo_list_lock);
 		if (r < 0) {
+<<<<<<< HEAD
 			amdgpu_bo_list_put(list);
 			return r;
+=======
+			goto error_put_list;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 
 		handle = r;
@@ -300,9 +308,14 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
 		mutex_unlock(&fpriv->bo_list_lock);
 
 		if (IS_ERR(old)) {
+<<<<<<< HEAD
 			amdgpu_bo_list_put(list);
 			r = PTR_ERR(old);
 			goto error_free;
+=======
+			r = PTR_ERR(old);
+			goto error_put_list;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 
 		amdgpu_bo_list_put(old);
@@ -319,8 +332,16 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
 
 	return 0;
 
+<<<<<<< HEAD
 error_free:
 	if (info)
 		kvfree(info);
+=======
+error_put_list:
+	amdgpu_bo_list_put(list);
+
+error_free:
+	kvfree(info);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return r;
 }

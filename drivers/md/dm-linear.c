@@ -62,6 +62,10 @@ int dm_linear_ctr(struct dm_target *ti, unsigned int argc, char **argv)
 	ti->num_secure_erase_bios = 1;
 	ti->num_write_same_bios = 1;
 	ti->num_write_zeroes_bios = 1;
+<<<<<<< HEAD
+=======
+	ti->may_passthrough_inline_crypto = true;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ti->private = lc;
 	return 0;
 

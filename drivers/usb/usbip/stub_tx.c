@@ -5,10 +5,15 @@
 
 #include <linux/kthread.h>
 #include <linux/socket.h>
+<<<<<<< HEAD
+=======
+#include <linux/scatterlist.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #include "usbip_common.h"
 #include "stub.h"
 
+<<<<<<< HEAD
 static void stub_free_priv_and_urb(struct stub_priv *priv)
 {
 	struct urb *urb = priv->urb;
@@ -24,6 +29,8 @@ static void stub_free_priv_and_urb(struct stub_priv *priv)
 	usb_free_urb(urb);
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* be in spin_lock_irqsave(&sdev->priv_lock, flags) */
 void stub_enqueue_ret_unlink(struct stub_device *sdev, __u32 seqnum,
 			     __u32 status)
@@ -85,6 +92,25 @@ void stub_complete(struct urb *urb)
 		break;
 	}
 
+<<<<<<< HEAD
+=======
+	/*
+	 * If the server breaks single SG request into the several URBs, the
+	 * URBs must be reassembled before sending completed URB to the vhci.
+	 * Don't wake up the tx thread until all the URBs are completed.
+	 */
+	if (priv->sgl) {
+		priv->completed_urbs++;
+
+		/* Only save the first error status */
+		if (urb->status && !priv->urb_status)
+			priv->urb_status = urb->status;
+
+		if (priv->completed_urbs < priv->num_urbs)
+			return;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* link a urb to the queue of tx. */
 	spin_lock_irqsave(&sdev->priv_lock, flags);
 	if (sdev->ud.tcp_socket == NULL) {
@@ -156,18 +182,35 @@ static int stub_send_ret_submit(struct stub_device *sdev)
 	size_t total_size = 0;
 
 	while ((priv = dequeue_from_priv_tx(sdev)) != NULL) {
+<<<<<<< HEAD
 		int ret;
 		struct urb *urb = priv->urb;
 		struct usbip_header pdu_header;
 		struct usbip_iso_packet_descriptor *iso_buffer = NULL;
 		struct kvec *iov = NULL;
 		int iovnum = 0;
+=======
+		struct urb *urb = priv->urbs[0];
+		struct usbip_header pdu_header;
+		struct usbip_iso_packet_descriptor *iso_buffer = NULL;
+		struct kvec *iov = NULL;
+		struct scatterlist *sg;
+		u32 actual_length = 0;
+		int iovnum = 0;
+		int ret;
+		int i;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		txsize = 0;
 		memset(&pdu_header, 0, sizeof(pdu_header));
 		memset(&msg, 0, sizeof(msg));
 
+<<<<<<< HEAD
 		if (urb->actual_length > 0 && !urb->transfer_buffer) {
+=======
+		if (urb->actual_length > 0 && !urb->transfer_buffer &&
+		   !urb->num_sgs) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			dev_err(&sdev->udev->dev,
 				"urb: actual_length %d transfer_buffer null\n",
 				urb->actual_length);
@@ -176,6 +219,14 @@ static int stub_send_ret_submit(struct stub_device *sdev)
 
 		if (usb_pipetype(urb->pipe) == PIPE_ISOCHRONOUS)
 			iovnum = 2 + urb->number_of_packets;
+<<<<<<< HEAD
+=======
+		else if (usb_pipein(urb->pipe) && urb->actual_length > 0 &&
+			urb->num_sgs)
+			iovnum = 1 + urb->num_sgs;
+		else if (usb_pipein(urb->pipe) && priv->sgl)
+			iovnum = 1 + priv->num_urbs;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		else
 			iovnum = 2;
 
@@ -192,6 +243,18 @@ static int stub_send_ret_submit(struct stub_device *sdev)
 		setup_ret_submit_pdu(&pdu_header, urb);
 		usbip_dbg_stub_tx("setup txdata seqnum: %d\n",
 				  pdu_header.base.seqnum);
+<<<<<<< HEAD
+=======
+
+		if (priv->sgl) {
+			for (i = 0; i < priv->num_urbs; i++)
+				actual_length += priv->urbs[i]->actual_length;
+
+			pdu_header.u.ret_submit.status = priv->urb_status;
+			pdu_header.u.ret_submit.actual_length = actual_length;
+		}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		usbip_header_correct_endian(&pdu_header, 1);
 
 		iov[iovnum].iov_base = &pdu_header;
@@ -200,12 +263,56 @@ static int stub_send_ret_submit(struct stub_device *sdev)
 		txsize += sizeof(pdu_header);
 
 		/* 2. setup transfer buffer */
+<<<<<<< HEAD
 		if (usb_pipein(urb->pipe) &&
 		    usb_pipetype(urb->pipe) != PIPE_ISOCHRONOUS &&
 		    urb->actual_length > 0) {
 			iov[iovnum].iov_base = urb->transfer_buffer;
 			iov[iovnum].iov_len  = urb->actual_length;
 			iovnum++;
+=======
+		if (usb_pipein(urb->pipe) && priv->sgl) {
+			/* If the server split a single SG request into several
+			 * URBs because the server's HCD doesn't support SG,
+			 * reassemble the split URB buffers into a single
+			 * return command.
+			 */
+			for (i = 0; i < priv->num_urbs; i++) {
+				iov[iovnum].iov_base =
+					priv->urbs[i]->transfer_buffer;
+				iov[iovnum].iov_len =
+					priv->urbs[i]->actual_length;
+				iovnum++;
+			}
+			txsize += actual_length;
+		} else if (usb_pipein(urb->pipe) &&
+		    usb_pipetype(urb->pipe) != PIPE_ISOCHRONOUS &&
+		    urb->actual_length > 0) {
+			if (urb->num_sgs) {
+				unsigned int copy = urb->actual_length;
+				int size;
+
+				for_each_sg(urb->sg, sg, urb->num_sgs, i) {
+					if (copy == 0)
+						break;
+
+					if (copy < sg->length)
+						size = copy;
+					else
+						size = sg->length;
+
+					iov[iovnum].iov_base = sg_virt(sg);
+					iov[iovnum].iov_len = size;
+
+					iovnum++;
+					copy -= size;
+				}
+			} else {
+				iov[iovnum].iov_base = urb->transfer_buffer;
+				iov[iovnum].iov_len  = urb->actual_length;
+				iovnum++;
+			}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			txsize += urb->actual_length;
 		} else if (usb_pipein(urb->pipe) &&
 			   usb_pipetype(urb->pipe) == PIPE_ISOCHRONOUS) {

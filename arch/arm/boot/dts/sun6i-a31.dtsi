@@ -201,7 +201,11 @@
 	};
 
 	pmu {
+<<<<<<< HEAD
 		compatible = "arm,cortex-a7-pmu", "arm,cortex-a15-pmu";
+=======
+		compatible = "arm,cortex-a7-pmu";
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
 			     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
 			     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,

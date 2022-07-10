@@ -61,7 +61,11 @@ struct vlan_hdr {
 	__be16 h_vlan_encapsulated_proto;
 };
 
+<<<<<<< HEAD
 struct bpf_flow_keys {
+=======
+struct flow_key_record {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	__be32 src;
 	__be32 dst;
 	union {
@@ -88,7 +92,11 @@ static inline __u32 ipv6_addr_hash(struct __sk_buff *ctx, __u64 off)
 }
 
 struct globals {
+<<<<<<< HEAD
 	struct bpf_flow_keys flow;
+=======
+	struct flow_key_record flow;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct bpf_map_def SEC("maps") percpu_map = {
@@ -114,14 +122,22 @@ struct pair {
 
 struct bpf_map_def SEC("maps") hash_map = {
 	.type = BPF_MAP_TYPE_HASH,
+<<<<<<< HEAD
 	.key_size = sizeof(struct bpf_flow_keys),
+=======
+	.key_size = sizeof(struct flow_key_record),
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.value_size = sizeof(struct pair),
 	.max_entries = 1024,
 };
 
 static void update_stats(struct __sk_buff *skb, struct globals *g)
 {
+<<<<<<< HEAD
 	struct bpf_flow_keys key = g->flow;
+=======
+	struct flow_key_record key = g->flow;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct pair *value;
 
 	value = bpf_map_lookup_elem(&hash_map, &key);

@@ -21,12 +21,21 @@ enum cnss_bus_width_type {
 	CNSS_BUS_WIDTH_LOW,
 	CNSS_BUS_WIDTH_MEDIUM,
 	CNSS_BUS_WIDTH_HIGH,
+<<<<<<< HEAD
 	CNSS_BUS_WIDTH_VERY_HIGH
+=======
+	CNSS_BUS_WIDTH_VERY_HIGH,
+	CNSS_BUS_WIDTH_LOW_LATENCY
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 enum cnss_platform_cap_flag {
 	CNSS_HAS_EXTERNAL_SWREG = 0x01,
 	CNSS_HAS_UART_ACCESS = 0x02,
+<<<<<<< HEAD
+=======
+	CNSS_HAS_DRV_SUPPORT = 0x04,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct cnss_platform_cap {
@@ -180,6 +189,10 @@ extern void cnss_schedule_recovery(struct device *dev,
 extern int cnss_self_recovery(struct device *dev,
 			      enum cnss_recovery_reason reason);
 extern int cnss_force_fw_assert(struct device *dev);
+<<<<<<< HEAD
+=======
+extern int cnss_force_fw_assert_async(struct device *dev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 extern int cnss_force_collect_rddm(struct device *dev);
 extern int cnss_qmi_send_get(struct device *dev);
 extern int cnss_qmi_send_put(struct device *dev);
@@ -212,6 +225,10 @@ extern int cnss_wlan_pm_control(struct device *dev, bool vote);
 extern int cnss_auto_suspend(struct device *dev);
 extern int cnss_auto_resume(struct device *dev);
 extern int cnss_pci_is_drv_connected(struct device *dev);
+<<<<<<< HEAD
+=======
+extern int cnss_pci_force_wake_request_sync(struct device *dev, int timeout);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 extern int cnss_pci_force_wake_request(struct device *dev);
 extern int cnss_pci_is_device_awake(struct device *dev);
 extern int cnss_pci_force_wake_release(struct device *dev);

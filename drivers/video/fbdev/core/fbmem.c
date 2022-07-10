@@ -1082,7 +1082,11 @@ fb_blank(struct fb_info *info, int blank)
 EXPORT_SYMBOL(fb_blank);
 
 static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
+<<<<<<< HEAD
 			unsigned long arg)
+=======
+			unsigned long arg, struct file *file)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct fb_ops *fb;
 	struct fb_var_screeninfo var;
@@ -1182,9 +1186,14 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
 	case FBIOPUT_CON2FBMAP:
 		if (copy_from_user(&con2fb, argp, sizeof(con2fb)))
 			return -EFAULT;
+<<<<<<< HEAD
 		if (con2fb.console < 1 || con2fb.console > MAX_NR_CONSOLES)
 			return -EINVAL;
 		if (con2fb.framebuffer >= FB_MAX)
+=======
+		if (con2fb.console < 1 || con2fb.console > MAX_NR_CONSOLES ||
+			(con2fb.framebuffer >= FB_MAX))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			return -EINVAL;
 		if (!registered_fb[con2fb.framebuffer])
 			request_module("fb%d", con2fb.framebuffer);
@@ -1219,7 +1228,13 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
 		if (!lock_fb_info(info))
 			return -ENODEV;
 		fb = info->fbops;
+<<<<<<< HEAD
 		if (fb->fb_ioctl)
+=======
+		if (fb->fb_ioctl_v2)
+			ret = fb->fb_ioctl_v2(info, cmd, arg, file);
+		else if (fb->fb_ioctl)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			ret = fb->fb_ioctl(info, cmd, arg);
 		else
 			ret = -ENOTTY;
@@ -1234,7 +1249,11 @@ static long fb_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 
 	if (!info)
 		return -ENODEV;
+<<<<<<< HEAD
 	return do_fb_ioctl(info, cmd, arg);
+=======
+	return do_fb_ioctl(info, cmd, arg, file);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 #ifdef CONFIG_COMPAT
@@ -1265,7 +1284,11 @@ struct fb_cmap32 {
 };
 
 static int fb_getput_cmap(struct fb_info *info, unsigned int cmd,
+<<<<<<< HEAD
 			  unsigned long arg)
+=======
+			  unsigned long arg, struct file *file)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct fb_cmap_user __user *cmap;
 	struct fb_cmap32 __user *cmap32;
@@ -1288,7 +1311,11 @@ static int fb_getput_cmap(struct fb_info *info, unsigned int cmd,
 	    put_user(compat_ptr(data), &cmap->transp))
 		return -EFAULT;
 
+<<<<<<< HEAD
 	err = do_fb_ioctl(info, cmd, (unsigned long) cmap);
+=======
+	err = do_fb_ioctl(info, cmd, (unsigned long) cmap, file);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!err) {
 		if (copy_in_user(&cmap32->start,
@@ -1333,7 +1360,11 @@ static int do_fscreeninfo_to_user(struct fb_fix_screeninfo *fix,
 }
 
 static int fb_get_fscreeninfo(struct fb_info *info, unsigned int cmd,
+<<<<<<< HEAD
 			      unsigned long arg)
+=======
+			      unsigned long arg, struct file *file)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct fb_fix_screeninfo fix;
 
@@ -1363,20 +1394,38 @@ static long fb_compat_ioctl(struct file *file, unsigned int cmd,
 		arg = (unsigned long) compat_ptr(arg);
 		/* fall through */
 	case FBIOBLANK:
+<<<<<<< HEAD
 		ret = do_fb_ioctl(info, cmd, arg);
 		break;
 
 	case FBIOGET_FSCREENINFO:
 		ret = fb_get_fscreeninfo(info, cmd, arg);
+=======
+		ret = do_fb_ioctl(info, cmd, arg, file);
+		break;
+
+	case FBIOGET_FSCREENINFO:
+		ret = fb_get_fscreeninfo(info, cmd, arg, file);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 
 	case FBIOGETCMAP:
 	case FBIOPUTCMAP:
+<<<<<<< HEAD
 		ret = fb_getput_cmap(info, cmd, arg);
 		break;
 
 	default:
 		if (fb->fb_compat_ioctl)
+=======
+		ret = fb_getput_cmap(info, cmd, arg, file);
+		break;
+
+	default:
+		if (fb->fb_compat_ioctl_v2)
+			ret = fb->fb_compat_ioctl_v2(info, cmd, arg, file);
+		else if (fb->fb_compat_ioctl)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			ret = fb->fb_compat_ioctl(info, cmd, arg);
 		break;
 	}

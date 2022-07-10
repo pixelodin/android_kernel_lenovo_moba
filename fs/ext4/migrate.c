@@ -427,6 +427,10 @@ static int free_ext_block(handle_t *handle, struct inode *inode)
 
 int ext4_ext_migrate(struct inode *inode)
 {
+<<<<<<< HEAD
+=======
+	struct ext4_sb_info *sbi = EXT4_SB(inode->i_sb);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	handle_t *handle;
 	int retval = 0, i;
 	__le32 *i_data;
@@ -451,6 +455,11 @@ int ext4_ext_migrate(struct inode *inode)
 		 */
 		return retval;
 
+<<<<<<< HEAD
+=======
+	percpu_down_write(&sbi->s_writepages_rwsem);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/*
 	 * Worst case we can touch the allocation bitmaps, a bgd
 	 * block, and a block to link in the orphan list.  We do need
@@ -461,7 +470,11 @@ int ext4_ext_migrate(struct inode *inode)
 
 	if (IS_ERR(handle)) {
 		retval = PTR_ERR(handle);
+<<<<<<< HEAD
 		return retval;
+=======
+		goto out_unlock;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	goal = (((inode->i_ino - 1) / EXT4_INODES_PER_GROUP(inode->i_sb)) *
 		EXT4_INODES_PER_GROUP(inode->i_sb)) + 1;
@@ -472,7 +485,11 @@ int ext4_ext_migrate(struct inode *inode)
 	if (IS_ERR(tmp_inode)) {
 		retval = PTR_ERR(tmp_inode);
 		ext4_journal_stop(handle);
+<<<<<<< HEAD
 		return retval;
+=======
+		goto out_unlock;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	i_size_write(tmp_inode, i_size_read(inode));
 	/*
@@ -514,7 +531,11 @@ int ext4_ext_migrate(struct inode *inode)
 		 */
 		ext4_orphan_del(NULL, tmp_inode);
 		retval = PTR_ERR(handle);
+<<<<<<< HEAD
 		goto out;
+=======
+		goto out_tmp_inode;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	ei = EXT4_I(inode);
@@ -595,10 +616,18 @@ err_out:
 	/* Reset the extent details */
 	ext4_ext_tree_init(handle, tmp_inode);
 	ext4_journal_stop(handle);
+<<<<<<< HEAD
 out:
 	unlock_new_inode(tmp_inode);
 	iput(tmp_inode);
 
+=======
+out_tmp_inode:
+	unlock_new_inode(tmp_inode);
+	iput(tmp_inode);
+out_unlock:
+	percpu_up_write(&sbi->s_writepages_rwsem);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return retval;
 }
 
@@ -608,7 +637,12 @@ out:
 int ext4_ind_migrate(struct inode *inode)
 {
 	struct ext4_extent_header	*eh;
+<<<<<<< HEAD
 	struct ext4_super_block		*es = EXT4_SB(inode->i_sb)->s_es;
+=======
+	struct ext4_sb_info		*sbi = EXT4_SB(inode->i_sb);
+	struct ext4_super_block		*es = sbi->s_es;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct ext4_inode_info		*ei = EXT4_I(inode);
 	struct ext4_extent		*ex;
 	unsigned int			i, len;
@@ -632,9 +666,19 @@ int ext4_ind_migrate(struct inode *inode)
 	if (test_opt(inode->i_sb, DELALLOC))
 		ext4_alloc_da_blocks(inode);
 
+<<<<<<< HEAD
 	handle = ext4_journal_start(inode, EXT4_HT_MIGRATE, 1);
 	if (IS_ERR(handle))
 		return PTR_ERR(handle);
+=======
+	percpu_down_write(&sbi->s_writepages_rwsem);
+
+	handle = ext4_journal_start(inode, EXT4_HT_MIGRATE, 1);
+	if (IS_ERR(handle)) {
+		ret = PTR_ERR(handle);
+		goto out_unlock;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	down_write(&EXT4_I(inode)->i_data_sem);
 	ret = ext4_ext_check_inode(inode);
@@ -669,5 +713,10 @@ int ext4_ind_migrate(struct inode *inode)
 errout:
 	ext4_journal_stop(handle);
 	up_write(&EXT4_I(inode)->i_data_sem);
+<<<<<<< HEAD
+=======
+out_unlock:
+	percpu_up_write(&sbi->s_writepages_rwsem);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return ret;
 }

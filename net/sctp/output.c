@@ -399,6 +399,7 @@ finish:
 	return retval;
 }
 
+<<<<<<< HEAD
 static void sctp_packet_release_owner(struct sk_buff *skb)
 {
 	sk_free(skb->sk);
@@ -418,6 +419,8 @@ static void sctp_packet_set_owner_w(struct sk_buff *skb, struct sock *sk)
 	refcount_inc(&sk->sk_wmem_alloc);
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static void sctp_packet_gso_append(struct sk_buff *head, struct sk_buff *skb)
 {
 	if (SCTP_OUTPUT_CB(head)->last == head)
@@ -429,6 +432,10 @@ static void sctp_packet_gso_append(struct sk_buff *head, struct sk_buff *skb)
 	head->truesize += skb->truesize;
 	head->data_len += skb->len;
 	head->len += skb->len;
+<<<<<<< HEAD
+=======
+	refcount_add(skb->truesize, &head->sk->sk_wmem_alloc);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	__skb_header_release(skb);
 }
@@ -604,7 +611,11 @@ int sctp_packet_transmit(struct sctp_packet *packet, gfp_t gfp)
 	if (!head)
 		goto out;
 	skb_reserve(head, packet->overhead + MAX_HEADER);
+<<<<<<< HEAD
 	sctp_packet_set_owner_w(head, sk);
+=======
+	skb_set_owner_w(head, sk);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* set sctp header */
 	sh = skb_push(head, sizeof(struct sctphdr));

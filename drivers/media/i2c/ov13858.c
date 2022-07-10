@@ -1230,7 +1230,11 @@ static int ov13858_set_ctrl(struct v4l2_ctrl *ctrl)
 	 * Applying V4L2 control value only happens
 	 * when power is up for streaming
 	 */
+<<<<<<< HEAD
 	if (pm_runtime_get_if_in_use(&client->dev) <= 0)
+=======
+	if (!pm_runtime_get_if_in_use(&client->dev))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return 0;
 
 	ret = 0;
@@ -1612,7 +1616,12 @@ static int ov13858_init_controls(struct ov13858 *ov13858)
 				OV13858_NUM_OF_LINK_FREQS - 1,
 				0,
 				link_freq_menu_items);
+<<<<<<< HEAD
 	ov13858->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+=======
+	if (ov13858->link_freq)
+		ov13858->link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	pixel_rate_max = link_freq_to_pixel_rate(link_freq_menu_items[0]);
 	pixel_rate_min = link_freq_to_pixel_rate(link_freq_menu_items[1]);
@@ -1635,7 +1644,12 @@ static int ov13858_init_controls(struct ov13858 *ov13858)
 	ov13858->hblank = v4l2_ctrl_new_std(
 				ctrl_hdlr, &ov13858_ctrl_ops, V4L2_CID_HBLANK,
 				hblank, hblank, 1, hblank);
+<<<<<<< HEAD
 	ov13858->hblank->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+=======
+	if (ov13858->hblank)
+		ov13858->hblank->flags |= V4L2_CTRL_FLAG_READ_ONLY;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	exposure_max = mode->vts_def - 8;
 	ov13858->exposure = v4l2_ctrl_new_std(

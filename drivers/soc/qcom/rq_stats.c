@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2010-2015, 2017, 2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2010-2015, 2017, 2019-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include <linux/init.h>
@@ -21,7 +25,11 @@ static void def_work_fn(struct work_struct *work)
 static ssize_t show_def_timer_ms(struct kobject *kobj,
 		struct kobj_attribute *attr, char *buf)
 {
+<<<<<<< HEAD
 	int64_t diff;
+=======
+	uint64_t diff;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	unsigned int udiff;
 
 	diff = ktime_to_ns(ktime_get()) - rq_info.def_start_time;
@@ -49,6 +57,7 @@ static struct kobj_attribute def_timer_ms_attr =
 	__ATTR(def_timer_ms, 0600, show_def_timer_ms,
 			store_def_timer_ms);
 
+<<<<<<< HEAD
 static ssize_t show_mpctl(struct kobject *kobj,
                struct kobj_attribute *attr, char *buf)
 {
@@ -70,6 +79,10 @@ static struct kobj_attribute mpctl_attr =
 static struct attribute *rq_attrs[] = {
 	&def_timer_ms_attr.attr,
 	&mpctl_attr.attr,
+=======
+static struct attribute *rq_attrs[] = {
+	&def_timer_ms_attr.attr,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	NULL,
 };
 
@@ -81,7 +94,10 @@ static int init_rq_attribs(void)
 {
 	int err;
 
+<<<<<<< HEAD
 	rq_info.mpctl[0] = '0';
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rq_info.attr_group = &rq_attr_group;
 
 	/* Create /sys/devices/system/cpu/cpu0/rq-stats/... */

@@ -104,6 +104,7 @@ int __cfg80211_join_ibss(struct cfg80211_registered_device *rdev,
 		* use the mandatory rate set for 11b or
 		* 11a for maximum compatibility.
 		*/
+<<<<<<< HEAD
 		struct ieee80211_supported_band *sband;
 		enum nl80211_band band;
 		u32 flag;
@@ -117,6 +118,15 @@ int __cfg80211_join_ibss(struct cfg80211_registered_device *rdev,
 			flag = IEEE80211_RATE_MANDATORY_B;
 
 		sband = rdev->wiphy.bands[band];
+=======
+		struct ieee80211_supported_band *sband =
+			rdev->wiphy.bands[params->chandef.chan->band];
+		int j;
+		u32 flag = params->chandef.chan->band == NL80211_BAND_5GHZ ?
+			IEEE80211_RATE_MANDATORY_A :
+			IEEE80211_RATE_MANDATORY_B;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		for (j = 0; j < sband->n_bitrates; j++) {
 			if (sband->bitrates[j].flags & flag)
 				params->basic_rates |= BIT(j);

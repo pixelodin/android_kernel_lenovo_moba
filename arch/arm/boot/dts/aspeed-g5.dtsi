@@ -247,7 +247,11 @@
 				compatible = "aspeed,ast2500-gpio";
 				reg = <0x1e780000 0x1000>;
 				interrupts = <20>;
+<<<<<<< HEAD
 				gpio-ranges = <&pinctrl 0 0 220>;
+=======
+				gpio-ranges = <&pinctrl 0 0 232>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				clocks = <&syscon ASPEED_CLK_APB>;
 				interrupt-controller;
 			};
@@ -410,7 +414,11 @@
 				status = "disabled";
 			};
 
+<<<<<<< HEAD
 			i2c: i2c@1e78a000 {
+=======
+			i2c: bus@1e78a000 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				compatible = "simple-bus";
 				#address-cells = <1>;
 				#size-cells = <1>;

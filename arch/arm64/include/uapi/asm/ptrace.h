@@ -49,6 +49,10 @@
 #define PSR_SSBS_BIT	0x00001000
 #define PSR_PAN_BIT	0x00400000
 #define PSR_UAO_BIT	0x00800000
+<<<<<<< HEAD
+=======
+#define PSR_DIT_BIT	0x01000000
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define PSR_V_BIT	0x10000000
 #define PSR_C_BIT	0x20000000
 #define PSR_Z_BIT	0x40000000

@@ -59,6 +59,14 @@ extern ssize_t cpu_show_l1tf(struct device *dev,
 			     struct device_attribute *attr, char *buf);
 extern ssize_t cpu_show_mds(struct device *dev,
 			    struct device_attribute *attr, char *buf);
+<<<<<<< HEAD
+=======
+extern ssize_t cpu_show_tsx_async_abort(struct device *dev,
+					struct device_attribute *attr,
+					char *buf);
+extern ssize_t cpu_show_itlb_multihit(struct device *dev,
+				      struct device_attribute *attr, char *buf);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 extern __printf(4, 5)
 struct device *cpu_device_create(struct device *parent, void *drvdata,
@@ -200,6 +208,7 @@ void idle_notifier_register(struct notifier_block *n);
 void idle_notifier_unregister(struct notifier_block *n);
 void idle_notifier_call_chain(unsigned long val);
 
+<<<<<<< HEAD
 /*
  * These are used for a global "mitigations=" cmdline option for toggling
  * optional CPU mitigations.
@@ -223,5 +232,9 @@ static inline bool cpu_mitigations_auto_nosmt(void)
 {
 	return cpu_mitigations == CPU_MITIGATIONS_AUTO_NOSMT;
 }
+=======
+extern bool cpu_mitigations_off(void);
+extern bool cpu_mitigations_auto_nosmt(void);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #endif /* _LINUX_CPU_H_ */

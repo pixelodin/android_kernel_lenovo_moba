@@ -59,6 +59,11 @@
 #define DIAG_CTRL_MSG_LOG_MS_MASK	37
 #define DIAG_CTRL_MSG_EVENT_MS_MASK	38
 
+<<<<<<< HEAD
+=======
+#define NON_HDLC_VERSION	1
+#define NON_HDLC_HEADER_SIZE	4
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define CONTROL_CHAR	0x7E
 
 #define DIAG_ID_ROOT_STRING "root"
@@ -834,6 +839,10 @@ struct diagchar_dev {
 	unsigned char *buf_feature_mask_update;
 	uint8_t hdlc_disabled;
 	uint8_t p_hdlc_disabled[NUM_MD_SESSIONS];
+<<<<<<< HEAD
+=======
+	uint8_t proc_hdlc_disabled[NUM_DIAG_MD_DEV];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct mutex hdlc_disable_mutex;
 	struct mutex hdlc_recovery_mutex;
 	struct timer_list hdlc_reset_timer;

@@ -784,7 +784,11 @@ static int pvcalls_back_poll(struct xenbus_device *dev,
 	mappass->reqcopy = *req;
 	icsk = inet_csk(mappass->sock->sk);
 	queue = &icsk->icsk_accept_queue;
+<<<<<<< HEAD
 	data = queue->rskq_accept_head != NULL;
+=======
+	data = READ_ONCE(queue->rskq_accept_head) != NULL;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (data) {
 		mappass->reqcopy.cmd = 0;
 		ret = 0;

@@ -7,7 +7,11 @@
  *
  * Copyright(c) 2008 - 2015 Intel Corporation. All rights reserved.
  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
+<<<<<<< HEAD
  * Copyright(c) 2018        Intel Corporation
+=======
+ * Copyright(c) 2018 - 2019 Intel Corporation
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of version 2 of the GNU General Public License as
@@ -34,7 +38,11 @@
  *
  * Copyright(c) 2005 - 2014 Intel Corporation. All rights reserved.
  * Copyright(c) 2016 - 2017 Intel Deutschland GmbH
+<<<<<<< HEAD
  * Copyright(c) 2018        Intel Corporation
+=======
+ * Copyright(c) 2018 - 2019 Intel Corporation
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -108,7 +116,11 @@ iwl_parse_nvm_data(struct iwl_trans *trans, const struct iwl_cfg *cfg,
 struct ieee80211_regdomain *
 iwl_parse_nvm_mcc_info(struct device *dev, const struct iwl_cfg *cfg,
 		       int num_of_ch, __le32 *channels, u16 fw_mcc,
+<<<<<<< HEAD
 		       u16 geo_info);
+=======
+		       u16 geo_info, u16 cap);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /**
  * struct iwl_nvm_section - describes an NVM section in memory.

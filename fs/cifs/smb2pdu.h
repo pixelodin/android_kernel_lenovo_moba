@@ -777,6 +777,10 @@ struct create_durable_handle_reconnect_v2 {
 	struct create_context ccontext;
 	__u8   Name[8];
 	struct durable_reconnect_context_v2 dcontext;
+<<<<<<< HEAD
+=======
+	__u8   Pad[4];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 } __packed;
 
 /* See MS-SMB2 2.2.13.2.5 */

@@ -238,6 +238,7 @@ struct ufs_qcom_testbus {
 	u8 select_minor;
 };
 
+<<<<<<< HEAD
 /**
  * struct ufs_qcom_ice_data - ICE related information
  * @vops:	pointer to variant operations of ICE
@@ -258,6 +259,8 @@ struct ufs_qcom_ice_data {
 	bool crypto_engine_err;
 };
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #ifdef CONFIG_DEBUG_FS
 struct qcom_debugfs_files {
 	struct dentry *debugfs_root;
@@ -366,7 +369,10 @@ struct ufs_qcom_host {
 	bool disable_lpm;
 	bool is_lane_clks_enabled;
 	bool sec_cfg_updated;
+<<<<<<< HEAD
 	struct ufs_qcom_ice_data ice;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	void __iomem *dev_ref_clk_ctrl_mmio;
 	bool is_dev_ref_clk_enabled;
@@ -381,9 +387,12 @@ struct ufs_qcom_host {
 	u32 dbg_print_en;
 	struct ufs_qcom_testbus testbus;
 
+<<<<<<< HEAD
 	spinlock_t ice_work_lock;
 	struct work_struct ice_cfg_work;
 	bool is_ice_cfg_work_set;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct request *req_pending;
 	struct ufs_vreg *vddp_ref_clk;
 	struct ufs_vreg *vccq_parent;

@@ -54,6 +54,11 @@ static const struct file_operations __fops = {				\
 	.llseek  = no_llseek,						\
 }
 
+<<<<<<< HEAD
+=======
+typedef struct vfsmount *(*debugfs_automount_t)(struct dentry *, void *);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #if defined(CONFIG_DEBUG_FS)
 
 struct dentry *debugfs_lookup(const char *name, struct dentry *parent);
@@ -75,7 +80,10 @@ struct dentry *debugfs_create_dir(const char *name, struct dentry *parent);
 struct dentry *debugfs_create_symlink(const char *name, struct dentry *parent,
 				      const char *dest);
 
+<<<<<<< HEAD
 typedef struct vfsmount *(*debugfs_automount_t)(struct dentry *, void *);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct dentry *debugfs_create_automount(const char *name,
 					struct dentry *parent,
 					debugfs_automount_t f,
@@ -204,7 +212,11 @@ static inline struct dentry *debugfs_create_symlink(const char *name,
 
 static inline struct dentry *debugfs_create_automount(const char *name,
 					struct dentry *parent,
+<<<<<<< HEAD
 					struct vfsmount *(*f)(void *),
+=======
+					debugfs_automount_t f,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 					void *data)
 {
 	return ERR_PTR(-ENODEV);

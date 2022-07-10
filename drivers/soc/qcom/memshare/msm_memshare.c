@@ -308,24 +308,50 @@ static int modem_notifier_cb(struct notifier_block *this, unsigned long code,
 
 	case SUBSYS_BEFORE_SHUTDOWN:
 		bootup_request++;
+<<<<<<< HEAD
+=======
+		dev_info(memsh_drv->dev,
+		"memshare: SUBSYS_BEFORE_SHUTDOWN: bootup_request:%d\n",
+		bootup_request);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		for (i = 0; i < MAX_CLIENTS; i++)
 			memblock[i].alloc_request = 0;
 		break;
 
 	case SUBSYS_RAMDUMP_NOTIFICATION:
 		ramdump_event = true;
+<<<<<<< HEAD
+=======
+		dev_info(memsh_drv->dev,
+		"memshare: SUBSYS_RAMDUMP_NOTIFICATION: ramdump_event:%d\n",
+		ramdump_event);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 
 	case SUBSYS_BEFORE_POWERUP:
 		if (_cmd) {
 			notifdata = (struct notif_data *) _cmd;
+<<<<<<< HEAD
 		} else {
 			ramdump_event = false;
+=======
+			dev_info(memsh_drv->dev,
+			"memshare: SUBSYS_BEFORE_POWERUP: enable_ramdump: %d, ramdump_event: %d\n",
+			notifdata->enable_ramdump, ramdump_event);
+		} else {
+			ramdump_event = false;
+			dev_info(memsh_drv->dev,
+			"memshare: SUBSYS_BEFORE_POWERUP: ramdump_event: %d\n",
+			ramdump_event);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			break;
 		}
 
 		if (notifdata->enable_ramdump && ramdump_event) {
+<<<<<<< HEAD
 			dev_info(memsh_child->dev, "memshare: Ramdump collection is enabled\n");
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			ret = mem_share_do_ramdump();
 			if (ret)
 				dev_err(memsh_child->dev, "memshare: Ramdump collection failed\n");
@@ -334,7 +360,11 @@ static int modem_notifier_cb(struct notifier_block *this, unsigned long code,
 		break;
 
 	case SUBSYS_AFTER_POWERUP:
+<<<<<<< HEAD
 		dev_dbg(memsh_child->dev, "memshare: Modem has booted up\n");
+=======
+		dev_info(memsh_drv->dev, "memshare: SUBSYS_AFTER_POWERUP: Modem has booted up\n");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		for (i = 0; i < MAX_CLIENTS; i++) {
 			size = memblock[i].size;
 			if (memblock[i].free_memory > 0 &&
@@ -398,8 +428,14 @@ static int modem_notifier_cb(struct notifier_block *this, unsigned long code,
 	default:
 		break;
 	}
+<<<<<<< HEAD
 
 	mutex_unlock(&memsh_drv->mem_share);
+=======
+	mutex_unlock(&memsh_drv->mem_share);
+	dev_info(memsh_drv->dev,
+	"memshare: notifier_cb processed for code: %d\n", code);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return NOTIFY_DONE;
 }
 
@@ -675,21 +711,33 @@ static struct qmi_msg_handler qmi_memshare_handlers[] = {
 		.type = QMI_REQUEST,
 		.msg_id = MEM_ALLOC_GENERIC_REQ_MSG_V01,
 		.ei = mem_alloc_generic_req_msg_data_v01_ei,
+<<<<<<< HEAD
 		.decoded_size = MEM_ALLOC_REQ_MAX_MSG_LEN_V01,
+=======
+		.decoded_size = sizeof(struct mem_alloc_generic_req_msg_v01),
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.fn = handle_alloc_generic_req,
 	},
 	{
 		.type = QMI_REQUEST,
 		.msg_id = MEM_FREE_GENERIC_REQ_MSG_V01,
 		.ei = mem_free_generic_req_msg_data_v01_ei,
+<<<<<<< HEAD
 		.decoded_size = MEM_FREE_REQ_MAX_MSG_LEN_V01,
+=======
+		.decoded_size = sizeof(struct mem_free_generic_req_msg_v01),
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.fn = handle_free_generic_req,
 	},
 	{
 		.type = QMI_REQUEST,
 		.msg_id = MEM_QUERY_SIZE_REQ_MSG_V01,
 		.ei = mem_query_size_req_msg_data_v01_ei,
+<<<<<<< HEAD
 		.decoded_size = MEM_QUERY_MAX_MSG_LEN_V01,
+=======
+		.decoded_size = sizeof(struct mem_query_size_req_msg_v01),
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.fn = handle_query_size_req,
 	},
 };

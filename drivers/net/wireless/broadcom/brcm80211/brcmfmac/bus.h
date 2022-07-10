@@ -90,6 +90,10 @@ struct brcmf_bus_ops {
 	int (*get_memdump)(struct device *dev, void *data, size_t len);
 	int (*get_fwname)(struct device *dev, const char *ext,
 			  unsigned char *fw_name);
+<<<<<<< HEAD
+=======
+	void (*debugfs_create)(struct device *dev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 
@@ -235,6 +239,18 @@ int brcmf_bus_get_fwname(struct brcmf_bus *bus, const char *ext,
 	return bus->ops->get_fwname(bus->dev, ext, fw_name);
 }
 
+<<<<<<< HEAD
+=======
+static inline
+void brcmf_bus_debugfs_create(struct brcmf_bus *bus)
+{
+	if (!bus->ops->debugfs_create)
+		return;
+
+	return bus->ops->debugfs_create(bus->dev);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * interface functions from common layer
  */

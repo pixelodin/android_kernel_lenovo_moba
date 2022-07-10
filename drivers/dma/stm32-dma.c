@@ -308,6 +308,7 @@ static bool stm32_dma_fifo_threshold_is_allowed(u32 burst, u32 threshold,
 
 static bool stm32_dma_is_burst_possible(u32 buf_len, u32 threshold)
 {
+<<<<<<< HEAD
 	switch (threshold) {
 	case STM32_DMA_FIFO_THRESHOLD_FULL:
 		if (buf_len >= STM32_DMA_MAX_BURST)
@@ -322,6 +323,14 @@ static bool stm32_dma_is_burst_possible(u32 buf_len, u32 threshold)
 	default:
 		return false;
 	}
+=======
+	/*
+	 * Buffer or period length has to be aligned on FIFO depth.
+	 * Otherwise bytes may be stuck within FIFO at buffer or period
+	 * length.
+	 */
+	return ((buf_len % ((threshold + 1) * 4)) == 0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static u32 stm32_dma_get_best_burst(u32 buf_len, u32 max_burst, u32 threshold,

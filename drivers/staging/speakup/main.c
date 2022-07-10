@@ -561,7 +561,11 @@ static u_long get_word(struct vc_data *vc)
 		return 0;
 	} else if (tmpx < vc->vc_cols - 2 &&
 		   (ch == SPACE || ch == 0 || (ch < 0x100 && IS_WDLM(ch))) &&
+<<<<<<< HEAD
 		   get_char(vc, (u_short *)&tmp_pos + 1, &temp) > SPACE) {
+=======
+		   get_char(vc, (u_short *)tmp_pos + 1, &temp) > SPACE) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		tmp_pos += 2;
 		tmpx++;
 	} else {

@@ -77,8 +77,12 @@ trans:
 
 		"3: ;"
 		: [res] "=r" (result), [texasr] "=r" (texasr)
+<<<<<<< HEAD
 		: [fp_load] "r" (fp_load), [fp_load_ckpt] "r" (fp_load_ckpt),
 		[sprn_texasr] "i"  (SPRN_TEXASR)
+=======
+		: [sprn_texasr] "i"  (SPRN_TEXASR)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		: "memory", "r0", "r1", "r3", "r4",
 		"r7", "r8", "r9", "r10", "r11"
 		);

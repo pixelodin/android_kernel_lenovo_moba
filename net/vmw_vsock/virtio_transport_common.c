@@ -92,8 +92,22 @@ static struct sk_buff *virtio_transport_build_skb(void *opaque)
 	struct virtio_vsock_pkt *pkt = opaque;
 	struct af_vsockmon_hdr *hdr;
 	struct sk_buff *skb;
+<<<<<<< HEAD
 
 	skb = alloc_skb(sizeof(*hdr) + sizeof(pkt->hdr) + pkt->len,
+=======
+	size_t payload_len;
+	void *payload_buf;
+
+	/* A packet could be split to fit the RX buffer, so we can retrieve
+	 * the payload length from the header and the buffer pointer taking
+	 * care of the offset in the original packet.
+	 */
+	payload_len = le32_to_cpu(pkt->hdr.len);
+	payload_buf = pkt->buf + pkt->off;
+
+	skb = alloc_skb(sizeof(*hdr) + sizeof(pkt->hdr) + payload_len,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			GFP_ATOMIC);
 	if (!skb)
 		return NULL;
@@ -133,8 +147,13 @@ static struct sk_buff *virtio_transport_build_skb(void *opaque)
 
 	skb_put_data(skb, &pkt->hdr, sizeof(pkt->hdr));
 
+<<<<<<< HEAD
 	if (pkt->len) {
 		skb_put_data(skb, pkt->buf, pkt->len);
+=======
+	if (payload_len) {
+		skb_put_data(skb, payload_buf, payload_len);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	return skb;
@@ -871,9 +890,17 @@ virtio_transport_recv_connected(struct sock *sk,
 		if (le32_to_cpu(pkt->hdr.flags) & VIRTIO_VSOCK_SHUTDOWN_SEND)
 			vsk->peer_shutdown |= SEND_SHUTDOWN;
 		if (vsk->peer_shutdown == SHUTDOWN_MASK &&
+<<<<<<< HEAD
 		    vsock_stream_has_data(vsk) <= 0) {
 			sock_set_flag(sk, SOCK_DONE);
 			sk->sk_state = TCP_CLOSING;
+=======
+		    vsock_stream_has_data(vsk) <= 0 &&
+		    !sock_flag(sk, SOCK_DONE)) {
+			(void)virtio_transport_reset(vsk, NULL);
+
+			virtio_transport_do_close(vsk, true);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 		if (le32_to_cpu(pkt->hdr.flags))
 			sk->sk_state_change(sk);

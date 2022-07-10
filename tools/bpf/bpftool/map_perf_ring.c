@@ -205,7 +205,11 @@ int do_event_pipe(int argc, char **argv)
 			NEXT_ARG();
 			cpu = strtoul(*argv, &endptr, 0);
 			if (*endptr) {
+<<<<<<< HEAD
 				p_err("can't parse %s as CPU ID", **argv);
+=======
+				p_err("can't parse %s as CPU ID", *argv);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				goto err_close_map;
 			}
 
@@ -216,7 +220,11 @@ int do_event_pipe(int argc, char **argv)
 			NEXT_ARG();
 			index = strtoul(*argv, &endptr, 0);
 			if (*endptr) {
+<<<<<<< HEAD
 				p_err("can't parse %s as index", **argv);
+=======
+				p_err("can't parse %s as index", *argv);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				goto err_close_map;
 			}
 

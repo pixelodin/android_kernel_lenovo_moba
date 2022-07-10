@@ -299,7 +299,11 @@ bool has_ns_capability(struct task_struct *t,
 	int ret;
 
 	rcu_read_lock();
+<<<<<<< HEAD
 	ret = security_capable(__task_cred(t), ns, cap);
+=======
+	ret = security_capable(__task_cred(t), ns, cap, CAP_OPT_NONE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rcu_read_unlock();
 
 	return (ret == 0);
@@ -340,7 +344,11 @@ bool has_ns_capability_noaudit(struct task_struct *t,
 	int ret;
 
 	rcu_read_lock();
+<<<<<<< HEAD
 	ret = security_capable_noaudit(__task_cred(t), ns, cap);
+=======
+	ret = security_capable(__task_cred(t), ns, cap, CAP_OPT_NOAUDIT);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rcu_read_unlock();
 
 	return (ret == 0);
@@ -363,7 +371,13 @@ bool has_capability_noaudit(struct task_struct *t, int cap)
 	return has_ns_capability_noaudit(t, &init_user_ns, cap);
 }
 
+<<<<<<< HEAD
 static bool ns_capable_common(struct user_namespace *ns, int cap, bool audit)
+=======
+static bool ns_capable_common(struct user_namespace *ns,
+			      int cap,
+			      unsigned int opts)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	int capable;
 
@@ -372,8 +386,12 @@ static bool ns_capable_common(struct user_namespace *ns, int cap, bool audit)
 		BUG();
 	}
 
+<<<<<<< HEAD
 	capable = audit ? security_capable(current_cred(), ns, cap) :
 			  security_capable_noaudit(current_cred(), ns, cap);
+=======
+	capable = security_capable(current_cred(), ns, cap, opts);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (capable == 0) {
 		current->flags |= PF_SUPERPRIV;
 		return true;
@@ -394,7 +412,11 @@ static bool ns_capable_common(struct user_namespace *ns, int cap, bool audit)
  */
 bool ns_capable(struct user_namespace *ns, int cap)
 {
+<<<<<<< HEAD
 	return ns_capable_common(ns, cap, true);
+=======
+	return ns_capable_common(ns, cap, CAP_OPT_NONE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 EXPORT_SYMBOL(ns_capable);
 
@@ -412,7 +434,11 @@ EXPORT_SYMBOL(ns_capable);
  */
 bool ns_capable_noaudit(struct user_namespace *ns, int cap)
 {
+<<<<<<< HEAD
 	return ns_capable_common(ns, cap, false);
+=======
+	return ns_capable_common(ns, cap, CAP_OPT_NOAUDIT);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 EXPORT_SYMBOL(ns_capable_noaudit);
 
@@ -448,10 +474,18 @@ EXPORT_SYMBOL(capable);
 bool file_ns_capable(const struct file *file, struct user_namespace *ns,
 		     int cap)
 {
+<<<<<<< HEAD
 	if (WARN_ON_ONCE(!cap_valid(cap)))
 		return false;
 
 	if (security_capable(file->f_cred, ns, cap) == 0)
+=======
+
+	if (WARN_ON_ONCE(!cap_valid(cap)))
+		return false;
+
+	if (security_capable(file->f_cred, ns, cap, CAP_OPT_NONE) == 0)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return true;
 
 	return false;
@@ -500,10 +534,19 @@ bool ptracer_capable(struct task_struct *tsk, struct user_namespace *ns)
 {
 	int ret = 0;  /* An absent tracer adds no restrictions */
 	const struct cred *cred;
+<<<<<<< HEAD
 	rcu_read_lock();
 	cred = rcu_dereference(tsk->ptracer_cred);
 	if (cred)
 		ret = security_capable_noaudit(cred, ns, CAP_SYS_PTRACE);
+=======
+
+	rcu_read_lock();
+	cred = rcu_dereference(tsk->ptracer_cred);
+	if (cred)
+		ret = security_capable(cred, ns, CAP_SYS_PTRACE,
+				       CAP_OPT_NOAUDIT);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rcu_read_unlock();
 	return (ret == 0);
 }

@@ -84,11 +84,22 @@ static ssize_t qrtr_tun_write_iter(struct kiocb *iocb, struct iov_iter *from)
 	if (!kbuf)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	if (!copy_from_iter_full(kbuf, len, from))
 		return -EFAULT;
 
 	ret = qrtr_endpoint_post(&tun->ep, kbuf, len);
 
+=======
+	if (!copy_from_iter_full(kbuf, len, from)) {
+		kfree(kbuf);
+		return -EFAULT;
+	}
+
+	ret = qrtr_endpoint_post(&tun->ep, kbuf, len);
+
+	kfree(kbuf);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return ret < 0 ? ret : len;
 }
 

@@ -573,6 +573,10 @@ static long afs_wait_for_call_to_complete(struct afs_call *call,
 			call->need_attention = false;
 			__set_current_state(TASK_RUNNING);
 			afs_deliver_to_call(call);
+<<<<<<< HEAD
+=======
+			timeout = rtt2;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			continue;
 		}
 

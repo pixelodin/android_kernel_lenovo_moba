@@ -1383,13 +1383,21 @@ static int ep_create_wakeup_source(struct epitem *epi)
 	struct wakeup_source *ws;
 
 	if (!epi->ep->ws) {
+<<<<<<< HEAD
 		epi->ep->ws = wakeup_source_register("eventpoll");
+=======
+		epi->ep->ws = wakeup_source_register(NULL, "eventpoll");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (!epi->ep->ws)
 			return -ENOMEM;
 	}
 
 	name = epi->ffd.file->f_path.dentry->d_name.name;
+<<<<<<< HEAD
 	ws = wakeup_source_register(name);
+=======
+	ws = wakeup_source_register(NULL, name);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!ws)
 		return -ENOMEM;

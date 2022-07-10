@@ -1039,12 +1039,27 @@ static long mon_bin_ioctl(struct file *file, unsigned int cmd, unsigned long arg
 
 		mutex_lock(&rp->fetch_lock);
 		spin_lock_irqsave(&rp->b_lock, flags);
+<<<<<<< HEAD
 		mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
 		kfree(rp->b_vec);
 		rp->b_vec  = vec;
 		rp->b_size = size;
 		rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
 		rp->cnt_lost = 0;
+=======
+		if (rp->mmap_active) {
+			mon_free_buff(vec, size/CHUNK_SIZE);
+			kfree(vec);
+			ret = -EBUSY;
+		} else {
+			mon_free_buff(rp->b_vec, rp->b_size/CHUNK_SIZE);
+			kfree(rp->b_vec);
+			rp->b_vec  = vec;
+			rp->b_size = size;
+			rp->b_read = rp->b_in = rp->b_out = rp->b_cnt = 0;
+			rp->cnt_lost = 0;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		spin_unlock_irqrestore(&rp->b_lock, flags);
 		mutex_unlock(&rp->fetch_lock);
 		}
@@ -1216,13 +1231,30 @@ mon_bin_poll(struct file *file, struct poll_table_struct *wait)
 static void mon_bin_vma_open(struct vm_area_struct *vma)
 {
 	struct mon_reader_bin *rp = vma->vm_private_data;
+<<<<<<< HEAD
 	rp->mmap_active++;
+=======
+	unsigned long flags;
+
+	spin_lock_irqsave(&rp->b_lock, flags);
+	rp->mmap_active++;
+	spin_unlock_irqrestore(&rp->b_lock, flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void mon_bin_vma_close(struct vm_area_struct *vma)
 {
+<<<<<<< HEAD
 	struct mon_reader_bin *rp = vma->vm_private_data;
 	rp->mmap_active--;
+=======
+	unsigned long flags;
+
+	struct mon_reader_bin *rp = vma->vm_private_data;
+	spin_lock_irqsave(&rp->b_lock, flags);
+	rp->mmap_active--;
+	spin_unlock_irqrestore(&rp->b_lock, flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /*
@@ -1234,6 +1266,7 @@ static vm_fault_t mon_bin_vma_fault(struct vm_fault *vmf)
 	unsigned long offset, chunk_idx;
 	struct page *pageptr;
 
+<<<<<<< HEAD
 	mutex_lock(&rp->fetch_lock);
 	offset = vmf->pgoff << PAGE_SHIFT;
 	if (offset >= rp->b_size) {
@@ -1244,6 +1277,14 @@ static vm_fault_t mon_bin_vma_fault(struct vm_fault *vmf)
 	pageptr = rp->b_vec[chunk_idx].pg;
 	get_page(pageptr);
 	mutex_unlock(&rp->fetch_lock);
+=======
+	offset = vmf->pgoff << PAGE_SHIFT;
+	if (offset >= rp->b_size)
+		return VM_FAULT_SIGBUS;
+	chunk_idx = offset / CHUNK_SIZE;
+	pageptr = rp->b_vec[chunk_idx].pg;
+	get_page(pageptr);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	vmf->page = pageptr;
 	return 0;
 }

@@ -22,6 +22,7 @@
 
 #define VERSION "1.0"
 
+<<<<<<< HEAD
 #define DEBUG
 
 #ifdef DEBUG
@@ -30,6 +31,8 @@
 #define DBG(args...)	do { } while(0)
 #endif
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* If the cache is older than 800ms we'll refetch it */
 #define MAX_AGE		msecs_to_jiffies(800)
 
@@ -106,6 +109,7 @@ struct smu_sdbp_header *smu_sat_get_sdb_partition(unsigned int sat_id, int id,
 		buf[i+2] = data[3];
 		buf[i+3] = data[2];
 	}
+<<<<<<< HEAD
 #ifdef DEBUG
 	DBG(KERN_DEBUG "sat %d partition %x:", sat_id, id);
 	for (i = 0; i < len; ++i)
@@ -113,6 +117,12 @@ struct smu_sdbp_header *smu_sat_get_sdb_partition(unsigned int sat_id, int id,
 	DBG("\n");
 #endif
 
+=======
+
+	printk(KERN_DEBUG "sat %d partition %x:", sat_id, id);
+	print_hex_dump(KERN_DEBUG, "  ", DUMP_PREFIX_OFFSET,
+		       16, 1, buf, len, false);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (size)
 		*size = len;
 	return (struct smu_sdbp_header *) buf;
@@ -132,6 +142,7 @@ static int wf_sat_read_cache(struct wf_sat *sat)
 	if (err < 0)
 		return err;
 	sat->last_read = jiffies;
+<<<<<<< HEAD
 #ifdef LOTSA_DEBUG
 	{
 		int i;
@@ -139,6 +150,15 @@ static int wf_sat_read_cache(struct wf_sat *sat)
 		for (i = 0; i < 16; ++i)
 			DBG(" %.2x", sat->cache[i]);
 		DBG("\n");
+=======
+
+#ifdef LOTSA_DEBUG
+	{
+		int i;
+		printk(KERN_DEBUG "wf_sat_get: data is");
+		print_hex_dump(KERN_DEBUG, "  ", DUMP_PREFIX_OFFSET,
+			       16, 1, sat->cache, 16, false);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 #endif
 	return 0;
@@ -354,9 +374,22 @@ static const struct i2c_device_id wf_sat_id[] = {
 };
 MODULE_DEVICE_TABLE(i2c, wf_sat_id);
 
+<<<<<<< HEAD
 static struct i2c_driver wf_sat_driver = {
 	.driver = {
 		.name		= "wf_smu_sat",
+=======
+static const struct of_device_id wf_sat_of_id[] = {
+	{ .compatible = "smu-sat", },
+	{ }
+};
+MODULE_DEVICE_TABLE(of, wf_sat_of_id);
+
+static struct i2c_driver wf_sat_driver = {
+	.driver = {
+		.name		= "wf_smu_sat",
+		.of_match_table = wf_sat_of_id,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	},
 	.probe		= wf_sat_probe,
 	.remove		= wf_sat_remove,

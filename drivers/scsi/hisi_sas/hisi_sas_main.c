@@ -485,7 +485,17 @@ static int hisi_sas_task_exec(struct sas_task *task, gfp_t gfp_flags,
 	struct hisi_sas_dq *dq = NULL;
 
 	if (unlikely(test_bit(HISI_SAS_REJECT_CMD_BIT, &hisi_hba->flags))) {
+<<<<<<< HEAD
 		if (in_softirq())
+=======
+		/*
+		 * For IOs from upper layer, it may already disable preempt
+		 * in the IO path, if disable preempt again in down(),
+		 * function schedule() will report schedule_bug(), so check
+		 * preemptible() before goto down().
+		 */
+		if (!preemptible())
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			return -EINVAL;
 
 		down(&hisi_hba->sem);
@@ -716,7 +726,12 @@ static void hisi_sas_phyup_work(struct work_struct *work)
 	struct asd_sas_phy *sas_phy = &phy->sas_phy;
 	int phy_no = sas_phy->id;
 
+<<<<<<< HEAD
 	hisi_hba->hw->sl_notify(hisi_hba, phy_no); /* This requires a sleep */
+=======
+	if (phy->identify.target_port_protocols == SAS_PROTOCOL_SSP)
+		hisi_hba->hw->sl_notify_ssp(hisi_hba, phy_no);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	hisi_sas_bytes_dmaed(hisi_hba, phy_no);
 }
 
@@ -885,7 +900,11 @@ static int hisi_sas_queue_command(struct sas_task *task, gfp_t gfp_flags)
 	return hisi_sas_task_exec(task, gfp_flags, 0, NULL);
 }
 
+<<<<<<< HEAD
 static void hisi_sas_phy_set_linkrate(struct hisi_hba *hisi_hba, int phy_no,
+=======
+static int hisi_sas_phy_set_linkrate(struct hisi_hba *hisi_hba, int phy_no,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			struct sas_phy_linkrates *r)
 {
 	struct sas_phy_linkrates _r;
@@ -894,6 +913,12 @@ static void hisi_sas_phy_set_linkrate(struct hisi_hba *hisi_hba, int phy_no,
 	struct asd_sas_phy *sas_phy = &phy->sas_phy;
 	enum sas_linkrate min, max;
 
+<<<<<<< HEAD
+=======
+	if (r->minimum_linkrate > SAS_LINK_RATE_1_5_GBPS)
+		return -EINVAL;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (r->maximum_linkrate == SAS_LINK_RATE_UNKNOWN) {
 		max = sas_phy->phy->maximum_linkrate;
 		min = r->minimum_linkrate;
@@ -901,15 +926,30 @@ static void hisi_sas_phy_set_linkrate(struct hisi_hba *hisi_hba, int phy_no,
 		max = r->maximum_linkrate;
 		min = sas_phy->phy->minimum_linkrate;
 	} else
+<<<<<<< HEAD
 		return;
+=======
+		return -EINVAL;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	_r.maximum_linkrate = max;
 	_r.minimum_linkrate = min;
 
+<<<<<<< HEAD
+=======
+	sas_phy->phy->maximum_linkrate = max;
+	sas_phy->phy->minimum_linkrate = min;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	hisi_hba->hw->phy_disable(hisi_hba, phy_no);
 	msleep(100);
 	hisi_hba->hw->phy_set_linkrate(hisi_hba, phy_no, &_r);
 	hisi_hba->hw->phy_start(hisi_hba, phy_no);
+<<<<<<< HEAD
+=======
+
+	return 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int hisi_sas_control_phy(struct asd_sas_phy *sas_phy, enum phy_func func,
@@ -935,8 +975,12 @@ static int hisi_sas_control_phy(struct asd_sas_phy *sas_phy, enum phy_func func,
 		break;
 
 	case PHY_FUNC_SET_LINK_RATE:
+<<<<<<< HEAD
 		hisi_sas_phy_set_linkrate(hisi_hba, phy_no, funcdata);
 		break;
+=======
+		return hisi_sas_phy_set_linkrate(hisi_hba, phy_no, funcdata);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	case PHY_FUNC_GET_EVENTS:
 		if (hisi_hba->hw->get_events) {
 			hisi_hba->hw->get_events(hisi_hba, phy_no);
@@ -952,8 +996,12 @@ static int hisi_sas_control_phy(struct asd_sas_phy *sas_phy, enum phy_func func,
 
 static void hisi_sas_task_done(struct sas_task *task)
 {
+<<<<<<< HEAD
 	if (!del_timer(&task->slow_task->timer))
 		return;
+=======
+	del_timer(&task->slow_task->timer);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	complete(&task->slow_task->completion);
 }
 
@@ -962,6 +1010,7 @@ static void hisi_sas_tmf_timedout(struct timer_list *t)
 	struct sas_task_slow *slow = from_timer(slow, t, timer);
 	struct sas_task *task = slow->task;
 	unsigned long flags;
+<<<<<<< HEAD
 
 	spin_lock_irqsave(&task->task_state_lock, flags);
 	if (!(task->task_state_flags & SAS_TASK_STATE_DONE))
@@ -969,6 +1018,19 @@ static void hisi_sas_tmf_timedout(struct timer_list *t)
 	spin_unlock_irqrestore(&task->task_state_lock, flags);
 
 	complete(&task->slow_task->completion);
+=======
+	bool is_completed = true;
+
+	spin_lock_irqsave(&task->task_state_lock, flags);
+	if (!(task->task_state_flags & SAS_TASK_STATE_DONE)) {
+		task->task_state_flags |= SAS_TASK_STATE_ABORTED;
+		is_completed = false;
+	}
+	spin_unlock_irqrestore(&task->task_state_lock, flags);
+
+	if (!is_completed)
+		complete(&task->slow_task->completion);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 #define TASK_TIMEOUT 20
@@ -1021,8 +1083,21 @@ static int hisi_sas_exec_internal_tmf_task(struct domain_device *device,
 				struct hisi_sas_slot *slot = task->lldd_task;
 
 				dev_err(dev, "abort tmf: TMF task timeout and not done\n");
+<<<<<<< HEAD
 				if (slot)
 					slot->task = NULL;
+=======
+				if (slot) {
+					struct hisi_sas_cq *cq =
+					       &hisi_hba->cq[slot->dlvry_queue];
+					/*
+					 * flush tasklet to avoid free'ing task
+					 * before using task in IO completion
+					 */
+					tasklet_kill(&cq->tasklet);
+					slot->task = NULL;
+				}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 				goto ex_err;
 			} else
@@ -1398,6 +1473,20 @@ static int hisi_sas_abort_task(struct sas_task *task)
 
 	spin_lock_irqsave(&task->task_state_lock, flags);
 	if (task->task_state_flags & SAS_TASK_STATE_DONE) {
+<<<<<<< HEAD
+=======
+		struct hisi_sas_slot *slot = task->lldd_task;
+		struct hisi_sas_cq *cq;
+
+		if (slot) {
+			/*
+			 * flush tasklet to avoid free'ing task
+			 * before using task in IO completion
+			 */
+			cq = &hisi_hba->cq[slot->dlvry_queue];
+			tasklet_kill(&cq->tasklet);
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		spin_unlock_irqrestore(&task->task_state_lock, flags);
 		rc = TMF_RESP_FUNC_COMPLETE;
 		goto out;
@@ -1453,12 +1542,27 @@ static int hisi_sas_abort_task(struct sas_task *task)
 		/* SMP */
 		struct hisi_sas_slot *slot = task->lldd_task;
 		u32 tag = slot->idx;
+<<<<<<< HEAD
+=======
+		struct hisi_sas_cq *cq = &hisi_hba->cq[slot->dlvry_queue];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		rc = hisi_sas_internal_task_abort(hisi_hba, device,
 			     HISI_SAS_INT_ABT_CMD, tag);
 		if (((rc < 0) || (rc == TMF_RESP_FUNC_FAILED)) &&
+<<<<<<< HEAD
 					task->lldd_task)
 			hisi_sas_do_release_task(hisi_hba, task, slot);
+=======
+					task->lldd_task) {
+			/*
+			 * flush tasklet to avoid free'ing task
+			 * before using task in IO completion
+			 */
+			tasklet_kill(&cq->tasklet);
+			slot->task = NULL;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 out:
@@ -1825,8 +1929,21 @@ hisi_sas_internal_task_abort(struct hisi_hba *hisi_hba,
 		if (!(task->task_state_flags & SAS_TASK_STATE_DONE)) {
 			struct hisi_sas_slot *slot = task->lldd_task;
 
+<<<<<<< HEAD
 			if (slot)
 				slot->task = NULL;
+=======
+			if (slot) {
+				struct hisi_sas_cq *cq =
+					&hisi_hba->cq[slot->dlvry_queue];
+				/*
+				 * flush tasklet to avoid free'ing task
+				 * before using task in IO completion
+				 */
+				tasklet_kill(&cq->tasklet);
+				slot->task = NULL;
+			}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			dev_err(dev, "internal task abort: timeout and not done.\n");
 			res = -EIO;
 			goto exit;

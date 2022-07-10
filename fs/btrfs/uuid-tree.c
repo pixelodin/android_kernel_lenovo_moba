@@ -324,6 +324,11 @@ again_search_slot:
 				}
 				if (ret < 0 && ret != -ENOENT)
 					goto out;
+<<<<<<< HEAD
+=======
+				key.offset++;
+				goto again_search_slot;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			}
 			item_size -= sizeof(subid_le);
 			offset += sizeof(subid_le);

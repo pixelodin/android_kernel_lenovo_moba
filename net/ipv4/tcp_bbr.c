@@ -680,8 +680,12 @@ static void bbr_update_bw(struct sock *sk, const struct rate_sample *rs)
 	 * bandwidth sample. Delivered is in packets and interval_us in uS and
 	 * ratio will be <<1 for most connections. So delivered is first scaled.
 	 */
+<<<<<<< HEAD
 	bw = (u64)rs->delivered * BW_UNIT;
 	do_div(bw, rs->interval_us);
+=======
+	bw = div64_long((u64)rs->delivered * BW_UNIT, rs->interval_us);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* If this sample is application-limited, it is likely to have a very
 	 * low delivered count that represents application behavior rather than

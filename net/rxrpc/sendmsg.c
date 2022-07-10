@@ -661,6 +661,10 @@ int rxrpc_do_sendmsg(struct rxrpc_sock *rx, struct msghdr *msg, size_t len)
 		case RXRPC_CALL_SERVER_PREALLOC:
 		case RXRPC_CALL_SERVER_SECURING:
 		case RXRPC_CALL_SERVER_ACCEPTING:
+<<<<<<< HEAD
+=======
+			rxrpc_put_call(call, rxrpc_call_put);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			ret = -EBUSY;
 			goto error_release_sock;
 		default:

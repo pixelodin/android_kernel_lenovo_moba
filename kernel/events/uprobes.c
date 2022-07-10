@@ -1858,7 +1858,11 @@ static void handle_trampoline(struct pt_regs *regs)
 
  sigill:
 	uprobe_warn(current, "handle uretprobe, sending SIGILL.");
+<<<<<<< HEAD
 	force_sig_info(SIGILL, SEND_SIG_FORCED, current);
+=======
+	force_sig(SIGILL, current);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 }
 
@@ -1974,7 +1978,11 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
 
 	if (unlikely(err)) {
 		uprobe_warn(current, "execute the probed insn, sending SIGILL.");
+<<<<<<< HEAD
 		force_sig_info(SIGILL, SEND_SIG_FORCED, current);
+=======
+		force_sig(SIGILL, current);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 }
 

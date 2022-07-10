@@ -57,6 +57,11 @@ static snd_pcm_sframes_t route_transfer(struct snd_pcm_plugin *plugin,
 		return -ENXIO;
 	if (frames == 0)
 		return 0;
+<<<<<<< HEAD
+=======
+	if (frames > dst_channels[0].frames)
+		frames = dst_channels[0].frames;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	nsrcs = plugin->src_format.channels;
 	ndsts = plugin->dst_format.channels;

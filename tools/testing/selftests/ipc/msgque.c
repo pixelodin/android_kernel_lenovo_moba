@@ -1,9 +1,17 @@
 // SPDX-License-Identifier: GPL-2.0
+<<<<<<< HEAD
+=======
+#define _GNU_SOURCE
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+<<<<<<< HEAD
 #include <linux/msg.h>
+=======
+#include <sys/msg.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <fcntl.h>
 
 #include "../kselftest.h"
@@ -73,7 +81,11 @@ int restore_queue(struct msgque_data *msgque)
 	return 0;
 
 destroy:
+<<<<<<< HEAD
 	if (msgctl(id, IPC_RMID, 0))
+=======
+	if (msgctl(id, IPC_RMID, NULL))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		printf("Failed to destroy queue: %d\n", -errno);
 	return ret;
 }
@@ -120,7 +132,11 @@ int check_and_destroy_queue(struct msgque_data *msgque)
 
 	ret = 0;
 err:
+<<<<<<< HEAD
 	if (msgctl(msgque->msq_id, IPC_RMID, 0)) {
+=======
+	if (msgctl(msgque->msq_id, IPC_RMID, NULL)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		printf("Failed to destroy queue: %d\n", -errno);
 		return -errno;
 	}
@@ -129,7 +145,11 @@ err:
 
 int dump_queue(struct msgque_data *msgque)
 {
+<<<<<<< HEAD
 	struct msqid64_ds ds;
+=======
+	struct msqid_ds ds;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int kern_id;
 	int i, ret;
 
@@ -245,7 +265,11 @@ int main(int argc, char **argv)
 	return ksft_exit_pass();
 
 err_destroy:
+<<<<<<< HEAD
 	if (msgctl(msgque.msq_id, IPC_RMID, 0)) {
+=======
+	if (msgctl(msgque.msq_id, IPC_RMID, NULL)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		printf("Failed to destroy queue: %d\n", -errno);
 		return ksft_exit_fail();
 	}

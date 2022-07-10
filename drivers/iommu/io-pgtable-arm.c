@@ -22,6 +22,10 @@
 
 #include <linux/atomic.h>
 #include <linux/iommu.h>
+<<<<<<< HEAD
+=======
+#include <linux/io-pgtable.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/kernel.h>
 #include <linux/scatterlist.h>
 #include <linux/sizes.h>
@@ -31,8 +35,11 @@
 
 #include <asm/barrier.h>
 
+<<<<<<< HEAD
 #include "io-pgtable.h"
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define ARM_LPAE_MAX_ADDR_BITS		48
 #define ARM_LPAE_S2_MAX_CONCAT_PAGES	16
 #define ARM_LPAE_MAX_LEVELS		4
@@ -802,6 +809,7 @@ static size_t arm_lpae_split_blk_unmap(struct arm_lpae_io_pgtable *data,
 			return 0;
 
 		tablep = iopte_deref(pte, data);
+<<<<<<< HEAD
 	}
 
 	if (unmap_idx < 0)
@@ -809,6 +817,14 @@ static size_t arm_lpae_split_blk_unmap(struct arm_lpae_io_pgtable *data,
 
 	io_pgtable_tlb_add_flush(&data->iop, iova, size, size, true);
 	return size;
+=======
+	} else if (unmap_idx >= 0) {
+		io_pgtable_tlb_add_flush(&data->iop, iova, size, size, true);
+		return size;
+	}
+
+	return __arm_lpae_unmap(data, iova, size, lvl, tablep);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static size_t __arm_lpae_unmap(struct arm_lpae_io_pgtable *data,

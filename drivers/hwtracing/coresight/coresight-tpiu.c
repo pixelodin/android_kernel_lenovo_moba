@@ -5,6 +5,10 @@
  * Description: CoreSight Trace Port Interface Unit driver
  */
 
+<<<<<<< HEAD
+=======
+#include <linux/atomic.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/kernel.h>
 #include <linux/init.h>
 #include <linux/device.h>
@@ -68,13 +72,22 @@ static void tpiu_enable_hw(struct tpiu_drvdata *drvdata)
 	CS_LOCK(drvdata->base);
 }
 
+<<<<<<< HEAD
 static int tpiu_enable(struct coresight_device *csdev, u32 mode)
+=======
+static int tpiu_enable(struct coresight_device *csdev, u32 mode, void *__unused)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct tpiu_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
 
 	tpiu_enable_hw(drvdata);
+<<<<<<< HEAD
 
 	dev_info(drvdata->dev, "TPIU enabled\n");
+=======
+	atomic_inc(csdev->refcnt);
+	dev_dbg(drvdata->dev, "TPIU enabled\n");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 }
 
@@ -94,6 +107,7 @@ static void tpiu_disable_hw(struct tpiu_drvdata *drvdata)
 	CS_LOCK(drvdata->base);
 }
 
+<<<<<<< HEAD
 static void tpiu_disable(struct coresight_device *csdev)
 {
 	struct tpiu_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
@@ -101,6 +115,19 @@ static void tpiu_disable(struct coresight_device *csdev)
 	tpiu_disable_hw(drvdata);
 
 	dev_info(drvdata->dev, "TPIU disabled\n");
+=======
+static int tpiu_disable(struct coresight_device *csdev)
+{
+	struct tpiu_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
+
+	if (atomic_dec_return(csdev->refcnt))
+		return -EBUSY;
+
+	tpiu_disable_hw(drvdata);
+
+	dev_dbg(drvdata->dev, "TPIU disabled\n");
+	return 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static const struct coresight_ops_sink tpiu_sink_ops = {

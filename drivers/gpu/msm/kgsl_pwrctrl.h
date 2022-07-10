@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 /*
+<<<<<<< HEAD
  * Copyright (c) 2010-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2010-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 #ifndef __KGSL_PWRCTRL_H
 #define __KGSL_PWRCTRL_H
@@ -177,6 +181,10 @@ struct gpu_cx_ipeak_client {
  * @limits - list head for limits
  * @limits_lock - spin lock to protect limits list
  * @sysfs_pwr_limit - pointer to the sysfs limits node
+<<<<<<< HEAD
+=======
+ * @cx_ipeak_pwr_limit - pointer to the cx_ipeak limits node
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * isense_clk_indx - index of isense clock, 0 if no isense
  * isense_clk_on_level - isense clock rate is XO rate below this level.
  * tzone_name - pointer to thermal zone name of GPU temperature sensor
@@ -236,6 +244,10 @@ struct kgsl_pwrctrl {
 	struct list_head limits;
 	spinlock_t limits_lock;
 	struct kgsl_pwr_limit *sysfs_pwr_limit;
+<<<<<<< HEAD
+=======
+	struct kgsl_pwr_limit *cx_ipeak_pwr_limit;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	unsigned int gpu_bimc_int_clk_freq;
 	bool gpu_bimc_interface_enabled;
 	const char *tzone_name;

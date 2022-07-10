@@ -1168,6 +1168,11 @@ static inline int bmap_would_wrap(unsigned bmap_nr)
 	return bmap_nr > ((1LL << 16) - 1);
 }
 
+<<<<<<< HEAD
+=======
+extern const struct xattr_handler *reiserfs_xattr_handlers[];
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * this says about version of key of all items (but stat data) the
  * object consists of

@@ -82,6 +82,10 @@ void arch_cpu_idle_prepare(void)
 
 void arch_cpu_idle_enter(void)
 {
+<<<<<<< HEAD
+=======
+	idle_notifier_call_chain(IDLE_START);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ledtrig_cpu(CPU_LED_IDLE_START);
 #ifdef CONFIG_PL310_ERRATA_769419
 	wmb();
@@ -90,6 +94,10 @@ void arch_cpu_idle_enter(void)
 
 void arch_cpu_idle_exit(void)
 {
+<<<<<<< HEAD
+=======
+	idle_notifier_call_chain(IDLE_END);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ledtrig_cpu(CPU_LED_IDLE_END);
 }
 

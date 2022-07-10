@@ -38,6 +38,10 @@ config EXT4_FS
 	select CRYPTO
 	select CRYPTO_CRC32C
 	select FS_IOMAP
+<<<<<<< HEAD
+=======
+	select FS_ENCRYPTION_ALGS if FS_ENCRYPTION
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	help
 	  This is the next generation of the ext3 filesystem.
 
@@ -106,6 +110,7 @@ config EXT4_ENCRYPTION
 	  files
 
 config EXT4_FS_ENCRYPTION
+<<<<<<< HEAD
 	bool "Ext4 FS Encryption"
 	default n
 	depends on EXT4_ENCRYPTION
@@ -116,6 +121,12 @@ config EXT4_FS_ICE_ENCRYPTION
 	depends on EXT4_FS_ENCRYPTION
 	depends on PFK
 
+=======
+	bool
+	default y
+	depends on EXT4_ENCRYPTION
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 config EXT4_DEBUG
 	bool "EXT4 debugging support"
 	depends on EXT4_FS

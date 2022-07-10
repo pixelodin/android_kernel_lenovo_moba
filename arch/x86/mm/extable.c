@@ -170,6 +170,10 @@ __visible bool ex_has_fault_handler(unsigned long ip)
 	return handler == ex_handler_fault;
 }
 
+<<<<<<< HEAD
+=======
+__nocfi
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 int fixup_exception(struct pt_regs *regs, int trapnr)
 {
 	const struct exception_table_entry *e;

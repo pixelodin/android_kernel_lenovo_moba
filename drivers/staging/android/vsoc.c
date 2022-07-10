@@ -260,7 +260,12 @@ do_create_fd_scoped_permission(struct vsoc_device_region *region_p,
 	atomic_t *owner_ptr = NULL;
 	struct vsoc_device_region *managed_region_p;
 
+<<<<<<< HEAD
 	if (copy_from_user(&np->permission, &arg->perm, sizeof(*np)) ||
+=======
+	if (copy_from_user(&np->permission,
+			   &arg->perm, sizeof(np->permission)) ||
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	    copy_from_user(&managed_fd,
 			   &arg->managed_region_fd, sizeof(managed_fd))) {
 		return -EFAULT;

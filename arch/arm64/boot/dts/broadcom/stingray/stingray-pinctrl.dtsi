@@ -42,13 +42,22 @@
 
 		pinmux: pinmux@14029c {
 			compatible = "pinctrl-single";
+<<<<<<< HEAD
 			reg = <0x0014029c 0x250>;
+=======
+			reg = <0x0014029c 0x26c>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			#address-cells = <1>;
 			#size-cells = <1>;
 			pinctrl-single,register-width = <32>;
 			pinctrl-single,function-mask = <0xf>;
 			pinctrl-single,gpio-range = <
+<<<<<<< HEAD
 				&range 0 154 MODE_GPIO
+=======
+				&range 0  91 MODE_GPIO
+				&range 95 60 MODE_GPIO
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				>;
 			range: gpio-range {
 				#pinctrl-single,gpio-range-cells = <3>;

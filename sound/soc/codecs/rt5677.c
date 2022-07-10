@@ -297,6 +297,10 @@ static bool rt5677_volatile_register(struct device *dev, unsigned int reg)
 	case RT5677_I2C_MASTER_CTRL7:
 	case RT5677_I2C_MASTER_CTRL8:
 	case RT5677_HAP_GENE_CTRL2:
+<<<<<<< HEAD
+=======
+	case RT5677_PWR_ANLG2: /* Modified by DSP firmware */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	case RT5677_PWR_DSP_ST:
 	case RT5677_PRIV_DATA:
 	case RT5677_ASRC_22:

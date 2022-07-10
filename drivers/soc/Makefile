@@ -13,7 +13,11 @@ obj-$(CONFIG_ARCH_GEMINI)	+= gemini/
 obj-$(CONFIG_ARCH_MXC)		+= imx/
 obj-$(CONFIG_SOC_XWAY)		+= lantiq/
 obj-y				+= mediatek/
+<<<<<<< HEAD
 obj-$(CONFIG_ARCH_MESON)	+= amlogic/
+=======
+obj-y				+= amlogic/
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 obj-y				+= qcom/
 obj-y				+= renesas/
 obj-$(CONFIG_ARCH_ROCKCHIP)	+= rockchip/

@@ -183,7 +183,10 @@
 	pinctrl-0 = <&pinctrl_usdhc4>;
 	bus-width = <8>;
 	non-removable;
+<<<<<<< HEAD
 	vmmc-supply = <&vdd_emmc_1p8>;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	status = "disabled";
 };
 

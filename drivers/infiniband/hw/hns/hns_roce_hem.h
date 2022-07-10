@@ -54,7 +54,11 @@ enum {
 
 #define HNS_ROCE_HEM_CHUNK_LEN	\
 	 ((256 - sizeof(struct list_head) - 2 * sizeof(int)) /	 \
+<<<<<<< HEAD
 	 (sizeof(struct scatterlist)))
+=======
+	 (sizeof(struct scatterlist) + sizeof(void *)))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define check_whether_bt_num_3(type, hop_num) \
 	(type < HEM_TYPE_MTT && hop_num == 2)

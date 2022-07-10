@@ -202,6 +202,10 @@ static int create_safe_exec_page(void *src_start, size_t length,
 				 gfp_t mask)
 {
 	int rc = 0;
+<<<<<<< HEAD
+=======
+	pgd_t *trans_pgd;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pgd_t *pgdp;
 	pud_t *pudp;
 	pmd_t *pmdp;
@@ -216,7 +220,17 @@ static int create_safe_exec_page(void *src_start, size_t length,
 	memcpy((void *)dst, src_start, length);
 	__flush_icache_range(dst, dst + length);
 
+<<<<<<< HEAD
 	pgdp = pgd_offset_raw(allocator(mask), dst_addr);
+=======
+	trans_pgd = allocator(mask);
+	if (!trans_pgd) {
+		rc = -ENOMEM;
+		goto out;
+	}
+
+	pgdp = pgd_offset_raw(trans_pgd, dst_addr);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (pgd_none(READ_ONCE(*pgdp))) {
 		pudp = allocator(mask);
 		if (!pudp) {

@@ -206,6 +206,7 @@ __cls_set_class(unsigned long *clp, unsigned long cl)
 	return xchg(clp, cl);
 }
 
+<<<<<<< HEAD
 static inline unsigned long
 cls_set_class(struct Qdisc *q, unsigned long *clp, unsigned long cl)
 {
@@ -215,22 +216,50 @@ cls_set_class(struct Qdisc *q, unsigned long *clp, unsigned long cl)
 	old_cl = __cls_set_class(clp, cl);
 	sch_tree_unlock(q);
 	return old_cl;
+=======
+static inline void
+__tcf_bind_filter(struct Qdisc *q, struct tcf_result *r, unsigned long base)
+{
+	unsigned long cl;
+
+	cl = q->ops->cl_ops->bind_tcf(q, base, r->classid);
+	cl = __cls_set_class(&r->class, cl);
+	if (cl)
+		q->ops->cl_ops->unbind_tcf(q, cl);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static inline void
 tcf_bind_filter(struct tcf_proto *tp, struct tcf_result *r, unsigned long base)
 {
 	struct Qdisc *q = tp->chain->block->q;
+<<<<<<< HEAD
 	unsigned long cl;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Check q as it is not set for shared blocks. In that case,
 	 * setting class is not supported.
 	 */
 	if (!q)
 		return;
+<<<<<<< HEAD
 	cl = q->ops->cl_ops->bind_tcf(q, base, r->classid);
 	cl = cls_set_class(q, &r->class, cl);
 	if (cl)
+=======
+	sch_tree_lock(q);
+	__tcf_bind_filter(q, r, base);
+	sch_tree_unlock(q);
+}
+
+static inline void
+__tcf_unbind_filter(struct Qdisc *q, struct tcf_result *r)
+{
+	unsigned long cl;
+
+	if ((cl = __cls_set_class(&r->class, 0)) != 0)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		q->ops->cl_ops->unbind_tcf(q, cl);
 }
 
@@ -238,12 +267,19 @@ static inline void
 tcf_unbind_filter(struct tcf_proto *tp, struct tcf_result *r)
 {
 	struct Qdisc *q = tp->chain->block->q;
+<<<<<<< HEAD
 	unsigned long cl;
 
 	if (!q)
 		return;
 	if ((cl = __cls_set_class(&r->class, 0)) != 0)
 		q->ops->cl_ops->unbind_tcf(q, cl);
+=======
+
+	if (!q)
+		return;
+	__tcf_unbind_filter(q, r);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 struct tcf_exts {

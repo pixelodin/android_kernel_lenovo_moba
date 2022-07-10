@@ -72,7 +72,10 @@
 
 struct rsnd_ssi {
 	struct rsnd_mod mod;
+<<<<<<< HEAD
 	struct rsnd_mod *dma;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	u32 flags;
 	u32 cr_own;
@@ -873,7 +876,10 @@ static int rsnd_ssi_dma_probe(struct rsnd_mod *mod,
 			      struct rsnd_dai_stream *io,
 			      struct rsnd_priv *priv)
 {
+<<<<<<< HEAD
 	struct rsnd_ssi *ssi = rsnd_mod_to_ssi(mod);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int ret;
 
 	/*
@@ -888,7 +894,11 @@ static int rsnd_ssi_dma_probe(struct rsnd_mod *mod,
 		return ret;
 
 	/* SSI probe might be called many times in MUX multi path */
+<<<<<<< HEAD
 	ret = rsnd_dma_attach(io, mod, &ssi->dma);
+=======
+	ret = rsnd_dma_attach(io, mod, &io->dma);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return ret;
 }

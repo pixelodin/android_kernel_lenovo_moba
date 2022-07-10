@@ -3894,12 +3894,20 @@ megasas_transition_to_ready(struct megasas_instance *instance, int ocr)
 		/*
 		 * The cur_state should not last for more than max_wait secs
 		 */
+<<<<<<< HEAD
 		for (i = 0; i < (max_wait * 1000); i++) {
+=======
+		for (i = 0; i < max_wait * 50; i++) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			curr_abs_state = instance->instancet->
 				read_fw_status_reg(instance->reg_set);
 
 			if (abs_state == curr_abs_state) {
+<<<<<<< HEAD
 				msleep(1);
+=======
+				msleep(20);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			} else
 				break;
 		}
@@ -4177,7 +4185,12 @@ dcmd_timeout_ocr_possible(struct megasas_instance *instance) {
 	if (instance->adapter_type == MFI_SERIES)
 		return KILL_ADAPTER;
 	else if (instance->unload ||
+<<<<<<< HEAD
 			test_bit(MEGASAS_FUSION_IN_RESET, &instance->reset_flags))
+=======
+			test_bit(MEGASAS_FUSION_OCR_NOT_POSSIBLE,
+				 &instance->reset_flags))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return IGNORE_TIMEOUT;
 	else
 		return INITIATE_OCR;
@@ -5410,7 +5423,11 @@ static int megasas_init_fw(struct megasas_instance *instance)
 	if (!instance->msix_vectors) {
 		i = pci_alloc_irq_vectors(instance->pdev, 1, 1, PCI_IRQ_LEGACY);
 		if (i < 0)
+<<<<<<< HEAD
 			goto fail_setup_irqs;
+=======
+			goto fail_init_adapter;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	megasas_setup_reply_map(instance);
@@ -5619,9 +5636,14 @@ static int megasas_init_fw(struct megasas_instance *instance)
 
 fail_get_ld_pd_list:
 	instance->instancet->disable_intr(instance);
+<<<<<<< HEAD
 fail_init_adapter:
 	megasas_destroy_irqs(instance);
 fail_setup_irqs:
+=======
+	megasas_destroy_irqs(instance);
+fail_init_adapter:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (instance->msix_vectors)
 		pci_free_irq_vectors(instance->pdev);
 	instance->msix_vectors = 0;

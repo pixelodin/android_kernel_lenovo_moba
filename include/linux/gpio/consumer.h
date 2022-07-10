@@ -475,7 +475,11 @@ static inline int gpiod_set_consumer_name(struct gpio_desc *desc,
 
 static inline struct gpio_desc *gpio_to_desc(unsigned gpio)
 {
+<<<<<<< HEAD
 	return ERR_PTR(-EINVAL);
+=======
+	return NULL;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static inline int desc_to_gpio(const struct gpio_desc *desc)

@@ -881,6 +881,20 @@ int extcon_set_property_capability(struct extcon_dev *edev, unsigned int id,
 }
 EXPORT_SYMBOL_GPL(extcon_set_property_capability);
 
+<<<<<<< HEAD
+=======
+int extcon_set_mutually_exclusive(struct extcon_dev *edev,
+				const u32 *exclusive)
+{
+	if (!edev)
+		return -EINVAL;
+
+	edev->mutually_exclusive = exclusive;
+	return 0;
+}
+EXPORT_SYMBOL(extcon_set_mutually_exclusive);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /**
  * extcon_get_extcon_dev() - Get the extcon device instance from the name.
  * @extcon_name:	the extcon name provided with extcon_dev_register()

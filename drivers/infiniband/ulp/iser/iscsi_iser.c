@@ -646,6 +646,10 @@ iscsi_iser_session_create(struct iscsi_endpoint *ep,
 		if (ib_conn->pi_support) {
 			u32 sig_caps = ib_conn->device->ib_device->attrs.sig_prot_cap;
 
+<<<<<<< HEAD
+=======
+			shost->sg_prot_tablesize = shost->sg_tablesize;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			scsi_host_set_prot(shost, iser_dif_prot_caps(sig_caps));
 			scsi_host_set_guard(shost, SHOST_DIX_GUARD_IP |
 						   SHOST_DIX_GUARD_CRC);

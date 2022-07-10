@@ -31,6 +31,10 @@
 #include <linux/types.h>
 #include <linux/io.h>
 #include <linux/pci.h>
+<<<<<<< HEAD
+=======
+#include <asm/io.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <sound/core.h>
 #include "hda_codec.h"
 #include "hda_local.h"
@@ -1682,13 +1686,23 @@ struct scp_msg {
 
 static void dspio_clear_response_queue(struct hda_codec *codec)
 {
+<<<<<<< HEAD
 	unsigned int dummy = 0;
 	int status = -1;
+=======
+	unsigned long timeout = jiffies + msecs_to_jiffies(1000);
+	unsigned int dummy = 0;
+	int status;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* clear all from the response queue */
 	do {
 		status = dspio_read(codec, &dummy);
+<<<<<<< HEAD
 	} while (status == 0);
+=======
+	} while (status == 0 && time_before(jiffies, timeout));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int dspio_get_response_data(struct hda_codec *codec)
@@ -4520,7 +4534,11 @@ static int ca0132_effects_set(struct hda_codec *codec, hda_nid_t nid, long val)
 			val = 0;
 
 		/* If Voice Focus on SBZ, set to two channel. */
+<<<<<<< HEAD
 		if ((nid == VOICE_FOCUS) && (spec->quirk == QUIRK_SBZ)
+=======
+		if ((nid == VOICE_FOCUS) && (spec->use_pci_mmio)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				&& (spec->cur_mic_type != REAR_LINE_IN)) {
 			if (spec->effects_switch[CRYSTAL_VOICE -
 						 EFFECT_START_NID]) {
@@ -4539,7 +4557,11 @@ static int ca0132_effects_set(struct hda_codec *codec, hda_nid_t nid, long val)
 		 * For SBZ noise reduction, there's an extra command
 		 * to module ID 0x47. No clue why.
 		 */
+<<<<<<< HEAD
 		if ((nid == NOISE_REDUCTION) && (spec->quirk == QUIRK_SBZ)
+=======
+		if ((nid == NOISE_REDUCTION) && (spec->use_pci_mmio)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				&& (spec->cur_mic_type != REAR_LINE_IN)) {
 			if (spec->effects_switch[CRYSTAL_VOICE -
 						 EFFECT_START_NID]) {
@@ -5855,8 +5877,13 @@ static int ca0132_build_controls(struct hda_codec *codec)
 	 */
 	num_fx = OUT_EFFECTS_COUNT + IN_EFFECTS_COUNT;
 	for (i = 0; i < num_fx; i++) {
+<<<<<<< HEAD
 		/* SBZ and R3D break if Echo Cancellation is used. */
 		if (spec->quirk == QUIRK_SBZ || spec->quirk == QUIRK_R3D) {
+=======
+		/* Desktop cards break if Echo Cancellation is used. */
+		if (spec->use_pci_mmio) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			if (i == (ECHO_CANCELLATION - IN_EFFECT_START_NID +
 						OUT_EFFECTS_COUNT))
 				continue;
@@ -6753,12 +6780,20 @@ static void ca0132_process_dsp_response(struct hda_codec *codec,
 	struct ca0132_spec *spec = codec->spec;
 
 	codec_dbg(codec, "ca0132_process_dsp_response\n");
+<<<<<<< HEAD
+=======
+	snd_hda_power_up_pm(codec);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (spec->wait_scp) {
 		if (dspio_get_response_data(codec) >= 0)
 			spec->wait_scp = 0;
 	}
 
 	dspio_clear_response_queue(codec);
+<<<<<<< HEAD
+=======
+	snd_hda_power_down_pm(codec);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void hp_callback(struct hda_codec *codec, struct hda_jack_callback *cb)
@@ -6769,11 +6804,18 @@ static void hp_callback(struct hda_codec *codec, struct hda_jack_callback *cb)
 	/* Delay enabling the HP amp, to let the mic-detection
 	 * state machine run.
 	 */
+<<<<<<< HEAD
 	cancel_delayed_work_sync(&spec->unsol_hp_work);
 	schedule_delayed_work(&spec->unsol_hp_work, msecs_to_jiffies(500));
 	tbl = snd_hda_jack_tbl_get(codec, cb->nid);
 	if (tbl)
 		tbl->block_report = 1;
+=======
+	tbl = snd_hda_jack_tbl_get(codec, cb->nid);
+	if (tbl)
+		tbl->block_report = 1;
+	schedule_delayed_work(&spec->unsol_hp_work, msecs_to_jiffies(500));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void amic_callback(struct hda_codec *codec, struct hda_jack_callback *cb)
@@ -7407,12 +7449,31 @@ static void ca0132_reboot_notify(struct hda_codec *codec)
 	codec->patch_ops.free(codec);
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM
+static int ca0132_suspend(struct hda_codec *codec)
+{
+	struct ca0132_spec *spec = codec->spec;
+
+	cancel_delayed_work_sync(&spec->unsol_hp_work);
+	return 0;
+}
+#endif
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static const struct hda_codec_ops ca0132_patch_ops = {
 	.build_controls = ca0132_build_controls,
 	.build_pcms = ca0132_build_pcms,
 	.init = ca0132_init,
 	.free = ca0132_free,
 	.unsol_event = snd_hda_jack_unsol_event,
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PM
+	.suspend = ca0132_suspend,
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.reboot_notify = ca0132_reboot_notify,
 };
 

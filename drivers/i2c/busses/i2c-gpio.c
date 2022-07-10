@@ -248,7 +248,11 @@ static struct gpio_desc *i2c_gpio_get_desc(struct device *dev,
 	if (ret == -ENOENT)
 		retdesc = ERR_PTR(-EPROBE_DEFER);
 
+<<<<<<< HEAD
 	if (ret != -EPROBE_DEFER)
+=======
+	if (PTR_ERR(retdesc) != -EPROBE_DEFER)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		dev_err(dev, "error trying to get descriptor: %d\n", ret);
 
 	return retdesc;

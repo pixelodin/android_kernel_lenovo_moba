@@ -1708,6 +1708,7 @@ static int __init initialize_ptr_random(void)
 }
 early_initcall(initialize_ptr_random);
 
+<<<<<<< HEAD
 /* Maps a pointer to a 32 bit unique identifier. */
 static char *ptr_to_id(char *buf, char *end, void *ptr, struct printf_spec spec)
 {
@@ -1725,6 +1726,14 @@ static char *ptr_to_id(char *buf, char *end, void *ptr, struct printf_spec spec)
 		/* string length must be less than default_width */
 		return string(buf, end, str, spec);
 	}
+=======
+static inline int __ptr_to_hashval(const void *ptr, unsigned long *hashval_out)
+{
+	unsigned long hashval;
+
+	if (static_branch_unlikely(&not_filled_random_ptr_key))
+		return -EAGAIN;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #ifdef CONFIG_64BIT
 	hashval = (unsigned long)siphash_1u64((u64)ptr, &ptr_key);
@@ -1736,6 +1745,38 @@ static char *ptr_to_id(char *buf, char *end, void *ptr, struct printf_spec spec)
 #else
 	hashval = (unsigned long)siphash_1u32((u32)ptr, &ptr_key);
 #endif
+<<<<<<< HEAD
+=======
+	*hashval_out = hashval;
+	return 0;
+}
+
+int ptr_to_hashval(const void *ptr, unsigned long *hashval_out)
+{
+	return __ptr_to_hashval(ptr, hashval_out);
+}
+
+/* Maps a pointer to a 32 bit unique identifier. */
+static char *ptr_to_id(char *buf, char *end, void *ptr, struct printf_spec spec)
+{
+	const char *str = sizeof(ptr) == 8 ? "(____ptrval____)" : "(ptrval)";
+	unsigned long hashval;
+	int ret;
+
+	/* When debugging early boot use non-cryptographically secure hash. */
+	if (unlikely(debug_boot_weak_hash)) {
+		hashval = hash_long((unsigned long)ptr, 32);
+		return pointer_string(buf, end, (const void *)hashval, spec);
+	}
+
+	ret = __ptr_to_hashval(ptr, &hashval);
+	if (ret) {
+		spec.field_width = 2 * sizeof(ptr);
+		/* string length must be less than default_width */
+		return string(buf, end, str, spec);
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return pointer_string(buf, end, (const void *)hashval, spec);
 }
 

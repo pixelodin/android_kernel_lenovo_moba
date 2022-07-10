@@ -126,7 +126,11 @@ static int vpbe_enum_outputs(struct vpbe_device *vpbe_dev,
 			     struct v4l2_output *output)
 {
 	struct vpbe_config *cfg = vpbe_dev->cfg;
+<<<<<<< HEAD
 	int temp_index = output->index;
+=======
+	unsigned int temp_index = output->index;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (temp_index >= cfg->num_outputs)
 		return -EINVAL;

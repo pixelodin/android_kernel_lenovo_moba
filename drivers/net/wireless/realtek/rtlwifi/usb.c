@@ -1050,8 +1050,15 @@ int rtl_usb_probe(struct usb_interface *intf,
 	rtlpriv->hw = hw;
 	rtlpriv->usb_data = kcalloc(RTL_USB_MAX_RX_COUNT, sizeof(u32),
 				    GFP_KERNEL);
+<<<<<<< HEAD
 	if (!rtlpriv->usb_data)
 		return -ENOMEM;
+=======
+	if (!rtlpriv->usb_data) {
+		ieee80211_free_hw(hw);
+		return -ENOMEM;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* this spin lock must be initialized early */
 	spin_lock_init(&rtlpriv->locks.usb_lock);
@@ -1112,6 +1119,10 @@ error_out2:
 	_rtl_usb_io_handler_release(hw);
 	usb_put_dev(udev);
 	complete(&rtlpriv->firmware_loading_complete);
+<<<<<<< HEAD
+=======
+	kfree(rtlpriv->usb_data);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return -ENODEV;
 }
 EXPORT_SYMBOL(rtl_usb_probe);

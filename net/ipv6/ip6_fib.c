@@ -981,8 +981,12 @@ static int fib6_add_rt2node(struct fib6_node *fn, struct fib6_info *rt,
 					found++;
 					break;
 				}
+<<<<<<< HEAD
 				if (rt_can_ecmp)
 					fallback_ins = fallback_ins ?: ins;
+=======
+				fallback_ins = fallback_ins ?: ins;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				goto next_iter;
 			}
 
@@ -1025,7 +1029,13 @@ next_iter:
 	}
 
 	if (fallback_ins && !found) {
+<<<<<<< HEAD
 		/* No ECMP-able route found, replace first non-ECMP one */
+=======
+		/* No matching route with same ecmp-able-ness found, replace
+		 * first matching route
+		 */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ins = fallback_ins;
 		iter = rcu_dereference_protected(*ins,
 				    lockdep_is_held(&rt->fib6_table->tb6_lock));
@@ -1529,7 +1539,12 @@ static struct fib6_node *fib6_locate_1(struct fib6_node *root,
 		if (plen == fn->fn_bit)
 			return fn;
 
+<<<<<<< HEAD
 		prev = fn;
+=======
+		if (fn->fn_flags & RTN_RTINFO)
+			prev = fn;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 next:
 		/*

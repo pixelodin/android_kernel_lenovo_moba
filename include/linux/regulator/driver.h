@@ -94,6 +94,13 @@ struct regulator_linear_range {
  *	if the selector indicates a voltage that is unusable on this system;
  *	or negative errno.  Selectors range from zero to one less than
  *	regulator_desc.n_voltages.  Voltages may be reported in any order.
+<<<<<<< HEAD
+=======
+ * @list_corner_voltage: Return the maximum voltage in microvolts that
+ *	that can be physically configured for the regulator when operating at
+ *	the specified voltage corner or a negative errno if the corner value
+ *	can't be used on this system.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  *
  * @set_current_limit: Configure a limit for a current-limited regulator.
  *                     The driver should select the current closest to max_uA.
@@ -150,6 +157,10 @@ struct regulator_ops {
 
 	/* enumerate supported voltages */
 	int (*list_voltage) (struct regulator_dev *, unsigned selector);
+<<<<<<< HEAD
+=======
+	int (*list_corner_voltage)(struct regulator_dev *list_reg, int corner);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* get/set regulator voltage */
 	int (*set_voltage) (struct regulator_dev *, int min_uV, int max_uV,

@@ -871,6 +871,10 @@ static int selinux_set_mnt_opts(struct super_block *sb,
 	    !strcmp(sb->s_type->name, "tracefs") ||
 	    !strcmp(sb->s_type->name, "sysfs") ||
 	    !strcmp(sb->s_type->name, "pstore") ||
+<<<<<<< HEAD
+=======
+	    !strcmp(sb->s_type->name, "binder") ||
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	    !strcmp(sb->s_type->name, "cgroup") ||
 	    !strcmp(sb->s_type->name, "cgroup2"))
 		sbsec->flags |= SE_SBGENFS;
@@ -1794,7 +1798,11 @@ static inline u32 signal_to_av(int sig)
 
 /* Check whether a task is allowed to use a capability. */
 static int cred_has_capability(const struct cred *cred,
+<<<<<<< HEAD
 			       int cap, int audit, bool initns)
+=======
+			       int cap, unsigned int opts, bool initns)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct common_audit_data ad;
 	struct av_decision avd;
@@ -1821,7 +1829,11 @@ static int cred_has_capability(const struct cred *cred,
 
 	rc = avc_has_perm_noaudit(&selinux_state,
 				  sid, sid, sclass, av, 0, &avd);
+<<<<<<< HEAD
 	if (audit == SECURITY_CAP_AUDIT) {
+=======
+	if (!(opts & CAP_OPT_NOAUDIT)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		int rc2 = avc_audit(&selinux_state,
 				    sid, sid, sclass, av, &avd, rc, &ad, 0);
 		if (rc2)
@@ -2341,9 +2353,15 @@ static int selinux_capset(struct cred *new, const struct cred *old,
  */
 
 static int selinux_capable(const struct cred *cred, struct user_namespace *ns,
+<<<<<<< HEAD
 			   int cap, int audit)
 {
 	return cred_has_capability(cred, cap, audit, ns == &init_user_ns);
+=======
+			   int cap, unsigned int opts)
+{
+	return cred_has_capability(cred, cap, opts, ns == &init_user_ns);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int selinux_quotactl(int cmds, int type, int id, struct super_block *sb)
@@ -2417,7 +2435,11 @@ static int selinux_vm_enough_memory(struct mm_struct *mm, long pages)
 	int rc, cap_sys_admin = 0;
 
 	rc = cred_has_capability(current_cred(), CAP_SYS_ADMIN,
+<<<<<<< HEAD
 				 SECURITY_CAP_NOAUDIT, true);
+=======
+				 CAP_OPT_NOAUDIT, true);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (rc == 0)
 		cap_sys_admin = 1;
 
@@ -3171,8 +3193,12 @@ static int selinux_inode_follow_link(struct dentry *dentry, struct inode *inode,
 
 static noinline int audit_inode_permission(struct inode *inode,
 					   u32 perms, u32 audited, u32 denied,
+<<<<<<< HEAD
 					   int result,
 					   unsigned flags)
+=======
+					   int result)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct common_audit_data ad;
 	struct inode_security_struct *isec = inode->i_security;
@@ -3183,7 +3209,11 @@ static noinline int audit_inode_permission(struct inode *inode,
 
 	rc = slow_avc_audit(&selinux_state,
 			    current_sid(), isec->sid, isec->sclass, perms,
+<<<<<<< HEAD
 			    audited, denied, result, &ad, flags);
+=======
+			    audited, denied, result, &ad);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (rc)
 		return rc;
 	return 0;
@@ -3230,7 +3260,15 @@ static int selinux_inode_permission(struct inode *inode, int mask)
 	if (likely(!audited))
 		return rc;
 
+<<<<<<< HEAD
 	rc2 = audit_inode_permission(inode, perms, audited, denied, rc, flags);
+=======
+	/* fall back to ref-walk if we have to generate audit */
+	if (flags & MAY_NOT_BLOCK)
+		return -ECHILD;
+
+	rc2 = audit_inode_permission(inode, perms, audited, denied, rc);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (rc2)
 		return rc2;
 	return rc;
@@ -3272,11 +3310,19 @@ static int selinux_inode_getattr(const struct path *path)
 static bool has_cap_mac_admin(bool audit)
 {
 	const struct cred *cred = current_cred();
+<<<<<<< HEAD
 	int cap_audit = audit ? SECURITY_CAP_AUDIT : SECURITY_CAP_NOAUDIT;
 
 	if (cap_capable(cred, &init_user_ns, CAP_MAC_ADMIN, cap_audit))
 		return false;
 	if (cred_has_capability(cred, CAP_MAC_ADMIN, cap_audit, true))
+=======
+	unsigned int opts = audit ? CAP_OPT_NONE : CAP_OPT_NOAUDIT;
+
+	if (cap_capable(cred, &init_user_ns, CAP_MAC_ADMIN, opts))
+		return false;
+	if (cred_has_capability(cred, CAP_MAC_ADMIN, opts, true))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return false;
 	return true;
 }
@@ -3680,7 +3726,11 @@ static int selinux_file_ioctl(struct file *file, unsigned int cmd,
 	case KDSKBENT:
 	case KDSKBSENT:
 		error = cred_has_capability(cred, CAP_SYS_TTY_CONFIG,
+<<<<<<< HEAD
 					    SECURITY_CAP_AUDIT, true);
+=======
+					    CAP_OPT_NONE, true);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 
 	/* default case assumes that the command will go
@@ -6940,6 +6990,71 @@ static void selinux_bpf_prog_free(struct bpf_prog_aux *aux)
 }
 #endif
 
+<<<<<<< HEAD
+=======
+
+#ifdef CONFIG_PERF_EVENTS
+static int selinux_perf_event_open(struct perf_event_attr *attr, int type)
+{
+	u32 requested, sid = current_sid();
+
+	if (type == PERF_SECURITY_OPEN)
+		requested = PERF_EVENT__OPEN;
+	else if (type == PERF_SECURITY_CPU)
+		requested = PERF_EVENT__CPU;
+	else if (type == PERF_SECURITY_KERNEL)
+		requested = PERF_EVENT__KERNEL;
+	else if (type == PERF_SECURITY_TRACEPOINT)
+		requested = PERF_EVENT__TRACEPOINT;
+	else
+		return -EINVAL;
+
+	return avc_has_perm(&selinux_state, sid, sid, SECCLASS_PERF_EVENT,
+			    requested, NULL);
+}
+
+static int selinux_perf_event_alloc(struct perf_event *event)
+{
+	struct perf_event_security_struct *perfsec;
+
+	perfsec = kzalloc(sizeof(*perfsec), GFP_KERNEL);
+	if (!perfsec)
+		return -ENOMEM;
+
+	perfsec->sid = current_sid();
+	event->security = perfsec;
+
+	return 0;
+}
+
+static void selinux_perf_event_free(struct perf_event *event)
+{
+	struct perf_event_security_struct *perfsec = event->security;
+
+	event->security = NULL;
+	kfree(perfsec);
+}
+
+static int selinux_perf_event_read(struct perf_event *event)
+{
+	struct perf_event_security_struct *perfsec = event->security;
+	u32 sid = current_sid();
+
+	return avc_has_perm(&selinux_state, sid, perfsec->sid,
+			    SECCLASS_PERF_EVENT, PERF_EVENT__READ, NULL);
+}
+
+static int selinux_perf_event_write(struct perf_event *event)
+{
+	struct perf_event_security_struct *perfsec = event->security;
+	u32 sid = current_sid();
+
+	return avc_has_perm(&selinux_state, sid, perfsec->sid,
+			    SECCLASS_PERF_EVENT, PERF_EVENT__WRITE, NULL);
+}
+#endif
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
 	LSM_HOOK_INIT(binder_set_context_mgr, selinux_binder_set_context_mgr),
 	LSM_HOOK_INIT(binder_transaction, selinux_binder_transaction),
@@ -7175,6 +7290,17 @@ static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
 	LSM_HOOK_INIT(bpf_map_free_security, selinux_bpf_map_free),
 	LSM_HOOK_INIT(bpf_prog_free_security, selinux_bpf_prog_free),
 #endif
+<<<<<<< HEAD
+=======
+
+#ifdef CONFIG_PERF_EVENTS
+	LSM_HOOK_INIT(perf_event_open, selinux_perf_event_open),
+	LSM_HOOK_INIT(perf_event_alloc, selinux_perf_event_alloc),
+	LSM_HOOK_INIT(perf_event_free, selinux_perf_event_free),
+	LSM_HOOK_INIT(perf_event_read, selinux_perf_event_read),
+	LSM_HOOK_INIT(perf_event_write, selinux_perf_event_write),
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 static __init int selinux_init(void)

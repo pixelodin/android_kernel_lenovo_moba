@@ -1132,7 +1132,10 @@ void __ref vmemmap_free(unsigned long start, unsigned long end,
 	remove_pagetable(start, end, false, altmap);
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_MEMORY_HOTREMOVE
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static void __meminit
 kernel_physical_mapping_remove(unsigned long start, unsigned long end)
 {
@@ -1142,6 +1145,7 @@ kernel_physical_mapping_remove(unsigned long start, unsigned long end)
 	remove_pagetable(start, end, true, NULL);
 }
 
+<<<<<<< HEAD
 int __ref arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
 {
 	unsigned long start_pfn = start >> PAGE_SHIFT;
@@ -1161,6 +1165,17 @@ int __ref arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
 	return ret;
 }
 #endif
+=======
+void __ref arch_remove_memory(int nid, u64 start, u64 size,
+			      struct vmem_altmap *altmap)
+{
+	unsigned long start_pfn = start >> PAGE_SHIFT;
+	unsigned long nr_pages = size >> PAGE_SHIFT;
+
+	__remove_pages(start_pfn, nr_pages, altmap);
+	kernel_physical_mapping_remove(start, start + size);
+}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif /* CONFIG_MEMORY_HOTPLUG */
 
 static struct kcore_list kcore_vsyscall;
@@ -1206,7 +1221,11 @@ int kernel_set_to_readonly;
 void set_kernel_text_rw(void)
 {
 	unsigned long start = PFN_ALIGN(_text);
+<<<<<<< HEAD
 	unsigned long end = PFN_ALIGN(__stop___ex_table);
+=======
+	unsigned long end = PFN_ALIGN(_etext);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!kernel_set_to_readonly)
 		return;
@@ -1225,7 +1244,11 @@ void set_kernel_text_rw(void)
 void set_kernel_text_ro(void)
 {
 	unsigned long start = PFN_ALIGN(_text);
+<<<<<<< HEAD
 	unsigned long end = PFN_ALIGN(__stop___ex_table);
+=======
+	unsigned long end = PFN_ALIGN(_etext);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!kernel_set_to_readonly)
 		return;
@@ -1244,7 +1267,11 @@ void mark_rodata_ro(void)
 	unsigned long start = PFN_ALIGN(_text);
 	unsigned long rodata_start = PFN_ALIGN(__start_rodata);
 	unsigned long end = (unsigned long) &__end_rodata_hpage_align;
+<<<<<<< HEAD
 	unsigned long text_end = PFN_ALIGN(&__stop___ex_table);
+=======
+	unsigned long text_end = PFN_ALIGN(&_etext);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	unsigned long rodata_end = PFN_ALIGN(&__end_rodata);
 	unsigned long all_end;
 

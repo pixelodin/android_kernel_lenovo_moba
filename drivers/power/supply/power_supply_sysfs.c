@@ -38,10 +38,13 @@
 	.store = power_supply_store_property,				\
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_PRODUCT_MOBA
 #define USE_TI_FG
 #endif
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static struct device_attribute power_supply_attrs[];
 
 static const char * const power_supply_type_text[] = {
@@ -485,6 +488,10 @@ static struct device_attribute power_supply_attrs[] = {
 	POWER_SUPPLY_ATTR(cp_ilim),
 	POWER_SUPPLY_ATTR(irq_status),
 	POWER_SUPPLY_ATTR(parallel_output_mode),
+<<<<<<< HEAD
+=======
+	POWER_SUPPLY_ATTR(fg_type),
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	POWER_SUPPLY_ATTR(charger_status),
 	/* Local extensions of type int64_t */
 	POWER_SUPPLY_ATTR(charge_counter_ext),
@@ -494,6 +501,7 @@ static struct device_attribute power_supply_attrs[] = {
 	POWER_SUPPLY_ATTR(battery_type),
 	POWER_SUPPLY_ATTR(cycle_counts),
 	POWER_SUPPLY_ATTR(serial_number),
+<<<<<<< HEAD
 #ifdef CONFIG_PRODUCT_MOBA
 	POWER_SUPPLY_ATTR(ti_fault_status),
 	POWER_SUPPLY_ATTR(ti_reg_status),
@@ -560,6 +568,8 @@ static struct device_attribute power_supply_attrs[] = {
 	POWER_SUPPLY_ATTR(first_pd_type),
 	POWER_SUPPLY_ATTR(sec_pd_type),
 #endif
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 static struct attribute *

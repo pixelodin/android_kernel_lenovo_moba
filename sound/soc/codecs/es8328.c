@@ -231,7 +231,11 @@ static const struct soc_enum es8328_rline_enum =
 			      ARRAY_SIZE(es8328_line_texts),
 			      es8328_line_texts);
 static const struct snd_kcontrol_new es8328_right_line_controls =
+<<<<<<< HEAD
 	SOC_DAPM_ENUM("Route", es8328_lline_enum);
+=======
+	SOC_DAPM_ENUM("Route", es8328_rline_enum);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /* Left Mixer */
 static const struct snd_kcontrol_new es8328_left_mixer_controls[] = {

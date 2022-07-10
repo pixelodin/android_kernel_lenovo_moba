@@ -1409,6 +1409,10 @@ int irq_chip_retrigger_hierarchy(struct irq_data *data)
 
 	return 0;
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(irq_chip_retrigger_hierarchy);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /**
  * irq_chip_set_vcpu_affinity_parent - Set vcpu affinity on the parent interrupt
@@ -1423,6 +1427,10 @@ int irq_chip_set_vcpu_affinity_parent(struct irq_data *data, void *vcpu_info)
 
 	return -ENOSYS;
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(irq_chip_set_vcpu_affinity_parent);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /**
  * irq_chip_set_wake_parent - Set/reset wake-up on the parent interrupt
@@ -1443,6 +1451,10 @@ int irq_chip_set_wake_parent(struct irq_data *data, unsigned int on)
 
 	return -ENOSYS;
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(irq_chip_set_wake_parent);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif
 
 /**

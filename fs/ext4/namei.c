@@ -35,6 +35,10 @@
 #include <linux/buffer_head.h>
 #include <linux/bio.h>
 #include <linux/iversion.h>
+<<<<<<< HEAD
+=======
+#include <linux/unicode.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include "ext4.h"
 #include "ext4_jbd2.h"
 
@@ -642,7 +646,11 @@ static struct stats dx_show_leaf(struct inode *dir,
 				}
 				if (!fscrypt_has_encryption_key(dir)) {
 					/* Directory is not encrypted */
+<<<<<<< HEAD
 					ext4fs_dirhash(de->name,
+=======
+					ext4fs_dirhash(dir, de->name,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 						de->name_len, &h);
 					printk("%*.s:(U)%x.%u ", len,
 					       name, h.hash,
@@ -675,8 +683,13 @@ static struct stats dx_show_leaf(struct inode *dir,
 						name = fname_crypto_str.name;
 						len = fname_crypto_str.len;
 					}
+<<<<<<< HEAD
 					ext4fs_dirhash(de->name, de->name_len,
 						       &h);
+=======
+					ext4fs_dirhash(dir, de->name,
+						       de->name_len, &h);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 					printk("%*.s:(E)%x.%u ", len, name,
 					       h.hash, (unsigned) ((char *) de
 								   - base));
@@ -686,7 +699,11 @@ static struct stats dx_show_leaf(struct inode *dir,
 #else
 				int len = de->name_len;
 				char *name = de->name;
+<<<<<<< HEAD
 				ext4fs_dirhash(de->name, de->name_len, &h);
+=======
+				ext4fs_dirhash(dir, de->name, de->name_len, &h);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				printk("%*.s:%x.%u ", len, name, h.hash,
 				       (unsigned) ((char *) de - base));
 #endif
@@ -775,7 +792,11 @@ dx_probe(struct ext4_filename *fname, struct inode *dir,
 		hinfo->hash_version += EXT4_SB(dir->i_sb)->s_hash_unsigned;
 	hinfo->seed = EXT4_SB(dir->i_sb)->s_hash_seed;
 	if (fname && fname_name(fname))
+<<<<<<< HEAD
 		ext4fs_dirhash(fname_name(fname), fname_len(fname), hinfo);
+=======
+		ext4fs_dirhash(dir, fname_name(fname), fname_len(fname), hinfo);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	hash = hinfo->hash;
 
 	if (root->info.unused_flags & 1) {
@@ -1024,7 +1045,11 @@ static int htree_dirblock_to_tree(struct file *dir_file,
 			/* silently ignore the rest of the block */
 			break;
 		}
+<<<<<<< HEAD
 		ext4fs_dirhash(de->name, de->name_len, hinfo);
+=======
+		ext4fs_dirhash(dir, de->name, de->name_len, hinfo);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if ((hinfo->hash < start_hash) ||
 		    ((hinfo->hash == start_hash) &&
 		     (hinfo->minor_hash < start_minor_hash)))
@@ -1213,7 +1238,11 @@ static int dx_make_map(struct inode *dir, struct ext4_dir_entry_2 *de,
 
 	while ((char *) de < base + blocksize) {
 		if (de->name_len && de->inode) {
+<<<<<<< HEAD
 			ext4fs_dirhash(de->name, de->name_len, &h);
+=======
+			ext4fs_dirhash(dir, de->name, de->name_len, &h);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			map_tail--;
 			map_tail->hash = h.hash;
 			map_tail->offs = ((char *) de - base)>>2;
@@ -1268,15 +1297,93 @@ static void dx_insert_block(struct dx_frame *frame, u32 hash, ext4_lblk_t block)
 	dx_set_count(entries, count + 1);
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_UNICODE
+/*
+ * Test whether a case-insensitive directory entry matches the filename
+ * being searched for.  If quick is set, assume the name being looked up
+ * is already in the casefolded form.
+ *
+ * Returns: 0 if the directory entry matches, more than 0 if it
+ * doesn't match or less than zero on error.
+ */
+int ext4_ci_compare(const struct inode *parent, const struct qstr *name,
+		    const struct qstr *entry, bool quick)
+{
+	const struct super_block *sb = parent->i_sb;
+	const struct unicode_map *um = sb->s_encoding;
+	int ret;
+
+	if (quick)
+		ret = utf8_strncasecmp_folded(um, name, entry);
+	else
+		ret = utf8_strncasecmp(um, name, entry);
+
+	if (ret < 0) {
+		/* Handle invalid character sequence as either an error
+		 * or as an opaque byte sequence.
+		 */
+		if (sb_has_enc_strict_mode(sb))
+			return -EINVAL;
+
+		if (name->len != entry->len)
+			return 1;
+
+		return !!memcmp(name->name, entry->name, name->len);
+	}
+
+	return ret;
+}
+
+void ext4_fname_setup_ci_filename(struct inode *dir, const struct qstr *iname,
+				  struct fscrypt_str *cf_name)
+{
+	int len;
+
+	if (!needs_casefold(dir)) {
+		cf_name->name = NULL;
+		return;
+	}
+
+	cf_name->name = kmalloc(EXT4_NAME_LEN, GFP_NOFS);
+	if (!cf_name->name)
+		return;
+
+	len = utf8_casefold(dir->i_sb->s_encoding,
+			    iname, cf_name->name,
+			    EXT4_NAME_LEN);
+	if (len <= 0) {
+		kfree(cf_name->name);
+		cf_name->name = NULL;
+		return;
+	}
+	cf_name->len = (unsigned) len;
+
+}
+#endif
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * Test whether a directory entry matches the filename being searched for.
  *
  * Return: %true if the directory entry matches, otherwise %false.
  */
+<<<<<<< HEAD
 static inline bool ext4_match(const struct ext4_filename *fname,
 			      const struct ext4_dir_entry_2 *de)
 {
 	struct fscrypt_name f;
+=======
+static inline bool ext4_match(const struct inode *parent,
+			      const struct ext4_filename *fname,
+			      const struct ext4_dir_entry_2 *de)
+{
+	struct fscrypt_name f;
+#ifdef CONFIG_UNICODE
+	const struct qstr entry = {.name = de->name, .len = de->name_len};
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!de->inode)
 		return false;
@@ -1286,6 +1393,22 @@ static inline bool ext4_match(const struct ext4_filename *fname,
 #ifdef CONFIG_FS_ENCRYPTION
 	f.crypto_buf = fname->crypto_buf;
 #endif
+<<<<<<< HEAD
+=======
+
+#ifdef CONFIG_UNICODE
+	if (needs_casefold(parent)) {
+		if (fname->cf_name.name) {
+			struct qstr cf = {.name = fname->cf_name.name,
+					  .len = fname->cf_name.len};
+			return !ext4_ci_compare(parent, &cf, &entry, true);
+		}
+		return !ext4_ci_compare(parent, fname->usr_fname, &entry,
+					false);
+	}
+#endif
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return fscrypt_match_name(&f, de->name, de->name_len);
 }
 
@@ -1306,7 +1429,11 @@ int ext4_search_dir(struct buffer_head *bh, char *search_buf, int buf_size,
 		/* this code is executed quadratically often */
 		/* do minimal checking `by hand' */
 		if ((char *) de + de->name_len <= dlimit &&
+<<<<<<< HEAD
 		    ext4_match(fname, de)) {
+=======
+		    ext4_match(dir, fname, de)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			/* found a match - just to be sure, do
 			 * a full check */
 			if (ext4_check_dir_entry(dir, NULL, de, bh, bh->b_data,
@@ -1343,7 +1470,11 @@ static int is_dx_internal_node(struct inode *dir, ext4_lblk_t block,
 }
 
 /*
+<<<<<<< HEAD
  *	ext4_find_entry()
+=======
+ *	__ext4_find_entry()
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  *
  * finds an entry in the specified directory with the wanted name. It
  * returns the cache buffer in which the entry was found, and the entry
@@ -1353,22 +1484,34 @@ static int is_dx_internal_node(struct inode *dir, ext4_lblk_t block,
  * The returned buffer_head has ->b_count elevated.  The caller is expected
  * to brelse() it when appropriate.
  */
+<<<<<<< HEAD
 static struct buffer_head * ext4_find_entry (struct inode *dir,
 					const struct qstr *d_name,
 					struct ext4_dir_entry_2 **res_dir,
 					int *inlined)
+=======
+static struct buffer_head *__ext4_find_entry(struct inode *dir,
+					     struct ext4_filename *fname,
+					     struct ext4_dir_entry_2 **res_dir,
+					     int *inlined)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct super_block *sb;
 	struct buffer_head *bh_use[NAMEI_RA_SIZE];
 	struct buffer_head *bh, *ret = NULL;
 	ext4_lblk_t start, block;
+<<<<<<< HEAD
 	const u8 *name = d_name->name;
+=======
+	const u8 *name = fname->usr_fname->name;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	size_t ra_max = 0;	/* Number of bh's in the readahead
 				   buffer, bh_use[] */
 	size_t ra_ptr = 0;	/* Current index into readahead
 				   buffer */
 	ext4_lblk_t  nblocks;
 	int i, namelen, retval;
+<<<<<<< HEAD
 	struct ext4_filename fname;
 
 	*res_dir = NULL;
@@ -1386,6 +1529,18 @@ static struct buffer_head * ext4_find_entry (struct inode *dir,
 	if (ext4_has_inline_data(dir)) {
 		int has_inline_data = 1;
 		ret = ext4_find_inline_entry(dir, &fname, res_dir,
+=======
+
+	*res_dir = NULL;
+	sb = dir->i_sb;
+	namelen = fname->usr_fname->len;
+	if (namelen > EXT4_NAME_LEN)
+		return NULL;
+
+	if (ext4_has_inline_data(dir)) {
+		int has_inline_data = 1;
+		ret = ext4_find_inline_entry(dir, fname, res_dir,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 					     &has_inline_data);
 		if (has_inline_data) {
 			if (inlined)
@@ -1405,7 +1560,11 @@ static struct buffer_head * ext4_find_entry (struct inode *dir,
 		goto restart;
 	}
 	if (is_dx(dir)) {
+<<<<<<< HEAD
 		ret = ext4_dx_find_entry(dir, &fname, res_dir);
+=======
+		ret = ext4_dx_find_entry(dir, fname, res_dir);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/*
 		 * On success, or if the error was file not found,
 		 * return.  Otherwise, fall back to doing a search the
@@ -1431,6 +1590,10 @@ restart:
 		/*
 		 * We deal with the read-ahead logic here.
 		 */
+<<<<<<< HEAD
+=======
+		cond_resched();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (ra_ptr >= ra_max) {
 			/* Refill the readahead buffer */
 			ra_ptr = 0;
@@ -1469,7 +1632,11 @@ restart:
 			goto cleanup_and_exit;
 		}
 		set_buffer_verified(bh);
+<<<<<<< HEAD
 		i = search_dirblock(bh, dir, &fname,
+=======
+		i = search_dirblock(bh, dir, fname,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			    block << EXT4_BLOCK_SIZE_BITS(sb), res_dir);
 		if (i == 1) {
 			EXT4_I(dir)->i_dir_start_lookup = block;
@@ -1500,10 +1667,58 @@ cleanup_and_exit:
 	/* Clean up the read-ahead blocks */
 	for (; ra_ptr < ra_max; ra_ptr++)
 		brelse(bh_use[ra_ptr]);
+<<<<<<< HEAD
 	ext4_fname_free_filename(&fname);
 	return ret;
 }
 
+=======
+	return ret;
+}
+
+static struct buffer_head *ext4_find_entry(struct inode *dir,
+					   const struct qstr *d_name,
+					   struct ext4_dir_entry_2 **res_dir,
+					   int *inlined)
+{
+	int err;
+	struct ext4_filename fname;
+	struct buffer_head *bh;
+
+	err = ext4_fname_setup_filename(dir, d_name, 1, &fname);
+	if (err == -ENOENT)
+		return NULL;
+	if (err)
+		return ERR_PTR(err);
+
+	bh = __ext4_find_entry(dir, &fname, res_dir, inlined);
+
+	ext4_fname_free_filename(&fname);
+	return bh;
+}
+
+static struct buffer_head *ext4_lookup_entry(struct inode *dir,
+					     struct dentry *dentry,
+					     struct ext4_dir_entry_2 **res_dir)
+{
+	int err;
+	struct ext4_filename fname;
+	struct buffer_head *bh;
+
+	err = ext4_fname_prepare_lookup(dir, dentry, &fname);
+	generic_set_encrypted_ci_d_ops(dir, dentry);
+	if (err == -ENOENT)
+		return NULL;
+	if (err)
+		return ERR_PTR(err);
+
+	bh = __ext4_find_entry(dir, &fname, res_dir, NULL);
+
+	ext4_fname_free_filename(&fname);
+	return bh;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static struct buffer_head * ext4_dx_find_entry(struct inode *dir,
 			struct ext4_filename *fname,
 			struct ext4_dir_entry_2 **res_dir)
@@ -1562,16 +1777,23 @@ static struct dentry *ext4_lookup(struct inode *dir, struct dentry *dentry, unsi
 	struct inode *inode;
 	struct ext4_dir_entry_2 *de;
 	struct buffer_head *bh;
+<<<<<<< HEAD
 	int err;
 
 	err = fscrypt_prepare_lookup(dir, dentry, flags);
 	if (err)
 		return ERR_PTR(err);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (dentry->d_name.len > EXT4_NAME_LEN)
 		return ERR_PTR(-ENAMETOOLONG);
 
+<<<<<<< HEAD
 	bh = ext4_find_entry(dir, &dentry->d_name, &de, NULL);
+=======
+	bh = ext4_lookup_entry(dir, dentry, &de);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (IS_ERR(bh))
 		return (struct dentry *) bh;
 	inode = NULL;
@@ -1604,6 +1826,20 @@ static struct dentry *ext4_lookup(struct inode *dir, struct dentry *dentry, unsi
 			return ERR_PTR(-EPERM);
 		}
 	}
+<<<<<<< HEAD
+=======
+
+#ifdef CONFIG_UNICODE
+	if (!inode && IS_CASEFOLDED(dir)) {
+		/* Eventually we want to call d_add_ci(dentry, NULL)
+		 * for negative dentries in the encoding case as
+		 * well.  For now, prevent the negative dentry
+		 * from being cached.
+		 */
+		return NULL;
+	}
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return d_splice_alias(inode, dentry);
 }
 
@@ -1814,7 +2050,11 @@ int ext4_find_dest_de(struct inode *dir, struct inode *inode,
 		if (ext4_check_dir_entry(dir, NULL, de, bh,
 					 buf, buf_size, offset))
 			return -EFSCORRUPTED;
+<<<<<<< HEAD
 		if (ext4_match(fname, de))
+=======
+		if (ext4_match(dir, fname, de))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			return -EEXIST;
 		nlen = EXT4_DIR_REC_LEN(de->name_len);
 		rlen = ext4_rec_len_from_disk(de->rec_len, buf_size);
@@ -1999,7 +2239,11 @@ static int make_indexed_dir(handle_t *handle, struct ext4_filename *fname,
 	if (fname->hinfo.hash_version <= DX_HASH_TEA)
 		fname->hinfo.hash_version += EXT4_SB(dir->i_sb)->s_hash_unsigned;
 	fname->hinfo.seed = EXT4_SB(dir->i_sb)->s_hash_seed;
+<<<<<<< HEAD
 	ext4fs_dirhash(fname_name(fname), fname_len(fname), &fname->hinfo);
+=======
+	ext4fs_dirhash(dir, fname_name(fname), fname_len(fname), &fname->hinfo);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	memset(frames, 0, sizeof(frames));
 	frame = frames;
@@ -2067,6 +2311,15 @@ static int ext4_add_entry(handle_t *handle, struct dentry *dentry,
 	if (!dentry->d_name.len)
 		return -EINVAL;
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_UNICODE
+	if (sb_has_enc_strict_mode(sb) && IS_CASEFOLDED(dir) &&
+	    sb->s_encoding && utf8_validate(sb->s_encoding, &dentry->d_name))
+		return -EINVAL;
+#endif
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	retval = ext4_fname_setup_filename(dir, &dentry->d_name, 0, &fname);
 	if (retval)
 		return retval;
@@ -2085,6 +2338,16 @@ static int ext4_add_entry(handle_t *handle, struct dentry *dentry,
 		retval = ext4_dx_add_entry(handle, &fname, dir, inode);
 		if (!retval || (retval != ERR_BAD_DX_DIR))
 			goto out;
+<<<<<<< HEAD
+=======
+		/* Can we just ignore htree data? */
+		if (ext4_has_metadata_csum(sb)) {
+			EXT4_ERROR_INODE(dir,
+				"Directory has corrupted htree index.");
+			retval = -EFSCORRUPTED;
+			goto out;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ext4_clear_inode_flag(dir, EXT4_INODE_INDEX);
 		dx_fallback++;
 		ext4_mark_inode_dirty(handle, dir);
@@ -2284,7 +2547,11 @@ again:
 			dxroot->info.indirect_levels += 1;
 			dxtrace(printk(KERN_DEBUG
 				       "Creating %d level index...\n",
+<<<<<<< HEAD
 				       info->indirect_levels));
+=======
+				       dxroot->info.indirect_levels));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			err = ext4_handle_dirty_dx_node(handle, dir, frame->bh);
 			if (err)
 				goto journal_error;
@@ -2693,7 +2960,11 @@ bool ext4_empty_dir(struct inode *inode)
 {
 	unsigned int offset;
 	struct buffer_head *bh;
+<<<<<<< HEAD
 	struct ext4_dir_entry_2 *de, *de1;
+=======
+	struct ext4_dir_entry_2 *de;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct super_block *sb;
 
 	if (ext4_has_inline_data(inode)) {
@@ -2718,6 +2989,7 @@ bool ext4_empty_dir(struct inode *inode)
 		return true;
 
 	de = (struct ext4_dir_entry_2 *) bh->b_data;
+<<<<<<< HEAD
 	de1 = ext4_next_entry(de, sb->s_blocksize);
 	if (le32_to_cpu(de->inode) != inode->i_ino ||
 			le32_to_cpu(de1->inode) == 0 ||
@@ -2731,6 +3003,27 @@ bool ext4_empty_dir(struct inode *inode)
 	de = ext4_next_entry(de1, sb->s_blocksize);
 	while (offset < inode->i_size) {
 		if ((void *) de >= (void *) (bh->b_data+sb->s_blocksize)) {
+=======
+	if (ext4_check_dir_entry(inode, NULL, de, bh, bh->b_data, bh->b_size,
+				 0) ||
+	    le32_to_cpu(de->inode) != inode->i_ino || strcmp(".", de->name)) {
+		ext4_warning_inode(inode, "directory missing '.'");
+		brelse(bh);
+		return true;
+	}
+	offset = ext4_rec_len_from_disk(de->rec_len, sb->s_blocksize);
+	de = ext4_next_entry(de, sb->s_blocksize);
+	if (ext4_check_dir_entry(inode, NULL, de, bh, bh->b_data, bh->b_size,
+				 offset) ||
+	    le32_to_cpu(de->inode) == 0 || strcmp("..", de->name)) {
+		ext4_warning_inode(inode, "directory missing '..'");
+		brelse(bh);
+		return true;
+	}
+	offset += ext4_rec_len_from_disk(de->rec_len, sb->s_blocksize);
+	while (offset < inode->i_size) {
+		if (!(offset & (sb->s_blocksize - 1))) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			unsigned int lblock;
 			brelse(bh);
 			lblock = offset >> EXT4_BLOCK_SIZE_BITS(sb);
@@ -2741,12 +3034,20 @@ bool ext4_empty_dir(struct inode *inode)
 			}
 			if (IS_ERR(bh))
 				return true;
+<<<<<<< HEAD
 			de = (struct ext4_dir_entry_2 *) bh->b_data;
 		}
 		if (ext4_check_dir_entry(inode, NULL, de, bh,
 					 bh->b_data, bh->b_size, offset)) {
 			de = (struct ext4_dir_entry_2 *)(bh->b_data +
 							 sb->s_blocksize);
+=======
+		}
+		de = (struct ext4_dir_entry_2 *) (bh->b_data +
+					(offset & (sb->s_blocksize - 1)));
+		if (ext4_check_dir_entry(inode, NULL, de, bh,
+					 bh->b_data, bh->b_size, offset)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			offset = (offset | (sb->s_blocksize - 1)) + 1;
 			continue;
 		}
@@ -2755,7 +3056,10 @@ bool ext4_empty_dir(struct inode *inode)
 			return false;
 		}
 		offset += ext4_rec_len_from_disk(de->rec_len, sb->s_blocksize);
+<<<<<<< HEAD
 		de = ext4_next_entry(de, sb->s_blocksize);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	brelse(bh);
 	return true;
@@ -3004,6 +3308,20 @@ static int ext4_rmdir(struct inode *dir, struct dentry *dentry)
 	ext4_update_dx_flag(dir);
 	ext4_mark_inode_dirty(handle, dir);
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_UNICODE
+	/* VFS negative dentries are incompatible with Encoding and
+	 * Case-insensitiveness. Eventually we'll want avoid
+	 * invalidating the dentries here, alongside with returning the
+	 * negative dentries at ext4_lookup(), when it is better
+	 * supported by the VFS for the CI case.
+	 */
+	if (IS_CASEFOLDED(dir))
+		d_invalidate(dentry);
+#endif
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 end_rmdir:
 	brelse(bh);
 	if (handle)
@@ -3056,23 +3374,48 @@ static int ext4_unlink(struct inode *dir, struct dentry *dentry)
 	if (IS_DIRSYNC(dir))
 		ext4_handle_sync(handle);
 
+<<<<<<< HEAD
 	if (inode->i_nlink == 0) {
 		ext4_warning_inode(inode, "Deleting file '%.*s' with no links",
 				   dentry->d_name.len, dentry->d_name.name);
 		set_nlink(inode, 1);
 	}
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	retval = ext4_delete_entry(handle, dir, de, bh);
 	if (retval)
 		goto end_unlink;
 	dir->i_ctime = dir->i_mtime = current_time(dir);
 	ext4_update_dx_flag(dir);
 	ext4_mark_inode_dirty(handle, dir);
+<<<<<<< HEAD
 	drop_nlink(inode);
+=======
+	if (inode->i_nlink == 0)
+		ext4_warning_inode(inode, "Deleting file '%.*s' with no links",
+				   dentry->d_name.len, dentry->d_name.name);
+	else
+		drop_nlink(inode);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!inode->i_nlink)
 		ext4_orphan_add(handle, inode);
 	inode->i_ctime = current_time(inode);
 	ext4_mark_inode_dirty(handle, inode);
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_UNICODE
+	/* VFS negative dentries are incompatible with Encoding and
+	 * Case-insensitiveness. Eventually we'll want avoid
+	 * invalidating the dentries here, alongside with returning the
+	 * negative dentries at ext4_lookup(), when it is  better
+	 * supported by the VFS for the CI case.
+	 */
+	if (IS_CASEFOLDED(dir))
+		d_invalidate(dentry);
+#endif
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 end_unlink:
 	brelse(bh);
 	if (handle)

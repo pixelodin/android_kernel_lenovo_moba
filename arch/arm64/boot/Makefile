@@ -18,7 +18,11 @@ include $(srctree)/arch/arm64/boot/dts/Makefile
 
 OBJCOPYFLAGS_Image :=-O binary -R .note -R .note.gnu.build-id -R .comment -S
 
+<<<<<<< HEAD
 targets := Image Image.gz
+=======
+targets := Image Image.bz2 Image.gz Image.lz4 Image.lzma Image.lzo
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 DTB_NAMES := $(subst $\",,$(CONFIG_BUILD_ARM64_APPENDED_DTB_IMAGE_NAMES))
 ifneq ($(DTB_NAMES),)

@@ -478,6 +478,11 @@ static int _dev_comp_vect_mappings_create(struct hfi1_devdata *dd,
 			  rvt_get_ibdev_name(&(dd)->verbs_dev.rdi), i, cpu);
 	}
 
+<<<<<<< HEAD
+=======
+	free_cpumask_var(available_cpus);
+	free_cpumask_var(non_intr_cpus);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 
 fail:

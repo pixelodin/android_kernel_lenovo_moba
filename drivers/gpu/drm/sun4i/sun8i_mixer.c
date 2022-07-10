@@ -111,48 +111,128 @@ static const struct de2_fmt_info de2_formats[] = {
 		.csc = SUN8I_CSC_MODE_OFF,
 	},
 	{
+<<<<<<< HEAD
+=======
+		/* for DE2 VI layer which ignores alpha */
+		.drm_fmt = DRM_FORMAT_XRGB4444,
+		.de2_fmt = SUN8I_MIXER_FBFMT_ARGB4444,
+		.rgb = true,
+		.csc = SUN8I_CSC_MODE_OFF,
+	},
+	{
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.drm_fmt = DRM_FORMAT_ABGR4444,
 		.de2_fmt = SUN8I_MIXER_FBFMT_ABGR4444,
 		.rgb = true,
 		.csc = SUN8I_CSC_MODE_OFF,
 	},
 	{
+<<<<<<< HEAD
+=======
+		/* for DE2 VI layer which ignores alpha */
+		.drm_fmt = DRM_FORMAT_XBGR4444,
+		.de2_fmt = SUN8I_MIXER_FBFMT_ABGR4444,
+		.rgb = true,
+		.csc = SUN8I_CSC_MODE_OFF,
+	},
+	{
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.drm_fmt = DRM_FORMAT_RGBA4444,
 		.de2_fmt = SUN8I_MIXER_FBFMT_RGBA4444,
 		.rgb = true,
 		.csc = SUN8I_CSC_MODE_OFF,
 	},
 	{
+<<<<<<< HEAD
+=======
+		/* for DE2 VI layer which ignores alpha */
+		.drm_fmt = DRM_FORMAT_RGBX4444,
+		.de2_fmt = SUN8I_MIXER_FBFMT_RGBA4444,
+		.rgb = true,
+		.csc = SUN8I_CSC_MODE_OFF,
+	},
+	{
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.drm_fmt = DRM_FORMAT_BGRA4444,
 		.de2_fmt = SUN8I_MIXER_FBFMT_BGRA4444,
 		.rgb = true,
 		.csc = SUN8I_CSC_MODE_OFF,
 	},
 	{
+<<<<<<< HEAD
+=======
+		/* for DE2 VI layer which ignores alpha */
+		.drm_fmt = DRM_FORMAT_BGRX4444,
+		.de2_fmt = SUN8I_MIXER_FBFMT_BGRA4444,
+		.rgb = true,
+		.csc = SUN8I_CSC_MODE_OFF,
+	},
+	{
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.drm_fmt = DRM_FORMAT_ARGB1555,
 		.de2_fmt = SUN8I_MIXER_FBFMT_ARGB1555,
 		.rgb = true,
 		.csc = SUN8I_CSC_MODE_OFF,
 	},
 	{
+<<<<<<< HEAD
+=======
+		/* for DE2 VI layer which ignores alpha */
+		.drm_fmt = DRM_FORMAT_XRGB1555,
+		.de2_fmt = SUN8I_MIXER_FBFMT_ARGB1555,
+		.rgb = true,
+		.csc = SUN8I_CSC_MODE_OFF,
+	},
+	{
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.drm_fmt = DRM_FORMAT_ABGR1555,
 		.de2_fmt = SUN8I_MIXER_FBFMT_ABGR1555,
 		.rgb = true,
 		.csc = SUN8I_CSC_MODE_OFF,
 	},
 	{
+<<<<<<< HEAD
+=======
+		/* for DE2 VI layer which ignores alpha */
+		.drm_fmt = DRM_FORMAT_XBGR1555,
+		.de2_fmt = SUN8I_MIXER_FBFMT_ABGR1555,
+		.rgb = true,
+		.csc = SUN8I_CSC_MODE_OFF,
+	},
+	{
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.drm_fmt = DRM_FORMAT_RGBA5551,
 		.de2_fmt = SUN8I_MIXER_FBFMT_RGBA5551,
 		.rgb = true,
 		.csc = SUN8I_CSC_MODE_OFF,
 	},
 	{
+<<<<<<< HEAD
+=======
+		/* for DE2 VI layer which ignores alpha */
+		.drm_fmt = DRM_FORMAT_RGBX5551,
+		.de2_fmt = SUN8I_MIXER_FBFMT_RGBA5551,
+		.rgb = true,
+		.csc = SUN8I_CSC_MODE_OFF,
+	},
+	{
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.drm_fmt = DRM_FORMAT_BGRA5551,
 		.de2_fmt = SUN8I_MIXER_FBFMT_BGRA5551,
 		.rgb = true,
 		.csc = SUN8I_CSC_MODE_OFF,
 	},
 	{
+<<<<<<< HEAD
+=======
+		/* for DE2 VI layer which ignores alpha */
+		.drm_fmt = DRM_FORMAT_BGRX5551,
+		.de2_fmt = SUN8I_MIXER_FBFMT_BGRA5551,
+		.rgb = true,
+		.csc = SUN8I_CSC_MODE_OFF,
+	},
+	{
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.drm_fmt = DRM_FORMAT_UYVY,
 		.de2_fmt = SUN8I_MIXER_FBFMT_UYVY,
 		.rgb = false,
@@ -201,12 +281,15 @@ static const struct de2_fmt_info de2_formats[] = {
 		.csc = SUN8I_CSC_MODE_YUV2RGB,
 	},
 	{
+<<<<<<< HEAD
 		.drm_fmt = DRM_FORMAT_YUV444,
 		.de2_fmt = SUN8I_MIXER_FBFMT_RGB888,
 		.rgb = true,
 		.csc = SUN8I_CSC_MODE_YUV2RGB,
 	},
 	{
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.drm_fmt = DRM_FORMAT_YUV422,
 		.de2_fmt = SUN8I_MIXER_FBFMT_YUV422,
 		.rgb = false,
@@ -225,12 +308,15 @@ static const struct de2_fmt_info de2_formats[] = {
 		.csc = SUN8I_CSC_MODE_YUV2RGB,
 	},
 	{
+<<<<<<< HEAD
 		.drm_fmt = DRM_FORMAT_YVU444,
 		.de2_fmt = SUN8I_MIXER_FBFMT_RGB888,
 		.rgb = true,
 		.csc = SUN8I_CSC_MODE_YVU2RGB,
 	},
 	{
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.drm_fmt = DRM_FORMAT_YVU422,
 		.de2_fmt = SUN8I_MIXER_FBFMT_YUV422,
 		.rgb = false,

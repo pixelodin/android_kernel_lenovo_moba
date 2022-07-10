@@ -370,7 +370,11 @@ struct phy_device *of_phy_get_and_connect(struct net_device *dev,
 	int ret;
 
 	iface = of_get_phy_mode(np);
+<<<<<<< HEAD
 	if (iface < 0)
+=======
+	if ((int)iface < 0)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return NULL;
 	if (of_phy_is_fixed_link(np)) {
 		ret = of_phy_register_fixed_link(np);

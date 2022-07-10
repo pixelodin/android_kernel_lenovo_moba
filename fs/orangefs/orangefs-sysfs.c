@@ -323,7 +323,11 @@ static ssize_t sysfs_service_op_show(struct kobject *kobj,
 	/* Can't do a service_operation if the client is not running... */
 	rc = is_daemon_in_service();
 	if (rc) {
+<<<<<<< HEAD
 		pr_info("%s: Client not running :%d:\n",
+=======
+		pr_info_ratelimited("%s: Client not running :%d:\n",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			__func__,
 			is_daemon_in_service());
 		goto out;

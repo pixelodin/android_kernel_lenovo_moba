@@ -730,12 +730,20 @@ TRACE_EVENT(cache_hwmon_update,
 );
 
 TRACE_EVENT(memlat_dev_meas,
+<<<<<<< HEAD
 
 	TP_PROTO(const char *name, unsigned int dev_id, unsigned long inst,
 		 unsigned long mem, unsigned long freq, unsigned int stall,
 		 unsigned int ratio),
 
 	TP_ARGS(name, dev_id, inst, mem, freq, stall, ratio),
+=======
+	TP_PROTO(const char *name, unsigned int dev_id, unsigned long inst,
+		 unsigned long mem, unsigned long freq, unsigned int stall,
+		 unsigned int wb, unsigned int ratio),
+
+	TP_ARGS(name, dev_id, inst, mem, freq, stall, wb, ratio),
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	TP_STRUCT__entry(
 		__string(name, name)
@@ -744,6 +752,10 @@ TRACE_EVENT(memlat_dev_meas,
 		__field(unsigned long, mem)
 		__field(unsigned long, freq)
 		__field(unsigned int, stall)
+<<<<<<< HEAD
+=======
+		__field(unsigned int, wb)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		__field(unsigned int, ratio)
 	),
 
@@ -754,16 +766,28 @@ TRACE_EVENT(memlat_dev_meas,
 		__entry->mem = mem;
 		__entry->freq = freq;
 		__entry->stall = stall;
+<<<<<<< HEAD
 		__entry->ratio = ratio;
 	),
 
 	TP_printk("dev: %s, id=%u, inst=%lu, mem=%lu, freq=%lu, stall=%u, ratio=%u",
+=======
+		__entry->wb = wb;
+		__entry->ratio = ratio;
+	),
+
+	TP_printk("dev: %s, id=%u, inst=%lu, mem=%lu, freq=%lu, stall=%u, wb=%u, ratio=%u",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		__get_str(name),
 		__entry->dev_id,
 		__entry->inst,
 		__entry->mem,
 		__entry->freq,
 		__entry->stall,
+<<<<<<< HEAD
+=======
+		__entry->wb,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		__entry->ratio)
 );
 

@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2018-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #define pr_fmt(fmt) "%s:%s " fmt, KBUILD_MODNAME, __func__
@@ -56,6 +60,12 @@ enum qmi_ts_sensor {
 	QMI_SYS_THERM1,
 	QMI_SYS_THERM2,
 	QMI_TS_TSENS_1,
+<<<<<<< HEAD
+=======
+	QMI_TS_BEAMER_W_THERM,
+	QMI_TS_BEAMER_N_THERM,
+	QMI_TS_BEAMER_E_THERM,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	QMI_TS_MAX_NR
 };
 
@@ -113,6 +123,12 @@ static char sensor_clients[QMI_TS_MAX_NR][QMI_CLIENT_NAME_LENGTH] = {
 	{"sys_therm1"},
 	{"sys_therm2"},
 	{"modem_tsens1"},
+<<<<<<< HEAD
+=======
+	{"BEAMER_W_THERM"},
+	{"BEAMER_N_THERM"},
+	{"BEAMER_E_THERM"},
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 static int32_t encode_qmi(int32_t val)

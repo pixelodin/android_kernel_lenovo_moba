@@ -926,8 +926,14 @@ static void tmio_mmc_finish_request(struct tmio_mmc_host *host)
 	if (mrq->cmd->error || (mrq->data && mrq->data->error))
 		tmio_mmc_abort_dma(host);
 
+<<<<<<< HEAD
 	if (host->check_scc_error)
 		host->check_scc_error(host);
+=======
+	/* SCC error means retune, but executed command was still successful */
+	if (host->check_scc_error && host->check_scc_error(host))
+		mmc_retune_needed(host->mmc);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* If SET_BLOCK_COUNT, continue with main command */
 	if (host->mrq && !mrq->cmd->error) {
@@ -1266,7 +1272,11 @@ int tmio_mmc_host_probe(struct tmio_mmc_host *_host)
 			return ret;
 	}
 
+<<<<<<< HEAD
 	mmc->caps |= MMC_CAP_4_BIT_DATA | pdata->capabilities;
+=======
+	mmc->caps |= MMC_CAP_ERASE | MMC_CAP_4_BIT_DATA | pdata->capabilities;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mmc->caps2 |= pdata->capabilities2;
 	mmc->max_segs = pdata->max_segs ? : 32;
 	mmc->max_blk_size = 512;

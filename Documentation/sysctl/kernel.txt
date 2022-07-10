@@ -80,6 +80,10 @@ show up in /proc/sys/kernel:
 - reboot-cmd                  [ SPARC only ]
 - rtsig-max
 - rtsig-nr
+<<<<<<< HEAD
+=======
+- sched_energy_aware
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 - seccomp/                    ==> Documentation/userspace-api/seccomp_filter.rst
 - sem
 - sem_next_id		      [ sysv ipc ]
@@ -900,6 +904,20 @@ rtsig-nr shows the number of RT signals currently queued.
 
 ==============================================================
 
+<<<<<<< HEAD
+=======
+sched_energy_aware:
+
+Enables/disables Energy Aware Scheduling (EAS). EAS starts
+automatically on platforms where it can run (that is,
+platforms with asymmetric CPU topologies and having an Energy
+Model available). If your platform happens to meet the
+requirements for EAS but you do not want to use it, change
+this value to 0.
+
+==============================================================
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 sched_schedstats:
 
 Enables/disables scheduler statistics. Enabling this feature

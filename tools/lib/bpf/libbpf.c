@@ -22,7 +22,13 @@
  * License along with this program; if not,  see <http://www.gnu.org/licenses>
  */
 
+<<<<<<< HEAD
 #define _GNU_SOURCE
+=======
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdarg.h>
@@ -1071,6 +1077,7 @@ int bpf_map__reuse_fd(struct bpf_map *map, int fd)
 		return -errno;
 
 	new_fd = open("/", O_RDONLY | O_CLOEXEC);
+<<<<<<< HEAD
 	if (new_fd < 0)
 		goto err_free_new_name;
 
@@ -1081,6 +1088,24 @@ int bpf_map__reuse_fd(struct bpf_map *map, int fd)
 	err = zclose(map->fd);
 	if (err)
 		goto err_close_new_fd;
+=======
+	if (new_fd < 0) {
+		err = -errno;
+		goto err_free_new_name;
+	}
+
+	new_fd = dup3(fd, new_fd, O_CLOEXEC);
+	if (new_fd < 0) {
+		err = -errno;
+		goto err_close_new_fd;
+	}
+
+	err = zclose(map->fd);
+	if (err) {
+		err = -errno;
+		goto err_close_new_fd;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	free(map->name);
 
 	map->fd = new_fd;
@@ -1099,7 +1124,11 @@ err_close_new_fd:
 	close(new_fd);
 err_free_new_name:
 	free(new_name);
+<<<<<<< HEAD
 	return -errno;
+=======
+	return err;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int

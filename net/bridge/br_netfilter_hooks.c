@@ -646,6 +646,12 @@ static unsigned int br_nf_forward_arp(void *priv,
 		nf_bridge_pull_encap_header(skb);
 	}
 
+<<<<<<< HEAD
+=======
+	if (unlikely(!pskb_may_pull(skb, sizeof(struct arphdr))))
+		return NF_DROP;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (arp_hdr(skb)->ar_pln != 4) {
 		if (IS_VLAN_ARP(skb))
 			nf_bridge_push_encap_header(skb);

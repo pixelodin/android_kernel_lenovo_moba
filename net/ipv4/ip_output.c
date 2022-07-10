@@ -940,7 +940,11 @@ static int __ip_append_data(struct sock *sk,
 			unsigned int fraglen;
 			unsigned int fraggap;
 			unsigned int alloclen;
+<<<<<<< HEAD
 			unsigned int pagedlen = 0;
+=======
+			unsigned int pagedlen;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			struct sk_buff *skb_prev;
 alloc_new_skb:
 			skb_prev = skb;
@@ -957,6 +961,10 @@ alloc_new_skb:
 			if (datalen > mtu - fragheaderlen)
 				datalen = maxfraglen - fragheaderlen;
 			fraglen = datalen + fragheaderlen;
+<<<<<<< HEAD
+=======
+			pagedlen = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 			if ((flags & MSG_MORE) &&
 			    !(rt->dst.dev->features&NETIF_F_SG))
@@ -1142,6 +1150,7 @@ static int ip_setup_cork(struct sock *sk, struct inet_cork *cork,
 		cork->addr = ipc->addr;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * We steal reference to this route, caller should not release it
 	 */
@@ -1151,6 +1160,20 @@ static int ip_setup_cork(struct sock *sk, struct inet_cork *cork,
 
 	cork->gso_size = ipc->gso_size;
 	cork->dst = &rt->dst;
+=======
+	cork->fragsize = ip_sk_use_pmtu(sk) ?
+			 dst_mtu(&rt->dst) : READ_ONCE(rt->dst.dev->mtu);
+
+	if (!inetdev_valid_mtu(cork->fragsize))
+		return -ENETUNREACH;
+
+	cork->gso_size = ipc->gso_size;
+
+	cork->dst = &rt->dst;
+	/* We stole this route, caller should not release it. */
+	*rtp = NULL;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	cork->length = 0;
 	cork->ttl = ipc->ttl;
 	cork->tos = ipc->tos;

@@ -552,6 +552,7 @@ static netdev_tx_t eth_start_xmit(struct sk_buff *skb,
 		if (dev->port_usb)
 			skb = dev->wrap(dev->port_usb, skb);
 		spin_unlock_irqrestore(&dev->lock, flags);
+<<<<<<< HEAD
 		if (!skb) {
 			/* Multi frame CDC protocols may store the frame for
 			 * later which is not a dropped frame.
@@ -561,6 +562,17 @@ static netdev_tx_t eth_start_xmit(struct sk_buff *skb,
 				goto multiframe;
 			goto drop;
 		}
+=======
+	}
+	if (!skb) {
+		/* Multi frame CDC protocols may store the frame for
+		 * later which is not a dropped frame.
+		 */
+		if (dev->port_usb &&
+				dev->port_usb->supports_multi_frame)
+			goto multiframe;
+		goto drop;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	length = skb->len;

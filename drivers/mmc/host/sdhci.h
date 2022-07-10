@@ -404,6 +404,11 @@ struct sdhci_host {
 #define SDHCI_QUIRK_BROKEN_CARD_DETECTION		(1<<15)
 /* Controller reports inverted write-protect state */
 #define SDHCI_QUIRK_INVERTED_WRITE_PROTECT		(1<<16)
+<<<<<<< HEAD
+=======
+/* Controller has unusable command queue engine */
+#define SDHCI_QUIRK_BROKEN_CQE				(1<<17)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* Controller does not like fast PIO transfers */
 #define SDHCI_QUIRK_PIO_NEEDS_DELAY			(1<<18)
 /* Controller has to be forced to use block size of 2048 bytes */
@@ -546,6 +551,14 @@ struct sdhci_host {
  */
 #define SDHCI_QUIRK2_USE_PIO_FOR_EMMC_TUNING (1 << 29)
 
+<<<<<<< HEAD
+=======
+/*
+ * Use QTI specific SDCC debug feature.
+ */
+#define SDHCI_QUIRK2_USE_DBG_FEATURE (1 << 30)
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int irq;		/* Device IRQ */
 	void __iomem *ioaddr;	/* Mapped address */
 	char *bounce_buffer;	/* For packing SDMA reads/writes */
@@ -669,7 +682,10 @@ struct sdhci_host {
 	enum sdhci_power_policy power_policy;
 
 	bool sdio_irq_async_status;
+<<<<<<< HEAD
 	bool is_crypto_en;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	u32 auto_cmd_err_sts;
 	struct ratelimit_state dbg_dump_rs;
@@ -710,11 +726,14 @@ struct sdhci_ops {
 	unsigned int    (*get_ro)(struct sdhci_host *host);
 	void		(*reset)(struct sdhci_host *host, u8 mask);
 	int	(*platform_execute_tuning)(struct sdhci_host *host, u32 opcode);
+<<<<<<< HEAD
 	int	(*crypto_engine_cfg)(struct sdhci_host *host,
 				struct mmc_request *mrq, u32 slot);
 	int	(*crypto_engine_cfg_end)(struct sdhci_host *host,
 					struct mmc_request *mrq);
 	int	(*crypto_engine_reset)(struct sdhci_host *host);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	void	(*set_uhs_signaling)(struct sdhci_host *host, unsigned int uhs);
 	void	(*hw_reset)(struct sdhci_host *host);
 	void    (*adma_workaround)(struct sdhci_host *host, u32 intmask);

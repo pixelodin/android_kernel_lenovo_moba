@@ -567,8 +567,12 @@ static ssize_t acc_read(struct file *fp, char __user *buf,
 {
 	struct acc_dev *dev = fp->private_data;
 	struct usb_request *req;
+<<<<<<< HEAD
 	ssize_t r = count;
 	unsigned xfer;
+=======
+	ssize_t r = count, xfer, len;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int ret = 0;
 
 	pr_debug("acc_read(%zu)\n", count);
@@ -589,6 +593,11 @@ static ssize_t acc_read(struct file *fp, char __user *buf,
 		goto done;
 	}
 
+<<<<<<< HEAD
+=======
+	len = ALIGN(count, dev->ep_out->maxpacket);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (dev->rx_done) {
 		// last req cancelled. try to get it.
 		req = dev->rx_req[0];
@@ -598,7 +607,11 @@ static ssize_t acc_read(struct file *fp, char __user *buf,
 requeue_req:
 	/* queue a request */
 	req = dev->rx_req[0];
+<<<<<<< HEAD
 	req->length = count;
+=======
+	req->length = len;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	dev->rx_done = 0;
 	ret = usb_ep_queue(dev->ep_out, req, GFP_KERNEL);
 	if (ret < 0) {
@@ -912,6 +925,11 @@ int acc_ctrlrequest(struct usb_composite_dev *cdev,
 			memset(dev->serial, 0, sizeof(dev->serial));
 			dev->start_requested = 0;
 			dev->audio_mode = 0;
+<<<<<<< HEAD
+=======
+			strlcpy(dev->manufacturer, "Android", ACC_STRING_SIZE);
+			strlcpy(dev->model, "Android", ACC_STRING_SIZE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 	}
 
@@ -1214,13 +1232,22 @@ static int acc_setup(void)
 	INIT_DELAYED_WORK(&dev->start_work, acc_start_work);
 	INIT_WORK(&dev->hid_work, acc_hid_work);
 
+<<<<<<< HEAD
 	/* _acc_dev must be set before calling usb_gadget_register_driver */
 	_acc_dev = dev;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = misc_register(&acc_device);
 	if (ret)
 		goto err;
 
+<<<<<<< HEAD
+=======
+	/* _acc_dev must be set before calling usb_gadget_register_driver */
+	_acc_dev = dev;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 
 err:

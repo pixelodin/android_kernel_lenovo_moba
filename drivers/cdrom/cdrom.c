@@ -411,10 +411,17 @@ static int cdrom_get_disc_info(struct cdrom_device_info *cdi,
  * hack to have the capability flags defined const, while we can still
  * change it here without gcc complaining at every line.
  */
+<<<<<<< HEAD
 #define ENSURE(call, bits)			\
 do {						\
 	if (cdo->call == NULL)			\
 		*change_capability &= ~(bits);	\
+=======
+#define ENSURE(cdo, call, bits)					\
+do {								\
+	if (cdo->call == NULL)					\
+		WARN_ON_ONCE((cdo)->capability & (bits));	\
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 } while (0)
 
 /*
@@ -590,7 +597,10 @@ int register_cdrom(struct cdrom_device_info *cdi)
 {
 	static char banner_printed;
 	const struct cdrom_device_ops *cdo = cdi->ops;
+<<<<<<< HEAD
 	int *change_capability = (int *)&cdo->capability; /* hack */
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	cd_dbg(CD_OPEN, "entering register_cdrom\n");
 
@@ -602,6 +612,7 @@ int register_cdrom(struct cdrom_device_info *cdi)
 		cdrom_sysctl_register();
 	}
 
+<<<<<<< HEAD
 	ENSURE(drive_status, CDC_DRIVE_STATUS);
 	if (cdo->check_events == NULL && cdo->media_changed == NULL)
 		*change_capability = ~(CDC_MEDIA_CHANGED | CDC_SELECT_DISC);
@@ -612,6 +623,18 @@ int register_cdrom(struct cdrom_device_info *cdi)
 	ENSURE(get_mcn, CDC_MCN);
 	ENSURE(reset, CDC_RESET);
 	ENSURE(generic_packet, CDC_GENERIC_PACKET);
+=======
+	ENSURE(cdo, drive_status, CDC_DRIVE_STATUS);
+	if (cdo->check_events == NULL && cdo->media_changed == NULL)
+		WARN_ON_ONCE(cdo->capability & (CDC_MEDIA_CHANGED | CDC_SELECT_DISC));
+	ENSURE(cdo, tray_move, CDC_CLOSE_TRAY | CDC_OPEN_TRAY);
+	ENSURE(cdo, lock_door, CDC_LOCK);
+	ENSURE(cdo, select_speed, CDC_SELECT_SPEED);
+	ENSURE(cdo, get_last_session, CDC_MULTI_SESSION);
+	ENSURE(cdo, get_mcn, CDC_MCN);
+	ENSURE(cdo, reset, CDC_RESET);
+	ENSURE(cdo, generic_packet, CDC_GENERIC_PACKET);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	cdi->mc_flags = 0;
 	cdi->options = CDO_USE_FFLAGS;
 
@@ -997,6 +1020,15 @@ static void cdrom_count_tracks(struct cdrom_device_info *cdi, tracktype *tracks)
 	tracks->xa = 0;
 	tracks->error = 0;
 	cd_dbg(CD_COUNT_TRACKS, "entering cdrom_count_tracks\n");
+<<<<<<< HEAD
+=======
+
+	if (!CDROM_CAN(CDC_PLAY_AUDIO)) {
+		tracks->error = CDS_NO_INFO;
+		return;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Grab the TOC header so we can see how many tracks there are */
 	ret = cdi->ops->audio_ioctl(cdi, CDROMREADTOCHDR, &header);
 	if (ret) {
@@ -1163,7 +1195,12 @@ int cdrom_open(struct cdrom_device_info *cdi, struct block_device *bdev,
 		ret = open_for_data(cdi);
 		if (ret)
 			goto err;
+<<<<<<< HEAD
 		cdrom_mmc3_profile(cdi);
+=======
+		if (CDROM_CAN(CDC_GENERIC_PACKET))
+			cdrom_mmc3_profile(cdi);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (mode & FMODE_WRITE) {
 			ret = -EROFS;
 			if (cdrom_open_write(cdi))
@@ -2883,6 +2920,12 @@ int cdrom_get_last_written(struct cdrom_device_info *cdi, long *last_written)
 	   it doesn't give enough information or fails. then we return
 	   the toc contents. */
 use_toc:
+<<<<<<< HEAD
+=======
+	if (!CDROM_CAN(CDC_PLAY_AUDIO))
+		return -ENOSYS;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	toc.cdte_format = CDROM_MSF;
 	toc.cdte_track = CDROM_LEADOUT;
 	if ((ret = cdi->ops->audio_ioctl(cdi, CDROMREADTOCENTRY, &toc)))

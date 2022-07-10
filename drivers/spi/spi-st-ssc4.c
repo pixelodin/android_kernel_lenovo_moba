@@ -385,6 +385,10 @@ static int spi_st_probe(struct platform_device *pdev)
 	return 0;
 
 clk_disable:
+<<<<<<< HEAD
+=======
+	pm_runtime_disable(&pdev->dev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	clk_disable_unprepare(spi_st->clk);
 put_master:
 	spi_master_put(master);
@@ -396,6 +400,11 @@ static int spi_st_remove(struct platform_device *pdev)
 	struct spi_master *master = platform_get_drvdata(pdev);
 	struct spi_st *spi_st = spi_master_get_devdata(master);
 
+<<<<<<< HEAD
+=======
+	pm_runtime_disable(&pdev->dev);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	clk_disable_unprepare(spi_st->clk);
 
 	pinctrl_pm_select_sleep_state(&pdev->dev);

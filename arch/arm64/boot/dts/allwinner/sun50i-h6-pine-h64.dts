@@ -176,6 +176,11 @@
 	pcf8563: rtc@51 {
 		compatible = "nxp,pcf8563";
 		reg = <0x51>;
+<<<<<<< HEAD
+=======
+		interrupt-parent = <&r_intc>;
+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		#clock-cells = <0>;
 	};
 };

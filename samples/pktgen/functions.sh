@@ -5,6 +5,11 @@
 # Author: Jesper Dangaaard Brouer
 # License: GPL
 
+<<<<<<< HEAD
+=======
+set -o errexit
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 ## -- General shell logging cmds --
 function err() {
     local exitcode=$1
@@ -58,6 +63,10 @@ function pg_set() {
 function proc_cmd() {
     local result
     local proc_file=$1
+<<<<<<< HEAD
+=======
+    local status=0
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
     # after shift, the remaining args are contained in $@
     shift
     local proc_ctrl=${PROC_DIR}/$proc_file
@@ -73,6 +82,7 @@ function proc_cmd() {
 	echo "cmd: $@ > $proc_ctrl"
     fi
     # Quoting of "$@" is important for space expansion
+<<<<<<< HEAD
     echo "$@" > "$proc_ctrl"
     local status=$?
 
@@ -80,6 +90,15 @@ function proc_cmd() {
     # Due to pgctrl, cannot use exit code $? from grep
     if [[ "$result" == "" ]]; then
 	grep "Result:" $proc_ctrl >&2
+=======
+    echo "$@" > "$proc_ctrl" || status=$?
+
+    if [[ "$proc_file" != "pgctrl" ]]; then
+        result=$(grep "Result: OK:" $proc_ctrl) || true
+        if [[ "$result" == "" ]]; then
+            grep "Result:" $proc_ctrl >&2
+        fi
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
     fi
     if (( $status != 0 )); then
 	err 5 "Write error($status) occurred cmd: \"$@ > $proc_ctrl\""
@@ -105,6 +124,11 @@ function pgset() {
     fi
 }
 
+<<<<<<< HEAD
+=======
+[[ $EUID -eq 0 ]] && trap 'pg_ctrl "reset"' EXIT
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 ## -- General shell tricks --
 
 function root_check_run_with_sudo() {

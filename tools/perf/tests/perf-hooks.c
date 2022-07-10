@@ -20,12 +20,19 @@ static void sigsegv_handler(int sig __maybe_unused)
 static void the_hook(void *_hook_flags)
 {
 	int *hook_flags = _hook_flags;
+<<<<<<< HEAD
 	int *p = NULL;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	*hook_flags = 1234;
 
 	/* Generate a segfault, test perf_hooks__recover */
+<<<<<<< HEAD
 	*p = 0;
+=======
+	raise(SIGSEGV);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 int test__perf_hooks(struct test *test __maybe_unused, int subtest __maybe_unused)

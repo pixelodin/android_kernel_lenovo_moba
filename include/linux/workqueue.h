@@ -468,9 +468,13 @@ extern bool queue_delayed_work_on(int cpu, struct workqueue_struct *wq,
 extern bool mod_delayed_work_on(int cpu, struct workqueue_struct *wq,
 			struct delayed_work *dwork, unsigned long delay);
 extern bool queue_rcu_work(struct workqueue_struct *wq, struct rcu_work *rwork);
+<<<<<<< HEAD
 #ifdef CONFIG_PRODUCT_MOBA
 extern bool cancel_work(struct work_struct *work);
 #endif
+=======
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 extern void flush_workqueue(struct workqueue_struct *wq);
 extern void drain_workqueue(struct workqueue_struct *wq);
 

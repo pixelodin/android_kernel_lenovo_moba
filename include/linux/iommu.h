@@ -65,12 +65,33 @@ struct notifier_block;
 typedef int (*iommu_fault_handler_t)(struct iommu_domain *,
 			struct device *, unsigned long, int, void *);
 
+<<<<<<< HEAD
+=======
+struct iommu_fault_ids {
+	u32 bid;
+	u32 pid;
+	u32 mid;
+};
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct iommu_domain_geometry {
 	dma_addr_t aperture_start; /* First address that can be mapped    */
 	dma_addr_t aperture_end;   /* Last address that can be mapped     */
 	bool force_aperture;       /* DMA only allowed in mappable range? */
 };
 
+<<<<<<< HEAD
+=======
+/* iommu transaction flags */
+#define IOMMU_TRANS_WRITE	BIT(0)	/* 1 Write, 0 Read */
+#define IOMMU_TRANS_PRIV	BIT(1)	/* 1 Privileged, 0 Unprivileged */
+#define IOMMU_TRANS_INST	BIT(2)	/* 1 Instruction fetch, 0 Data access */
+#define IOMMU_TRANS_SEC	BIT(3)	/* 1 Secure, 0 Non-secure access*/
+
+/* Non secure unprivileged Data read operation */
+#define IOMMU_TRANS_DEFAULT	(0U)
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct iommu_pgtbl_info {
 	void *ops;
 };
@@ -259,7 +280,11 @@ struct iommu_ops {
 	void (*iotlb_sync)(struct iommu_domain *domain);
 	phys_addr_t (*iova_to_phys)(struct iommu_domain *domain, dma_addr_t iova);
 	phys_addr_t (*iova_to_phys_hard)(struct iommu_domain *domain,
+<<<<<<< HEAD
 					 dma_addr_t iova);
+=======
+				 dma_addr_t iova, unsigned long trans_flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int (*add_device)(struct device *dev);
 	void (*remove_device)(struct device *dev);
 	struct iommu_group *(*device_group)(struct device *dev);
@@ -371,12 +396,21 @@ extern size_t default_iommu_map_sg(struct iommu_domain *domain, unsigned long io
 			   struct scatterlist *sg,unsigned int nents, int prot);
 extern phys_addr_t iommu_iova_to_phys(struct iommu_domain *domain, dma_addr_t iova);
 extern phys_addr_t iommu_iova_to_phys_hard(struct iommu_domain *domain,
+<<<<<<< HEAD
 					   dma_addr_t iova);
+=======
+				   dma_addr_t iova, unsigned long trans_flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 extern bool iommu_is_iova_coherent(struct iommu_domain *domain,
 				dma_addr_t iova);
 extern void iommu_set_fault_handler(struct iommu_domain *domain,
 			iommu_fault_handler_t handler, void *token);
+<<<<<<< HEAD
 
+=======
+extern int iommu_get_fault_ids(struct iommu_domain *domain,
+				struct iommu_fault_ids *f_ids);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 extern void iommu_get_resv_regions(struct device *dev, struct list_head *list);
 extern void iommu_put_resv_regions(struct device *dev, struct list_head *list);
 extern int iommu_request_dm_for_dev(struct device *dev);
@@ -607,7 +641,11 @@ static inline phys_addr_t iommu_iova_to_phys(struct iommu_domain *domain, dma_ad
 }
 
 static inline phys_addr_t iommu_iova_to_phys_hard(struct iommu_domain *domain,
+<<<<<<< HEAD
 						  dma_addr_t iova)
+=======
+				dma_addr_t iova, unsigned long trans_flags)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	return 0;
 }
@@ -622,12 +660,23 @@ static inline void iommu_set_fault_handler(struct iommu_domain *domain,
 				iommu_fault_handler_t handler, void *token)
 {
 }
+<<<<<<< HEAD
+=======
+static inline int iommu_get_fault_ids(struct iommu_domain *domain,
+				struct iommu_fault_ids *f_ids)
+{
+	return -EINVAL;
+}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 static inline void iommu_get_resv_regions(struct device *dev,
 					struct list_head *list)
 {
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static inline void iommu_put_resv_regions(struct device *dev,
 					struct list_head *list)
 {

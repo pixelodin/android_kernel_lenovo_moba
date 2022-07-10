@@ -23,6 +23,11 @@ KCOV_INSTRUMENT_early_nobss.o	:= n
 UBSAN_SANITIZE_early.o		:= n
 UBSAN_SANITIZE_early_nobss.o	:= n
 
+<<<<<<< HEAD
+=======
+KASAN_SANITIZE_early_nobss.o	:= n
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #
 # Passing null pointers is ok for smp code, since we access the lowcore here.
 #

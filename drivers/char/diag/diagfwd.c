@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-only
+<<<<<<< HEAD
 /* Copyright (c) 2008-2019, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2008-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 #include <linux/slab.h>
 #include <linux/init.h>
@@ -1378,8 +1382,13 @@ int diag_process_apps_pkt(unsigned char *buf, int len, int pid)
 			}
 		}
 		mutex_unlock(&driver->md_session_lock);
+<<<<<<< HEAD
 		diag_update_md_clients(HDLC_SUPPORT_TYPE);
 		mutex_unlock(&driver->hdlc_disable_mutex);
+=======
+		mutex_unlock(&driver->hdlc_disable_mutex);
+		diag_update_md_clients(HDLC_SUPPORT_TYPE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return 0;
 	}
 #endif

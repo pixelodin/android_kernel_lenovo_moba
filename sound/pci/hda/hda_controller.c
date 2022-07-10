@@ -883,7 +883,11 @@ static int azx_rirb_get_response(struct hdac_bus *bus, unsigned int addr,
 		return -EAGAIN; /* give a chance to retry */
 	}
 
+<<<<<<< HEAD
 	dev_WARN(chip->card->dev,
+=======
+	dev_err(chip->card->dev,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		"azx_get_response timeout, switching to single_cmd mode: last cmd=0x%08x\n",
 		bus->last_cmd[addr]);
 	chip->single_cmd = 1;

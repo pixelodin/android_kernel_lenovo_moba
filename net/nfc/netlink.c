@@ -44,6 +44,10 @@ static const struct nla_policy nfc_genl_policy[NFC_ATTR_MAX + 1] = {
 	[NFC_ATTR_DEVICE_NAME] = { .type = NLA_STRING,
 				.len = NFC_DEVICE_NAME_MAXSIZE },
 	[NFC_ATTR_PROTOCOLS] = { .type = NLA_U32 },
+<<<<<<< HEAD
+=======
+	[NFC_ATTR_TARGET_INDEX] = { .type = NLA_U32 },
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	[NFC_ATTR_COMM_MODE] = { .type = NLA_U8 },
 	[NFC_ATTR_RF_MODE] = { .type = NLA_U8 },
 	[NFC_ATTR_DEVICE_POWERED] = { .type = NLA_U8 },
@@ -55,7 +59,14 @@ static const struct nla_policy nfc_genl_policy[NFC_ATTR_MAX + 1] = {
 	[NFC_ATTR_LLC_SDP] = { .type = NLA_NESTED },
 	[NFC_ATTR_FIRMWARE_NAME] = { .type = NLA_STRING,
 				     .len = NFC_FIRMWARE_NAME_MAXSIZE },
+<<<<<<< HEAD
 	[NFC_ATTR_SE_APDU] = { .type = NLA_BINARY },
+=======
+	[NFC_ATTR_SE_INDEX] = { .type = NLA_U32 },
+	[NFC_ATTR_SE_APDU] = { .type = NLA_BINARY },
+	[NFC_ATTR_VENDOR_ID] = { .type = NLA_U32 },
+	[NFC_ATTR_VENDOR_SUBCMD] = { .type = NLA_U32 },
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	[NFC_ATTR_VENDOR_DATA] = { .type = NLA_BINARY },
 
 };
@@ -1110,7 +1121,10 @@ static int nfc_genl_llc_set_params(struct sk_buff *skb, struct genl_info *info)
 
 	local = nfc_llcp_find_local(dev);
 	if (!local) {
+<<<<<<< HEAD
 		nfc_put_device(dev);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		rc = -ENODEV;
 		goto exit;
 	}
@@ -1170,7 +1184,10 @@ static int nfc_genl_llc_sdreq(struct sk_buff *skb, struct genl_info *info)
 
 	local = nfc_llcp_find_local(dev);
 	if (!local) {
+<<<<<<< HEAD
 		nfc_put_device(dev);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		rc = -ENODEV;
 		goto exit;
 	}

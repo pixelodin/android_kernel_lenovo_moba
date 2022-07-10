@@ -629,10 +629,15 @@ intel_th_subdevice_alloc(struct intel_th *th,
 	}
 
 	err = intel_th_device_add_resources(thdev, res, subdev->nres);
+<<<<<<< HEAD
 	if (err) {
 		put_device(&thdev->dev);
 		goto fail_put_device;
 	}
+=======
+	if (err)
+		goto fail_put_device;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (subdev->type == INTEL_TH_OUTPUT) {
 		thdev->dev.devt = MKDEV(th->major, th->num_thdevs);
@@ -646,10 +651,15 @@ intel_th_subdevice_alloc(struct intel_th *th,
 	}
 
 	err = device_add(&thdev->dev);
+<<<<<<< HEAD
 	if (err) {
 		put_device(&thdev->dev);
 		goto fail_free_res;
 	}
+=======
+	if (err)
+		goto fail_free_res;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* need switch driver to be loaded to enumerate the rest */
 	if (subdev->type == INTEL_TH_SWITCH && !req) {

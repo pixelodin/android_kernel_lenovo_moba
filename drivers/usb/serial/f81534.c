@@ -45,14 +45,25 @@
 #define F81534_CONFIG1_REG		(0x09 + F81534_UART_BASE_ADDRESS)
 
 #define F81534_DEF_CONF_ADDRESS_START	0x3000
+<<<<<<< HEAD
 #define F81534_DEF_CONF_SIZE		8
+=======
+#define F81534_DEF_CONF_SIZE		12
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define F81534_CUSTOM_ADDRESS_START	0x2f00
 #define F81534_CUSTOM_DATA_SIZE		0x10
 #define F81534_CUSTOM_NO_CUSTOM_DATA	0xff
 #define F81534_CUSTOM_VALID_TOKEN	0xf0
 #define F81534_CONF_OFFSET		1
+<<<<<<< HEAD
 #define F81534_CONF_GPIO_OFFSET		4
+=======
+#define F81534_CONF_INIT_GPIO_OFFSET	4
+#define F81534_CONF_WORK_GPIO_OFFSET	8
+#define F81534_CONF_GPIO_SHUTDOWN	7
+#define F81534_CONF_GPIO_RS232		1
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define F81534_MAX_DATA_BLOCK		64
 #define F81534_MAX_BUS_RETRY		20
@@ -1359,8 +1370,24 @@ static int f81534_set_port_output_pin(struct usb_serial_port *port)
 	serial_priv = usb_get_serial_data(serial);
 	port_priv = usb_get_serial_port_data(port);
 
+<<<<<<< HEAD
 	idx = F81534_CONF_GPIO_OFFSET + port_priv->phy_num;
 	value = serial_priv->conf_data[idx];
+=======
+	idx = F81534_CONF_INIT_GPIO_OFFSET + port_priv->phy_num;
+	value = serial_priv->conf_data[idx];
+	if (value >= F81534_CONF_GPIO_SHUTDOWN) {
+		/*
+		 * Newer IC configure will make transceiver in shutdown mode on
+		 * initial power on. We need enable it before using UARTs.
+		 */
+		idx = F81534_CONF_WORK_GPIO_OFFSET + port_priv->phy_num;
+		value = serial_priv->conf_data[idx];
+		if (value >= F81534_CONF_GPIO_SHUTDOWN)
+			value = F81534_CONF_GPIO_RS232;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pins = &f81534_port_out_pins[port_priv->phy_num];
 
 	for (i = 0; i < ARRAY_SIZE(pins->pin); ++i) {

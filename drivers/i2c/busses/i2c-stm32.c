@@ -21,6 +21,7 @@ struct stm32_i2c_dma *stm32_i2c_dma_request(struct device *dev,
 
 	dma = devm_kzalloc(dev, sizeof(*dma), GFP_KERNEL);
 	if (!dma)
+<<<<<<< HEAD
 		return NULL;
 
 	/* Request and configure I2C TX dma channel */
@@ -28,6 +29,15 @@ struct stm32_i2c_dma *stm32_i2c_dma_request(struct device *dev,
 	if (!dma->chan_tx) {
 		dev_dbg(dev, "can't request DMA tx channel\n");
 		ret = -EINVAL;
+=======
+		return ERR_PTR(-ENOMEM);
+
+	/* Request and configure I2C TX dma channel */
+	dma->chan_tx = dma_request_chan(dev, "tx");
+	if (IS_ERR(dma->chan_tx)) {
+		dev_dbg(dev, "can't request DMA tx channel\n");
+		ret = PTR_ERR(dma->chan_tx);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto fail_al;
 	}
 
@@ -43,10 +53,17 @@ struct stm32_i2c_dma *stm32_i2c_dma_request(struct device *dev,
 	}
 
 	/* Request and configure I2C RX dma channel */
+<<<<<<< HEAD
 	dma->chan_rx = dma_request_slave_channel(dev, "rx");
 	if (!dma->chan_rx) {
 		dev_err(dev, "can't request DMA rx channel\n");
 		ret = -EINVAL;
+=======
+	dma->chan_rx = dma_request_chan(dev, "rx");
+	if (IS_ERR(dma->chan_rx)) {
+		dev_err(dev, "can't request DMA rx channel\n");
+		ret = PTR_ERR(dma->chan_rx);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto fail_tx;
 	}
 
@@ -76,7 +93,11 @@ fail_al:
 	devm_kfree(dev, dma);
 	dev_info(dev, "can't use DMA\n");
 
+<<<<<<< HEAD
 	return NULL;
+=======
+	return ERR_PTR(ret);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 void stm32_i2c_dma_free(struct stm32_i2c_dma *dma)

@@ -98,7 +98,11 @@
 
 #if defined(CONFIG_IPA_EMULATION)
 static bool running_emulation = true;
+<<<<<<< HEAD
 #else
+=======
+#elif defined(CONFIG_PCI)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static bool running_emulation;
 #endif
 
@@ -3108,6 +3112,10 @@ static const struct of_device_id ipa_plat_drv_match[] = {
 /*                PCIe Version                           */
 /*********************************************************/
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PCI
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static const struct of_device_id ipa_pci_drv_match[] = {
 	{ .compatible = "qcom,ipa", },
 	{}
@@ -3154,6 +3162,10 @@ static struct pci_driver ipa_pci_driver = {
 	.shutdown = ipa_pci_shutdown,
 	.err_handler = &ipa_pci_err_handler
 };
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 static int ipa_generic_plat_drv_probe(struct platform_device *pdev_p)
 {
@@ -3755,6 +3767,10 @@ static struct platform_driver ipa_plat_drv = {
 /*                PCIe Version                           */
 /*********************************************************/
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PCI
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int ipa_pci_probe(
 	struct pci_dev             *pci_dev,
 	const struct pci_device_id *ent)
@@ -3822,15 +3838,27 @@ static pci_ers_result_t ipa_pci_io_slot_reset(struct pci_dev *pci_dev)
 static void ipa_pci_io_resume(struct pci_dev *pci_dev)
 {
 }
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 static int __init ipa_module_init(void)
 {
 	pr_debug("IPA module init\n");
+<<<<<<< HEAD
 
+=======
+#ifdef CONFIG_PCI
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (running_emulation) {
 		/* Register as a PCI device driver */
 		return pci_register_driver(&ipa_pci_driver);
 	}
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Register as a platform device driver */
 	return platform_driver_register(&ipa_plat_drv);
 }

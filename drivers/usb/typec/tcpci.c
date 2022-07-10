@@ -100,13 +100,25 @@ static int tcpci_set_cc(struct tcpc_dev *tcpc, enum typec_cc_status cc)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int tcpci_start_drp_toggling(struct tcpc_dev *tcpc,
 				    enum typec_cc_status cc)
+=======
+static int tcpci_start_toggling(struct tcpc_dev *tcpc,
+				enum typec_port_type port_type,
+				enum typec_cc_status cc)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	int ret;
 	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
 	unsigned int reg = TCPC_ROLE_CTRL_DRP;
 
+<<<<<<< HEAD
+=======
+	if (port_type != TYPEC_PORT_DRP)
+		return -EOPNOTSUPP;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Handle vendor drp toggling */
 	if (tcpci->data->start_drp_toggling) {
 		ret = tcpci->data->start_drp_toggling(tcpci, tcpci->data, cc);
@@ -511,7 +523,11 @@ struct tcpci *tcpci_register_port(struct device *dev, struct tcpci_data *data)
 	tcpci->tcpc.get_cc = tcpci_get_cc;
 	tcpci->tcpc.set_polarity = tcpci_set_polarity;
 	tcpci->tcpc.set_vconn = tcpci_set_vconn;
+<<<<<<< HEAD
 	tcpci->tcpc.start_drp_toggling = tcpci_start_drp_toggling;
+=======
+	tcpci->tcpc.start_toggling = tcpci_start_toggling;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	tcpci->tcpc.set_pd_rx = tcpci_set_pd_rx;
 	tcpci->tcpc.set_roles = tcpci_set_roles;
@@ -577,6 +593,15 @@ static int tcpci_probe(struct i2c_client *client,
 static int tcpci_remove(struct i2c_client *client)
 {
 	struct tcpci_chip *chip = i2c_get_clientdata(client);
+<<<<<<< HEAD
+=======
+	int err;
+
+	/* Disable chip interrupts before unregistering port */
+	err = tcpci_write16(chip->tcpci, TCPC_ALERT_MASK, 0);
+	if (err < 0)
+		return err;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	tcpci_unregister_port(chip->tcpci);
 

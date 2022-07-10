@@ -544,7 +544,12 @@ static irqreturn_t amd_gpio_irq_handler(int irq, void *dev_id)
 	irqreturn_t ret = IRQ_NONE;
 	unsigned int i, irqnr;
 	unsigned long flags;
+<<<<<<< HEAD
 	u32 *regs, regval;
+=======
+	u32 __iomem *regs;
+	u32  regval;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u64 status, mask;
 
 	/* Read the wake status */

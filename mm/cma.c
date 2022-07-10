@@ -55,6 +55,10 @@ const char *cma_get_name(const struct cma *cma)
 {
 	return cma->name ? cma->name : "(undefined)";
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(cma_get_name);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 static unsigned long cma_bitmap_aligned_mask(const struct cma *cma,
 					     unsigned int align_order)
@@ -453,6 +457,10 @@ struct page *cma_alloc(struct cma *cma, size_t count, unsigned int align,
 	unsigned long pfn = -1;
 	unsigned long start = 0;
 	unsigned long bitmap_maxno, bitmap_no, bitmap_count;
+<<<<<<< HEAD
+=======
+	size_t i;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct page *page = NULL;
 	int ret = -ENOMEM;
 	int retry_after_sleep = 0;
@@ -545,6 +553,19 @@ struct page *cma_alloc(struct cma *cma, size_t count, unsigned int align,
 
 	trace_cma_alloc(pfn, page, count, align);
 
+<<<<<<< HEAD
+=======
+	/*
+	 * CMA can allocate multiple page blocks, which results in different
+	 * blocks being marked with different tags. Reset the tags to ignore
+	 * those page blocks.
+	 */
+	if (page) {
+		for (i = 0; i < count; i++)
+			page_kasan_tag_reset(page + i);
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (ret && !no_warn) {
 		pr_err("%s: %s: alloc failed, req-size: %zu pages, ret: %d\n",
 			__func__, cma->name, cma->count, ret);
@@ -554,6 +575,10 @@ struct page *cma_alloc(struct cma *cma, size_t count, unsigned int align,
 	pr_debug("%s(): returned %p\n", __func__, page);
 	return page;
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(cma_alloc);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /**
  * cma_release() - release allocated pages
@@ -587,6 +612,10 @@ bool cma_release(struct cma *cma, const struct page *pages, unsigned int count)
 
 	return true;
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(cma_release);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 int cma_for_each_area(int (*it)(struct cma *cma, void *data), void *data)
 {
@@ -601,3 +630,7 @@ int cma_for_each_area(int (*it)(struct cma *cma, void *data), void *data)
 
 	return 0;
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(cma_for_each_area);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

@@ -67,7 +67,11 @@
 #define MAX9867_MICCONFIG    0x15
 #define MAX9867_MODECONFIG   0x16
 #define MAX9867_PWRMAN       0x17
+<<<<<<< HEAD
 #define MAX9867_SHTDOWN_MASK (1<<7)
+=======
+#define MAX9867_SHTDOWN      0x80
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define MAX9867_REVISION     0xff
 
 #define MAX9867_CACHEREGNUM 10

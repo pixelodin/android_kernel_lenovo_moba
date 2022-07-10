@@ -240,7 +240,11 @@ handler:							;\
  *	 occured. in fact they never do. if you need them use
  *	 values saved on stack (for SPR_EPC, SPR_ESR) or content
  *       of r4 (for SPR_EEAR). for details look at EXCEPTION_HANDLE()
+<<<<<<< HEAD
  *       in 'arch/or32/kernel/head.S'
+=======
+ *       in 'arch/openrisc/kernel/head.S'
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 /* =====================================================[ exceptions] === */

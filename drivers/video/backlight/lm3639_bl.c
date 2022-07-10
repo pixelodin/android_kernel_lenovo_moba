@@ -400,10 +400,15 @@ static int lm3639_remove(struct i2c_client *client)
 
 	regmap_write(pchip->regmap, REG_ENABLE, 0x00);
 
+<<<<<<< HEAD
 	if (&pchip->cdev_torch)
 		led_classdev_unregister(&pchip->cdev_torch);
 	if (&pchip->cdev_flash)
 		led_classdev_unregister(&pchip->cdev_flash);
+=======
+	led_classdev_unregister(&pchip->cdev_torch);
+	led_classdev_unregister(&pchip->cdev_flash);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (pchip->bled)
 		device_remove_file(&(pchip->bled->dev), &dev_attr_bled_mode);
 	return 0;

@@ -530,8 +530,11 @@
 				};
 
 				hdmi_out: port@1 {
+<<<<<<< HEAD
 					#address-cells = <1>;
 					#size-cells = <0>;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 					reg = <1>;
 				};
 			};

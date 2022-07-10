@@ -66,7 +66,11 @@
 /* QPHY_V3_PCS_MISC_CLAMP_ENABLE register bits */
 #define CLAMP_EN				BIT(0) /* enables i/o clamp_n */
 
+<<<<<<< HEAD
 #define PHY_INIT_COMPLETE_TIMEOUT		1000
+=======
+#define PHY_INIT_COMPLETE_TIMEOUT		10000
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define POWER_DOWN_DELAY_US_MIN			10
 #define POWER_DOWN_DELAY_US_MAX			11
 

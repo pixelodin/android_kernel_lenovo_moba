@@ -63,7 +63,11 @@ cflags-y += -Wa,-I$(srctree)/arch/$(ARCH)/include
 #
 cflags-$(CONFIG_FRAME_POINTER) += -fno-optimize-sibling-calls
 
+<<<<<<< HEAD
 ifeq ($(call cc-option-yn,-mpacked-stack),y)
+=======
+ifeq ($(call cc-option-yn,-mpacked-stack -mbackchain -msoft-float),y)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 cflags-$(CONFIG_PACK_STACK)  += -mpacked-stack -D__PACK_STACK
 aflags-$(CONFIG_PACK_STACK)  += -D__PACK_STACK
 endif
@@ -140,7 +144,11 @@ all: bzImage
 #KBUILD_IMAGE is necessary for packaging targets like rpm-pkg, deb-pkg...
 KBUILD_IMAGE	:= $(boot)/bzImage
 
+<<<<<<< HEAD
 install: vmlinux
+=======
+install:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	$(Q)$(MAKE) $(build)=$(boot) $@
 
 bzImage: vmlinux

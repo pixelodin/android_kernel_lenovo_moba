@@ -676,7 +676,11 @@ nfsd4_cb_layout_done(struct nfsd4_callback *cb, struct rpc_task *task)
 
 		/* Client gets 2 lease periods to return it */
 		cutoff = ktime_add_ns(task->tk_start,
+<<<<<<< HEAD
 					 nn->nfsd4_lease * NSEC_PER_SEC * 2);
+=======
+					 (u64)nn->nfsd4_lease * NSEC_PER_SEC * 2);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		if (ktime_before(now, cutoff)) {
 			rpc_delay(task, HZ/100); /* 10 mili-seconds */

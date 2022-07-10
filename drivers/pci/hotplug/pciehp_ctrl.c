@@ -383,7 +383,12 @@ int pciehp_sysfs_enable_slot(struct slot *p_slot)
 		ctrl->request_result = -ENODEV;
 		pciehp_request(ctrl, PCI_EXP_SLTSTA_PDC);
 		wait_event(ctrl->requester,
+<<<<<<< HEAD
 			   !atomic_read(&ctrl->pending_events));
+=======
+			   !atomic_read(&ctrl->pending_events) &&
+			   !ctrl->ist_running);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return ctrl->request_result;
 	case POWERON_STATE:
 		ctrl_info(ctrl, "Slot(%s): Already in powering on state\n",
@@ -416,7 +421,12 @@ int pciehp_sysfs_disable_slot(struct slot *p_slot)
 		mutex_unlock(&p_slot->lock);
 		pciehp_request(ctrl, DISABLE_SLOT);
 		wait_event(ctrl->requester,
+<<<<<<< HEAD
 			   !atomic_read(&ctrl->pending_events));
+=======
+			   !atomic_read(&ctrl->pending_events) &&
+			   !ctrl->ist_running);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return ctrl->request_result;
 	case POWEROFF_STATE:
 		ctrl_info(ctrl, "Slot(%s): Already in powering off state\n",

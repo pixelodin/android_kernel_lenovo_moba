@@ -6,6 +6,10 @@
 KCOV_INSTRUMENT := n
 GCOV_PROFILE := n
 UBSAN_SANITIZE := n
+<<<<<<< HEAD
+=======
+KASAN_SANITIZE := n
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 KBUILD_AFLAGS := $(KBUILD_AFLAGS_DECOMPRESSOR)
 KBUILD_CFLAGS := $(KBUILD_CFLAGS_DECOMPRESSOR)
@@ -45,7 +49,11 @@ quiet_cmd_ar = AR      $@
 $(obj)/startup.a: $(OBJECTS) FORCE
 	$(call if_changed,ar)
 
+<<<<<<< HEAD
 install: $(CONFIGURE) $(obj)/bzImage
+=======
+install:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	sh -x  $(srctree)/$(obj)/install.sh $(KERNELRELEASE) $(obj)/bzImage \
 	      System.map "$(INSTALL_PATH)"
 

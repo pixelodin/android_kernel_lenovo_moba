@@ -133,7 +133,11 @@ static void xfrmi_dev_free(struct net_device *dev)
 	free_percpu(dev->tstats);
 }
 
+<<<<<<< HEAD
 static int xfrmi_create2(struct net_device *dev)
+=======
+static int xfrmi_create(struct net_device *dev)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct xfrm_if *xi = netdev_priv(dev);
 	struct net *net = dev_net(dev);
@@ -145,8 +149,11 @@ static int xfrmi_create2(struct net_device *dev)
 	if (err < 0)
 		goto out;
 
+<<<<<<< HEAD
 	strcpy(xi->p.name, dev->name);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	dev_hold(dev);
 	xfrmi_link(xfrmn, xi);
 
@@ -156,6 +163,7 @@ out:
 	return err;
 }
 
+<<<<<<< HEAD
 static struct xfrm_if *xfrmi_create(struct net *net, struct xfrm_if_parms *p)
 {
 	struct net_device *dev;
@@ -204,6 +212,9 @@ failed:
 
 static struct xfrm_if *xfrmi_locate(struct net *net, struct xfrm_if_parms *p,
 				   int create)
+=======
+static struct xfrm_if *xfrmi_locate(struct net *net, struct xfrm_if_parms *p)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct xfrm_if __rcu **xip;
 	struct xfrm_if *xi;
@@ -211,6 +222,7 @@ static struct xfrm_if *xfrmi_locate(struct net *net, struct xfrm_if_parms *p,
 
 	for (xip = &xfrmn->xfrmi[0];
 	     (xi = rtnl_dereference(*xip)) != NULL;
+<<<<<<< HEAD
 	     xip = &xi->next) {
 		if (xi->p.if_id == p->if_id) {
 			if (create)
@@ -222,6 +234,13 @@ static struct xfrm_if *xfrmi_locate(struct net *net, struct xfrm_if_parms *p,
 	if (!create)
 		return ERR_PTR(-ENODEV);
 	return xfrmi_create(net, p);
+=======
+	     xip = &xi->next)
+		if (xi->p.if_id == p->if_id)
+			return xi;
+
+	return NULL;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void xfrmi_dev_uninit(struct net_device *dev)
@@ -230,7 +249,10 @@ static void xfrmi_dev_uninit(struct net_device *dev)
 	struct xfrmi_net *xfrmn = net_generic(xi->net, xfrmi_net_id);
 
 	xfrmi_unlink(xfrmn, xi);
+<<<<<<< HEAD
 	dev_put(xi->phydev);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	dev_put(dev);
 }
 
@@ -324,9 +346,12 @@ xfrmi_xmit2(struct sk_buff *skb, struct net_device *dev, struct flowi *fl)
 	int err = -1;
 	int mtu;
 
+<<<<<<< HEAD
 	if (!dst)
 		goto tx_err_link_failure;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	dst_hold(dst);
 	dst = xfrm_lookup_with_ifid(xi->net, dst, fl, NULL, 0, xi->p.if_id);
 	if (IS_ERR(dst)) {
@@ -347,13 +372,21 @@ xfrmi_xmit2(struct sk_buff *skb, struct net_device *dev, struct flowi *fl)
 	if (tdev == dev) {
 		stats->collisions++;
 		net_warn_ratelimited("%s: Local routing loop detected!\n",
+<<<<<<< HEAD
 				     xi->p.name);
+=======
+				     dev->name);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto tx_err_dst_release;
 	}
 
 	mtu = dst_mtu(dst);
 	if (!skb->ignore_df && skb->len > mtu) {
+<<<<<<< HEAD
 		skb_dst_update_pmtu(skb, mtu);
+=======
+		skb_dst_update_pmtu_no_confirm(skb, mtu);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		if (skb->protocol == htons(ETH_P_IPV6)) {
 			if (mtu < IPV6_MIN_MTU)
@@ -399,6 +432,10 @@ static netdev_tx_t xfrmi_xmit(struct sk_buff *skb, struct net_device *dev)
 {
 	struct xfrm_if *xi = netdev_priv(dev);
 	struct net_device_stats *stats = &xi->dev->stats;
+<<<<<<< HEAD
+=======
+	struct dst_entry *dst = skb_dst(skb);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct flowi fl;
 	int ret;
 
@@ -408,16 +445,49 @@ static netdev_tx_t xfrmi_xmit(struct sk_buff *skb, struct net_device *dev)
 	case htons(ETH_P_IPV6):
 		xfrm_decode_session(skb, &fl, AF_INET6);
 		memset(IP6CB(skb), 0, sizeof(*IP6CB(skb)));
+<<<<<<< HEAD
+=======
+		if (!dst) {
+			fl.u.ip6.flowi6_oif = dev->ifindex;
+			fl.u.ip6.flowi6_flags |= FLOWI_FLAG_ANYSRC;
+			dst = ip6_route_output(dev_net(dev), NULL, &fl.u.ip6);
+			if (dst->error) {
+				dst_release(dst);
+				stats->tx_carrier_errors++;
+				goto tx_err;
+			}
+			skb_dst_set(skb, dst);
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 	case htons(ETH_P_IP):
 		xfrm_decode_session(skb, &fl, AF_INET);
 		memset(IPCB(skb), 0, sizeof(*IPCB(skb)));
+<<<<<<< HEAD
+=======
+		if (!dst) {
+			struct rtable *rt;
+
+			fl.u.ip4.flowi4_oif = dev->ifindex;
+			fl.u.ip4.flowi4_flags |= FLOWI_FLAG_ANYSRC;
+			rt = __ip_route_output_key(dev_net(dev), &fl.u.ip4);
+			if (IS_ERR(rt)) {
+				stats->tx_carrier_errors++;
+				goto tx_err;
+			}
+			skb_dst_set(skb, &rt->dst);
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 	default:
 		goto tx_err;
 	}
 
+<<<<<<< HEAD
 	fl.flowi_oif = xi->phydev->ifindex;
+=======
+	fl.flowi_oif = xi->p.link;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	ret = xfrmi_xmit2(skb, dev, &fl);
 	if (ret < 0)
@@ -558,7 +628,11 @@ static int xfrmi_change(struct xfrm_if *xi, const struct xfrm_if_parms *p)
 
 static int xfrmi_update(struct xfrm_if *xi, struct xfrm_if_parms *p)
 {
+<<<<<<< HEAD
 	struct net *net = dev_net(xi->dev);
+=======
+	struct net *net = xi->net;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct xfrmi_net *xfrmn = net_generic(net, xfrmi_net_id);
 	int err;
 
@@ -606,7 +680,11 @@ static int xfrmi_get_iflink(const struct net_device *dev)
 {
 	struct xfrm_if *xi = netdev_priv(dev);
 
+<<<<<<< HEAD
 	return xi->phydev->ifindex;
+=======
+	return xi->p.link;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 
@@ -622,22 +700,37 @@ static void xfrmi_dev_setup(struct net_device *dev)
 {
 	dev->netdev_ops 	= &xfrmi_netdev_ops;
 	dev->type		= ARPHRD_NONE;
+<<<<<<< HEAD
 	dev->hard_header_len 	= ETH_HLEN;
 	dev->min_header_len	= ETH_HLEN;
 	dev->mtu		= ETH_DATA_LEN;
 	dev->min_mtu		= ETH_MIN_MTU;
 	dev->max_mtu		= ETH_DATA_LEN;
 	dev->addr_len		= ETH_ALEN;
+=======
+	dev->mtu		= ETH_DATA_LEN;
+	dev->min_mtu		= ETH_MIN_MTU;
+	dev->max_mtu		= IP_MAX_MTU;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	dev->flags 		= IFF_NOARP;
 	dev->needs_free_netdev	= true;
 	dev->priv_destructor	= xfrmi_dev_free;
 	netif_keep_dst(dev);
+<<<<<<< HEAD
+=======
+
+	eth_broadcast_addr(dev->broadcast);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int xfrmi_dev_init(struct net_device *dev)
 {
 	struct xfrm_if *xi = netdev_priv(dev);
+<<<<<<< HEAD
 	struct net_device *phydev = xi->phydev;
+=======
+	struct net_device *phydev = __dev_get_by_index(xi->net, xi->p.link);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int err;
 
 	dev->tstats = netdev_alloc_pcpu_stats(struct pcpu_sw_netstats);
@@ -652,6 +745,7 @@ static int xfrmi_dev_init(struct net_device *dev)
 
 	dev->features |= NETIF_F_LLTX;
 
+<<<<<<< HEAD
 	dev->needed_headroom = phydev->needed_headroom;
 	dev->needed_tailroom = phydev->needed_tailroom;
 
@@ -659,6 +753,21 @@ static int xfrmi_dev_init(struct net_device *dev)
 		eth_hw_addr_inherit(dev, phydev);
 	if (is_zero_ether_addr(dev->broadcast))
 		memcpy(dev->broadcast, phydev->broadcast, dev->addr_len);
+=======
+	if (phydev) {
+		dev->needed_headroom = phydev->needed_headroom;
+		dev->needed_tailroom = phydev->needed_tailroom;
+
+		if (is_zero_ether_addr(dev->dev_addr))
+			eth_hw_addr_inherit(dev, phydev);
+		if (is_zero_ether_addr(dev->broadcast))
+			memcpy(dev->broadcast, phydev->broadcast,
+			       dev->addr_len);
+	} else {
+		eth_hw_addr_random(dev);
+		eth_broadcast_addr(dev->broadcast);
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return 0;
 }
@@ -689,6 +798,7 @@ static int xfrmi_newlink(struct net *src_net, struct net_device *dev,
 			struct netlink_ext_ack *extack)
 {
 	struct net *net = dev_net(dev);
+<<<<<<< HEAD
 	struct xfrm_if_parms *p;
 	struct xfrm_if *xi;
 
@@ -704,6 +814,24 @@ static int xfrmi_newlink(struct net *src_net, struct net_device *dev,
 
 	xi = xfrmi_locate(net, p, 1);
 	return PTR_ERR_OR_ZERO(xi);
+=======
+	struct xfrm_if_parms p;
+	struct xfrm_if *xi;
+	int err;
+
+	xfrmi_netlink_parms(data, &p);
+	xi = xfrmi_locate(net, &p);
+	if (xi)
+		return -EEXIST;
+
+	xi = netdev_priv(dev);
+	xi->p = p;
+	xi->net = net;
+	xi->dev = dev;
+
+	err = xfrmi_create(dev);
+	return err;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void xfrmi_dellink(struct net_device *dev, struct list_head *head)
@@ -716,6 +844,7 @@ static int xfrmi_changelink(struct net_device *dev, struct nlattr *tb[],
 			   struct netlink_ext_ack *extack)
 {
 	struct xfrm_if *xi = netdev_priv(dev);
+<<<<<<< HEAD
 	struct net *net = dev_net(dev);
 
 	xfrmi_netlink_parms(data, &xi->p);
@@ -723,13 +852,25 @@ static int xfrmi_changelink(struct net_device *dev, struct nlattr *tb[],
 	xi = xfrmi_locate(net, &xi->p, 0);
 
 	if (IS_ERR_OR_NULL(xi)) {
+=======
+	struct net *net = xi->net;
+	struct xfrm_if_parms p;
+
+	xfrmi_netlink_parms(data, &p);
+	xi = xfrmi_locate(net, &p);
+	if (!xi) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		xi = netdev_priv(dev);
 	} else {
 		if (xi->dev != dev)
 			return -EEXIST;
 	}
 
+<<<<<<< HEAD
 	return xfrmi_update(xi, &xi->p);
+=======
+	return xfrmi_update(xi, &p);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static size_t xfrmi_get_size(const struct net_device *dev)
@@ -760,7 +901,11 @@ struct net *xfrmi_get_link_net(const struct net_device *dev)
 {
 	struct xfrm_if *xi = netdev_priv(dev);
 
+<<<<<<< HEAD
 	return dev_net(xi->phydev);
+=======
+	return xi->net;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static const struct nla_policy xfrmi_policy[IFLA_XFRM_MAX + 1] = {

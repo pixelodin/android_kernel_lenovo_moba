@@ -24,7 +24,11 @@ struct gpio_kp {
 	struct gpio_event_input_devs *input_devs;
 	struct gpio_event_matrix_info *keypad_info;
 	struct hrtimer timer;
+<<<<<<< HEAD
 	struct wakeup_source wake_src;
+=======
+	struct wakeup_source *wake_src;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int current_output;
 	unsigned int use_irq:1;
 	unsigned int key_state_changed:1;
@@ -214,7 +218,11 @@ static enum hrtimer_restart gpio_keypad_timer_func(struct hrtimer *timer)
 	}
 	for (in = 0; in < mi->ninputs; in++)
 		enable_irq(gpio_to_irq(mi->input_gpios[in]));
+<<<<<<< HEAD
 	__pm_relax(&kp->wake_src);
+=======
+	__pm_relax(kp->wake_src);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return HRTIMER_NORESTART;
 }
 
@@ -241,7 +249,11 @@ static irqreturn_t gpio_keypad_irq_handler(int irq_in, void *dev_id)
 		else
 			gpio_direction_input(mi->output_gpios[i]);
 	}
+<<<<<<< HEAD
 	__pm_stay_awake(&kp->wake_src);
+=======
+	__pm_stay_awake(kp->wake_src);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	hrtimer_start(&kp->timer, ktime_set(0, 0), HRTIMER_MODE_REL);
 	return IRQ_HANDLED;
 }
@@ -395,7 +407,18 @@ int gpio_event_matrix_func(struct gpio_event_input_devs *input_devs,
 
 		hrtimer_init(&kp->timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
 		kp->timer.function = gpio_keypad_timer_func;
+<<<<<<< HEAD
 		wakeup_source_init(&kp->wake_src, "gpio_kp");
+=======
+
+		kp->wake_src =
+			wakeup_source_register(&input_devs->dev[0]->dev, "gpio_kp");
+		if (!kp->wake_src) {
+			err = -ENOMEM;
+			goto err_wakeup_source_register_failed;
+		}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		err = gpio_keypad_request_irqs(kp);
 		kp->use_irq = err == 0;
 
@@ -405,7 +428,11 @@ int gpio_event_matrix_func(struct gpio_event_input_devs *input_devs,
 			kp->use_irq ? "interrupt" : "polling");
 
 		if (kp->use_irq)
+<<<<<<< HEAD
 			__pm_stay_awake(&kp->wake_src);
+=======
+			__pm_stay_awake(kp->wake_src);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		hrtimer_start(&kp->timer, ktime_set(0, 0), HRTIMER_MODE_REL);
 
 		return 0;
@@ -419,8 +446,14 @@ int gpio_event_matrix_func(struct gpio_event_input_devs *input_devs,
 			free_irq(gpio_to_irq(mi->input_gpios[i]), kp);
 
 	hrtimer_cancel(&kp->timer);
+<<<<<<< HEAD
 	wakeup_source_trash(&kp->wake_src);
 	for (i = mi->noutputs - 1; i >= 0; i--) {
+=======
+	wakeup_source_unregister(kp->wake_src);
+err_wakeup_source_register_failed:
+	for (i = mi->ninputs - 1; i >= 0; i--) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 err_gpio_direction_input_failed:
 		gpio_free(mi->input_gpios[i]);
 err_request_input_gpio_failed:

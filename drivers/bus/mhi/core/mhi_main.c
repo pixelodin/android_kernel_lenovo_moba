@@ -1206,6 +1206,7 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
 				enum MHI_PM_STATE new_state;
 
 				/*
+<<<<<<< HEAD
 				 * Don't process sys error if device support
 				 * rddm since we will be processing rddm ee
 				 * event instead of sys error state change event
@@ -1219,6 +1220,23 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
 				new_state = mhi_tryset_pm_state(mhi_cntrl,
 							MHI_PM_SYS_ERR_DETECT);
 				write_unlock_irq(&mhi_cntrl->pm_lock);
+=======
+				 * Allow move to SYS_ERROR even if RDDM is
+				 * supported so that core driver is inactive
+				 * with anticipation of an upcoming RDDM event
+				 */
+				write_lock_irq(&mhi_cntrl->pm_lock);
+				/* skip if RDDM event was already processed */
+				if (mhi_cntrl->ee == MHI_EE_RDDM) {
+					write_unlock_irq(&mhi_cntrl->pm_lock);
+					break;
+				}
+				new_state = mhi_tryset_pm_state(mhi_cntrl,
+							MHI_PM_SYS_ERR_DETECT);
+				write_unlock_irq(&mhi_cntrl->pm_lock);
+
+				MHI_ERR("MHI system error detected\n");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				if (new_state == MHI_PM_SYS_ERR_DETECT)
 					mhi_process_sys_err(mhi_cntrl);
 				break;
@@ -1256,6 +1274,25 @@ int mhi_process_ctrl_ev_ring(struct mhi_controller *mhi_cntrl,
 				st = MHI_ST_TRANSITION_MISSION_MODE;
 				break;
 			case MHI_EE_RDDM:
+<<<<<<< HEAD
+=======
+				if (mhi_cntrl->ee == MHI_EE_RDDM ||
+				    mhi_cntrl->power_down)
+					break;
+
+				MHI_ERR("RDDM event occurred!\n");
+				write_lock_irq(&mhi_cntrl->pm_lock);
+				mhi_cntrl->ee = MHI_EE_RDDM;
+				write_unlock_irq(&mhi_cntrl->pm_lock);
+
+				/* notify critical clients */
+				mhi_control_error(mhi_cntrl);
+
+				mhi_cntrl->status_cb(mhi_cntrl,
+						     mhi_cntrl->priv_data,
+						     MHI_CB_EE_RDDM);
+				wake_up_all(&mhi_cntrl->state_event);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				break;
 			default:
 				MHI_ERR("Unhandled EE event:%s\n",
@@ -1402,6 +1439,13 @@ int mhi_process_tsync_ev_ring(struct mhi_controller *mhi_cntrl,
 	if (unlikely(mhi_tsync->int_sequence != sequence)) {
 		MHI_ASSERT(1, "Unexpected response:0x%llx Expected:0x%llx\n",
 			   sequence, mhi_tsync->int_sequence);
+<<<<<<< HEAD
+=======
+
+		mhi_device_put(mhi_cntrl->mhi_dev,
+			       MHI_VOTE_DEVICE | MHI_VOTE_BUS);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		mutex_unlock(&mhi_cntrl->tsync_mutex);
 		goto exit_tsync_process;
 	}
@@ -1427,6 +1471,14 @@ int mhi_process_tsync_ev_ring(struct mhi_controller *mhi_cntrl,
 	} while (true);
 
 	mhi_tsync->db_response_pending = false;
+<<<<<<< HEAD
+=======
+	mhi_tsync->remote_time = remote_time;
+	complete(&mhi_tsync->db_completion);
+
+	mhi_device_put(mhi_cntrl->mhi_dev, MHI_VOTE_DEVICE | MHI_VOTE_BUS);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mutex_unlock(&mhi_cntrl->tsync_mutex);
 
 exit_tsync_process:
@@ -1484,6 +1536,7 @@ int mhi_process_bw_scale_ev_ring(struct mhi_controller *mhi_cntrl,
 	read_unlock_bh(&mhi_cntrl->pm_lock);
 	spin_unlock_bh(&mhi_event->lock);
 
+<<<<<<< HEAD
 	atomic_inc(&mhi_cntrl->pending_pkts);
 	ret = mhi_device_get_sync(mhi_cntrl->mhi_dev,
 				  MHI_VOTE_DEVICE | MHI_VOTE_BUS);
@@ -1491,6 +1544,12 @@ int mhi_process_bw_scale_ev_ring(struct mhi_controller *mhi_cntrl,
 		atomic_dec(&mhi_cntrl->pending_pkts);
 		goto exit_bw_scale_process;
 	}
+=======
+	ret = mhi_device_get_sync(mhi_cntrl->mhi_dev,
+				  MHI_VOTE_DEVICE | MHI_VOTE_BUS);
+	if (ret)
+		goto exit_bw_scale_process;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	mutex_lock(&mhi_cntrl->pm_mutex);
 
@@ -1508,7 +1567,10 @@ int mhi_process_bw_scale_ev_ring(struct mhi_controller *mhi_cntrl,
 	read_unlock_bh(&mhi_cntrl->pm_lock);
 
 	mhi_device_put(mhi_cntrl->mhi_dev, MHI_VOTE_DEVICE | MHI_VOTE_BUS);
+<<<<<<< HEAD
 	atomic_dec(&mhi_cntrl->pending_pkts);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	mutex_unlock(&mhi_cntrl->pm_mutex);
 
@@ -1632,20 +1694,35 @@ irqreturn_t mhi_intvec_threaded_handlr(int irq_number, void *dev)
 		TO_MHI_EXEC_STR(ee),
 		TO_MHI_STATE_STR(state));
 
+<<<<<<< HEAD
 	if (mhi_cntrl->power_down) {
 		write_unlock_irq(&mhi_cntrl->pm_lock);
 		goto exit_intvec;
 	}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (state == MHI_STATE_SYS_ERR) {
 		MHI_ERR("MHI system error detected\n");
 		pm_state = mhi_tryset_pm_state(mhi_cntrl,
 					       MHI_PM_SYS_ERR_DETECT);
 	}
+<<<<<<< HEAD
 	write_unlock_irq(&mhi_cntrl->pm_lock);
 
 	if (ee == MHI_EE_RDDM) {
 		write_lock_irq(&mhi_cntrl->pm_lock);
+=======
+
+	if (mhi_cntrl->rddm_supported) {
+		/* exit as power down is already initiated */
+		if (mhi_cntrl->power_down || ee != MHI_EE_RDDM) {
+			write_unlock_irq(&mhi_cntrl->pm_lock);
+			goto exit_intvec;
+		}
+
+		/* prevent multiple entries for RDDM execution environment */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (mhi_cntrl->ee == MHI_EE_RDDM) {
 			write_unlock_irq(&mhi_cntrl->pm_lock);
 			goto exit_intvec;
@@ -1654,16 +1731,31 @@ irqreturn_t mhi_intvec_threaded_handlr(int irq_number, void *dev)
 		write_unlock_irq(&mhi_cntrl->pm_lock);
 
 		MHI_ERR("RDDM event occurred!\n");
+<<<<<<< HEAD
 		mhi_cntrl->status_cb(mhi_cntrl, mhi_cntrl->priv_data,
 				     MHI_CB_EE_RDDM);
 		wake_up_all(&mhi_cntrl->state_event);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		/* notify critical clients with early notifications */
 		mhi_control_error(mhi_cntrl);
 
+<<<<<<< HEAD
 		goto exit_intvec;
 	}
 
+=======
+		mhi_cntrl->status_cb(mhi_cntrl, mhi_cntrl->priv_data,
+				     MHI_CB_EE_RDDM);
+		wake_up_all(&mhi_cntrl->state_event);
+
+		goto exit_intvec;
+	}
+
+	write_unlock_irq(&mhi_cntrl->pm_lock);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* if device is in RDDM, don't bother processing SYS_ERR */
 	if (ee != MHI_EE_RDDM && pm_state == MHI_PM_SYS_ERR_DETECT) {
 		wake_up_all(&mhi_cntrl->state_event);
@@ -1699,7 +1791,11 @@ irqreturn_t mhi_intvec_handlr(int irq_number, void *dev)
 	MHI_VERB("Exit\n");
 
 	if (MHI_IN_MISSION_MODE(mhi_cntrl->ee))
+<<<<<<< HEAD
 		queue_work(mhi_cntrl->special_wq, &mhi_cntrl->special_work);
+=======
+		queue_work(mhi_cntrl->wq, &mhi_cntrl->special_work);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return IRQ_WAKE_THREAD;
 }
@@ -1913,7 +2009,12 @@ int mhi_prepare_channel(struct mhi_controller *mhi_cntrl,
 	return 0;
 
 error_dec_pendpkt:
+<<<<<<< HEAD
 	atomic_dec(&mhi_cntrl->pending_pkts);
+=======
+	if (in_mission_mode)
+		atomic_dec(&mhi_cntrl->pending_pkts);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 error_pm_state:
 	if (!mhi_chan->offload_ch)
 		mhi_deinit_chan_ctxt(mhi_cntrl, mhi_chan);
@@ -2050,19 +2151,33 @@ static void __mhi_unprepare_channel(struct mhi_controller *mhi_cntrl,
 {
 	int ret;
 	bool in_mission_mode = false;
+<<<<<<< HEAD
+=======
+	bool notify = false;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	MHI_LOG("Entered: unprepare channel:%d\n", mhi_chan->chan);
 
 	/* no more processing events for this channel */
 	mutex_lock(&mhi_chan->mutex);
 	write_lock_irq(&mhi_chan->lock);
+<<<<<<< HEAD
 	if (mhi_chan->ch_state != MHI_CH_STATE_ENABLED) {
+=======
+	if (mhi_chan->ch_state != MHI_CH_STATE_ENABLED &&
+	    mhi_chan->ch_state != MHI_CH_STATE_SUSPENDED) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		MHI_LOG("chan:%d is already disabled\n", mhi_chan->chan);
 		write_unlock_irq(&mhi_chan->lock);
 		mutex_unlock(&mhi_chan->mutex);
 		return;
 	}
+<<<<<<< HEAD
 
+=======
+	if (mhi_chan->ch_state == MHI_CH_STATE_SUSPENDED)
+		notify = true;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mhi_chan->ch_state = MHI_CH_STATE_DISABLED;
 	write_unlock_irq(&mhi_chan->lock);
 
@@ -2103,11 +2218,79 @@ error_invalid_state:
 	if (!mhi_chan->offload_ch) {
 		mhi_reset_chan(mhi_cntrl, mhi_chan);
 		mhi_deinit_chan_ctxt(mhi_cntrl, mhi_chan);
+<<<<<<< HEAD
+=======
+
+		/* notify waiters to proceed with unbinding channel */
+		if (notify)
+			wake_up_all(&mhi_cntrl->state_event);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	MHI_LOG("chan:%d successfully resetted\n", mhi_chan->chan);
 	mutex_unlock(&mhi_chan->mutex);
 }
 
+<<<<<<< HEAD
+=======
+int mhi_debugfs_mhi_regdump_show(struct seq_file *m, void *d)
+{
+	struct mhi_controller *mhi_cntrl = m->private;
+	enum mhi_dev_state state;
+	enum mhi_ee ee;
+	int i, ret;
+	u32 val;
+	void __iomem *mhi_base = mhi_cntrl->regs;
+	void __iomem *bhi_base = mhi_cntrl->bhi;
+	void __iomem *bhie_base = mhi_cntrl->bhie;
+	void __iomem *wake_db = mhi_cntrl->wake_db;
+	struct {
+		const char *name;
+		int offset;
+		void __iomem *base;
+	} debug_reg[] = {
+		{ "MHI_CNTRL", MHICTRL, mhi_base},
+		{ "MHI_STATUS", MHISTATUS, mhi_base},
+		{ "MHI_WAKE_DB", 0, wake_db},
+		{ "BHI_EXECENV", BHI_EXECENV, bhi_base},
+		{ "BHI_STATUS", BHI_STATUS, bhi_base},
+		{ "BHI_ERRCODE", BHI_ERRCODE, bhi_base},
+		{ "BHI_ERRDBG1", BHI_ERRDBG1, bhi_base},
+		{ "BHI_ERRDBG2", BHI_ERRDBG2, bhi_base},
+		{ "BHI_ERRDBG3", BHI_ERRDBG3, bhi_base},
+		{ "BHIE_TXVEC_DB", BHIE_TXVECDB_OFFS, bhie_base},
+		{ "BHIE_TXVEC_STATUS", BHIE_TXVECSTATUS_OFFS, bhie_base},
+		{ "BHIE_RXVEC_DB", BHIE_RXVECDB_OFFS, bhie_base},
+		{ "BHIE_RXVEC_STATUS", BHIE_RXVECSTATUS_OFFS, bhie_base},
+		{ NULL },
+	};
+
+	if (!MHI_REG_ACCESS_VALID(mhi_cntrl->pm_state))
+		return -EIO;
+
+	seq_printf(m, "host pm_state:%s dev_state:%s ee:%s\n",
+		   to_mhi_pm_state_str(mhi_cntrl->pm_state),
+		   TO_MHI_STATE_STR(mhi_cntrl->dev_state),
+		   TO_MHI_EXEC_STR(mhi_cntrl->ee));
+
+	state = mhi_get_mhi_state(mhi_cntrl);
+	ee = mhi_get_exec_env(mhi_cntrl);
+
+	seq_printf(m, "device ee:%s dev_state:%s\n", TO_MHI_EXEC_STR(ee),
+		   TO_MHI_STATE_STR(state));
+
+	for (i = 0; debug_reg[i].name; i++) {
+		if (!debug_reg[i].base)
+			continue;
+		ret = mhi_read_reg(mhi_cntrl, debug_reg[i].base,
+				   debug_reg[i].offset, &val);
+		seq_printf(m, "reg:%s val:0x%x, ret:%d\n", debug_reg[i].name,
+			   val, ret);
+	}
+
+	return 0;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 int mhi_debugfs_mhi_states_show(struct seq_file *m, void *d)
 {
 	struct mhi_controller *mhi_cntrl = m->private;
@@ -2319,7 +2502,12 @@ static int mhi_update_channel_state(struct mhi_controller *mhi_cntrl,
 		 mhi_chan->chan, cmd == MHI_CMD_START_CHAN ? "START" : "STOP");
 
 	/* if channel is not active state state do not allow to state change */
+<<<<<<< HEAD
 	if (mhi_chan->ch_state != MHI_CH_STATE_ENABLED) {
+=======
+	if (mhi_chan->ch_state != MHI_CH_STATE_ENABLED &&
+	    mhi_chan->ch_state != MHI_CH_STATE_SUSPENDED) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ret = -EINVAL;
 		MHI_LOG("channel:%d is not in active state, ch_state%d\n",
 			mhi_chan->chan, mhi_chan->ch_state);
@@ -2502,6 +2690,7 @@ int mhi_get_remote_time_sync(struct mhi_device *mhi_dev,
 {
 	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
 	struct mhi_timesync *mhi_tsync = mhi_cntrl->mhi_tsync;
+<<<<<<< HEAD
 	int ret;
 
 	mutex_lock(&mhi_cntrl->tsync_mutex);
@@ -2509,12 +2698,49 @@ int mhi_get_remote_time_sync(struct mhi_device *mhi_dev,
 	if (!mhi_tsync) {
 		ret = -EIO;
 		goto err_unlock;
+=======
+	u64 local_time;
+	int ret;
+
+	/* not all devices support time features */
+	if (!mhi_tsync)
+		return -EINVAL;
+
+	if (unlikely(MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state))) {
+		MHI_ERR("MHI is not in active state, pm_state:%s\n",
+			to_mhi_pm_state_str(mhi_cntrl->pm_state));
+		return -EIO;
+	}
+
+	mutex_lock(&mhi_cntrl->tsync_mutex);
+
+	/* return times from last async request completion */
+	if (mhi_tsync->db_response_pending) {
+		local_time = mhi_tsync->local_time;
+		mutex_unlock(&mhi_cntrl->tsync_mutex);
+
+		ret = wait_for_completion_timeout(&mhi_tsync->db_completion,
+				       msecs_to_jiffies(mhi_cntrl->timeout_ms));
+		if (MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state) || !ret) {
+			MHI_ERR("Pending DB request did not complete, abort\n");
+			return -EAGAIN;
+		}
+
+		*t_host = local_time;
+		*t_dev = mhi_tsync->remote_time;
+
+		return 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	/* bring to M0 state */
 	ret = __mhi_device_get_sync(mhi_cntrl);
 	if (ret)
+<<<<<<< HEAD
 		goto err_unlock;
+=======
+		goto error_unlock;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	read_lock_bh(&mhi_cntrl->pm_lock);
 	if (unlikely(MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state))) {
@@ -2552,7 +2778,11 @@ int mhi_get_remote_time_sync(struct mhi_device *mhi_dev,
 error_invalid_state:
 	mhi_cntrl->wake_put(mhi_cntrl, false);
 	read_unlock_bh(&mhi_cntrl->pm_lock);
+<<<<<<< HEAD
 err_unlock:
+=======
+error_unlock:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mutex_unlock(&mhi_cntrl->tsync_mutex);
 	return ret;
 }
@@ -2581,6 +2811,7 @@ int mhi_get_remote_time(struct mhi_device *mhi_dev,
 	int ret = 0;
 
 	/* not all devices support all time features */
+<<<<<<< HEAD
 	mutex_lock(&mhi_cntrl->tsync_mutex);
 	if (!mhi_tsync || !mhi_tsync->db_support) {
 		ret = -EIO;
@@ -2589,6 +2820,15 @@ int mhi_get_remote_time(struct mhi_device *mhi_dev,
 
 	/* tsync db can only be rung in M0 state */
 	ret = __mhi_device_get_sync(mhi_cntrl);
+=======
+	if (!mhi_tsync || !mhi_tsync->db_support)
+		return -EINVAL;
+
+	mutex_lock(&mhi_cntrl->tsync_mutex);
+
+	ret = mhi_device_get_sync(mhi_cntrl->mhi_dev,
+				  MHI_VOTE_DEVICE | MHI_VOTE_BUS);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (ret)
 		goto error_unlock;
 
@@ -2620,8 +2860,16 @@ int mhi_get_remote_time(struct mhi_device *mhi_dev,
 	tsync_node->cb_func = cb_func;
 	tsync_node->mhi_dev = mhi_dev;
 
+<<<<<<< HEAD
 	if (mhi_tsync->db_response_pending)
 		goto skip_tsync_db;
+=======
+	if (mhi_tsync->db_response_pending) {
+		mhi_device_put(mhi_cntrl->mhi_dev,
+			       MHI_VOTE_DEVICE | MHI_VOTE_BUS);
+		goto skip_tsync_db;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	mhi_tsync->int_sequence++;
 	if (mhi_tsync->int_sequence == 0xFFFFFFFF)
@@ -2656,12 +2904,17 @@ int mhi_get_remote_time(struct mhi_device *mhi_dev,
 	MHI_VERB("time DB request with seq:0x%llx\n", mhi_tsync->int_sequence);
 
 	mhi_tsync->db_response_pending = true;
+<<<<<<< HEAD
+=======
+	init_completion(&mhi_tsync->db_completion);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 skip_tsync_db:
 	spin_lock(&mhi_tsync->lock);
 	list_add_tail(&tsync_node->node, &mhi_tsync->head);
 	spin_unlock(&mhi_tsync->lock);
 
+<<<<<<< HEAD
 	ret = 0;
 
 error_invalid_state:
@@ -2671,6 +2924,16 @@ error_no_mem:
 	read_lock_bh(&mhi_cntrl->pm_lock);
 	mhi_cntrl->wake_put(mhi_cntrl, false);
 	read_unlock_bh(&mhi_cntrl->pm_lock);
+=======
+	mutex_unlock(&mhi_cntrl->tsync_mutex);
+
+	return 0;
+
+error_invalid_state:
+	kfree(tsync_node);
+error_no_mem:
+	mhi_device_put(mhi_cntrl->mhi_dev, MHI_VOTE_DEVICE | MHI_VOTE_BUS);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 error_unlock:
 	mutex_unlock(&mhi_cntrl->tsync_mutex);
 	return ret;
@@ -2690,7 +2953,11 @@ void mhi_debug_reg_dump(struct mhi_controller *mhi_cntrl)
 	struct {
 		const char *name;
 		int offset;
+<<<<<<< HEAD
 		void *base;
+=======
+		void __iomem *base;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	} debug_reg[] = {
 		{ "MHI_CNTRL", MHICTRL, mhi_base},
 		{ "MHI_STATUS", MHISTATUS, mhi_base},
@@ -2720,6 +2987,11 @@ void mhi_debug_reg_dump(struct mhi_controller *mhi_cntrl)
 		TO_MHI_STATE_STR(state));
 
 	for (i = 0; debug_reg[i].name; i++) {
+<<<<<<< HEAD
+=======
+		if (!debug_reg[i].base)
+			continue;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ret = mhi_read_reg(mhi_cntrl, debug_reg[i].base,
 				   debug_reg[i].offset, &val);
 		MHI_LOG("reg:%s val:0x%x, ret:%d\n", debug_reg[i].name, val,

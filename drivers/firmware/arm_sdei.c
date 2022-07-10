@@ -1009,7 +1009,10 @@ static struct platform_driver sdei_driver = {
 
 static bool __init sdei_present_dt(void)
 {
+<<<<<<< HEAD
 	struct platform_device *pdev;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct device_node *np, *fw_np;
 
 	fw_np = of_find_node_by_name(NULL, "firmware");
@@ -1017,6 +1020,7 @@ static bool __init sdei_present_dt(void)
 		return false;
 
 	np = of_find_matching_node(fw_np, sdei_of_match);
+<<<<<<< HEAD
 	of_node_put(fw_np);
 	if (!np)
 		return false;
@@ -1025,6 +1029,11 @@ static bool __init sdei_present_dt(void)
 	of_node_put(np);
 	if (!pdev)
 		return false;
+=======
+	if (!np)
+		return false;
+	of_node_put(np);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return true;
 }

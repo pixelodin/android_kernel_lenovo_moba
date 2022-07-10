@@ -171,6 +171,7 @@ static int bcm2835_rng_probe(struct platform_device *pdev)
 	priv->rng.read = bcm2835_rng_read;
 	priv->rng.cleanup = bcm2835_rng_cleanup;
 
+<<<<<<< HEAD
 	rng_id = of_match_node(bcm2835_rng_of_match, np);
 	if (!rng_id)
 		return -EINVAL;
@@ -179,6 +180,18 @@ static int bcm2835_rng_probe(struct platform_device *pdev)
 	of_data = rng_id->data;
 	if (of_data)
 		priv->mask_interrupts = of_data->mask_interrupts;
+=======
+	if (dev_of_node(dev)) {
+		rng_id = of_match_node(bcm2835_rng_of_match, np);
+		if (!rng_id)
+			return -EINVAL;
+
+		/* Check for rng init function, execute it */
+		of_data = rng_id->data;
+		if (of_data)
+			priv->mask_interrupts = of_data->mask_interrupts;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* register driver */
 	err = devm_hwrng_register(dev, &priv->rng);

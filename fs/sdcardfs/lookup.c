@@ -257,7 +257,10 @@ static struct dentry *__sdcardfs_lookup(struct dentry *dentry,
 	struct dentry *lower_dentry;
 	const struct qstr *name;
 	struct path lower_path;
+<<<<<<< HEAD
 	struct qstr dname;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct dentry *ret_dentry = NULL;
 	struct sdcardfs_sb_info *sbi;
 
@@ -316,6 +319,10 @@ put_name:
 
 	/* no error: handle positive dentries */
 	if (!err) {
+<<<<<<< HEAD
+=======
+found:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/* check if the dentry is an obb dentry
 		 * if true, the lower_inode must be replaced with
 		 * the inode of the graft path
@@ -362,6 +369,7 @@ put_name:
 	if (err && err != -ENOENT)
 		goto out;
 
+<<<<<<< HEAD
 	/* instatiate a new negative dentry */
 	dname.name = name->name;
 	dname.len = name->len;
@@ -379,11 +387,31 @@ put_name:
 		 * one on it now...
 		 */
 		err = -ENOENT;
+=======
+	/* get a (very likely) new negative dentry */
+	lower_dentry = lookup_one_len_unlocked(name->name,
+					       lower_dir_dentry, name->len);
+	if (IS_ERR(lower_dentry)) {
+		err = PTR_ERR(lower_dentry);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto out;
 	}
 
 	lower_path.dentry = lower_dentry;
 	lower_path.mnt = mntget(lower_dir_mnt);
+<<<<<<< HEAD
+=======
+
+	/*
+	 * Check if someone sneakily filled in the dentry when
+	 * we weren't looking. We'll check again in create.
+	 */
+	if (unlikely(d_inode_rcu(lower_dentry))) {
+		err = 0;
+		goto found;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	sdcardfs_set_lower_path(dentry, &lower_path);
 
 	/*

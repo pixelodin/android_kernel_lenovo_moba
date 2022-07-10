@@ -289,7 +289,11 @@ int bpf_prog_offload_info_fill(struct bpf_prog_info *info,
 
 	ulen = info->jited_prog_len;
 	info->jited_prog_len = aux->offload->jited_len;
+<<<<<<< HEAD
 	if (info->jited_prog_len & ulen) {
+=======
+	if (info->jited_prog_len && ulen) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		uinsns = u64_to_user_ptr(info->jited_prog_insns);
 		ulen = min_t(u32, info->jited_prog_len, ulen);
 		if (copy_to_user(uinsns, aux->offload->jited_image, ulen)) {
@@ -645,8 +649,15 @@ struct bpf_offload_dev *bpf_offload_dev_create(void)
 	down_write(&bpf_devs_lock);
 	if (!offdevs_inited) {
 		err = rhashtable_init(&offdevs, &offdevs_params);
+<<<<<<< HEAD
 		if (err)
 			return ERR_PTR(err);
+=======
+		if (err) {
+			up_write(&bpf_devs_lock);
+			return ERR_PTR(err);
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		offdevs_inited = true;
 	}
 	up_write(&bpf_devs_lock);

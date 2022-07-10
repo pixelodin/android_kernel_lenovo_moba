@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2002,2007-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2002,2007-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include <linux/slab.h>
@@ -126,6 +130,12 @@ void adreno_perfcounter_restore(struct adreno_device *adreno_dev)
 	struct adreno_perfcount_group *group;
 	unsigned int counter, groupid;
 
+<<<<<<< HEAD
+=======
+	if (adreno_is_a702(adreno_dev))
+		return;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (counters == NULL)
 		return;
 
@@ -159,6 +169,12 @@ inline void adreno_perfcounter_save(struct adreno_device *adreno_dev)
 	struct adreno_perfcount_group *group;
 	unsigned int counter, groupid;
 
+<<<<<<< HEAD
+=======
+	if (adreno_is_a702(adreno_dev))
+		return;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (counters == NULL)
 		return;
 

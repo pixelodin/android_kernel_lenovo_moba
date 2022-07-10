@@ -896,6 +896,10 @@ static int ov772x_power_on(struct ov772x_priv *priv)
 					     GPIOD_OUT_LOW);
 	if (IS_ERR(priv->rstb_gpio)) {
 		dev_info(&client->dev, "Unable to get GPIO \"reset\"");
+<<<<<<< HEAD
+=======
+		clk_disable_unprepare(priv->clk);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return PTR_ERR(priv->rstb_gpio);
 	}
 

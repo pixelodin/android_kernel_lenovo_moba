@@ -197,7 +197,11 @@ static struct usb_composite_driver ncm_driver = {
 	.name		= "g_ncm",
 	.dev		= &device_desc,
 	.strings	= dev_strings,
+<<<<<<< HEAD
 	.max_speed	= USB_SPEED_HIGH,
+=======
+	.max_speed	= USB_SPEED_SUPER,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.bind		= gncm_bind,
 	.unbind		= gncm_unbind,
 };

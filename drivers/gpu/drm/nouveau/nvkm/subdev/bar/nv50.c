@@ -174,6 +174,11 @@ nv50_bar_oneinit(struct nvkm_bar *base)
 
 	ret = nvkm_vmm_new(device, start, limit-- - start, NULL, 0,
 			   &bar1_lock, "bar1", &bar->bar1_vmm);
+<<<<<<< HEAD
+=======
+	if (ret)
+		return ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	atomic_inc(&bar->bar1_vmm->engref[NVKM_SUBDEV_BAR]);
 	bar->bar1_vmm->debug = bar->base.subdev.debug;

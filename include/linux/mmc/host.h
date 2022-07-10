@@ -260,6 +260,16 @@ struct mmc_cqe_ops {
 	 * will have zero data bytes transferred.
 	 */
 	void	(*cqe_recovery_finish)(struct mmc_host *host);
+<<<<<<< HEAD
+=======
+	/*
+	 * Update the request queue with keyslot manager details. This keyslot
+	 * manager will be used by block crypto to configure the crypto Engine
+	 * for data encryption.
+	 */
+	void	(*cqe_crypto_update_queue)(struct mmc_host *host,
+					struct request_queue *queue);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct mmc_async_req {

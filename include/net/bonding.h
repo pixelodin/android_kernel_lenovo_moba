@@ -149,7 +149,10 @@ struct slave {
 	unsigned long target_last_arp_rx[BOND_MAX_ARP_TARGETS];
 	s8     link;		/* one of BOND_LINK_XXXX */
 	s8     link_new_state;	/* one of BOND_LINK_XXXX */
+<<<<<<< HEAD
 	s8     new_link;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u8     backup:1,   /* indicates backup slave. Value corresponds with
 			      BOND_STATE_ACTIVE and BOND_STATE_BACKUP */
 	       inactive:1, /* indicates inactive slave */
@@ -539,7 +542,11 @@ static inline void bond_propose_link_state(struct slave *slave, int state)
 
 static inline void bond_commit_link_state(struct slave *slave, bool notify)
 {
+<<<<<<< HEAD
 	if (slave->link == slave->link_new_state)
+=======
+	if (slave->link_new_state == BOND_LINK_NOCHANGE)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return;
 
 	slave->link = slave->link_new_state;

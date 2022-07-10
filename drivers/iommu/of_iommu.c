@@ -222,3 +222,18 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
 
 	return ops;
 }
+<<<<<<< HEAD
+=======
+
+#ifdef CONFIG_ARM_SMMU_SELFTEST
+int of_iommu_fill_fwspec(struct device *dev, struct of_phandle_args *iommu_spec)
+{
+	return of_iommu_xlate(dev, iommu_spec);
+}
+#else
+int of_iommu_fill_fwspec(struct device *dev, struct of_phandle_args *iommu_spec)
+{
+	return 0;
+}
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

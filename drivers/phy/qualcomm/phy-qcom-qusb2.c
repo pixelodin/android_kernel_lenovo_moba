@@ -526,7 +526,11 @@ static int __maybe_unused qusb2_phy_runtime_resume(struct device *dev)
 	}
 
 	if (!qphy->has_se_clk_scheme) {
+<<<<<<< HEAD
 		clk_prepare_enable(qphy->ref_clk);
+=======
+		ret = clk_prepare_enable(qphy->ref_clk);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (ret) {
 			dev_err(dev, "failed to enable ref clk, %d\n", ret);
 			goto disable_ahb_clk;

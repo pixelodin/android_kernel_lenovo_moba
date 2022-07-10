@@ -45,6 +45,10 @@ struct uas_dev_info {
 	struct scsi_cmnd *cmnd[MAX_CMNDS];
 	spinlock_t lock;
 	struct work_struct work;
+<<<<<<< HEAD
+=======
+	struct work_struct scan_work;      /* for async scanning */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 enum {
@@ -114,6 +118,20 @@ out:
 	spin_unlock_irqrestore(&devinfo->lock, flags);
 }
 
+<<<<<<< HEAD
+=======
+static void uas_scan_work(struct work_struct *work)
+{
+	struct uas_dev_info *devinfo =
+		container_of(work, struct uas_dev_info, scan_work);
+	struct Scsi_Host *shost = usb_get_intfdata(devinfo->intf);
+
+	dev_dbg(&devinfo->intf->dev, "starting scan\n");
+	scsi_scan_host(shost);
+	dev_dbg(&devinfo->intf->dev, "scan complete\n");
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static void uas_add_work(struct uas_cmd_info *cmdinfo)
 {
 	struct scsi_pointer *scp = (void *)cmdinfo;
@@ -796,11 +814,15 @@ static int uas_slave_alloc(struct scsi_device *sdev)
 {
 	struct uas_dev_info *devinfo =
 		(struct uas_dev_info *)sdev->host->hostdata;
+<<<<<<< HEAD
 	int maxp;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	sdev->hostdata = devinfo;
 
 	/*
+<<<<<<< HEAD
 	 * We have two requirements here. We must satisfy the requirements
 	 * of the physical HC and the demands of the protocol, as we
 	 * definitely want no additional memory allocation in this path
@@ -820,6 +842,8 @@ static int uas_slave_alloc(struct scsi_device *sdev)
 	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
 
 	/*
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	 * The protocol has no requirements on alignment in the strict sense.
 	 * Controllers may or may not have alignment restrictions.
 	 * As this is not exported, we use an extremely conservative guess.
@@ -852,6 +876,13 @@ static int uas_slave_configure(struct scsi_device *sdev)
 		sdev->wce_default_on = 1;
 	}
 
+<<<<<<< HEAD
+=======
+	/* Some disks cannot handle READ_CAPACITY_16 */
+	if (devinfo->flags & US_FL_NO_READ_CAPACITY_16)
+		sdev->no_read_capacity_16 = 1;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/*
 	 * Some disks return the total number of blocks in response
 	 * to READ CAPACITY rather than the highest block number.
@@ -861,6 +892,15 @@ static int uas_slave_configure(struct scsi_device *sdev)
 		sdev->fix_capacity = 1;
 
 	/*
+<<<<<<< HEAD
+=======
+	 * in some cases we have to guess
+	 */
+	if (devinfo->flags & US_FL_CAPACITY_HEURISTICS)
+		sdev->guess_capacity = 1;
+
+	/*
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	 * Some devices don't like MODE SENSE with page=0x3f,
 	 * which is the command used for checking if a device
 	 * is write-protected.  Now that we tell the sd driver
@@ -999,6 +1039,10 @@ static int uas_probe(struct usb_interface *intf, const struct usb_device_id *id)
 	init_usb_anchor(&devinfo->data_urbs);
 	spin_lock_init(&devinfo->lock);
 	INIT_WORK(&devinfo->work, uas_do_work);
+<<<<<<< HEAD
+=======
+	INIT_WORK(&devinfo->scan_work, uas_scan_work);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	result = uas_configure_endpoints(devinfo);
 	if (result)
@@ -1015,7 +1059,13 @@ static int uas_probe(struct usb_interface *intf, const struct usb_device_id *id)
 	if (result)
 		goto free_streams;
 
+<<<<<<< HEAD
 	scsi_scan_host(shost);
+=======
+	/* Submit the delayed_work for SCSI-device scanning */
+	schedule_work(&devinfo->scan_work);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return result;
 
 free_streams:
@@ -1183,6 +1233,15 @@ static void uas_disconnect(struct usb_interface *intf)
 	usb_kill_anchored_urbs(&devinfo->data_urbs);
 	uas_zap_pending(devinfo, DID_NO_CONNECT);
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Prevent SCSI scanning (if it hasn't started yet)
+	 * or wait for the SCSI-scanning routine to stop.
+	 */
+	cancel_work_sync(&devinfo->scan_work);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	scsi_remove_host(shost);
 	uas_free_streams(devinfo);
 	scsi_host_put(shost);

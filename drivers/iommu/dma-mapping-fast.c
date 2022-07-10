@@ -17,7 +17,12 @@
 #include <linux/dma-iommu.h>
 #include <linux/iova.h>
 #include <trace/events/iommu.h>
+<<<<<<< HEAD
 #include "io-pgtable.h"
+=======
+
+#include <linux/io-pgtable.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /* some redundant definitions... :( TODO: move to io-pgtable-fast.h */
 #define FAST_PAGE_SHIFT		12
@@ -116,6 +121,7 @@ static struct dma_fast_smmu_mapping *dev_get_mapping(struct device *dev)
 	return domain->iova_cookie;
 }
 
+<<<<<<< HEAD
 /*
  * Checks if the allocated range (ending at @end) covered the upcoming
  * stale bit.  We don't need to know exactly where the range starts since
@@ -171,10 +177,13 @@ static bool __bit_covered_stale(unsigned long upcoming_stale,
 	return true;
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static dma_addr_t __fast_smmu_alloc_iova(struct dma_fast_smmu_mapping *mapping,
 					 unsigned long attrs,
 					 size_t size)
 {
+<<<<<<< HEAD
 	unsigned long bit, prev_search_start, nbits = size >> FAST_PAGE_SHIFT;
 	unsigned long align = (1 << get_order(size)) - 1;
 
@@ -192,10 +201,65 @@ static dma_addr_t __fast_smmu_alloc_iova(struct dma_fast_smmu_mapping *mapping,
 
 	bitmap_set(mapping->bitmap, bit, nbits);
 	prev_search_start = mapping->next_start;
+=======
+	unsigned long bit, nbits = size >> FAST_PAGE_SHIFT;
+	unsigned long align = (1 << get_order(size)) - 1;
+
+	bit = bitmap_find_next_zero_area(mapping->clean_bitmap,
+					  mapping->num_4k_pages,
+					  mapping->next_start, nbits, align);
+	if (unlikely(bit > mapping->num_4k_pages)) {
+		/* try wrapping */
+		bit = bitmap_find_next_zero_area(
+			mapping->clean_bitmap, mapping->num_4k_pages, 0, nbits,
+			align);
+		if (unlikely(bit > mapping->num_4k_pages)) {
+			/*
+			 * If we just re-allocated a VA whose TLB hasn't been
+			 * invalidated since it was last used and unmapped, we
+			 * need to invalidate it here.  We actually invalidate
+			 * the entire TLB so that we don't have to invalidate
+			 * the TLB again until we wrap back around.
+			 */
+			if (mapping->have_stale_tlbs) {
+				bool skip_sync = (attrs &
+						  DMA_ATTR_SKIP_CPU_SYNC);
+				struct iommu_domain_geometry *geometry =
+					&(mapping->domain->geometry);
+
+				iommu_tlbiall(mapping->domain);
+				bitmap_copy(mapping->clean_bitmap,
+					    mapping->bitmap,
+					    mapping->num_4k_pages);
+				mapping->have_stale_tlbs = false;
+				av8l_fast_clear_stale_ptes(mapping->pgtbl_ops,
+						geometry->aperture_start,
+						mapping->base,
+						mapping->base +
+						mapping->size - 1,
+						skip_sync);
+				bit = bitmap_find_next_zero_area(
+							mapping->clean_bitmap,
+							mapping->num_4k_pages,
+								 0, nbits,
+								 align);
+				if (unlikely(bit > mapping->num_4k_pages))
+					return DMA_ERROR_CODE;
+
+			} else {
+				return DMA_ERROR_CODE;
+			}
+		}
+	}
+
+	bitmap_set(mapping->bitmap, bit, nbits);
+	bitmap_set(mapping->clean_bitmap, bit, nbits);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mapping->next_start = bit + nbits;
 	if (unlikely(mapping->next_start >= mapping->num_4k_pages))
 		mapping->next_start = 0;
 
+<<<<<<< HEAD
 	/*
 	 * If we just re-allocated a VA whose TLB hasn't been invalidated
 	 * since it was last used and unmapped, we need to invalidate it
@@ -303,6 +367,11 @@ static bool __bit_is_sooner(unsigned long candidate,
 	return true;
 }
 
+=======
+	return (bit << FAST_PAGE_SHIFT) + mapping->base;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #ifdef CONFIG_ARM64
 static int __init atomic_pool_init(void)
 {
@@ -376,12 +445,17 @@ static void __fast_smmu_free_iova(struct dma_fast_smmu_mapping *mapping,
 	/*
 	 * We don't invalidate TLBs on unmap.  We invalidate TLBs on map
 	 * when we're about to re-allocate a VA that was previously
+<<<<<<< HEAD
 	 * unmapped but hasn't yet been invalidated.  So we need to keep
 	 * track of which bit is the closest to being re-allocated here.
 	 */
 	if (__bit_is_sooner(start_bit, mapping))
 		mapping->upcoming_stale_bit = start_bit;
 
+=======
+	 * unmapped but hasn't yet been invalidated.
+	 */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	bitmap_clear(mapping->bitmap, start_bit, nbits);
 	mapping->have_stale_tlbs = true;
 }
@@ -1075,7 +1149,11 @@ static const struct dma_map_ops fast_smmu_dma_ops = {
  *
  * Creates a mapping structure which holds information about used/unused IO
  * address ranges, which is required to perform mapping with IOMMU aware
+<<<<<<< HEAD
  * functions.  The only VA range supported is [0, 4GB).
+=======
+ * functions. The only VA range supported is [0, 4GB].
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  *
  * The client device need to be attached to the mapping with
  * fast_smmu_attach_device function.
@@ -1102,6 +1180,17 @@ static struct dma_fast_smmu_mapping *__fast_smmu_create_mapping_sized(
 	if (!fast->bitmap)
 		goto err2;
 
+<<<<<<< HEAD
+=======
+	fast->clean_bitmap = kzalloc(fast->bitmap_size, GFP_KERNEL |
+				     __GFP_NOWARN | __GFP_NORETRY);
+	if (!fast->clean_bitmap)
+		fast->clean_bitmap = vzalloc(fast->bitmap_size);
+
+	if (!fast->clean_bitmap)
+		goto err3;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	spin_lock_init(&fast->lock);
 
 	fast->iovad = kzalloc(sizeof(*fast->iovad), GFP_KERNEL);
@@ -1113,6 +1202,11 @@ static struct dma_fast_smmu_mapping *__fast_smmu_create_mapping_sized(
 	return fast;
 
 err_free_bitmap:
+<<<<<<< HEAD
+=======
+	kvfree(fast->clean_bitmap);
+err3:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	kvfree(fast->bitmap);
 err2:
 	kfree(fast);
@@ -1179,6 +1273,12 @@ void fast_smmu_put_dma_cookie(struct iommu_domain *domain)
 	if (fast->bitmap)
 		kvfree(fast->bitmap);
 
+<<<<<<< HEAD
+=======
+	if (fast->clean_bitmap)
+		kvfree(fast->clean_bitmap);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	kfree(fast);
 	domain->iova_cookie = NULL;
 }
@@ -1219,6 +1319,12 @@ int fast_smmu_init_mapping(struct device *dev,
 	fast->dev = dev;
 	domain->iova_cookie = fast;
 
+<<<<<<< HEAD
+=======
+	domain->geometry.aperture_start = mapping->base;
+	domain->geometry.aperture_end = mapping->base + size - 1;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (iommu_domain_get_attr(domain, DOMAIN_ATTR_PGTBL_INFO,
 				  &info)) {
 		dev_err(dev, "Couldn't get page table info\n");

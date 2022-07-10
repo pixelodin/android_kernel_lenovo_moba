@@ -97,6 +97,10 @@ struct amdgpu_gmc {
 	uint32_t                srbm_soft_reset;
 	bool			prt_warning;
 	uint64_t		stolen_size;
+<<<<<<< HEAD
+=======
+	uint32_t		sdpif_register;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* apertures */
 	u64			shared_aperture_start;
 	u64			shared_aperture_end;

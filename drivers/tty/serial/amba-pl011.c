@@ -813,10 +813,15 @@ __acquires(&uap->port.lock)
 	if (!uap->using_tx_dma)
 		return;
 
+<<<<<<< HEAD
 	/* Avoid deadlock with the DMA engine callback */
 	spin_unlock(&uap->port.lock);
 	dmaengine_terminate_all(uap->dmatx.chan);
 	spin_lock(&uap->port.lock);
+=======
+	dmaengine_terminate_async(uap->dmatx.chan);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (uap->dmatx.queued) {
 		dma_unmap_sg(uap->dmatx.chan->device->dev, &uap->dmatx.sg, 1,
 			     DMA_TO_DEVICE);

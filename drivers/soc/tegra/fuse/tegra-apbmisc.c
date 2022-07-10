@@ -135,7 +135,11 @@ void __init tegra_init_apbmisc(void)
 			apbmisc.flags = IORESOURCE_MEM;
 
 			/* strapping options */
+<<<<<<< HEAD
 			if (tegra_get_chip_id() == TEGRA124) {
+=======
+			if (of_machine_is_compatible("nvidia,tegra124")) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				straps.start = 0x7000e864;
 				straps.end = 0x7000e867;
 			} else {

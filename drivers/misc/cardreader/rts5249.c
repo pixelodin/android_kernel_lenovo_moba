@@ -623,6 +623,10 @@ static const struct pcr_ops rts524a_pcr_ops = {
 void rts524a_init_params(struct rtsx_pcr *pcr)
 {
 	rts5249_init_params(pcr);
+<<<<<<< HEAD
+=======
+	pcr->tx_initial_phase = SET_CLOCK_PHASE(27, 29, 11);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pcr->option.ltr_l1off_sspwrgate = LTR_L1OFF_SSPWRGATE_5250_DEF;
 	pcr->option.ltr_l1off_snooze_sspwrgate =
 		LTR_L1OFF_SNOOZE_SSPWRGATE_5250_DEF;
@@ -731,6 +735,10 @@ static const struct pcr_ops rts525a_pcr_ops = {
 void rts525a_init_params(struct rtsx_pcr *pcr)
 {
 	rts5249_init_params(pcr);
+<<<<<<< HEAD
+=======
+	pcr->tx_initial_phase = SET_CLOCK_PHASE(25, 29, 11);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pcr->option.ltr_l1off_sspwrgate = LTR_L1OFF_SSPWRGATE_5250_DEF;
 	pcr->option.ltr_l1off_snooze_sspwrgate =
 		LTR_L1OFF_SNOOZE_SSPWRGATE_5250_DEF;

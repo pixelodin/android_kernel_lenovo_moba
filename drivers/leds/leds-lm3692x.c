@@ -337,9 +337,24 @@ static int lm3692x_probe_dt(struct lm3692x_led *led)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	led->regulator = devm_regulator_get(&led->client->dev, "vled");
 	if (IS_ERR(led->regulator))
 		led->regulator = NULL;
+=======
+	led->regulator = devm_regulator_get_optional(&led->client->dev, "vled");
+	if (IS_ERR(led->regulator)) {
+		ret = PTR_ERR(led->regulator);
+		if (ret != -ENODEV) {
+			if (ret != -EPROBE_DEFER)
+				dev_err(&led->client->dev,
+					"Failed to get vled regulator: %d\n",
+					ret);
+			return ret;
+		}
+		led->regulator = NULL;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	child = device_get_next_child_node(&led->client->dev, child);
 	if (!child) {

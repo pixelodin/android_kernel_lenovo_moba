@@ -2016,7 +2016,11 @@ static int ov5670_set_ctrl(struct v4l2_ctrl *ctrl)
 	}
 
 	/* V4L2 controls values will be applied only when power is already up */
+<<<<<<< HEAD
 	if (pm_runtime_get_if_in_use(&client->dev) <= 0)
+=======
+	if (!pm_runtime_get_if_in_use(&client->dev))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return 0;
 
 	switch (ctrl->id) {

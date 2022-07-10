@@ -1491,7 +1491,11 @@ static void kbd_event(struct input_handle *handle, unsigned int event_type,
 
 	if (event_type == EV_MSC && event_code == MSC_RAW && HW_RAW(handle->dev))
 		kbd_rawcode(value);
+<<<<<<< HEAD
 	if (event_type == EV_KEY)
+=======
+	if (event_type == EV_KEY && event_code <= KEY_MAX)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		kbd_keycode(event_code, value, HW_RAW(handle->dev));
 
 	spin_unlock(&kbd_event_lock);

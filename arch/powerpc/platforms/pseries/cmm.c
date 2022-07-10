@@ -425,6 +425,13 @@ static struct bus_type cmm_subsys = {
 	.dev_name = "cmm",
 };
 
+<<<<<<< HEAD
+=======
+static void cmm_release_device(struct device *dev)
+{
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /**
  * cmm_sysfs_register - Register with sysfs
  *
@@ -440,6 +447,10 @@ static int cmm_sysfs_register(struct device *dev)
 
 	dev->id = 0;
 	dev->bus = &cmm_subsys;
+<<<<<<< HEAD
+=======
+	dev->release = cmm_release_device;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if ((rc = device_register(dev)))
 		goto subsys_unregister;

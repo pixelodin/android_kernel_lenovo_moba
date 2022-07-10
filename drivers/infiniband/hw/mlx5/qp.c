@@ -2598,6 +2598,14 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_PKEY_INDEX	|
 					  MLX5_QP_OPTPAR_Q_KEY		|
 					  MLX5_QP_OPTPAR_PRI_PORT,
+<<<<<<< HEAD
+=======
+			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_RRE		|
+					  MLX5_QP_OPTPAR_RAE		|
+					  MLX5_QP_OPTPAR_RWE		|
+					  MLX5_QP_OPTPAR_PKEY_INDEX	|
+					  MLX5_QP_OPTPAR_PRI_PORT,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		},
 		[MLX5_QP_STATE_RTR] = {
 			[MLX5_QP_ST_RC] = MLX5_QP_OPTPAR_ALT_ADDR_PATH  |
@@ -2631,6 +2639,15 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
 					  MLX5_QP_OPTPAR_RWE		|
 					  MLX5_QP_OPTPAR_PM_STATE,
 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_Q_KEY,
+<<<<<<< HEAD
+=======
+			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_ALT_ADDR_PATH	|
+					  MLX5_QP_OPTPAR_RRE		|
+					  MLX5_QP_OPTPAR_RAE		|
+					  MLX5_QP_OPTPAR_RWE		|
+					  MLX5_QP_OPTPAR_PM_STATE	|
+					  MLX5_QP_OPTPAR_RNR_TIMEOUT,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		},
 	},
 	[MLX5_QP_STATE_RTS] = {
@@ -2647,6 +2664,15 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
 			[MLX5_QP_ST_UD] = MLX5_QP_OPTPAR_Q_KEY		|
 					  MLX5_QP_OPTPAR_SRQN		|
 					  MLX5_QP_OPTPAR_CQN_RCV,
+<<<<<<< HEAD
+=======
+			[MLX5_QP_ST_XRC] = MLX5_QP_OPTPAR_RRE		|
+					  MLX5_QP_OPTPAR_RAE		|
+					  MLX5_QP_OPTPAR_RWE		|
+					  MLX5_QP_OPTPAR_RNR_TIMEOUT	|
+					  MLX5_QP_OPTPAR_PM_STATE	|
+					  MLX5_QP_OPTPAR_ALT_ADDR_PATH,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		},
 	},
 	[MLX5_QP_STATE_SQER] = {
@@ -2658,6 +2684,13 @@ static enum mlx5_qp_optpar opt_mask[MLX5_QP_NUM_STATE][MLX5_QP_NUM_STATE][MLX5_Q
 					   MLX5_QP_OPTPAR_RWE		|
 					   MLX5_QP_OPTPAR_RAE		|
 					   MLX5_QP_OPTPAR_RRE,
+<<<<<<< HEAD
+=======
+			[MLX5_QP_ST_XRC]  = MLX5_QP_OPTPAR_RNR_TIMEOUT	|
+					   MLX5_QP_OPTPAR_RWE		|
+					   MLX5_QP_OPTPAR_RAE		|
+					   MLX5_QP_OPTPAR_RRE,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		},
 	},
 };
@@ -2828,10 +2861,19 @@ static int modify_raw_packet_qp_sq(struct mlx5_core_dev *dev,
 	}
 
 	/* Only remove the old rate after new rate was set */
+<<<<<<< HEAD
 	if ((old_rl.rate &&
 	     !mlx5_rl_are_equal(&old_rl, &new_rl)) ||
 	    (new_state != MLX5_SQC_STATE_RDY))
 		mlx5_rl_remove_rate(dev, &old_rl);
+=======
+	if ((old_rl.rate && !mlx5_rl_are_equal(&old_rl, &new_rl)) ||
+	    (new_state != MLX5_SQC_STATE_RDY)) {
+		mlx5_rl_remove_rate(dev, &old_rl);
+		if (new_state != MLX5_SQC_STATE_RDY)
+			memset(&new_rl, 0, sizeof(new_rl));
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	ibqp->rl = new_rl;
 	sq->state = new_state;
@@ -2908,6 +2950,40 @@ static int modify_raw_packet_qp(struct mlx5_ib_dev *dev, struct mlx5_ib_qp *qp,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static unsigned int get_tx_affinity(struct mlx5_ib_dev *dev,
+				    struct mlx5_ib_pd *pd,
+				    struct mlx5_ib_qp_base *qp_base,
+				    u8 port_num)
+{
+	struct mlx5_ib_ucontext *ucontext = NULL;
+	unsigned int tx_port_affinity;
+
+	if (pd && pd->ibpd.uobject && pd->ibpd.uobject->context)
+		ucontext = to_mucontext(pd->ibpd.uobject->context);
+
+	if (ucontext) {
+		tx_port_affinity = (unsigned int)atomic_add_return(
+					   1, &ucontext->tx_port_affinity) %
+					   MLX5_MAX_PORTS +
+				   1;
+		mlx5_ib_dbg(dev, "Set tx affinity 0x%x to qpn 0x%x ucontext %p\n",
+				tx_port_affinity, qp_base->mqp.qpn, ucontext);
+	} else {
+		tx_port_affinity =
+			(unsigned int)atomic_add_return(
+				1, &dev->roce[port_num].tx_port_affinity) %
+				MLX5_MAX_PORTS +
+			1;
+		mlx5_ib_dbg(dev, "Set tx affinity 0x%x to qpn 0x%x\n",
+				tx_port_affinity, qp_base->mqp.qpn);
+	}
+
+	return tx_port_affinity;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int __mlx5_ib_modify_qp(struct ib_qp *ibqp,
 			       const struct ib_qp_attr *attr, int attr_mask,
 			       enum ib_qp_state cur_state, enum ib_qp_state new_state,
@@ -2973,6 +3049,10 @@ static int __mlx5_ib_modify_qp(struct ib_qp *ibqp,
 	if (!context)
 		return -ENOMEM;
 
+<<<<<<< HEAD
+=======
+	pd = get_pd(qp);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	context->flags = cpu_to_be32(mlx5_st << 16);
 
 	if (!(attr_mask & IB_QP_PATH_MIG_STATE)) {
@@ -3001,9 +3081,13 @@ static int __mlx5_ib_modify_qp(struct ib_qp *ibqp,
 		    (ibqp->qp_type == IB_QPT_XRC_TGT)) {
 			if (mlx5_lag_is_active(dev->mdev)) {
 				u8 p = mlx5_core_native_port_num(dev->mdev);
+<<<<<<< HEAD
 				tx_affinity = (unsigned int)atomic_add_return(1,
 						&dev->roce[p].next_port) %
 						MLX5_MAX_PORTS + 1;
+=======
+				tx_affinity = get_tx_affinity(dev, pd, base, p);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				context->flags |= cpu_to_be32(tx_affinity << 24);
 			}
 		}
@@ -3061,7 +3145,10 @@ static int __mlx5_ib_modify_qp(struct ib_qp *ibqp,
 			goto out;
 	}
 
+<<<<<<< HEAD
 	pd = get_pd(qp);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	get_cqs(qp->ibqp.qp_type, qp->ibqp.send_cq, qp->ibqp.recv_cq,
 		&send_cq, &recv_cq);
 
@@ -4376,6 +4463,15 @@ static int _mlx5_ib_post_send(struct ib_qp *ibqp, const struct ib_send_wr *wr,
 	u8 next_fence = 0;
 	u8 fence;
 
+<<<<<<< HEAD
+=======
+	if (unlikely(mdev->state == MLX5_DEVICE_STATE_INTERNAL_ERROR &&
+		     !drain)) {
+		*bad_wr = wr;
+		return -EIO;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (unlikely(ibqp->qp_type == IB_QPT_GSI))
 		return mlx5_ib_gsi_post_send(ibqp, wr, bad_wr);
 
@@ -4385,6 +4481,7 @@ static int _mlx5_ib_post_send(struct ib_qp *ibqp, const struct ib_send_wr *wr,
 
 	spin_lock_irqsave(&qp->sq.lock, flags);
 
+<<<<<<< HEAD
 	if (mdev->state == MLX5_DEVICE_STATE_INTERNAL_ERROR && !drain) {
 		err = -EIO;
 		*bad_wr = wr;
@@ -4392,6 +4489,8 @@ static int _mlx5_ib_post_send(struct ib_qp *ibqp, const struct ib_send_wr *wr,
 		goto out;
 	}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	for (nreq = 0; wr; nreq++, wr = wr->next) {
 		if (unlikely(wr->opcode >= ARRAY_SIZE(mlx5_ib_opcode))) {
 			mlx5_ib_warn(dev, "\n");
@@ -4706,11 +4805,21 @@ static int _mlx5_ib_post_recv(struct ib_qp *ibqp, const struct ib_recv_wr *wr,
 	int ind;
 	int i;
 
+<<<<<<< HEAD
+=======
+	if (unlikely(mdev->state == MLX5_DEVICE_STATE_INTERNAL_ERROR &&
+		     !drain)) {
+		*bad_wr = wr;
+		return -EIO;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (unlikely(ibqp->qp_type == IB_QPT_GSI))
 		return mlx5_ib_gsi_post_recv(ibqp, wr, bad_wr);
 
 	spin_lock_irqsave(&qp->rq.lock, flags);
 
+<<<<<<< HEAD
 	if (mdev->state == MLX5_DEVICE_STATE_INTERNAL_ERROR && !drain) {
 		err = -EIO;
 		*bad_wr = wr;
@@ -4718,6 +4827,8 @@ static int _mlx5_ib_post_recv(struct ib_qp *ibqp, const struct ib_recv_wr *wr,
 		goto out;
 	}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ind = qp->rq.head & (qp->rq.wqe_cnt - 1);
 
 	for (nreq = 0; wr; nreq++, wr = wr->next) {

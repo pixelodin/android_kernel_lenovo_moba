@@ -536,6 +536,10 @@ cxd2880_spi_probe(struct spi_device *spi)
 
 	if (!dvb_attach(cxd2880_attach, &dvb_spi->dvb_fe, &config)) {
 		pr_err("cxd2880_attach failed\n");
+<<<<<<< HEAD
+=======
+		ret = -ENODEV;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto fail_attach;
 	}
 

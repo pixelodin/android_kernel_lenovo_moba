@@ -110,7 +110,10 @@ ia64_rt_sigreturn (struct sigscratch *scr)
 {
 	extern char ia64_strace_leave_kernel, ia64_leave_kernel;
 	struct sigcontext __user *sc;
+<<<<<<< HEAD
 	struct siginfo si;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	sigset_t set;
 	long retval;
 
@@ -153,6 +156,7 @@ ia64_rt_sigreturn (struct sigscratch *scr)
 	return retval;
 
   give_sigsegv:
+<<<<<<< HEAD
 	clear_siginfo(&si);
 	si.si_signo = SIGSEGV;
 	si.si_errno = 0;
@@ -161,6 +165,9 @@ ia64_rt_sigreturn (struct sigscratch *scr)
 	si.si_uid = from_kuid_munged(current_user_ns(), current_uid());
 	si.si_addr = sc;
 	force_sig_info(SIGSEGV, &si, current);
+=======
+	force_sig(SIGSEGV, current);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return retval;
 }
 
@@ -232,6 +239,7 @@ rbs_on_sig_stack (unsigned long bsp)
 }
 
 static long
+<<<<<<< HEAD
 force_sigsegv_info (int sig, void __user *addr)
 {
 	unsigned long flags;
@@ -263,6 +271,8 @@ force_sigsegv_info (int sig, void __user *addr)
 }
 
 static long
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 setup_frame(struct ksignal *ksig, sigset_t *set, struct sigscratch *scr)
 {
 	extern char __kernel_sigtramp[];
@@ -295,15 +305,29 @@ setup_frame(struct ksignal *ksig, sigset_t *set, struct sigscratch *scr)
 			 * instead so we will die with SIGSEGV.
 			 */
 			check_sp = (new_sp - sizeof(*frame)) & -STACK_ALIGN;
+<<<<<<< HEAD
 			if (!likely(on_sig_stack(check_sp)))
 				return force_sigsegv_info(ksig->sig, (void __user *)
 							  check_sp);
+=======
+			if (!likely(on_sig_stack(check_sp))) {
+				force_sigsegv(ksig->sig, current);
+				return 1;
+			}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 	}
 	frame = (void __user *) ((new_sp - sizeof(*frame)) & -STACK_ALIGN);
 
+<<<<<<< HEAD
 	if (!access_ok(VERIFY_WRITE, frame, sizeof(*frame)))
 		return force_sigsegv_info(ksig->sig, frame);
+=======
+	if (!access_ok(VERIFY_WRITE, frame, sizeof(*frame))) {
+		force_sigsegv(ksig->sig, current);
+		return 1;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	err  = __put_user(ksig->sig, &frame->arg0);
 	err |= __put_user(&frame->info, &frame->arg1);
@@ -317,8 +341,15 @@ setup_frame(struct ksignal *ksig, sigset_t *set, struct sigscratch *scr)
 	err |= __save_altstack(&frame->sc.sc_stack, scr->pt.r12);
 	err |= setup_sigcontext(&frame->sc, set, scr);
 
+<<<<<<< HEAD
 	if (unlikely(err))
 		return force_sigsegv_info(ksig->sig, frame);
+=======
+	if (unlikely(err)) {
+		force_sigsegv(ksig->sig, current);
+		return 1;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	scr->pt.r12 = (unsigned long) frame - 16;	/* new stack pointer */
 	scr->pt.ar_fpsr = FPSR_DEFAULT;			/* reset fpsr for signal handler */

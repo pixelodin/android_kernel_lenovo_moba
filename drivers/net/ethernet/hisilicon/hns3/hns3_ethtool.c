@@ -100,13 +100,17 @@ static int hns3_lp_up(struct net_device *ndev, enum hnae3_loop loop_mode)
 	struct hnae3_handle *h = hns3_get_handle(ndev);
 	int ret;
 
+<<<<<<< HEAD
 	if (!h->ae_algo->ops->start)
 		return -EOPNOTSUPP;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = hns3_nic_reset_all_ring(h);
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	ret = h->ae_algo->ops->start(h);
 	if (ret) {
 		netdev_err(ndev,
@@ -118,23 +122,37 @@ static int hns3_lp_up(struct net_device *ndev, enum hnae3_loop loop_mode)
 	usleep_range(10000, 20000);
 
 	return ret;
+=======
+	ret = hns3_lp_setup(ndev, loop_mode, true);
+	usleep_range(10000, 20000);
+
+	return 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int hns3_lp_down(struct net_device *ndev, enum hnae3_loop loop_mode)
 {
+<<<<<<< HEAD
 	struct hnae3_handle *h = hns3_get_handle(ndev);
 	int ret;
 
 	if (!h->ae_algo->ops->stop)
 		return -EOPNOTSUPP;
 
+=======
+	int ret;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = hns3_lp_setup(ndev, loop_mode, false);
 	if (ret) {
 		netdev_err(ndev, "lb_setup return error: %d\n", ret);
 		return ret;
 	}
 
+<<<<<<< HEAD
 	h->ae_algo->ops->stop(h);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	usleep_range(10000, 20000);
 
 	return 0;
@@ -152,6 +170,10 @@ static void hns3_lp_setup_skb(struct sk_buff *skb)
 	packet = skb_put(skb, HNS3_NIC_LB_TEST_PACKET_SIZE);
 
 	memcpy(ethh->h_dest, ndev->dev_addr, ETH_ALEN);
+<<<<<<< HEAD
+=======
+	ethh->h_dest[5] += 0x1f;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	eth_zero_addr(ethh->h_source);
 	ethh->h_proto = htons(ETH_P_ARP);
 	skb_reset_mac_header(skb);

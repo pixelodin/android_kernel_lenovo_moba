@@ -1969,6 +1969,14 @@ static void sg_update_list(struct ScsiReqBlk *srb, u32 left)
 			xferred -= psge->length;
 		} else {
 			/* Partial SG entry done */
+<<<<<<< HEAD
+=======
+			pci_dma_sync_single_for_cpu(srb->dcb->
+					    acb->dev,
+					    srb->sg_bus_addr,
+					    SEGMENTX_LEN,
+					    PCI_DMA_TODEVICE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			psge->length -= xferred;
 			psge->address += xferred;
 			srb->sg_index = idx;
@@ -3447,14 +3455,22 @@ static void srb_done(struct AdapterCtlBlk *acb, struct DeviceCtlBlk *dcb,
 		}
 	}
 
+<<<<<<< HEAD
 	if (dir != PCI_DMA_NONE && scsi_sg_count(cmd))
 		pci_dma_sync_sg_for_cpu(acb->dev, scsi_sglist(cmd),
 					scsi_sg_count(cmd), dir);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ckc_only = 0;
 /* Check Error Conditions */
       ckc_e:
 
+<<<<<<< HEAD
+=======
+	pci_unmap_srb(acb, srb);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (cmd->cmnd[0] == INQUIRY) {
 		unsigned char *base = NULL;
 		struct ScsiInqData *ptr;
@@ -3507,7 +3523,10 @@ static void srb_done(struct AdapterCtlBlk *acb, struct DeviceCtlBlk *dcb,
 			cmd, cmd->result);
 		srb_free_insert(acb, srb);
 	}
+<<<<<<< HEAD
 	pci_unmap_srb(acb, srb);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	cmd->scsi_done(cmd);
 	waiting_process_next(acb);

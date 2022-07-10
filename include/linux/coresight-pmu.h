@@ -12,11 +12,19 @@
 
 /* ETMv3.5/PTM's ETMCR config bit */
 #define ETM_OPT_CYCACC  12
+<<<<<<< HEAD
+=======
+#define ETM_OPT_CTXTID	14
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define ETM_OPT_TS      28
 #define ETM_OPT_RETSTK	29
 
 /* ETMv4 CONFIGR programming bits for the ETM OPTs */
 #define ETM4_CFG_BIT_CYCACC	4
+<<<<<<< HEAD
+=======
+#define ETM4_CFG_BIT_CTXTID	6
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define ETM4_CFG_BIT_TS		11
 #define ETM4_CFG_BIT_RETSTK	12
 

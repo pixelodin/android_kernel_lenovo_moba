@@ -134,7 +134,11 @@ static inline void skb_mark_napi_id(struct sk_buff *skb,
 static inline void sk_mark_napi_id(struct sock *sk, const struct sk_buff *skb)
 {
 #ifdef CONFIG_NET_RX_BUSY_POLL
+<<<<<<< HEAD
 	sk->sk_napi_id = skb->napi_id;
+=======
+	WRITE_ONCE(sk->sk_napi_id, skb->napi_id);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif
 	sk_rx_queue_set(sk, skb);
 }
@@ -144,8 +148,13 @@ static inline void sk_mark_napi_id_once(struct sock *sk,
 					const struct sk_buff *skb)
 {
 #ifdef CONFIG_NET_RX_BUSY_POLL
+<<<<<<< HEAD
 	if (!sk->sk_napi_id)
 		sk->sk_napi_id = skb->napi_id;
+=======
+	if (!READ_ONCE(sk->sk_napi_id))
+		WRITE_ONCE(sk->sk_napi_id, skb->napi_id);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif
 }
 

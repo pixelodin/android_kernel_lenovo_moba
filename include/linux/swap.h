@@ -382,6 +382,7 @@ extern unsigned long vm_total_pages;
 extern int node_reclaim_mode;
 extern int sysctl_min_unmapped_ratio;
 extern int sysctl_min_slab_ratio;
+<<<<<<< HEAD
 extern int node_reclaim(struct pglist_data *, gfp_t, unsigned int);
 #else
 #define node_reclaim_mode 0
@@ -390,6 +391,10 @@ static inline int node_reclaim(struct pglist_data *pgdat, gfp_t mask,
 {
 	return 0;
 }
+=======
+#else
+#define node_reclaim_mode 0
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif
 
 extern int page_evictable(struct page *page);

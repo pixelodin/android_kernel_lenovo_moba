@@ -23,6 +23,11 @@
 #ifndef __ASM_ASSEMBLER_H
 #define __ASM_ASSEMBLER_H
 
+<<<<<<< HEAD
+=======
+#include <asm-generic/export.h>
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <asm/asm-offsets.h>
 #include <asm/cpufeature.h>
 #include <asm/debug-monitors.h>
@@ -500,6 +505,16 @@ USER(\label, ic	ivau, \tmp2)			// invalidate I line PoU
 #else
 #define NOKPROBE(x)
 #endif
+<<<<<<< HEAD
+=======
+
+#ifdef CONFIG_KASAN
+#define EXPORT_SYMBOL_NOKASAN(name)
+#else
+#define EXPORT_SYMBOL_NOKASAN(name)	EXPORT_SYMBOL(name)
+#endif
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/*
 	 * Emit a 64-bit absolute little endian symbol reference in a way that
 	 * ensures that it will be resolved at build time, even when building a

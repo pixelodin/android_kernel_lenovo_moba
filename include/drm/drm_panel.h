@@ -24,6 +24,10 @@
 #ifndef __DRM_PANEL_H__
 #define __DRM_PANEL_H__
 
+<<<<<<< HEAD
+=======
+#include <linux/err.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/errno.h>
 #include <linux/list.h>
 #include <linux/notifier.h>

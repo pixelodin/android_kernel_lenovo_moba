@@ -55,6 +55,10 @@ static u8 usb_bos_descriptor [] = {
 static int xhci_create_usb3_bos_desc(struct xhci_hcd *xhci, char *buf,
 				     u16 wLength)
 {
+<<<<<<< HEAD
+=======
+	struct xhci_port_cap *port_cap = NULL;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int i, ssa_count;
 	u32 temp;
 	u16 desc_size, ssp_cap_size, ssa_size = 0;
@@ -64,16 +68,36 @@ static int xhci_create_usb3_bos_desc(struct xhci_hcd *xhci, char *buf,
 	ssp_cap_size = sizeof(usb_bos_descriptor) - desc_size;
 
 	/* does xhci support USB 3.1 Enhanced SuperSpeed */
+<<<<<<< HEAD
 	if (xhci->usb3_rhub.min_rev >= 0x01) {
 		/* does xhci provide a PSI table for SSA speed attributes? */
 		if (xhci->usb3_rhub.psi_count) {
 			/* two SSA entries for each unique PSI ID, RX and TX */
 			ssa_count = xhci->usb3_rhub.psi_uid_count * 2;
+=======
+	for (i = 0; i < xhci->num_port_caps; i++) {
+		if (xhci->port_caps[i].maj_rev == 0x03 &&
+		    xhci->port_caps[i].min_rev >= 0x01) {
+			usb3_1 = true;
+			port_cap = &xhci->port_caps[i];
+			break;
+		}
+	}
+
+	if (usb3_1) {
+		/* does xhci provide a PSI table for SSA speed attributes? */
+		if (port_cap->psi_count) {
+			/* two SSA entries for each unique PSI ID, RX and TX */
+			ssa_count = port_cap->psi_uid_count * 2;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			ssa_size = ssa_count * sizeof(u32);
 			ssp_cap_size -= 16; /* skip copying the default SSA */
 		}
 		desc_size += ssp_cap_size;
+<<<<<<< HEAD
 		usb3_1 = true;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	memcpy(buf, &usb_bos_descriptor, min(desc_size, wLength));
 
@@ -99,7 +123,11 @@ static int xhci_create_usb3_bos_desc(struct xhci_hcd *xhci, char *buf,
 	}
 
 	/* If PSI table exists, add the custom speed attributes from it */
+<<<<<<< HEAD
 	if (usb3_1 && xhci->usb3_rhub.psi_count) {
+=======
+	if (usb3_1 && port_cap->psi_count) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		u32 ssp_cap_base, bm_attrib, psi, psi_mant, psi_exp;
 		int offset;
 
@@ -111,7 +139,11 @@ static int xhci_create_usb3_bos_desc(struct xhci_hcd *xhci, char *buf,
 
 		/* attribute count SSAC bits 4:0 and ID count SSIC bits 8:5 */
 		bm_attrib = (ssa_count - 1) & 0x1f;
+<<<<<<< HEAD
 		bm_attrib |= (xhci->usb3_rhub.psi_uid_count - 1) << 5;
+=======
+		bm_attrib |= (port_cap->psi_uid_count - 1) << 5;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		put_unaligned_le32(bm_attrib, &buf[ssp_cap_base + 4]);
 
 		if (wLength < desc_size + ssa_size)
@@ -124,8 +156,13 @@ static int xhci_create_usb3_bos_desc(struct xhci_hcd *xhci, char *buf,
 		 * USB 3.1 requires two SSA entries (RX and TX) for every link
 		 */
 		offset = desc_size;
+<<<<<<< HEAD
 		for (i = 0; i < xhci->usb3_rhub.psi_count; i++) {
 			psi = xhci->usb3_rhub.psi[i];
+=======
+		for (i = 0; i < port_cap->psi_count; i++) {
+			psi = port_cap->psi[i];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			psi &= ~USB_SSP_SUBLINK_SPEED_RSVD;
 			psi_exp = XHCI_EXT_PORT_PSIE(psi);
 			psi_mant = XHCI_EXT_PORT_PSIM(psi);
@@ -831,7 +868,11 @@ static u32 xhci_get_ext_port_status(u32 raw_port_status, u32 port_li)
 static u32 xhci_get_port_status(struct usb_hcd *hcd,
 		struct xhci_bus_state *bus_state,
 	u16 wIndex, u32 raw_port_status,
+<<<<<<< HEAD
 		unsigned long flags)
+=======
+		unsigned long *flags)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	__releases(&xhci->lock)
 	__acquires(&xhci->lock)
 {
@@ -868,6 +909,17 @@ static u32 xhci_get_port_status(struct usb_hcd *hcd,
 			status |= USB_PORT_STAT_C_BH_RESET << 16;
 		if ((raw_port_status & PORT_CEC))
 			status |= USB_PORT_STAT_C_CONFIG_ERROR << 16;
+<<<<<<< HEAD
+=======
+
+		/* USB3 remote wake resume signaling completed */
+		if (bus_state->port_remote_wakeup & (1 << wIndex) &&
+		    (raw_port_status & PORT_PLS_MASK) != XDEV_RESUME &&
+		    (raw_port_status & PORT_PLS_MASK) != XDEV_RECOVERY) {
+			bus_state->port_remote_wakeup &= ~(1 << wIndex);
+			usb_hcd_end_port_resume(&hcd->self, wIndex);
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	if (hcd->speed < HCD_USB3) {
@@ -917,12 +969,20 @@ static u32 xhci_get_port_status(struct usb_hcd *hcd,
 			xhci_test_and_clear_bit(xhci, port, PORT_PLC);
 			xhci_set_link_state(xhci, port, XDEV_U0);
 
+<<<<<<< HEAD
 			spin_unlock_irqrestore(&xhci->lock, flags);
+=======
+			spin_unlock_irqrestore(&xhci->lock, *flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			time_left = wait_for_completion_timeout(
 					&bus_state->rexit_done[wIndex],
 					msecs_to_jiffies(
 						XHCI_MAX_REXIT_TIMEOUT_MS));
+<<<<<<< HEAD
 			spin_lock_irqsave(&xhci->lock, flags);
+=======
+			spin_lock_irqsave(&xhci->lock, *flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 			if (time_left) {
 				slot_id = xhci_find_slot_id_by_port(hcd,
@@ -1221,7 +1281,11 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
 		}
 		trace_xhci_get_port_status(wIndex, temp);
 		status = xhci_get_port_status(hcd, bus_state, wIndex, temp,
+<<<<<<< HEAD
 					      flags);
+=======
+					      &flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (status == 0xffffffff)
 			goto error;
 
@@ -1241,7 +1305,11 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
 			}
 			port_li = readl(ports[wIndex]->addr + PORTLI);
 			status = xhci_get_ext_port_status(temp, port_li);
+<<<<<<< HEAD
 			put_unaligned_le32(cpu_to_le32(status), &buf[4]);
+=======
+			put_unaligned_le32(status, &buf[4]);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 		break;
 	case SetPortFeature:

@@ -342,7 +342,12 @@ exit:
 
 }
 
+<<<<<<< HEAD
 static int usbtmc_ioctl_abort_bulk_out(struct usbtmc_device_data *data)
+=======
+static int usbtmc_ioctl_abort_bulk_out_tag(struct usbtmc_device_data *data,
+					   u8 tag)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct device *dev;
 	u8 *buffer;
@@ -359,8 +364,13 @@ static int usbtmc_ioctl_abort_bulk_out(struct usbtmc_device_data *data)
 			     usb_rcvctrlpipe(data->usb_dev, 0),
 			     USBTMC_REQUEST_INITIATE_ABORT_BULK_OUT,
 			     USB_DIR_IN | USB_TYPE_CLASS | USB_RECIP_ENDPOINT,
+<<<<<<< HEAD
 			     data->bTag_last_write, data->bulk_out,
 			     buffer, 2, USBTMC_TIMEOUT);
+=======
+			     tag, data->bulk_out,
+			     buffer, 2, USB_CTRL_GET_TIMEOUT);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (rv < 0) {
 		dev_err(dev, "usb_control_msg returned %d\n", rv);
@@ -379,12 +389,21 @@ static int usbtmc_ioctl_abort_bulk_out(struct usbtmc_device_data *data)
 	n = 0;
 
 usbtmc_abort_bulk_out_check_status:
+<<<<<<< HEAD
+=======
+	/* do not stress device with subsequent requests */
+	msleep(50);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rv = usb_control_msg(data->usb_dev,
 			     usb_rcvctrlpipe(data->usb_dev, 0),
 			     USBTMC_REQUEST_CHECK_ABORT_BULK_OUT_STATUS,
 			     USB_DIR_IN | USB_TYPE_CLASS | USB_RECIP_ENDPOINT,
 			     0, data->bulk_out, buffer, 0x08,
+<<<<<<< HEAD
 			     USBTMC_TIMEOUT);
+=======
+			     USB_CTRL_GET_TIMEOUT);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	n++;
 	if (rv < 0) {
 		dev_err(dev, "usb_control_msg returned %d\n", rv);
@@ -418,6 +437,14 @@ exit:
 	return rv;
 }
 
+<<<<<<< HEAD
+=======
+static int usbtmc_ioctl_abort_bulk_out(struct usbtmc_device_data *data)
+{
+	return usbtmc_ioctl_abort_bulk_out_tag(data, data->bTag_last_write);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int usbtmc488_ioctl_read_stb(struct usbtmc_file_data *file_data,
 				void __user *arg)
 {
@@ -1008,6 +1035,10 @@ usbtmc_clear_check_status:
 		do {
 			dev_dbg(dev, "Reading from bulk in EP\n");
 
+<<<<<<< HEAD
+=======
+			actual = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			rv = usb_bulk_msg(data->usb_dev,
 					  usb_rcvbulkpipe(data->usb_dev,
 							  data->bulk_in),

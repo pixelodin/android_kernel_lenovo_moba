@@ -7,7 +7,11 @@
 menuconfig ARC_PLAT_EZNPS
 	bool "\"EZchip\" ARC dev platform"
 	select CPU_BIG_ENDIAN
+<<<<<<< HEAD
 	select CLKSRC_NPS
+=======
+	select CLKSRC_NPS if !PHYS_ADDR_T_64BIT
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	select EZNPS_GIC
 	select EZCHIP_NPS_MANAGEMENT_ENET if ETHERNET
 	help

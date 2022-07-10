@@ -16,6 +16,10 @@
 #define __CODA_H__
 
 #include <linux/debugfs.h>
+<<<<<<< HEAD
+=======
+#include <linux/idr.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/irqreturn.h>
 #include <linux/mutex.h>
 #include <linux/kfifo.h>
@@ -95,7 +99,11 @@ struct coda_dev {
 	struct workqueue_struct	*workqueue;
 	struct v4l2_m2m_dev	*m2m_dev;
 	struct list_head	instances;
+<<<<<<< HEAD
 	unsigned long		instance_mask;
+=======
+	struct ida		ida;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct dentry		*debugfs_root;
 };
 

@@ -307,7 +307,11 @@ bool is_input_present(struct qpnp_qg *chip)
 	return is_usb_present(chip) || is_dc_present(chip);
 }
 
+<<<<<<< HEAD
 static bool is_parallel_available(struct qpnp_qg *chip)
+=======
+bool is_parallel_available(struct qpnp_qg *chip)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	if (chip->parallel_psy)
 		return true;
@@ -319,6 +323,21 @@ static bool is_parallel_available(struct qpnp_qg *chip)
 	return true;
 }
 
+<<<<<<< HEAD
+=======
+bool is_cp_available(struct qpnp_qg *chip)
+{
+	if (chip->cp_psy)
+		return true;
+
+	chip->cp_psy = power_supply_get_by_name("charge_pump_master");
+	if (!chip->cp_psy)
+		return false;
+
+	return true;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 bool is_parallel_enabled(struct qpnp_qg *chip)
 {
 	union power_supply_propval pval = {0, };
@@ -326,6 +345,12 @@ bool is_parallel_enabled(struct qpnp_qg *chip)
 	if (is_parallel_available(chip)) {
 		power_supply_get_property(chip->parallel_psy,
 			POWER_SUPPLY_PROP_CHARGING_ENABLED, &pval);
+<<<<<<< HEAD
+=======
+	} else if (is_cp_available(chip)) {
+		power_supply_get_property(chip->cp_psy,
+			POWER_SUPPLY_PROP_CP_ENABLE, &pval);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	return pval.intval ? true : false;
@@ -373,6 +398,14 @@ int qg_get_battery_current(struct qpnp_qg *chip, int *ibat_ua)
 		return 0;
 	}
 
+<<<<<<< HEAD
+=======
+	if (chip->qg_mode == QG_V_MODE) {
+		*ibat_ua = chip->qg_v_ibat;
+		return 0;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* hold data */
 	rc = qg_masked_write(chip, chip->qg_base + QG_DATA_CTL2_REG,
 				BURST_AVG_HOLD_FOR_READ_BIT,

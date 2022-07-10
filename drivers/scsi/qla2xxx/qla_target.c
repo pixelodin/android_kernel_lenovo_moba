@@ -1261,7 +1261,10 @@ void qlt_schedule_sess_for_deletion(struct fc_port *sess)
 	    "Scheduling sess %p for deletion %8phC\n",
 	    sess, sess->port_name);
 
+<<<<<<< HEAD
 	INIT_WORK(&sess->del_work, qla24xx_delete_sess_fn);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	WARN_ON(!queue_work(sess->vha->hw->wq, &sess->del_work));
 }
 
@@ -2234,6 +2237,7 @@ void qlt_send_resp_ctio(struct qla_qpair *qpair, struct qla_tgt_cmd *cmd,
 		ctio->u.status1.scsi_status |=
 		    cpu_to_le16(SS_RESIDUAL_UNDER);
 
+<<<<<<< HEAD
 	/* Response code and sense key */
 	put_unaligned_le32(((0x70 << 24) | (sense_key << 8)),
 	    (&ctio->u.status1.sense_data)[0]);
@@ -2242,6 +2246,16 @@ void qlt_send_resp_ctio(struct qla_qpair *qpair, struct qla_tgt_cmd *cmd,
 	/* ASC and ASCQ */
 	put_unaligned_le32(((asc << 24) | (ascq << 16)),
 	    (&ctio->u.status1.sense_data)[3]);
+=======
+	/* Fixed format sense data. */
+	ctio->u.status1.sense_data[0] = 0x70;
+	ctio->u.status1.sense_data[2] = sense_key;
+	/* Additional sense length */
+	ctio->u.status1.sense_data[7] = 0xa;
+	/* ASC and ASCQ */
+	ctio->u.status1.sense_data[12] = asc;
+	ctio->u.status1.sense_data[13] = ascq;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Memory Barrier */
 	wmb();
@@ -2291,7 +2305,11 @@ void qlt_xmit_tm_rsp(struct qla_tgt_mgmt_cmd *mcmd)
 		    mcmd->orig_iocb.imm_ntfy.u.isp24.status_subcode ==
 		    ELS_TPRLO) {
 			ql_dbg(ql_dbg_disc, vha, 0x2106,
+<<<<<<< HEAD
 			    "TM response logo %phC status %#x state %#x",
+=======
+			    "TM response logo %8phC status %#x state %#x",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			    mcmd->sess->port_name, mcmd->fc_tm_rsp,
 			    mcmd->flags);
 			qlt_schedule_sess_for_deletion(mcmd->sess);
@@ -4703,6 +4721,15 @@ static int qlt_handle_login(struct scsi_qla_host *vha,
 		sess = qlt_find_sess_invalidate_other(vha, wwn,
 		    port_id, loop_id, &conflict_sess);
 		spin_unlock_irqrestore(&vha->hw->tgt.sess_lock, flags);
+<<<<<<< HEAD
+=======
+	} else {
+		ql_dbg(ql_dbg_disc, vha, 0xffff,
+		    "%s %d Term INOT due to WWN=0 lid=%d, NportID %06X ",
+		    __func__, __LINE__, loop_id, port_id.b24);
+		qlt_send_term_imm_notif(vha, iocb, 1);
+		goto out;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	if (IS_SW_RESV_ADDR(port_id)) {
@@ -4774,6 +4801,10 @@ static int qlt_handle_login(struct scsi_qla_host *vha,
 
 	switch (sess->disc_state) {
 	case DSC_DELETED:
+<<<<<<< HEAD
+=======
+	case DSC_LOGIN_PEND:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		qlt_plogi_ack_unref(vha, pla);
 		break;
 
@@ -5328,11 +5359,15 @@ qlt_alloc_qfull_cmd(struct scsi_qla_host *vha,
 	se_sess = sess->se_sess;
 
 	tag = sbitmap_queue_get(&se_sess->sess_tag_pool, &cpu);
+<<<<<<< HEAD
 	if (tag < 0)
 		return;
 
 	cmd = &((struct qla_tgt_cmd *)se_sess->sess_cmd_map)[tag];
 	if (!cmd) {
+=======
+	if (tag < 0) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ql_dbg(ql_dbg_io, vha, 0x3009,
 			"qla_target(%d): %s: Allocation of cmd failed\n",
 			vha->vp_idx, __func__);
@@ -5347,6 +5382,10 @@ qlt_alloc_qfull_cmd(struct scsi_qla_host *vha,
 		return;
 	}
 
+<<<<<<< HEAD
+=======
+	cmd = &((struct qla_tgt_cmd *)se_sess->sess_cmd_map)[tag];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	memset(cmd, 0, sizeof(struct qla_tgt_cmd));
 
 	qlt_incr_num_pend_cmds(vha);
@@ -6056,7 +6095,10 @@ static void qlt_abort_work(struct qla_tgt *tgt,
 	struct qla_hw_data *ha = vha->hw;
 	struct fc_port *sess = NULL;
 	unsigned long flags = 0, flags2 = 0;
+<<<<<<< HEAD
 	uint32_t be_s_id;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	uint8_t s_id[3];
 	int rc;
 
@@ -6069,8 +6111,12 @@ static void qlt_abort_work(struct qla_tgt *tgt,
 	s_id[1] = prm->abts.fcp_hdr_le.s_id[1];
 	s_id[2] = prm->abts.fcp_hdr_le.s_id[0];
 
+<<<<<<< HEAD
 	sess = ha->tgt.tgt_ops->find_sess_by_s_id(vha,
 	    (unsigned char *)&be_s_id);
+=======
+	sess = ha->tgt.tgt_ops->find_sess_by_s_id(vha, s_id);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!sess) {
 		spin_unlock_irqrestore(&ha->tgt.sess_lock, flags2);
 
@@ -6539,7 +6585,12 @@ qlt_enable_vha(struct scsi_qla_host *vha)
 	} else {
 		set_bit(ISP_ABORT_NEEDED, &base_vha->dpc_flags);
 		qla2xxx_wake_dpc(base_vha);
+<<<<<<< HEAD
 		qla2x00_wait_for_hba_online(base_vha);
+=======
+		WARN_ON_ONCE(qla2x00_wait_for_hba_online(base_vha) !=
+			     QLA_SUCCESS);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 }
 EXPORT_SYMBOL(qlt_enable_vha);
@@ -6569,7 +6620,13 @@ static void qlt_disable_vha(struct scsi_qla_host *vha)
 
 	set_bit(ISP_ABORT_NEEDED, &vha->dpc_flags);
 	qla2xxx_wake_dpc(vha);
+<<<<<<< HEAD
 	qla2x00_wait_for_hba_online(vha);
+=======
+	if (qla2x00_wait_for_hba_online(vha) != QLA_SUCCESS)
+		ql_dbg(ql_dbg_tgt, vha, 0xe081,
+		       "qla2x00_wait_for_hba_online() failed\n");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /*

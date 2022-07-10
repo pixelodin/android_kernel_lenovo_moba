@@ -938,9 +938,18 @@ int __uio_register_device(struct module *owner,
 	atomic_set(&idev->event, 0);
 
 	ret = uio_get_minor(idev);
+<<<<<<< HEAD
 	if (ret)
 		return ret;
 
+=======
+	if (ret) {
+		kfree(idev);
+		return ret;
+	}
+
+	device_initialize(&idev->dev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	idev->dev.devt = MKDEV(uio_major, idev->minor);
 	idev->dev.class = &uio_class;
 	idev->dev.parent = parent;
@@ -951,7 +960,11 @@ int __uio_register_device(struct module *owner,
 	if (ret)
 		goto err_device_create;
 
+<<<<<<< HEAD
 	ret = device_register(&idev->dev);
+=======
+	ret = device_add(&idev->dev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (ret)
 		goto err_device_create;
 
@@ -983,9 +996,16 @@ int __uio_register_device(struct module *owner,
 err_request_irq:
 	uio_dev_del_attributes(idev);
 err_uio_dev_add_attributes:
+<<<<<<< HEAD
 	device_unregister(&idev->dev);
 err_device_create:
 	uio_free_minor(idev);
+=======
+	device_del(&idev->dev);
+err_device_create:
+	uio_free_minor(idev);
+	put_device(&idev->dev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return ret;
 }
 EXPORT_SYMBOL_GPL(__uio_register_device);

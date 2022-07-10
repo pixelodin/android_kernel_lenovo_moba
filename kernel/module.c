@@ -1021,6 +1021,11 @@ SYSCALL_DEFINE2(delete_module, const char __user *, name_user,
 	strlcpy(last_unloaded_module, mod->name, sizeof(last_unloaded_module));
 
 	free_module(mod);
+<<<<<<< HEAD
+=======
+	/* someone could wait for the module in add_unformed_module() */
+	wake_up_all(&module_wq);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 out:
 	mutex_unlock(&module_mutex);
@@ -1727,6 +1732,11 @@ static int module_add_modinfo_attrs(struct module *mod)
 error_out:
 	if (i > 0)
 		module_remove_modinfo_attrs(mod, --i);
+<<<<<<< HEAD
+=======
+	else
+		kfree(mod->modinfo_attrs);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return error;
 }
 
@@ -2986,9 +2996,13 @@ static int setup_load_info(struct load_info *info, int flags)
 
 	/* Try to find a name early so we can log errors with a module name */
 	info->index.info = find_sec(info, ".modinfo");
+<<<<<<< HEAD
 	if (!info->index.info)
 		info->name = "(missing .modinfo section)";
 	else
+=======
+	if (info->index.info)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		info->name = get_modinfo(info, "name");
 
 	/* Find internal symbols and strings. */
@@ -3003,14 +3017,23 @@ static int setup_load_info(struct load_info *info, int flags)
 	}
 
 	if (info->index.sym == 0) {
+<<<<<<< HEAD
 		pr_warn("%s: module has no symbols (stripped?)\n", info->name);
+=======
+		pr_warn("%s: module has no symbols (stripped?)\n",
+			info->name ?: "(missing .modinfo section or name field)");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -ENOEXEC;
 	}
 
 	info->index.mod = find_sec(info, ".gnu.linkonce.this_module");
 	if (!info->index.mod) {
 		pr_warn("%s: No module found in object\n",
+<<<<<<< HEAD
 			info->name ?: "(missing .modinfo name field)");
+=======
+			info->name ?: "(missing .modinfo section or name field)");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -ENOEXEC;
 	}
 	/* This is temporary: point mod into copy of data. */

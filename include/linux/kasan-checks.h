@@ -2,7 +2,11 @@
 #ifndef _LINUX_KASAN_CHECKS_H
 #define _LINUX_KASAN_CHECKS_H
 
+<<<<<<< HEAD
 #ifdef CONFIG_KASAN
+=======
+#if defined(__SANITIZE_ADDRESS__) || defined(__KASAN_INTERNAL)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 void kasan_check_read(const volatile void *p, unsigned int size);
 void kasan_check_write(const volatile void *p, unsigned int size);
 #else

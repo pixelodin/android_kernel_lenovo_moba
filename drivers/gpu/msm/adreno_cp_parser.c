@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2013-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2013-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include <linux/slab.h>
@@ -152,6 +156,11 @@ static int adreno_ib_add(struct kgsl_process_private *process,
 		adreno_ib_init_ib_obj(gpuaddr, size, type, entry,
 			&(ib_obj_list->obj_list[ib_obj_list->num_objs]));
 		ib_obj_list->num_objs++;
+<<<<<<< HEAD
+=======
+		/* Skip reclaim for the memdesc until it is dumped */
+		entry->memdesc.priv |= KGSL_MEMDESC_SKIP_RECLAIM;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	return 0;
 }

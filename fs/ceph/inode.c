@@ -1399,6 +1399,10 @@ retry_lookup:
 		dout(" final dn %p\n", dn);
 	} else if ((req->r_op == CEPH_MDS_OP_LOOKUPSNAP ||
 		    req->r_op == CEPH_MDS_OP_MKSNAP) &&
+<<<<<<< HEAD
+=======
+	           test_bit(CEPH_MDS_R_PARENT_LOCKED, &req->r_req_flags) &&
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		   !test_bit(CEPH_MDS_R_ABORTED, &req->r_req_flags)) {
 		struct dentry *dn = req->r_dentry;
 		struct inode *dir = req->r_parent;
@@ -1693,7 +1697,10 @@ retry_lookup:
 			if (IS_ERR(realdn)) {
 				err = PTR_ERR(realdn);
 				d_drop(dn);
+<<<<<<< HEAD
 				dn = NULL;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				goto next_item;
 			}
 			dn = realdn;

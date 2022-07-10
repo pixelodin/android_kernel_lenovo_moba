@@ -378,6 +378,16 @@ static int brcm_usb_phy_probe(struct platform_device *pdev)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int brcm_usb_phy_remove(struct platform_device *pdev)
+{
+	sysfs_remove_group(&pdev->dev.kobj, &brcm_usb_phy_group);
+
+	return 0;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #ifdef CONFIG_PM_SLEEP
 static int brcm_usb_phy_suspend(struct device *dev)
 {
@@ -443,6 +453,10 @@ MODULE_DEVICE_TABLE(of, brcm_usb_dt_ids);
 
 static struct platform_driver brcm_usb_driver = {
 	.probe		= brcm_usb_phy_probe,
+<<<<<<< HEAD
+=======
+	.remove		= brcm_usb_phy_remove,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.driver		= {
 		.name	= "brcmstb-usb-phy",
 		.owner	= THIS_MODULE,

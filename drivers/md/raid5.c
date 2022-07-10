@@ -5590,8 +5590,13 @@ static bool raid5_make_request(struct mddev *mddev, struct bio * bi)
 		if (ret == 0)
 			return true;
 		if (ret == -ENODEV) {
+<<<<<<< HEAD
 			md_flush_request(mddev, bi);
 			return true;
+=======
+			if (md_flush_request(mddev, bi))
+				return true;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 		/* ret == -EAGAIN, fallback */
 		/*
@@ -5724,7 +5729,11 @@ static bool raid5_make_request(struct mddev *mddev, struct bio * bi)
 				do_flush = false;
 			}
 
+<<<<<<< HEAD
 			if (!sh->batch_head)
+=======
+			if (!sh->batch_head || sh == sh->batch_head)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				set_bit(STRIPE_HANDLE, &sh->state);
 			clear_bit(STRIPE_DELAYED, &sh->state);
 			if ((!sh->batch_head || sh == sh->batch_head) &&

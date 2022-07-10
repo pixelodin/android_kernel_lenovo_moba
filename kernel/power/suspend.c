@@ -496,7 +496,11 @@ static int suspend_enter(suspend_state_t state, bool *wakeup)
  */
 int suspend_devices_and_enter(suspend_state_t state)
 {
+<<<<<<< HEAD
 	int error;
+=======
+	int error, last_dev;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	bool wakeup = false;
 
 	if (!sleep_state_supported(state))
@@ -512,8 +516,16 @@ int suspend_devices_and_enter(suspend_state_t state)
 	suspend_test_start();
 	error = dpm_suspend_start(PMSG_SUSPEND);
 	if (error) {
+<<<<<<< HEAD
 		pr_err("Some devices failed to suspend, or early wake event detected\n");
 		log_suspend_abort_reason("Some devices failed to suspend, or early wake event detected");
+=======
+		last_dev = suspend_stats.last_failed_dev + REC_FAILED_NUM - 1;
+		last_dev %= REC_FAILED_NUM;
+		pr_err("Some devices failed to suspend, or early wake event detected\n");
+		log_suspend_abort_reason("%s device failed to suspend, or early wake event detected",
+			suspend_stats.failed_devs[last_dev]);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto Recover_platform;
 	}
 	suspend_test_finish("suspend devices");

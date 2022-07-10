@@ -1324,6 +1324,7 @@ bool exhalbtc_initlize_variables_wifi_only(struct rtl_priv *rtlpriv)
 
 	switch (rtlpriv->rtlhal.interface) {
 	case INTF_PCI:
+<<<<<<< HEAD
 		wifionly_cfg->chip_interface = BTC_INTF_PCI;
 		break;
 	case INTF_USB:
@@ -1331,6 +1332,15 @@ bool exhalbtc_initlize_variables_wifi_only(struct rtl_priv *rtlpriv)
 		break;
 	default:
 		wifionly_cfg->chip_interface = BTC_INTF_UNKNOWN;
+=======
+		wifionly_cfg->chip_interface = WIFIONLY_INTF_PCI;
+		break;
+	case INTF_USB:
+		wifionly_cfg->chip_interface = WIFIONLY_INTF_USB;
+		break;
+	default:
+		wifionly_cfg->chip_interface = WIFIONLY_INTF_UNKNOWN;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 	}
 

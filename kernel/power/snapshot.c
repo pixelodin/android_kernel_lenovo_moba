@@ -736,8 +736,20 @@ zone_found:
 	 * We have found the zone. Now walk the radix tree to find the leaf node
 	 * for our PFN.
 	 */
+<<<<<<< HEAD
 	node = bm->cur.node;
 	if (((pfn - zone->start_pfn) & ~BM_BLOCK_MASK) == bm->cur.node_pfn)
+=======
+
+	/*
+	 * If the zone we wish to scan is the the current zone and the
+	 * pfn falls into the current node then we do not need to walk
+	 * the tree.
+	 */
+	node = bm->cur.node;
+	if (zone == bm->cur.zone &&
+	    ((pfn - zone->start_pfn) & ~BM_BLOCK_MASK) == bm->cur.node_pfn)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto node_found;
 
 	node      = zone->rtree;

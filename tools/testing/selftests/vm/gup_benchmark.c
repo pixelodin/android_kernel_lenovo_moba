@@ -51,6 +51,10 @@ int main(int argc, char **argv)
 			break;
 		case 'w':
 			write = 1;
+<<<<<<< HEAD
+=======
+			break;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		default:
 			return -1;
 		}

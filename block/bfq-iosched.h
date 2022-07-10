@@ -351,6 +351,35 @@ struct bfq_queue {
 	unsigned long split_time; /* time of last split */
 
 	unsigned long first_IO_time; /* time of first I/O for this queue */
+<<<<<<< HEAD
+=======
+
+	/* max service rate measured so far */
+	u32 max_service_rate;
+	/*
+	 * Ratio between the service received by bfqq while it is in
+	 * service, and the cumulative service (of requests of other
+	 * queues) that may be injected while bfqq is empty but still
+	 * in service. To increase precision, the coefficient is
+	 * measured in tenths of unit. Here are some example of (1)
+	 * ratios, (2) resulting percentages of service injected
+	 * w.r.t. to the total service dispatched while bfqq is in
+	 * service, and (3) corresponding values of the coefficient:
+	 * 1 (50%) -> 10
+	 * 2 (33%) -> 20
+	 * 10 (9%) -> 100
+	 * 9.9 (9%) -> 99
+	 * 1.5 (40%) -> 15
+	 * 0.5 (66%) -> 5
+	 * 0.1 (90%) -> 1
+	 *
+	 * So, if the coefficient is lower than 10, then
+	 * injected service is more than bfqq service.
+	 */
+	unsigned int inject_coeff;
+	/* amount of service injected in current service slot */
+	unsigned int injected_service;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 /**

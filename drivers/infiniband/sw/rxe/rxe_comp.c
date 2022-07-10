@@ -191,6 +191,10 @@ static inline void reset_retry_counters(struct rxe_qp *qp)
 {
 	qp->comp.retry_cnt = qp->attr.retry_cnt;
 	qp->comp.rnr_retry = qp->attr.rnr_retry;
+<<<<<<< HEAD
+=======
+	qp->comp.started_retry = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static inline enum comp_state check_psn(struct rxe_qp *qp,
@@ -253,6 +257,20 @@ static inline enum comp_state check_ack(struct rxe_qp *qp,
 	case IB_OPCODE_RC_RDMA_READ_RESPONSE_MIDDLE:
 		if (pkt->opcode != IB_OPCODE_RC_RDMA_READ_RESPONSE_MIDDLE &&
 		    pkt->opcode != IB_OPCODE_RC_RDMA_READ_RESPONSE_LAST) {
+<<<<<<< HEAD
+=======
+			/* read retries of partial data may restart from
+			 * read response first or response only.
+			 */
+			if ((pkt->psn == wqe->first_psn &&
+			     pkt->opcode ==
+			     IB_OPCODE_RC_RDMA_READ_RESPONSE_FIRST) ||
+			    (wqe->first_psn == wqe->last_psn &&
+			     pkt->opcode ==
+			     IB_OPCODE_RC_RDMA_READ_RESPONSE_ONLY))
+				break;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			return COMPST_ERROR;
 		}
 		break;
@@ -317,7 +335,11 @@ static inline enum comp_state check_ack(struct rxe_qp *qp,
 					qp->comp.psn = pkt->psn;
 					if (qp->req.wait_psn) {
 						qp->req.wait_psn = 0;
+<<<<<<< HEAD
 						rxe_run_task(&qp->req.task, 1);
+=======
+						rxe_run_task(&qp->req.task, 0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 					}
 				}
 				return COMPST_ERROR_RETRY;
@@ -445,7 +467,11 @@ static void do_complete(struct rxe_qp *qp, struct rxe_send_wqe *wqe)
 	 */
 	if (qp->req.wait_fence) {
 		qp->req.wait_fence = 0;
+<<<<<<< HEAD
 		rxe_run_task(&qp->req.task, 1);
+=======
+		rxe_run_task(&qp->req.task, 0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 }
 
@@ -461,7 +487,11 @@ static inline enum comp_state complete_ack(struct rxe_qp *qp,
 		if (qp->req.need_rd_atomic) {
 			qp->comp.timeout_retry = 0;
 			qp->req.need_rd_atomic = 0;
+<<<<<<< HEAD
 			rxe_run_task(&qp->req.task, 1);
+=======
+			rxe_run_task(&qp->req.task, 0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 	}
 
@@ -499,11 +529,19 @@ static inline enum comp_state complete_wqe(struct rxe_qp *qp,
 					   struct rxe_pkt_info *pkt,
 					   struct rxe_send_wqe *wqe)
 {
+<<<<<<< HEAD
 	qp->comp.opcode = -1;
 
 	if (pkt) {
 		if (psn_compare(pkt->psn, qp->comp.psn) >= 0)
 			qp->comp.psn = (pkt->psn + 1) & BTH_PSN_MASK;
+=======
+	if (pkt && wqe->state == wqe_state_pending) {
+		if (psn_compare(wqe->last_psn, qp->comp.psn) >= 0) {
+			qp->comp.psn = (wqe->last_psn + 1) & BTH_PSN_MASK;
+			qp->comp.opcode = -1;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		if (qp->req.wait_psn) {
 			qp->req.wait_psn = 0;
@@ -676,6 +714,23 @@ int rxe_completer(void *arg)
 				goto exit;
 			}
 
+<<<<<<< HEAD
+=======
+			/* if we've started a retry, don't start another
+			 * retry sequence, unless this is a timeout.
+			 */
+			if (qp->comp.started_retry &&
+			    !qp->comp.timeout_retry) {
+				if (pkt) {
+					rxe_drop_ref(pkt->qp);
+					kfree_skb(skb);
+					skb = NULL;
+				}
+
+				goto done;
+			}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			if (qp->comp.retry_cnt > 0) {
 				if (qp->comp.retry_cnt != 7)
 					qp->comp.retry_cnt--;
@@ -692,7 +747,12 @@ int rxe_completer(void *arg)
 					rxe_counter_inc(rxe,
 							RXE_CNT_COMP_RETRY);
 					qp->req.need_retry = 1;
+<<<<<<< HEAD
 					rxe_run_task(&qp->req.task, 1);
+=======
+					qp->comp.started_retry = 1;
+					rxe_run_task(&qp->req.task, 0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				}
 
 				if (pkt) {
@@ -701,7 +761,11 @@ int rxe_completer(void *arg)
 					skb = NULL;
 				}
 
+<<<<<<< HEAD
 				goto exit;
+=======
+				goto done;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 			} else {
 				rxe_counter_inc(rxe, RXE_CNT_RETRY_EXCEEDED);

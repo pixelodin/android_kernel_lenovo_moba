@@ -34,6 +34,10 @@ struct input_event {
 	__kernel_ulong_t __sec;
 #if defined(__sparc__) && defined(__arch64__)
 	unsigned int __usec;
+<<<<<<< HEAD
+=======
+	unsigned int __pad;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #else
 	__kernel_ulong_t __usec;
 #endif

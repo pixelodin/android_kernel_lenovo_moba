@@ -1244,11 +1244,15 @@ xfs_prepare_shift(
 	 * Writeback and invalidate cache for the remainder of the file as we're
 	 * about to shift down every extent from offset to EOF.
 	 */
+<<<<<<< HEAD
 	error = filemap_write_and_wait_range(VFS_I(ip)->i_mapping, offset, -1);
 	if (error)
 		return error;
 	error = invalidate_inode_pages2_range(VFS_I(ip)->i_mapping,
 					offset >> PAGE_SHIFT, -1);
+=======
+	error = xfs_flush_unmap_range(ip, offset, XFS_ISIZE(ip));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (error)
 		return error;
 

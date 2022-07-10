@@ -1164,7 +1164,11 @@ static int smbd_post_send_data(
 
 	if (n_vec > SMBDIRECT_MAX_SGE) {
 		cifs_dbg(VFS, "Can't fit data to SGL, n_vec=%d\n", n_vec);
+<<<<<<< HEAD
 		return -ENOMEM;
+=======
+		return -EINVAL;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	sg_init_table(sgl, n_vec);
@@ -1491,6 +1495,10 @@ void smbd_destroy(struct smbd_connection *info)
 		info->transport_status == SMBD_DESTROYED);
 
 	destroy_workqueue(info->workqueue);
+<<<<<<< HEAD
+=======
+	log_rdma_event(INFO,  "rdma session destroyed\n");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	kfree(info);
 }
 
@@ -1528,8 +1536,14 @@ create_conn:
 	log_rdma_event(INFO, "creating rdma session\n");
 	server->smbd_conn = smbd_get_connection(
 		server, (struct sockaddr *) &server->dstaddr);
+<<<<<<< HEAD
 	log_rdma_event(INFO, "created rdma session info=%p\n",
 		server->smbd_conn);
+=======
+
+	if (server->smbd_conn)
+		cifs_dbg(VFS, "RDMA transport re-established\n");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return server->smbd_conn ? 0 : -ENOENT;
 }

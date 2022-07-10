@@ -66,6 +66,16 @@
 #define OMAP4_RNG_OUTPUT_SIZE			0x8
 #define EIP76_RNG_OUTPUT_SIZE			0x10
 
+<<<<<<< HEAD
+=======
+/*
+ * EIP76 RNG takes approx. 700us to produce 16 bytes of output data
+ * as per testing results. And to account for the lack of udelay()'s
+ * reliability, we keep the timeout as 1000us.
+ */
+#define RNG_DATA_FILL_TIMEOUT			100
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 enum {
 	RNG_OUTPUT_0_REG = 0,
 	RNG_OUTPUT_1_REG,
@@ -176,7 +186,11 @@ static int omap_rng_do_read(struct hwrng *rng, void *data, size_t max,
 	if (max < priv->pdata->data_size)
 		return 0;
 
+<<<<<<< HEAD
 	for (i = 0; i < 20; i++) {
+=======
+	for (i = 0; i < RNG_DATA_FILL_TIMEOUT; i++) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		present = priv->pdata->data_present(priv);
 		if (present || !wait)
 			break;

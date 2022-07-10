@@ -173,11 +173,16 @@ static int ti_abb_wait_txdone(struct device *dev, struct ti_abb *abb)
 	while (timeout++ <= abb->settling_time) {
 		status = ti_abb_check_txdone(abb);
 		if (status)
+<<<<<<< HEAD
 			break;
+=======
+			return 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		udelay(1);
 	}
 
+<<<<<<< HEAD
 	if (timeout > abb->settling_time) {
 		dev_warn_ratelimited(dev,
 				     "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
@@ -186,6 +191,11 @@ static int ti_abb_wait_txdone(struct device *dev, struct ti_abb *abb)
 	}
 
 	return 0;
+=======
+	dev_warn_ratelimited(dev, "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
+			     __func__, timeout, readl(abb->int_base));
+	return -ETIMEDOUT;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /**
@@ -205,11 +215,16 @@ static int ti_abb_clear_all_txdone(struct device *dev, const struct ti_abb *abb)
 
 		status = ti_abb_check_txdone(abb);
 		if (!status)
+<<<<<<< HEAD
 			break;
+=======
+			return 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		udelay(1);
 	}
 
+<<<<<<< HEAD
 	if (timeout > abb->settling_time) {
 		dev_warn_ratelimited(dev,
 				     "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
@@ -218,6 +233,11 @@ static int ti_abb_clear_all_txdone(struct device *dev, const struct ti_abb *abb)
 	}
 
 	return 0;
+=======
+	dev_warn_ratelimited(dev, "%s:TRANXDONE timeout(%duS) int=0x%08x\n",
+			     __func__, timeout, readl(abb->int_base));
+	return -ETIMEDOUT;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /**

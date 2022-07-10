@@ -215,7 +215,15 @@ struct drm_msm_gem_cpu_fini {
  */
 struct drm_msm_gem_submit_reloc {
 	__u32 submit_offset;  /* in, offset from submit_bo */
+<<<<<<< HEAD
 	__u32 or;             /* in, value OR'd with result */
+=======
+#ifdef __cplusplus
+	__u32 or_val;
+#else
+	__u32 or;             /* in, value OR'd with result */
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	__s32 shift;          /* in, amount of left shift (can be negative) */
 	__u32 reloc_idx;      /* in, index of reloc_bo buffer */
 	__u64 reloc_offset;   /* in, offset from start of reloc_bo */

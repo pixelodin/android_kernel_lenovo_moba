@@ -80,8 +80,13 @@
 #define SUN4I_I2S_CLK_DIV_MCLK_MASK		GENMASK(3, 0)
 #define SUN4I_I2S_CLK_DIV_MCLK(mclk)			((mclk) << 0)
 
+<<<<<<< HEAD
 #define SUN4I_I2S_RX_CNT_REG		0x28
 #define SUN4I_I2S_TX_CNT_REG		0x2c
+=======
+#define SUN4I_I2S_TX_CNT_REG		0x28
+#define SUN4I_I2S_RX_CNT_REG		0x2c
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define SUN4I_I2S_TX_CHAN_SEL_REG	0x30
 #define SUN4I_I2S_CHAN_SEL(num_chan)		(((num_chan) - 1) << 0)

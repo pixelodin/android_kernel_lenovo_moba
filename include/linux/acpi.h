@@ -101,7 +101,11 @@ static inline bool has_acpi_companion(struct device *dev)
 static inline void acpi_preset_companion(struct device *dev,
 					 struct acpi_device *parent, u64 addr)
 {
+<<<<<<< HEAD
 	ACPI_COMPANION_SET(dev, acpi_find_child_device(parent, addr, NULL));
+=======
+	ACPI_COMPANION_SET(dev, acpi_find_child_device(parent, addr, false));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static inline const char *acpi_dev_name(struct acpi_device *adev)
@@ -917,6 +921,7 @@ int acpi_subsys_prepare(struct device *dev);
 void acpi_subsys_complete(struct device *dev);
 int acpi_subsys_suspend_late(struct device *dev);
 int acpi_subsys_suspend_noirq(struct device *dev);
+<<<<<<< HEAD
 int acpi_subsys_resume_noirq(struct device *dev);
 int acpi_subsys_resume_early(struct device *dev);
 int acpi_subsys_suspend(struct device *dev);
@@ -924,12 +929,18 @@ int acpi_subsys_freeze(struct device *dev);
 int acpi_subsys_freeze_late(struct device *dev);
 int acpi_subsys_freeze_noirq(struct device *dev);
 int acpi_subsys_thaw_noirq(struct device *dev);
+=======
+int acpi_subsys_suspend(struct device *dev);
+int acpi_subsys_freeze(struct device *dev);
+int acpi_subsys_poweroff(struct device *dev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #else
 static inline int acpi_dev_resume_early(struct device *dev) { return 0; }
 static inline int acpi_subsys_prepare(struct device *dev) { return 0; }
 static inline void acpi_subsys_complete(struct device *dev) {}
 static inline int acpi_subsys_suspend_late(struct device *dev) { return 0; }
 static inline int acpi_subsys_suspend_noirq(struct device *dev) { return 0; }
+<<<<<<< HEAD
 static inline int acpi_subsys_resume_noirq(struct device *dev) { return 0; }
 static inline int acpi_subsys_resume_early(struct device *dev) { return 0; }
 static inline int acpi_subsys_suspend(struct device *dev) { return 0; }
@@ -937,6 +948,11 @@ static inline int acpi_subsys_freeze(struct device *dev) { return 0; }
 static inline int acpi_subsys_freeze_late(struct device *dev) { return 0; }
 static inline int acpi_subsys_freeze_noirq(struct device *dev) { return 0; }
 static inline int acpi_subsys_thaw_noirq(struct device *dev) { return 0; }
+=======
+static inline int acpi_subsys_suspend(struct device *dev) { return 0; }
+static inline int acpi_subsys_freeze(struct device *dev) { return 0; }
+static inline int acpi_subsys_poweroff(struct device *dev) { return 0; }
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif
 
 #ifdef CONFIG_ACPI

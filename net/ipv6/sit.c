@@ -943,7 +943,11 @@ static netdev_tx_t ipip6_tunnel_xmit(struct sk_buff *skb,
 		}
 
 		if (tunnel->parms.iph.daddr)
+<<<<<<< HEAD
 			skb_dst_update_pmtu(skb, mtu);
+=======
+			skb_dst_update_pmtu_no_confirm(skb, mtu);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		if (skb->len > mtu && !skb_is_gso(skb)) {
 			icmpv6_send(skb, ICMPV6_PKT_TOOBIG, 0, mtu);

@@ -599,8 +599,13 @@ void ib_unregister_device(struct ib_device *device)
 	}
 	up_read(&lists_rwsem);
 
+<<<<<<< HEAD
 	ib_device_unregister_rdmacg(device);
 	ib_device_unregister_sysfs(device);
+=======
+	ib_device_unregister_sysfs(device);
+	ib_device_unregister_rdmacg(device);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	mutex_unlock(&device_mutex);
 

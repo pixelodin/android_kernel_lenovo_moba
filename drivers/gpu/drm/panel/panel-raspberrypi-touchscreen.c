@@ -427,6 +427,10 @@ static int rpi_touchscreen_probe(struct i2c_client *i2c,
 		return PTR_ERR(ts->dsi);
 	}
 
+<<<<<<< HEAD
+=======
+	drm_panel_init(&ts->base);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ts->base.dev = dev;
 	ts->base.funcs = &rpi_touchscreen_funcs;
 

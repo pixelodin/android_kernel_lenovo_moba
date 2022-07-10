@@ -9,6 +9,10 @@
 #include <linux/device.h>
 #include <linux/module.h>
 #include <linux/mutex.h>
+<<<<<<< HEAD
+=======
+#include <linux/property.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/slab.h>
 
 #include "bus.h"
@@ -204,15 +208,41 @@ static void typec_altmode_put_partner(struct altmode *altmode)
 	put_device(&adev->dev);
 }
 
+<<<<<<< HEAD
 static int __typec_port_match(struct device *dev, const void *name)
+=======
+static int typec_port_fwnode_match(struct device *dev, const void *fwnode)
+{
+	return dev_fwnode(dev) == fwnode;
+}
+
+static int typec_port_name_match(struct device *dev, const void *name)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	return !strcmp((const char *)name, dev_name(dev));
 }
 
 static void *typec_port_match(struct device_connection *con, int ep, void *data)
 {
+<<<<<<< HEAD
 	return class_find_device(typec_class, NULL, con->endpoint[ep],
 				 __typec_port_match);
+=======
+	struct device *dev;
+
+	/*
+	 * FIXME: Check does the fwnode supports the requested SVID. If it does
+	 * we need to return ERR_PTR(-PROBE_DEFER) when there is no device.
+	 */
+	if (con->fwnode)
+		return class_find_device(typec_class, NULL, con->fwnode,
+					 typec_port_fwnode_match);
+
+	dev = class_find_device(typec_class, NULL, con->endpoint[ep],
+				typec_port_name_match);
+
+	return dev ? dev : ERR_PTR(-EPROBE_DEFER);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 struct typec_altmode *
@@ -277,7 +307,11 @@ void typec_altmode_update_active(struct typec_altmode *adev, bool active)
 	if (adev->active == active)
 		return;
 
+<<<<<<< HEAD
 	if (!is_typec_port(adev->dev.parent)) {
+=======
+	if (!is_typec_port(adev->dev.parent) && adev->dev.driver) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (!active)
 			module_put(adev->dev.driver->owner);
 		else
@@ -1496,11 +1530,16 @@ typec_port_register_altmode(struct typec_port *port,
 {
 	struct typec_altmode *adev;
 	struct typec_mux *mux;
+<<<<<<< HEAD
 	char id[10];
 
 	sprintf(id, "id%04xm%02x", desc->svid, desc->mode);
 
 	mux = typec_mux_get(&port->dev, id);
+=======
+
+	mux = typec_mux_get(&port->dev, desc);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (IS_ERR(mux))
 		return ERR_CAST(mux);
 
@@ -1589,6 +1628,7 @@ struct typec_port *typec_register_port(struct device *parent,
 
 	port->sw = typec_switch_get(&port->dev);
 	if (IS_ERR(port->sw)) {
+<<<<<<< HEAD
 		put_device(&port->dev);
 		return ERR_CAST(port->sw);
 	}
@@ -1597,6 +1637,18 @@ struct typec_port *typec_register_port(struct device *parent,
 	if (IS_ERR(port->mux)) {
 		put_device(&port->dev);
 		return ERR_CAST(port->mux);
+=======
+		ret = PTR_ERR(port->sw);
+		put_device(&port->dev);
+		return ERR_PTR(ret);
+	}
+
+	port->mux = typec_mux_get(&port->dev, NULL);
+	if (IS_ERR(port->mux)) {
+		ret = PTR_ERR(port->mux);
+		put_device(&port->dev);
+		return ERR_PTR(ret);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	ret = device_add(&port->dev);
@@ -1631,6 +1683,7 @@ static int __init typec_init(void)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	typec_class = class_create(THIS_MODULE, "typec");
 	if (IS_ERR(typec_class)) {
 		bus_unregister(&typec_bus);
@@ -1638,6 +1691,27 @@ static int __init typec_init(void)
 	}
 
 	return 0;
+=======
+	ret = class_register(&typec_mux_class);
+	if (ret)
+		goto err_unregister_bus;
+
+	typec_class = class_create(THIS_MODULE, "typec");
+	if (IS_ERR(typec_class)) {
+		ret = PTR_ERR(typec_class);
+		goto err_unregister_mux_class;
+	}
+
+	return 0;
+
+err_unregister_mux_class:
+	class_unregister(&typec_mux_class);
+
+err_unregister_bus:
+	bus_unregister(&typec_bus);
+
+	return ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 subsys_initcall(typec_init);
 
@@ -1646,6 +1720,10 @@ static void __exit typec_exit(void)
 	class_destroy(typec_class);
 	ida_destroy(&typec_index_ida);
 	bus_unregister(&typec_bus);
+<<<<<<< HEAD
+=======
+	class_unregister(&typec_mux_class);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 module_exit(typec_exit);
 

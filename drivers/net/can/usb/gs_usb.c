@@ -631,6 +631,10 @@ static int gs_can_open(struct net_device *netdev)
 					   rc);
 
 				usb_unanchor_urb(urb);
+<<<<<<< HEAD
+=======
+				usb_free_urb(urb);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				break;
 			}
 
@@ -925,7 +929,11 @@ static int gs_usb_probe(struct usb_interface *intf,
 			     GS_USB_BREQ_HOST_FORMAT,
 			     USB_DIR_OUT | USB_TYPE_VENDOR | USB_RECIP_INTERFACE,
 			     1,
+<<<<<<< HEAD
 			     intf->altsetting[0].desc.bInterfaceNumber,
+=======
+			     intf->cur_altsetting->desc.bInterfaceNumber,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			     hconf,
 			     sizeof(*hconf),
 			     1000);
@@ -948,7 +956,11 @@ static int gs_usb_probe(struct usb_interface *intf,
 			     GS_USB_BREQ_DEVICE_CONFIG,
 			     USB_DIR_IN | USB_TYPE_VENDOR | USB_RECIP_INTERFACE,
 			     1,
+<<<<<<< HEAD
 			     intf->altsetting[0].desc.bInterfaceNumber,
+=======
+			     intf->cur_altsetting->desc.bInterfaceNumber,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			     dconf,
 			     sizeof(*dconf),
 			     1000);

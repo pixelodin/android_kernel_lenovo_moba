@@ -366,7 +366,11 @@ int mmc_get_ext_csd(struct mmc_card *card, u8 **new_ext_csd)
 	 * As the ext_csd is so large and mostly unused, we don't store the
 	 * raw block in mmc_card.
 	 */
+<<<<<<< HEAD
 	ext_csd = kzalloc(512, GFP_KERNEL);
+=======
+	ext_csd = kzalloc(512, GFP_NOIO | __GFP_NOFAIL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!ext_csd)
 		return -ENOMEM;
 

@@ -188,10 +188,17 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
 	sprintf(buf, "virtfn%u", id);
 	rc = sysfs_create_link(&dev->dev.kobj, &virtfn->dev.kobj, buf);
 	if (rc)
+<<<<<<< HEAD
 		goto failed2;
 	rc = sysfs_create_link(&virtfn->dev.kobj, &dev->dev.kobj, "physfn");
 	if (rc)
 		goto failed3;
+=======
+		goto failed1;
+	rc = sysfs_create_link(&virtfn->dev.kobj, &dev->dev.kobj, "physfn");
+	if (rc)
+		goto failed2;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	kobject_uevent(&virtfn->dev.kobj, KOBJ_CHANGE);
 
@@ -199,11 +206,18 @@ int pci_iov_add_virtfn(struct pci_dev *dev, int id)
 
 	return 0;
 
+<<<<<<< HEAD
 failed3:
 	sysfs_remove_link(&dev->dev.kobj, buf);
 failed2:
 	pci_stop_and_remove_bus_device(virtfn);
 failed1:
+=======
+failed2:
+	sysfs_remove_link(&dev->dev.kobj, buf);
+failed1:
+	pci_stop_and_remove_bus_device(virtfn);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pci_dev_put(dev);
 failed0:
 	virtfn_remove_bus(dev->bus, bus);

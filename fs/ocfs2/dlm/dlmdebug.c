@@ -329,7 +329,11 @@ void dlm_print_one_mle(struct dlm_master_list_entry *mle)
 {
 	char *buf;
 
+<<<<<<< HEAD
 	buf = (char *) get_zeroed_page(GFP_NOFS);
+=======
+	buf = (char *) get_zeroed_page(GFP_ATOMIC);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (buf) {
 		dump_mle(mle, buf, PAGE_SIZE - 1);
 		free_page((unsigned long)buf);

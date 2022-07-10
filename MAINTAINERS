@@ -326,6 +326,15 @@ F:	drivers/pci/*acpi*
 F:	drivers/pci/*/*acpi*
 F:	tools/power/acpi/
 
+<<<<<<< HEAD
+=======
+commit 6f40c42105d5c913cf855320ba7cfbc418314e29
+Author: Meng Jiang <mengjian@codeaurora.org>
+Date:   Mon Jan 13 18:20:15 2020 -0400
+	MAINTAINERS: add MCP25xxFD driver to support SPI to CAN
+	Signed-off-by: Meng Jiang <mengjian@codeaurora.org>
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 ACPI APEI
 M:	"Rafael J. Wysocki" <rjw@rjwysocki.net>
 M:	Len Brown <lenb@kernel.org>
@@ -6007,6 +6016,10 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tytso/fscrypt.git
 S:	Supported
 F:	fs/crypto/
 F:	include/linux/fscrypt*.h
+<<<<<<< HEAD
+=======
+F:	include/uapi/linux/fscrypt.h
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 F:	Documentation/filesystems/fscrypt.rst
 
 FSI-ATTACHED I2C DRIVER
@@ -6025,6 +6038,21 @@ S:	Maintained
 F:	fs/notify/
 F:	include/linux/fsnotify*.h
 
+<<<<<<< HEAD
+=======
+FSVERITY: READ-ONLY FILE-BASED AUTHENTICITY PROTECTION
+M:	Eric Biggers <ebiggers@kernel.org>
+M:	Theodore Y. Ts'o <tytso@mit.edu>
+L:	linux-fscrypt@vger.kernel.org
+Q:	https://patchwork.kernel.org/project/linux-fscrypt/list/
+T:	git git://git.kernel.org/pub/scm/fs/fscrypt/fscrypt.git fsverity
+S:	Supported
+F:	fs/verity/
+F:	include/linux/fsverity.h
+F:	include/uapi/linux/fsverity.h
+F:	Documentation/filesystems/fsverity.rst
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 FUJITSU LAPTOP EXTRAS
 M:	Jonathan Woithe <jwoithe@just42.net>
 L:	platform-driver-x86@vger.kernel.org
@@ -7348,7 +7376,11 @@ M:	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
 M:	Rodrigo Vivi <rodrigo.vivi@intel.com>
 L:	intel-gfx@lists.freedesktop.org
 W:	https://01.org/linuxgraphics/
+<<<<<<< HEAD
 B:	https://01.org/linuxgraphics/documentation/how-report-bugs
+=======
+B:	https://gitlab.freedesktop.org/drm/intel/-/wikis/How-to-file-i915-bugs
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 C:	irc://chat.freenode.net/intel-gfx
 Q:	http://patchwork.freedesktop.org/project/intel-gfx/
 T:	git git://anongit.freedesktop.org/drm-intel
@@ -10293,6 +10325,15 @@ S:	Maintained
 F:	Documentation/scsi/NinjaSCSI.txt
 F:	drivers/scsi/nsp32*
 
+<<<<<<< HEAD
+=======
+NINTENDO HID DRIVER
+M:	Daniel J. Ogorchock <djogorchock@gmail.com>
+L:	linux-input@vger.kernel.org
+S:	Maintained
+F:	drivers/hid/hid-nintendo*
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 NIOS2 ARCHITECTURE
 M:	Ley Foon Tan <lftan@altera.com>
 L:	nios2-dev@lists.rocketboards.org (moderated for non-subscribers)

@@ -18,7 +18,10 @@
 
 	aliases {
 		serial0 = &uart_AO;
+<<<<<<< HEAD
 		serial1 = &uart_A;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		serial2 = &uart_AO_B;
 	};
 
@@ -63,11 +66,17 @@
 
 	gpio-keys-polled {
 		compatible = "gpio-keys-polled";
+<<<<<<< HEAD
 		#address-cells = <1>;
 		#size-cells = <0>;
 		poll-interval = <100>;
 
 		button@0 {
+=======
+		poll-interval = <100>;
+
+		power-button {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			label = "power";
 			linux,code = <KEY_POWER>;
 			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_LOW>;
@@ -271,6 +280,10 @@
 	status = "okay";
 	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
 	pinctrl-names = "default";
+<<<<<<< HEAD
+=======
+	hdmi-supply = <&hdmi_5v>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 &hdmi_tx_tmds_port {
@@ -408,8 +421,22 @@
 /* This one is connected to the Bluetooth module */
 &uart_A {
 	status = "okay";
+<<<<<<< HEAD
 	pinctrl-0 = <&uart_a_pins>;
 	pinctrl-names = "default";
+=======
+	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
+	pinctrl-names = "default";
+	uart-has-rtscts;
+
+	bluetooth {
+		compatible = "brcm,bcm43438-bt";
+		shutdown-gpios = <&gpio GPIOX_17 GPIO_ACTIVE_HIGH>;
+		max-speed = <2000000>;
+		clocks = <&wifi32k>;
+		clock-names = "lpo";
+	};
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 /* This is brought out on the Linux_RX (18) and Linux_TX (19) pins: */

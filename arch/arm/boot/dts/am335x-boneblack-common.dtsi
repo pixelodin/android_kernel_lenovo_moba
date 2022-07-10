@@ -88,7 +88,11 @@
 };
 
 &i2c0 {
+<<<<<<< HEAD
 	tda19988: tda19988 {
+=======
+	tda19988: tda19988@70 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		compatible = "nxp,tda998x";
 		reg = <0x70>;
 
@@ -131,6 +135,14 @@
 };
 
 / {
+<<<<<<< HEAD
+=======
+	memory@80000000 {
+		device_type = "memory";
+		reg = <0x80000000 0x20000000>; /* 512 MB */
+	};
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	clk_mcasp0_fixed: clk_mcasp0_fixed {
 		#clock-cells = <0>;
 		compatible = "fixed-clock";

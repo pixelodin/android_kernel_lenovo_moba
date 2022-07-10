@@ -1004,11 +1004,14 @@ static void dwc2_hsotg_start_req(struct dwc2_hsotg *hsotg,
 	else
 		packets = 1;	/* send one packet if length is zero. */
 
+<<<<<<< HEAD
 	if (hs_ep->isochronous && length > (hs_ep->mc * hs_ep->ep.maxpacket)) {
 		dev_err(hsotg->dev, "req length > maxpacket*mc\n");
 		return;
 	}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (dir_in && index != 0)
 		if (hs_ep->isochronous)
 			epsize = DXEPTSIZ_MC(packets);
@@ -1312,6 +1315,16 @@ static int dwc2_hsotg_ep_queue(struct usb_ep *ep, struct usb_request *req,
 	req->actual = 0;
 	req->status = -EINPROGRESS;
 
+<<<<<<< HEAD
+=======
+	/* Don't queue ISOC request if length greater than mps*mc */
+	if (hs_ep->isochronous &&
+	    req->length > (hs_ep->mc * hs_ep->ep.maxpacket)) {
+		dev_err(hs->dev, "req length > maxpacket*mc\n");
+		return -EINVAL;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* In DDMA mode for ISOC's don't queue request if length greater
 	 * than descriptor limits.
 	 */
@@ -1542,6 +1555,10 @@ static int dwc2_hsotg_process_req_status(struct dwc2_hsotg *hsotg,
 	struct dwc2_hsotg_ep *ep0 = hsotg->eps_out[0];
 	struct dwc2_hsotg_ep *ep;
 	__le16 reply;
+<<<<<<< HEAD
+=======
+	u16 status;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int ret;
 
 	dev_dbg(hsotg->dev, "%s: USB_REQ_GET_STATUS\n", __func__);
@@ -1553,11 +1570,18 @@ static int dwc2_hsotg_process_req_status(struct dwc2_hsotg *hsotg,
 
 	switch (ctrl->bRequestType & USB_RECIP_MASK) {
 	case USB_RECIP_DEVICE:
+<<<<<<< HEAD
 		/*
 		 * bit 0 => self powered
 		 * bit 1 => remote wakeup
 		 */
 		reply = cpu_to_le16(0);
+=======
+		status = 1 << USB_DEVICE_SELF_POWERED;
+		status |= hsotg->remote_wakeup_allowed <<
+			  USB_DEVICE_REMOTE_WAKEUP;
+		reply = cpu_to_le16(status);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 
 	case USB_RECIP_INTERFACE:
@@ -1668,7 +1692,14 @@ static int dwc2_hsotg_process_req_feature(struct dwc2_hsotg *hsotg,
 	case USB_RECIP_DEVICE:
 		switch (wValue) {
 		case USB_DEVICE_REMOTE_WAKEUP:
+<<<<<<< HEAD
 			hsotg->remote_wakeup_allowed = 1;
+=======
+			if (set)
+				hsotg->remote_wakeup_allowed = 1;
+			else
+				hsotg->remote_wakeup_allowed = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			break;
 
 		case USB_DEVICE_TEST_MODE:
@@ -1678,16 +1709,29 @@ static int dwc2_hsotg_process_req_feature(struct dwc2_hsotg *hsotg,
 				return -EINVAL;
 
 			hsotg->test_mode = wIndex >> 8;
+<<<<<<< HEAD
 			ret = dwc2_hsotg_send_reply(hsotg, ep0, NULL, 0);
 			if (ret) {
 				dev_err(hsotg->dev,
 					"%s: failed to send reply\n", __func__);
 				return ret;
 			}
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			break;
 		default:
 			return -ENOENT;
 		}
+<<<<<<< HEAD
+=======
+
+		ret = dwc2_hsotg_send_reply(hsotg, ep0, NULL, 0);
+		if (ret) {
+			dev_err(hsotg->dev,
+				"%s: failed to send reply\n", __func__);
+			return ret;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 
 	case USB_RECIP_ENDPOINT:
@@ -2230,6 +2274,10 @@ static unsigned int dwc2_gadget_get_xfersize_ddma(struct dwc2_hsotg_ep *hs_ep)
 		if (status & DEV_DMA_STS_MASK)
 			dev_err(hsotg->dev, "descriptor %d closed with %x\n",
 				i, status & DEV_DMA_STS_MASK);
+<<<<<<< HEAD
+=======
+		desc++;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	return bytes_rem;
@@ -3917,11 +3965,19 @@ static int dwc2_hsotg_ep_enable(struct usb_ep *ep,
 	 * a unique tx-fifo even if it is non-periodic.
 	 */
 	if (dir_in && hsotg->dedicated_fifos) {
+<<<<<<< HEAD
+=======
+		unsigned fifo_count = dwc2_hsotg_tx_fifo_count(hsotg);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		u32 fifo_index = 0;
 		u32 fifo_size = UINT_MAX;
 
 		size = hs_ep->ep.maxpacket * hs_ep->mc;
+<<<<<<< HEAD
 		for (i = 1; i < hsotg->num_of_eps; ++i) {
+=======
+		for (i = 1; i <= fifo_count; ++i) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			if (hsotg->fifo_map & (1 << i))
 				continue;
 			val = dwc2_readl(hsotg, DPTXFSIZN(i));

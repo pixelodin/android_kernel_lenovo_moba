@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2010-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2010-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include <linux/msm-bus.h>
@@ -15,6 +19,10 @@
 #include "kgsl_device.h"
 #include "kgsl_pwrscale.h"
 #include "kgsl_trace.h"
+<<<<<<< HEAD
+=======
+#include "kgsl_trace_power.h"
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define KGSL_PWRFLAGS_POWER_ON 0
 #define KGSL_PWRFLAGS_CLK_ON   1
@@ -312,6 +320,25 @@ void kgsl_pwrctrl_buslevel_update(struct kgsl_device *device,
 EXPORT_SYMBOL(kgsl_pwrctrl_buslevel_update);
 
 #if IS_ENABLED(CONFIG_QCOM_CX_IPEAK)
+<<<<<<< HEAD
+=======
+static int kgsl_pwr_cx_ipeak_freq_limit(void *ptr, unsigned int freq)
+{
+	struct kgsl_pwr_limit *cx_ipeak_pwr_limit = ptr;
+
+	if (IS_ERR_OR_NULL(cx_ipeak_pwr_limit))
+		return -EINVAL;
+
+	/* CX-ipeak safe interrupt to remove freq limit */
+	if (freq == 0) {
+		kgsl_pwr_limits_set_default(cx_ipeak_pwr_limit);
+		return 0;
+	}
+
+	return kgsl_pwr_limits_set_freq(cx_ipeak_pwr_limit, freq);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int kgsl_pwrctrl_cx_ipeak_vote(struct kgsl_device *device,
 		u64 old_freq, u64 new_freq)
 {
@@ -424,6 +451,33 @@ static int kgsl_pwrctrl_cx_ipeak_init(struct kgsl_device *device)
 		++i;
 	}
 
+<<<<<<< HEAD
+=======
+	/* cx_ipeak limits for GPU freq throttling */
+	pwr->cx_ipeak_pwr_limit = kgsl_pwr_limits_add(KGSL_DEVICE_3D0);
+	if (IS_ERR_OR_NULL(pwr->cx_ipeak_pwr_limit)) {
+		dev_err(device->dev,
+				"Failed to get cx_ipeak power limit\n");
+		ret = -EINVAL;
+		goto error;
+	}
+
+	cx_ipeak_client = &pwr->gpu_ipeak_client[0];
+	if (!IS_ERR_OR_NULL(cx_ipeak_client->client)) {
+		ret = cx_ipeak_victim_register(cx_ipeak_client->client,
+				kgsl_pwr_cx_ipeak_freq_limit,
+				pwr->cx_ipeak_pwr_limit);
+		if (ret) {
+			kgsl_pwr_limits_del(pwr->cx_ipeak_pwr_limit);
+			if (ret != -ENOENT) {
+				dev_err(device->dev,
+					"Failed to register GPU-CX-Ipeak victim\n");
+				goto error;
+			}
+		}
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	of_node_put(node);
 	return 0;
 
@@ -616,6 +670,11 @@ void kgsl_pwrctrl_pwrlevel_change(struct kgsl_device *device,
 			pwr->previous_pwrlevel,
 			pwr->pwrlevels[old_level].gpu_freq);
 
+<<<<<<< HEAD
+=======
+	trace_gpu_frequency(pwrlevel->gpu_freq/1000, 0);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/*
 	 * Some targets do not support the bandwidth requirement of
 	 * GPU at TURBO, for such targets we need to set GPU-BIMC
@@ -2376,6 +2435,12 @@ int kgsl_pwrctrl_init(struct kgsl_device *device)
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	INIT_LIST_HEAD(&pwr->limits);
+	spin_lock_init(&pwr->limits_lock);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	result = kgsl_pwrctrl_cx_ipeak_init(device);
 	if (result)
 		goto error_cleanup_bus_ib;
@@ -2383,8 +2448,11 @@ int kgsl_pwrctrl_init(struct kgsl_device *device)
 	INIT_WORK(&pwr->thermal_cycle_ws, kgsl_thermal_cycle);
 	timer_setup(&pwr->thermal_timer, kgsl_thermal_timer, 0);
 
+<<<<<<< HEAD
 	INIT_LIST_HEAD(&pwr->limits);
 	spin_lock_init(&pwr->limits_lock);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pwr->sysfs_pwr_limit = kgsl_pwr_limits_add(KGSL_DEVICE_3D0);
 
 	kgsl_pwrctrl_vbif_init(device);
@@ -2415,6 +2483,15 @@ void kgsl_pwrctrl_close(struct kgsl_device *device)
 	struct kgsl_pwrctrl *pwr = &device->pwrctrl;
 	int i;
 
+<<<<<<< HEAD
+=======
+	kgsl_pwr_limits_del(pwr->cx_ipeak_pwr_limit);
+	pwr->cx_ipeak_pwr_limit = NULL;
+
+	if (!IS_ERR_OR_NULL(pwr->gpu_ipeak_client[0].client))
+		cx_ipeak_victim_unregister(pwr->gpu_ipeak_client[0].client);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	for (i = 0; i < ARRAY_SIZE(pwr->gpu_ipeak_client); i++) {
 		if (!IS_ERR_OR_NULL(pwr->gpu_ipeak_client[i].client)) {
 			cx_ipeak_unregister(pwr->gpu_ipeak_client[i].client);
@@ -2674,6 +2751,10 @@ static int _wake(struct kgsl_device *device)
 {
 	struct kgsl_pwrctrl *pwr = &device->pwrctrl;
 	int status = 0;
+<<<<<<< HEAD
+=======
+	unsigned int state = device->state;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	switch (device->state) {
 	case KGSL_STATE_SUSPEND:
@@ -2700,6 +2781,12 @@ static int _wake(struct kgsl_device *device)
 		/* Turn on the core clocks */
 		kgsl_pwrctrl_clk(device, KGSL_PWRFLAGS_ON, KGSL_STATE_ACTIVE);
 
+<<<<<<< HEAD
+=======
+		if (state == KGSL_STATE_SLUMBER || state == KGSL_STATE_SUSPEND)
+			trace_gpu_frequency(
+			pwr->pwrlevels[pwr->active_pwrlevel].gpu_freq/1000, 0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/*
 		 * No need to turn on/off irq here as it no longer affects
 		 * power collapse
@@ -2859,6 +2946,10 @@ _slumber(struct kgsl_device *device)
 		kgsl_pwrctrl_clk_set_options(device, false);
 		kgsl_pwrctrl_disable(device);
 		kgsl_pwrscale_sleep(device);
+<<<<<<< HEAD
+=======
+		trace_gpu_frequency(0, 0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		kgsl_pwrctrl_set_state(device, KGSL_STATE_SLUMBER);
 		pm_qos_update_request(&device->pwrctrl.pm_qos_req_dma,
 						PM_QOS_DEFAULT_VALUE);
@@ -2874,6 +2965,10 @@ _slumber(struct kgsl_device *device)
 		break;
 	case KGSL_STATE_AWARE:
 		kgsl_pwrctrl_disable(device);
+<<<<<<< HEAD
+=======
+		trace_gpu_frequency(0, 0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		kgsl_pwrctrl_set_state(device, KGSL_STATE_SLUMBER);
 		break;
 	case KGSL_STATE_RESET:
@@ -3275,6 +3370,44 @@ int kgsl_pwr_limits_set_freq(void *limit_ptr, unsigned int freq)
 EXPORT_SYMBOL(kgsl_pwr_limits_set_freq);
 
 /**
+<<<<<<< HEAD
+=======
+ * kgsl_pwr_limits_set_gpu_fmax() - Set the requested limit for the
+ * client, if requested freq value is larger than fmax supported
+ * function returns with success.
+ * @limit_ptr: Client handle
+ * @freq: Client requested frequency
+ *
+ * Set the new limit for the client and adjust the clocks
+ */
+int kgsl_pwr_limits_set_gpu_fmax(void *limit_ptr, unsigned int freq)
+{
+	struct kgsl_pwrctrl *pwr;
+	struct kgsl_pwr_limit *limit = limit_ptr;
+	int level;
+
+	if (IS_ERR_OR_NULL(limit))
+		return -EINVAL;
+
+	pwr = &limit->device->pwrctrl;
+
+	/*
+	 * When requested frequency is greater than fmax,
+	 * requested limit is implicit, return success here.
+	 */
+	if (freq >= pwr->pwrlevels[0].gpu_freq)
+		return 0;
+
+	level = _get_nearest_pwrlevel(pwr, freq);
+	if (level < 0)
+		return -EINVAL;
+	_update_limits(limit, KGSL_PWR_SET_LIMIT, level);
+	return 0;
+}
+EXPORT_SYMBOL(kgsl_pwr_limits_set_gpu_fmax);
+
+/**
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * kgsl_pwr_limits_set_default() - Set the default thermal limit for the client
  * @limit_ptr: Client handle
  *

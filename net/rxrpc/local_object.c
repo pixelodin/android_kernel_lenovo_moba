@@ -368,11 +368,22 @@ void rxrpc_queue_local(struct rxrpc_local *local)
 void rxrpc_put_local(struct rxrpc_local *local)
 {
 	const void *here = __builtin_return_address(0);
+<<<<<<< HEAD
 	int n;
 
 	if (local) {
 		n = atomic_dec_return(&local->usage);
 		trace_rxrpc_local(local->debug_id, rxrpc_local_put, n, here);
+=======
+	unsigned int debug_id;
+	int n;
+
+	if (local) {
+		debug_id = local->debug_id;
+
+		n = atomic_dec_return(&local->usage);
+		trace_rxrpc_local(debug_id, rxrpc_local_put, n, here);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		if (n == 0)
 			call_rcu(&local->rcu, rxrpc_local_rcu);
@@ -384,14 +395,21 @@ void rxrpc_put_local(struct rxrpc_local *local)
  */
 struct rxrpc_local *rxrpc_use_local(struct rxrpc_local *local)
 {
+<<<<<<< HEAD
 	unsigned int au;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	local = rxrpc_get_local_maybe(local);
 	if (!local)
 		return NULL;
 
+<<<<<<< HEAD
 	au = atomic_fetch_add_unless(&local->active_users, 1, 0);
 	if (au == 0) {
+=======
+	if (!__rxrpc_use_local(local)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		rxrpc_put_local(local);
 		return NULL;
 	}
@@ -405,6 +423,7 @@ struct rxrpc_local *rxrpc_use_local(struct rxrpc_local *local)
  */
 void rxrpc_unuse_local(struct rxrpc_local *local)
 {
+<<<<<<< HEAD
 	unsigned int au;
 
 	if (local) {
@@ -413,6 +432,13 @@ void rxrpc_unuse_local(struct rxrpc_local *local)
 			rxrpc_queue_local(local);
 		else
 			rxrpc_put_local(local);
+=======
+	if (local) {
+		if (__rxrpc_unuse_local(local)) {
+			rxrpc_get_local(local);
+			rxrpc_queue_local(local);
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 }
 
@@ -430,11 +456,21 @@ static void rxrpc_local_destroyer(struct rxrpc_local *local)
 
 	_enter("%d", local->debug_id);
 
+<<<<<<< HEAD
+=======
+	local->dead = true;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mutex_lock(&rxnet->local_mutex);
 	list_del_init(&local->link);
 	mutex_unlock(&rxnet->local_mutex);
 
+<<<<<<< HEAD
 	ASSERT(RB_EMPTY_ROOT(&local->client_conns));
+=======
+	rxrpc_clean_up_local_conns(local);
+	rxrpc_service_connection_reaper(&rxnet->service_conn_reaper);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ASSERT(!local->service);
 
 	if (socket) {
@@ -466,7 +502,11 @@ static void rxrpc_local_processor(struct work_struct *work)
 
 	do {
 		again = false;
+<<<<<<< HEAD
 		if (atomic_read(&local->active_users) == 0) {
+=======
+		if (!__rxrpc_use_local(local)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			rxrpc_local_destroyer(local);
 			break;
 		}
@@ -480,6 +520,11 @@ static void rxrpc_local_processor(struct work_struct *work)
 			rxrpc_process_local_events(local);
 			again = true;
 		}
+<<<<<<< HEAD
+=======
+
+		__rxrpc_unuse_local(local);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	} while (again);
 
 	rxrpc_put_local(local);

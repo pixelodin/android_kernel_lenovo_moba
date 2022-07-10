@@ -682,7 +682,11 @@ struct msm_pcie_dev_t {
 	bool disable_pc;
 	struct pci_saved_state *saved_state;
 
+<<<<<<< HEAD
 	struct wakeup_source ws;
+=======
+	struct wakeup_source *ws;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct msm_bus_scale_pdata *bus_scale_table;
 	uint32_t bus_client;
 
@@ -1280,6 +1284,32 @@ static void pcie_parf_dump(struct msm_pcie_dev_t *dev)
 	}
 }
 
+<<<<<<< HEAD
+=======
+static void pcie_dm_core_dump(struct msm_pcie_dev_t *dev)
+{
+	int i, size;
+
+	PCIE_DUMP(dev, "PCIe: RC%d DBI/dm_core register dump\n", dev->rc_idx);
+
+	size = resource_size(dev->res[MSM_PCIE_RES_DM_CORE].resource);
+
+	for (i = 0; i < size; i += 32) {
+		PCIE_DUMP(dev,
+			"RC%d: 0x%04x %08x %08x %08x %08x %08x %08x %08x %08x\n",
+			dev->rc_idx, i,
+			readl_relaxed(dev->dm_core + i),
+			readl_relaxed(dev->dm_core + (i + 4)),
+			readl_relaxed(dev->dm_core + (i + 8)),
+			readl_relaxed(dev->dm_core + (i + 12)),
+			readl_relaxed(dev->dm_core + (i + 16)),
+			readl_relaxed(dev->dm_core + (i + 20)),
+			readl_relaxed(dev->dm_core + (i + 24)),
+			readl_relaxed(dev->dm_core + (i + 28)));
+	}
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static void msm_pcie_show_status(struct msm_pcie_dev_t *dev)
 {
 	PCIE_DBG_FS(dev, "PCIe: RC%d is %s enumerated\n",
@@ -4991,8 +5021,13 @@ static irqreturn_t handle_wake_irq(int irq, void *data)
 		schedule_work(&dev->handle_wake_work);
 	} else {
 		PCIE_DBG2(dev, "Wake up RC%d\n", dev->rc_idx);
+<<<<<<< HEAD
 		__pm_stay_awake(&dev->ws);
 		__pm_relax(&dev->ws);
+=======
+		__pm_stay_awake(dev->ws);
+		__pm_relax(dev->ws);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		if (dev->num_ep > 1) {
 			for (i = 0; i < MAX_DEVICE_NUM; i++) {
@@ -5034,6 +5069,19 @@ static irqreturn_t handle_linkdown_irq(int irq, void *data)
 		dev->link_status = MSM_PCIE_LINK_DOWN;
 		dev->shadow_en = false;
 
+<<<<<<< HEAD
+=======
+		/* PCIe registers dump on link down */
+		if ((dev->rc_idx == 0) || (dev->rc_idx == 2)) {
+			PCIE_DUMP(dev,
+			"PCIe:Linkdown IRQ for RC%d Dumping PCIe registers\n",
+			dev->rc_idx);
+			pcie_phy_dump(dev);
+			pcie_parf_dump(dev);
+			pcie_dm_core_dump(dev);
+		}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (dev->linkdown_panic)
 			panic("User has chosen to panic on linkdown\n");
 
@@ -5129,10 +5177,20 @@ static int32_t msm_pcie_irq_init(struct msm_pcie_dev_t *dev)
 
 	PCIE_DBG(dev, "RC%d\n", dev->rc_idx);
 
+<<<<<<< HEAD
 	if (dev->rc_idx)
 		wakeup_source_init(&dev->ws, "RC1 pcie_wakeup_source");
 	else
 		wakeup_source_init(&dev->ws, "RC0 pcie_wakeup_source");
+=======
+	dev->ws = wakeup_source_register(pdev, dev_name(pdev));
+	if (!dev->ws) {
+		PCIE_ERR(dev,
+			 "PCIe: RC%d: failed to register wakeup source\n",
+			 dev->rc_idx);
+		return -ENOMEM;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (dev->irq[MSM_PCIE_INT_GLOBAL_INT].num) {
 		rc = devm_request_irq(pdev,
@@ -5180,7 +5238,11 @@ static void msm_pcie_irq_deinit(struct msm_pcie_dev_t *dev)
 {
 	PCIE_DBG(dev, "RC%d\n", dev->rc_idx);
 
+<<<<<<< HEAD
 	wakeup_source_trash(&dev->ws);
+=======
+	wakeup_source_unregister(dev->ws);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (dev->wake_n)
 		disable_irq(dev->wake_n);

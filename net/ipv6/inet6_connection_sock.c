@@ -150,7 +150,11 @@ struct dst_entry *inet6_csk_update_pmtu(struct sock *sk, u32 mtu)
 
 	if (IS_ERR(dst))
 		return NULL;
+<<<<<<< HEAD
 	dst->ops->update_pmtu(dst, sk, NULL, mtu);
+=======
+	dst->ops->update_pmtu(dst, sk, NULL, mtu, true);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	dst = inet6_csk_route_socket(sk, &fl6);
 	return IS_ERR(dst) ? NULL : dst;

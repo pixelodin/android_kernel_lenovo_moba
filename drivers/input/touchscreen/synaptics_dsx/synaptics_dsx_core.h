@@ -3,6 +3,10 @@
  *
  * Copyright (C) 2012-2016 Synaptics Incorporated. All rights reserved.
  *
+<<<<<<< HEAD
+=======
+ * Copyright (c) 2018-2019 The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * Copyright (C) 2012 Alexandra Chin <alexandra.chin@tw.synaptics.com>
  * Copyright (C) 2012 Scott Lin <scott.lin@tw.synaptics.com>
  *
@@ -40,8 +44,12 @@
 #define SYNAPTICS_DSX_DRIVER_VERSION 0x2070
 
 #include <linux/version.h>
+<<<<<<< HEAD
 #ifdef CONFIG_DRM
 //#include <linux/msm_drm_notify.h>
+=======
+#ifdef CONFIG_FB
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/notifier.h>
 #include <linux/fb.h>
 #endif
@@ -50,10 +58,21 @@
 #endif
 
 #include <drm/drm_panel.h>
+<<<<<<< HEAD
 #define CONFIG_HAPTIC_CALLBACK
 #ifdef CONFIG_HAPTIC_CALLBACK
 #include <linux/aw8697.h>
 #endif
+=======
+
+#if defined(CONFIG_SECURE_TOUCH_SYNAPTICS_DSX)
+#include <linux/completion.h>
+#include <linux/atomic.h>
+#include <linux/pm_runtime.h>
+#include <linux/clk.h>
+#endif
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #if (LINUX_VERSION_CODE > KERNEL_VERSION(2, 6, 38))
 #define KERNEL_ABOVE_2_6_38
 #endif
@@ -67,6 +86,7 @@
 #else
 #define sstrtoul(...) strict_strtoul(__VA_ARGS__)
 #endif
+<<<<<<< HEAD
 #define SYNA_TOUCH_EXT_PROC   1
 /*
 #define F51_DISCRETE_FORCE
@@ -77,6 +97,9 @@
 #endif
 #define SYNA_TDDI
 */
+=======
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define PDT_PROPS (0X00EF)
 #define PDT_START (0x00E9)
 #define PDT_END (0x00D0)
@@ -131,8 +154,15 @@
 #define MASK_2BIT 0x03
 #define MASK_1BIT 0x01
 
+<<<<<<< HEAD
 #define ESD_WATCHDOG
 #define ESD_TIMER 2000
+=======
+#define PINCTRL_STATE_ACTIVE    "pmx_ts_active"
+#define PINCTRL_STATE_SUSPEND   "pmx_ts_suspend"
+#define PINCTRL_STATE_RELEASE   "pmx_ts_release"
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 enum exp_fn {
 	RMI_DEV = 0,
 	RMI_FW_UPDATER,
@@ -292,6 +322,20 @@ struct synaptics_rmi4_device_info {
 	struct list_head support_fn_list;
 };
 
+<<<<<<< HEAD
+=======
+struct synaptics_rmi4_f01_device_status {
+	union {
+		struct {
+			unsigned char status_code:4;
+			unsigned char reserved:2;
+			unsigned char flash_prog:1;
+			unsigned char unconfigured:1;
+		} __packed;
+		unsigned char data[1];
+	};
+};
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * struct synaptics_rmi4_data - RMI4 device instance data
  * @pdev: pointer to platform device
@@ -337,6 +381,10 @@ struct synaptics_rmi4_device_info {
  * @sensor_max_y: maximum y coordinate for 2D touch
  * @force_min: minimum force value
  * @force_max: maximum force value
+<<<<<<< HEAD
+=======
+ * @set_wakeup_gesture: location of set wakeup gesture
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * @flash_prog_mode: flag to indicate flash programming mode status
  * @irq_enabled: flag to indicate attention interrupt enable status
  * @fingers_on_2d: flag to indicate presence of fingers in 2D area
@@ -358,12 +406,21 @@ struct synaptics_rmi4_device_info {
  * @report_touch: pointer to touch reporting function
  */
 struct synaptics_rmi4_data {
+<<<<<<< HEAD
+=======
+	bool initialized;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct platform_device *pdev;
 	struct input_dev *input_dev;
 	struct input_dev *stylus_dev;
 	const struct synaptics_dsx_hw_interface *hw_if;
 	struct synaptics_rmi4_device_info rmi4_mod_info;
 	struct synaptics_rmi4_input_settings input_settings;
+<<<<<<< HEAD
+=======
+	struct synaptics_rmi4_fn_desc rmi_fd;
+	struct synaptics_rmi4_f01_device_status status;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct kobject *board_prop_dir;
 	struct regulator *pwr_reg;
 	struct regulator *bus_reg;
@@ -374,6 +431,7 @@ struct synaptics_rmi4_data {
 	struct mutex rmi4_irq_enable_mutex;
 	struct delayed_work rb_work;
 	struct workqueue_struct *rb_workqueue;
+<<<<<<< HEAD
 #ifdef CONFIG_DRM
 	struct notifier_block drm_notifier;
 	struct work_struct reset_work;
@@ -381,6 +439,18 @@ struct synaptics_rmi4_data {
 #endif
 	struct delayed_work esd_watchdog_work;
 	struct workqueue_struct *esd_watchdog_workqueue;
+=======
+	struct work_struct rmi4_probe_work;
+	struct workqueue_struct *rmi4_probe_wq;
+	struct completion drm_init_done;
+	struct pinctrl *ts_pinctrl;
+	struct pinctrl_state *pinctrl_state_active;
+	struct pinctrl_state *pinctrl_state_suspend;
+	struct pinctrl_state *pinctrl_state_release;
+	struct notifier_block fb_notifier;
+	struct work_struct reset_work;
+	struct workqueue_struct *reset_workqueue;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #ifdef CONFIG_HAS_EARLYSUSPEND
 	struct early_suspend early_suspend;
 #endif
@@ -410,11 +480,20 @@ struct synaptics_rmi4_data {
 	int sensor_max_y;
 	int force_min;
 	int force_max;
+<<<<<<< HEAD
+=======
+	int set_wakeup_gesture;
+	int avdd_status;
+	int vdd_status;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	bool flash_prog_mode;
 	bool irq_enabled;
 	bool fingers_on_2d;
 	bool suspend;
+<<<<<<< HEAD
 	bool is_sleep;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	bool sensor_sleep;
 	bool stay_awake;
 	bool fb_ready;
@@ -430,6 +509,7 @@ struct synaptics_rmi4_data {
 			bool rebuild);
 	int (*irq_enable)(struct synaptics_rmi4_data *rmi4_data, bool enable,
 			bool attn_only);
+<<<<<<< HEAD
 	void (*sleep_enable)(struct synaptics_rmi4_data *rmi4_data,
 			bool enable);
 	void (*report_touch)(struct synaptics_rmi4_data *rmi4_data,
@@ -438,6 +518,20 @@ struct synaptics_rmi4_data {
 /* Haptic TP event notify start */
 	struct tp_point_event tp_event;
 /* Haptic Tp event notify end */
+=======
+	int (*sleep_enable)(struct synaptics_rmi4_data *rmi4_data,
+			bool enable);
+	void (*report_touch)(struct synaptics_rmi4_data *rmi4_data,
+			struct synaptics_rmi4_fn *fhandler);
+#if defined(CONFIG_SECURE_TOUCH_SYNAPTICS_DSX)
+	atomic_t st_enabled;
+	atomic_t st_pending_irqs;
+	struct completion st_powerdown;
+	struct completion st_irq_processed;
+	bool st_initialized;
+	struct clk *core_clk;
+	struct clk *iface_clk;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif
 };
 
@@ -447,6 +541,11 @@ struct synaptics_dsx_bus_access {
 		unsigned char *data, unsigned int length);
 	int (*write)(struct synaptics_rmi4_data *rmi4_data, unsigned short addr,
 		unsigned char *data, unsigned int length);
+<<<<<<< HEAD
+=======
+	int (*get)(struct synaptics_rmi4_data *rmi4_data);
+	void (*put)(struct synaptics_rmi4_data *rmi4_data);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct synaptics_dsx_hw_interface {
@@ -497,6 +596,19 @@ static inline int synaptics_rmi4_reg_write(
 	return rmi4_data->hw_if->bus_access->write(rmi4_data, addr, data, len);
 }
 
+<<<<<<< HEAD
+=======
+static inline int synaptics_rmi4_bus_get(struct synaptics_rmi4_data *rmi4_data)
+{
+	return rmi4_data->hw_if->bus_access->get(rmi4_data);
+}
+
+static inline void synaptics_rmi4_bus_put(struct synaptics_rmi4_data *rmi4_data)
+{
+	rmi4_data->hw_if->bus_access->put(rmi4_data);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static inline ssize_t synaptics_rmi4_show_error(struct device *dev,
 		struct device_attribute *attr, char *buf)
 {

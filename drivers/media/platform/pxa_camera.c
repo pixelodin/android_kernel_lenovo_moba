@@ -2397,7 +2397,11 @@ static int pxa_camera_probe(struct platform_device *pdev)
 	pcdev->res = res;
 
 	pcdev->pdata = pdev->dev.platform_data;
+<<<<<<< HEAD
 	if (&pdev->dev.of_node && !pcdev->pdata) {
+=======
+	if (pdev->dev.of_node && !pcdev->pdata) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		err = pxa_camera_pdata_from_dt(&pdev->dev, pcdev, &pcdev->asd);
 	} else {
 		pcdev->platform_flags = pcdev->pdata->flags;

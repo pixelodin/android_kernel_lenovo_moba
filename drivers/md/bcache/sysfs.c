@@ -25,6 +25,15 @@ static const char * const bch_cache_modes[] = {
 	NULL
 };
 
+<<<<<<< HEAD
+=======
+static const char * const bch_reada_cache_policies[] = {
+	"all",
+	"meta-only",
+	NULL
+};
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* Default is -1; we skip past it for stop_when_cache_set_failed */
 static const char * const bch_stop_on_failure_modes[] = {
 	"auto",
@@ -94,6 +103,10 @@ rw_attribute(congested_write_threshold_us);
 rw_attribute(sequential_cutoff);
 rw_attribute(data_csum);
 rw_attribute(cache_mode);
+<<<<<<< HEAD
+=======
+rw_attribute(readahead_cache_policy);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 rw_attribute(stop_when_cache_set_failed);
 rw_attribute(writeback_metadata);
 rw_attribute(writeback_running);
@@ -160,6 +173,14 @@ SHOW(__bch_cached_dev)
 					       bch_cache_modes,
 					       BDEV_CACHE_MODE(&dc->sb));
 
+<<<<<<< HEAD
+=======
+	if (attr == &sysfs_readahead_cache_policy)
+		return bch_snprint_string_list(buf, PAGE_SIZE,
+					      bch_reada_cache_policies,
+					      dc->cache_readahead_policy);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (attr == &sysfs_stop_when_cache_set_failed)
 		return bch_snprint_string_list(buf, PAGE_SIZE,
 					       bch_stop_on_failure_modes,
@@ -289,7 +310,13 @@ STORE(__cached_dev)
 	sysfs_strtoul_clamp(writeback_rate_p_term_inverse,
 			    dc->writeback_rate_p_term_inverse,
 			    1, UINT_MAX);
+<<<<<<< HEAD
 	d_strtoul_nonzero(writeback_rate_minimum);
+=======
+	sysfs_strtoul_clamp(writeback_rate_minimum,
+			    dc->writeback_rate_minimum,
+			    1, UINT_MAX);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	sysfs_strtoul_clamp(io_error_limit, dc->error_limit, 0, INT_MAX);
 
@@ -322,6 +349,18 @@ STORE(__cached_dev)
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	if (attr == &sysfs_readahead_cache_policy) {
+		v = __sysfs_match_string(bch_reada_cache_policies, -1, buf);
+		if (v < 0)
+			return v;
+
+		if ((unsigned int) v != dc->cache_readahead_policy)
+			dc->cache_readahead_policy = v;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (attr == &sysfs_stop_when_cache_set_failed) {
 		v = __sysfs_match_string(bch_stop_on_failure_modes, -1, buf);
 		if (v < 0)
@@ -415,6 +454,10 @@ static struct attribute *bch_cached_dev_files[] = {
 	&sysfs_data_csum,
 #endif
 	&sysfs_cache_mode,
+<<<<<<< HEAD
+=======
+	&sysfs_readahead_cache_policy,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	&sysfs_stop_when_cache_set_failed,
 	&sysfs_writeback_metadata,
 	&sysfs_writeback_running,

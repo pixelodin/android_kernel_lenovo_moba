@@ -2430,7 +2430,11 @@ static void _setup_iclk_autoidle(struct omap_hwmod *oh)
  */
 static int _setup_reset(struct omap_hwmod *oh)
 {
+<<<<<<< HEAD
 	int r;
+=======
+	int r = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (oh->_state != _HWMOD_STATE_INITIALIZED)
 		return -EINVAL;

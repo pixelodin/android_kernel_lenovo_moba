@@ -305,7 +305,10 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
 {
 	struct property *new_prop = NULL, *prop;
 	int ret = 0;
+<<<<<<< HEAD
 	bool check_for_non_overlay_node = false;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (target->in_livetree)
 		if (!of_prop_cmp(overlay_prop->name, "name") ||
@@ -318,6 +321,28 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
 	else
 		prop = NULL;
 
+<<<<<<< HEAD
+=======
+	if (prop) {
+		if (!of_prop_cmp(prop->name, "#address-cells")) {
+			if (!of_prop_val_eq(prop, overlay_prop)) {
+				pr_err("ERROR: changing value of #address-cells is not allowed in %pOF\n",
+				       target->np);
+				ret = -EINVAL;
+			}
+			return ret;
+
+		} else if (!of_prop_cmp(prop->name, "#size-cells")) {
+			if (!of_prop_val_eq(prop, overlay_prop)) {
+				pr_err("ERROR: changing value of #size-cells is not allowed in %pOF\n",
+				       target->np);
+				ret = -EINVAL;
+			}
+			return ret;
+		}
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (is_symbols_prop) {
 		if (prop)
 			return -EINVAL;
@@ -330,13 +355,17 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
 		return -ENOMEM;
 
 	if (!prop) {
+<<<<<<< HEAD
 		check_for_non_overlay_node = true;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (!target->in_livetree) {
 			new_prop->next = target->np->deadprops;
 			target->np->deadprops = new_prop;
 		}
 		ret = of_changeset_add_property(&ovcs->cset, target->np,
 						new_prop);
+<<<<<<< HEAD
 	} else if (!of_prop_cmp(prop->name, "#address-cells")) {
 		if (!of_prop_val_eq(prop, new_prop)) {
 			pr_err("ERROR: changing value of #address-cells is not allowed in %pOF\n",
@@ -351,12 +380,19 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
 		}
 	} else {
 		check_for_non_overlay_node = true;
+=======
+	} else {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ret = of_changeset_update_property(&ovcs->cset, target->np,
 						   new_prop);
 	}
 
+<<<<<<< HEAD
 	if (check_for_non_overlay_node &&
 	    !of_node_check_flag(target->np, OF_OVERLAY))
+=======
+	if (!of_node_check_flag(target->np, OF_OVERLAY))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		pr_err("WARNING: memory leak will occur if overlay removed, property: %pOF/%s\n",
 		       target->np, new_prop->name);
 

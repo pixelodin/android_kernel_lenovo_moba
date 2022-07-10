@@ -2678,7 +2678,11 @@ static void lock_get_status(struct seq_file *f, struct file_lock *fl,
 	}
 	if (inode) {
 		/* userspace relies on this representation of dev_t */
+<<<<<<< HEAD
 		seq_printf(f, "%d %02x:%02x:%ld ", fl_pid,
+=======
+		seq_printf(f, "%d %02x:%02x:%lu ", fl_pid,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				MAJOR(inode->i_sb->s_dev),
 				MINOR(inode->i_sb->s_dev), inode->i_ino);
 	} else {

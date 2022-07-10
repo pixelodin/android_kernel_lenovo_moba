@@ -32,7 +32,11 @@
 
 		mailbox@7e00b840 {
 			compatible = "brcm,bcm2835-vchiq";
+<<<<<<< HEAD
 			reg = <0x7e00b840 0xf>;
+=======
+			reg = <0x7e00b840 0x3c>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			interrupts = <0 2>;
 		};
 	};

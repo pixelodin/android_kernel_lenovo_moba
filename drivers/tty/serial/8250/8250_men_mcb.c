@@ -71,8 +71,13 @@ static int serial_8250_men_mcb_probe(struct mcb_device *mdev,
 {
 	struct serial_8250_men_mcb_data *data;
 	struct resource *mem;
+<<<<<<< HEAD
 	unsigned int num_ports;
 	unsigned int i;
+=======
+	int num_ports;
+	int i;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	void __iomem *membase;
 
 	mem = mcb_get_resource(mdev, IORESOURCE_MEM);
@@ -87,7 +92,11 @@ static int serial_8250_men_mcb_probe(struct mcb_device *mdev,
 	dev_dbg(&mdev->dev, "found a 16z%03u with %u ports\n",
 		mdev->id, num_ports);
 
+<<<<<<< HEAD
 	if (num_ports == 0 || num_ports > 4) {
+=======
+	if (num_ports <= 0 || num_ports > 4) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		dev_err(&mdev->dev, "unexpected number of ports: %u\n",
 			num_ports);
 		return -ENODEV;
@@ -132,7 +141,11 @@ static int serial_8250_men_mcb_probe(struct mcb_device *mdev,
 
 static void serial_8250_men_mcb_remove(struct mcb_device *mdev)
 {
+<<<<<<< HEAD
 	unsigned int num_ports, i;
+=======
+	int num_ports, i;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct serial_8250_men_mcb_data *data = mcb_get_drvdata(mdev);
 
 	if (!data)

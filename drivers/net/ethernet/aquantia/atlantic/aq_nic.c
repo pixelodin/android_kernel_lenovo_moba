@@ -44,7 +44,11 @@ static void aq_nic_rss_init(struct aq_nic_s *self, unsigned int num_rss_queues)
 	struct aq_rss_parameters *rss_params = &cfg->aq_rss;
 	int i = 0;
 
+<<<<<<< HEAD
 	static u8 rss_key[40] = {
+=======
+	static u8 rss_key[AQ_CFG_RSS_HASHKEY_SIZE] = {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		0x1e, 0xad, 0x71, 0x87, 0x65, 0xfc, 0x26, 0x7d,
 		0x0d, 0x45, 0x67, 0x74, 0xcd, 0x06, 0x1a, 0x18,
 		0xb6, 0xc1, 0xf0, 0xc7, 0xbb, 0x18, 0xbe, 0xf8,
@@ -399,8 +403,15 @@ static unsigned int aq_nic_map_skb(struct aq_nic_s *self,
 				     dx_buff->len,
 				     DMA_TO_DEVICE);
 
+<<<<<<< HEAD
 	if (unlikely(dma_mapping_error(aq_nic_get_dev(self), dx_buff->pa)))
 		goto exit;
+=======
+	if (unlikely(dma_mapping_error(aq_nic_get_dev(self), dx_buff->pa))) {
+		ret = 0;
+		goto exit;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	first = dx_buff;
 	dx_buff->len_pkt = skb->len;
@@ -530,10 +541,13 @@ int aq_nic_xmit(struct aq_nic_s *self, struct sk_buff *skb)
 	if (likely(frags)) {
 		err = self->aq_hw_ops->hw_ring_tx_xmit(self->aq_hw,
 						       ring, frags);
+<<<<<<< HEAD
 		if (err >= 0) {
 			++ring->stats.tx.packets;
 			ring->stats.tx.bytes += skb->len;
 		}
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	} else {
 		err = NETDEV_TX_BUSY;
 	}

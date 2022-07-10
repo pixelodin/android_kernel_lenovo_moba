@@ -5,6 +5,10 @@ obj-$(CONFIG_ND_BTT) += nd_btt.o
 obj-$(CONFIG_ND_BLK) += nd_blk.o
 obj-$(CONFIG_X86_PMEM_LEGACY) += nd_e820.o
 obj-$(CONFIG_OF_PMEM) += of_pmem.o
+<<<<<<< HEAD
+=======
+obj-$(CONFIG_VIRTIO_PMEM) += virtio_pmem.o nd_virtio.o
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 nd_pmem-y := pmem.o
 

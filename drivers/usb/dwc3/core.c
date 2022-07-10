@@ -296,8 +296,12 @@ static void dwc3_frame_length_adjustment(struct dwc3 *dwc)
 
 	reg = dwc3_readl(dwc->regs, DWC3_GFLADJ);
 	dft = reg & DWC3_GFLADJ_30MHZ_MASK;
+<<<<<<< HEAD
 	if (!dev_WARN_ONCE(dwc->dev, dft == dwc->fladj,
 	    "request value same as default, ignoring\n")) {
+=======
+	if (dft != dwc->fladj) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		reg &= ~DWC3_GFLADJ_30MHZ_MASK;
 		reg |= DWC3_GFLADJ_30MHZ_SDBND_SEL | dwc->fladj;
 		dwc3_writel(dwc->regs, DWC3_GFLADJ, reg);
@@ -1003,6 +1007,20 @@ int dwc3_core_init(struct dwc3 *dwc)
 		if (dwc->dis_tx_ipgap_linecheck_quirk)
 			reg |= DWC3_GUCTL1_TX_IPGAP_LINECHECK_DIS;
 
+<<<<<<< HEAD
+=======
+		/*
+		 * STAR: 9001415732: Host failure when Park mode is enabled:
+		 * Disable parkmode for Gen1 controllers to fix the stall
+		 * seen during host mode transfers on multiple endpoints.
+		 */
+		if (!dwc3_is_usb31(dwc)) {
+			reg |= DWC3_GUCTL1_PARKMODE_DISABLE_SS;
+			reg |= DWC3_GUCTL1_PARKMODE_DISABLE_HS;
+			reg |= DWC3_GUCTL1_PARKMODE_DISABLE_FSLS;
+		}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		dwc3_writel(dwc->regs, DWC3_GUCTL1, reg);
 	}
 
@@ -1198,6 +1216,12 @@ static void __maybe_unused dwc3_core_exit_mode(struct dwc3 *dwc)
 		/* do nothing */
 		break;
 	}
+<<<<<<< HEAD
+=======
+
+	/* de-assert DRVVBUS for HOST and OTG mode */
+	dwc3_set_prtcap(dwc, DWC3_GCTL_PRTCAP_DEVICE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void (*notify_event)(struct dwc3 *, unsigned int, unsigned int);

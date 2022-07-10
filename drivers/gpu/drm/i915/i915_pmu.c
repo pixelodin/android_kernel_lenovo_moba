@@ -827,8 +827,13 @@ create_event_attributes(struct drm_i915_private *i915)
 		const char *name;
 		const char *unit;
 	} events[] = {
+<<<<<<< HEAD
 		__event(I915_PMU_ACTUAL_FREQUENCY, "actual-frequency", "MHz"),
 		__event(I915_PMU_REQUESTED_FREQUENCY, "requested-frequency", "MHz"),
+=======
+		__event(I915_PMU_ACTUAL_FREQUENCY, "actual-frequency", "M"),
+		__event(I915_PMU_REQUESTED_FREQUENCY, "requested-frequency", "M"),
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		__event(I915_PMU_INTERRUPTS, "interrupts", NULL),
 		__event(I915_PMU_RC6_RESIDENCY, "rc6-residency", "ns"),
 	};

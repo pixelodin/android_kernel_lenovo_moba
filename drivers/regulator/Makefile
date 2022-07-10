@@ -12,7 +12,11 @@ obj-$(CONFIG_REGULATOR_USERSPACE_CONSUMER) += userspace-consumer.o
 obj-$(CONFIG_REGULATOR_PROXY_CONSUMER) += proxy-consumer.o
 
 obj-$(CONFIG_REGULATOR_88PG86X) += 88pg86x.o
+<<<<<<< HEAD
 obj-$(CONFIG_REGULATOR_88PM800) += 88pm800.o
+=======
+obj-$(CONFIG_REGULATOR_88PM800) += 88pm800-regulator.o
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 obj-$(CONFIG_REGULATOR_88PM8607) += 88pm8607.o
 obj-$(CONFIG_REGULATOR_CPCAP) += cpcap-regulator.o
 obj-$(CONFIG_REGULATOR_AAT2870) += aat2870-regulator.o
@@ -135,8 +139,18 @@ obj-$(CONFIG_REGULATOR_WM831X) += wm831x-ldo.o
 obj-$(CONFIG_REGULATOR_WM8350) += wm8350-regulator.o
 obj-$(CONFIG_REGULATOR_WM8400) += wm8400-regulator.o
 obj-$(CONFIG_REGULATOR_WM8994) += wm8994-regulator.o
+<<<<<<< HEAD
 
 obj-$(CONFIG_REGULATOR_REFGEN) += refgen.o
+=======
+obj-$(CONFIG_REGULATOR_MEM_ACC) += mem-acc-regulator.o
+obj-$(CONFIG_REGULATOR_MSM_GFX_LDO) += msm_gfx_ldo.o
+obj-$(CONFIG_REGULATOR_CPR3) += cpr3-regulator.o cpr3-util.o
+obj-$(CONFIG_REGULATOR_CPR4_MMSS_LDO) += cpr4-mmss-ldo-regulator.o
+obj-$(CONFIG_REGULATOR_CPRH_KBSS) += cprh-kbss-regulator.o
+obj-$(CONFIG_REGULATOR_REFGEN) += refgen.o
+obj-$(CONFIG_REGULATOR_SPM) += spm-regulator.o
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 obj-$(CONFIG_REGULATOR_RPMH) += rpmh-regulator.o
 obj-$(CONFIG_REGULATOR_STUB) += stub-regulator.o
 

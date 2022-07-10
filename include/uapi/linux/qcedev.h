@@ -10,13 +10,21 @@
 #include <linux/ioctl.h>
 #include "fips_status.h"
 
+<<<<<<< HEAD
 #define QCEDEV_MAX_SHA_BLOCK_SIZE	64
+=======
+#define QCEDEV_MAX_SHA_BLOCK_SIZE	128
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define QCEDEV_MAX_BEARER	31
 #define QCEDEV_MAX_KEY_SIZE	64
 #define QCEDEV_MAX_IV_SIZE	32
 
 #define QCEDEV_MAX_BUFFERS      16
+<<<<<<< HEAD
 #define QCEDEV_MAX_SHA_DIGEST	32
+=======
+#define QCEDEV_MAX_SHA_DIGEST	64
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define QCEDEV_USE_PMEM		1
 #define QCEDEV_NO_PMEM		0
@@ -79,8 +87,17 @@ enum qcedev_cipher_mode_enum {
  *enum qcedev_sha_alg_enum : Secure Hashing Algorithm
  * @QCEDEV_ALG_SHA1:		Digest returned: 20 bytes (160 bits)
  * @QCEDEV_ALG_SHA256:		Digest returned: 32 bytes (256 bit)
+<<<<<<< HEAD
  * @QCEDEV_ALG_SHA1_HMAC:	HMAC returned 20 bytes (160 bits)
  * @QCEDEV_ALG_SHA256_HMAC:	HMAC returned 32 bytes (256 bit)
+=======
+ * @QCEDEV_ALG_SHA384:		Digest returned: 48 bytes (384 bit)
+ * @QCEDEV_ALG_SHA512:		Digest returned: 64 bytes (512 bit)
+ * @QCEDEV_ALG_SHA1_HMAC:	HMAC returned 20 bytes (160 bits)
+ * @QCEDEV_ALG_SHA256_HMAC:	HMAC returned 32 bytes (256 bit)
+ * @QCEDEV_ALG_SHA384_HMAC:	HMAC returned 48 bytes (384 bit)
+ * @QCEDEV_ALG_SHA512_HMAC:	HMAC returned 64 bytes (512 bit)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * @QCEDEV_ALG_AES_CMAC:		Configurable MAC size
  */
 enum qcedev_sha_alg_enum {
@@ -89,6 +106,13 @@ enum qcedev_sha_alg_enum {
 	QCEDEV_ALG_SHA1_HMAC	= 2,
 	QCEDEV_ALG_SHA256_HMAC	= 3,
 	QCEDEV_ALG_AES_CMAC	= 4,
+<<<<<<< HEAD
+=======
+	QCEDEV_ALG_SHA384	= 5,
+	QCEDEV_ALG_SHA512	= 6,
+	QCEDEV_ALG_SHA384_HMAC	= 7,
+	QCEDEV_ALG_SHA512_HMAC	= 8,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	QCEDEV_ALG_SHA_ALG_LAST
 };
 

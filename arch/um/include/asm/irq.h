@@ -23,7 +23,11 @@
 #define VECTOR_BASE_IRQ		15
 #define VECTOR_IRQ_SPACE	8
 
+<<<<<<< HEAD
 #define LAST_IRQ (VECTOR_IRQ_SPACE + VECTOR_BASE_IRQ)
+=======
+#define LAST_IRQ (VECTOR_IRQ_SPACE + VECTOR_BASE_IRQ - 1)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #else
 

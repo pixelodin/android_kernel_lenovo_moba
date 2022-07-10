@@ -1,5 +1,9 @@
 /* SPDX-License-Identifier: GPL-2.0 */
+<<<<<<< HEAD
 /* Copyright (c) 2014-2019, The Linux Foundation. All rights reserved.
+=======
+/* Copyright (c) 2014-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #ifndef DIAGFWD_MHI_H
@@ -60,6 +64,10 @@ struct diag_mhi_info {
 	int mempool;
 	int mempool_init;
 	int num_read;
+<<<<<<< HEAD
+=======
+	int device_reset;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	uint8_t enabled;
 	struct mhi_device *mhi_dev;
 	char name[DIAG_MHI_NAME_SZ];

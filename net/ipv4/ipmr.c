@@ -2278,7 +2278,12 @@ int ipmr_get_route(struct net *net, struct sk_buff *skb,
 			rcu_read_unlock();
 			return -ENODEV;
 		}
+<<<<<<< HEAD
 		skb2 = skb_clone(skb, GFP_ATOMIC);
+=======
+
+		skb2 = skb_realloc_headroom(skb, sizeof(struct iphdr));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (!skb2) {
 			read_unlock(&mrt_lock);
 			rcu_read_unlock();

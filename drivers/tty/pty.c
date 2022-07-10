@@ -28,6 +28,10 @@
 #include <linux/mount.h>
 #include <linux/file.h>
 #include <linux/ioctl.h>
+<<<<<<< HEAD
+=======
+#include <linux/compat.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #undef TTY_DEBUG_HANGUP
 #ifdef TTY_DEBUG_HANGUP
@@ -488,6 +492,10 @@ static int pty_bsd_ioctl(struct tty_struct *tty,
 	return -ENOIOCTLCMD;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_COMPAT
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static long pty_bsd_compat_ioctl(struct tty_struct *tty,
 				 unsigned int cmd, unsigned long arg)
 {
@@ -495,8 +503,16 @@ static long pty_bsd_compat_ioctl(struct tty_struct *tty,
 	 * PTY ioctls don't require any special translation between 32-bit and
 	 * 64-bit userspace, they are already compatible.
 	 */
+<<<<<<< HEAD
 	return pty_bsd_ioctl(tty, cmd, arg);
 }
+=======
+	return pty_bsd_ioctl(tty, cmd, (unsigned long)compat_ptr(arg));
+}
+#else
+#define pty_bsd_compat_ioctl NULL
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 static int legacy_count = CONFIG_LEGACY_PTY_COUNT;
 /*
@@ -676,6 +692,10 @@ static int pty_unix98_ioctl(struct tty_struct *tty,
 	return -ENOIOCTLCMD;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_COMPAT
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static long pty_unix98_compat_ioctl(struct tty_struct *tty,
 				 unsigned int cmd, unsigned long arg)
 {
@@ -683,8 +703,17 @@ static long pty_unix98_compat_ioctl(struct tty_struct *tty,
 	 * PTY ioctls don't require any special translation between 32-bit and
 	 * 64-bit userspace, they are already compatible.
 	 */
+<<<<<<< HEAD
 	return pty_unix98_ioctl(tty, cmd, arg);
 }
+=======
+	return pty_unix98_ioctl(tty, cmd,
+		cmd == TIOCSIG ? arg : (unsigned long)compat_ptr(arg));
+}
+#else
+#define pty_unix98_compat_ioctl NULL
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /**
  *	ptm_unix98_lookup	-	find a pty master

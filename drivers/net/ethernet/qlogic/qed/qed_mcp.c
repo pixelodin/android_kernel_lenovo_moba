@@ -1382,7 +1382,11 @@ static void qed_mcp_handle_link_change(struct qed_hwfn *p_hwfn,
 	if (p_hwfn->mcp_info->capabilities & FW_MB_PARAM_FEATURE_SUPPORT_EEE)
 		qed_mcp_read_eee_config(p_hwfn, p_ptt, p_link);
 
+<<<<<<< HEAD
 	qed_link_update(p_hwfn);
+=======
+	qed_link_update(p_hwfn, p_ptt);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 out:
 	spin_unlock_bh(&p_hwfn->mcp_info->link_lock);
 }
@@ -1849,12 +1853,19 @@ int qed_mcp_get_mbi_ver(struct qed_hwfn *p_hwfn,
 	return 0;
 }
 
+<<<<<<< HEAD
 int qed_mcp_get_media_type(struct qed_dev *cdev, u32 *p_media_type)
 {
 	struct qed_hwfn *p_hwfn = &cdev->hwfns[0];
 	struct qed_ptt  *p_ptt;
 
 	if (IS_VF(cdev))
+=======
+int qed_mcp_get_media_type(struct qed_hwfn *p_hwfn,
+			   struct qed_ptt *p_ptt, u32 *p_media_type)
+{
+	if (IS_VF(p_hwfn->cdev))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EINVAL;
 
 	if (!qed_mcp_is_init(p_hwfn)) {
@@ -1862,6 +1873,7 @@ int qed_mcp_get_media_type(struct qed_dev *cdev, u32 *p_media_type)
 		return -EBUSY;
 	}
 
+<<<<<<< HEAD
 	*p_media_type = MEDIA_UNSPECIFIED;
 
 	p_ptt = qed_ptt_acquire(p_hwfn);
@@ -1872,6 +1884,17 @@ int qed_mcp_get_media_type(struct qed_dev *cdev, u32 *p_media_type)
 			       offsetof(struct public_port, media_type));
 
 	qed_ptt_release(p_hwfn, p_ptt);
+=======
+	if (!p_ptt) {
+		*p_media_type = MEDIA_UNSPECIFIED;
+		return -EINVAL;
+	}
+
+	*p_media_type = qed_rd(p_hwfn, p_ptt,
+			       p_hwfn->mcp_info->port_addr +
+			       offsetof(struct public_port,
+					media_type));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return 0;
 }

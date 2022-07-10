@@ -295,7 +295,11 @@ struct fts_ts_info {
 
 	struct notifier_block notifier;
 	bool sensor_sleep;
+<<<<<<< HEAD
 	struct wakeup_source wakeup_source;
+=======
+	struct wakeup_source *wakeup_source;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* input lock */
 	struct mutex input_report_mutex;

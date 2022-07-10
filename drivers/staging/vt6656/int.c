@@ -97,9 +97,17 @@ static int vnt_int_report_rate(struct vnt_private *priv, u8 pkt_no, u8 tsr)
 
 	info->status.rates[0].count = tx_retry;
 
+<<<<<<< HEAD
 	if (!(tsr & (TSR_TMO | TSR_RETRYTMO))) {
 		info->status.rates[0].idx = idx;
 		info->flags |= IEEE80211_TX_STAT_ACK;
+=======
+	if (!(tsr & TSR_TMO)) {
+		info->status.rates[0].idx = idx;
+
+		if (!(info->flags & IEEE80211_TX_CTL_NO_ACK))
+			info->flags |= IEEE80211_TX_STAT_ACK;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	ieee80211_tx_status_irqsafe(priv->hw, context->skb);

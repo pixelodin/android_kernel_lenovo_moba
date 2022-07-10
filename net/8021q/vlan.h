@@ -114,6 +114,10 @@ int vlan_check_real_dev(struct net_device *real_dev,
 void vlan_setup(struct net_device *dev);
 int register_vlan_dev(struct net_device *dev, struct netlink_ext_ack *extack);
 void unregister_vlan_dev(struct net_device *dev, struct list_head *head);
+<<<<<<< HEAD
+=======
+void vlan_dev_uninit(struct net_device *dev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 bool vlan_dev_inherit_address(struct net_device *dev,
 			      struct net_device *real_dev);
 

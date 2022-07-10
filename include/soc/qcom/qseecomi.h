@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 /*
+<<<<<<< HEAD
  * Copyright (c) 2013-2018, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2013-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #ifndef __QSEECOMI_H_
@@ -23,6 +27,11 @@
 #define QSEOS_RESULT_FAIL_MAX_ATTEMPT         -72
 #define QSEOS_RESULT_FAIL_PENDING_OPERATION   -73
 
+<<<<<<< HEAD
+=======
+#define SMCINVOKE_RESULT_INBOUND_REQ_NEEDED	3
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 enum qseecom_command_scm_resp_type {
 	QSEOS_APP_ID = 0xEE01,
 	QSEOS_LISTENER_ID
@@ -77,6 +86,10 @@ enum qseecom_qceos_cmd_status {
 	QSEOS_RESULT_SUCCESS = 0,
 	QSEOS_RESULT_INCOMPLETE,
 	QSEOS_RESULT_BLOCKED_ON_LISTENER,
+<<<<<<< HEAD
+=======
+	QSEOS_RESULT_CBACK_REQUEST,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	QSEOS_RESULT_FAILURE  = 0xFFFFFFFF
 };
 

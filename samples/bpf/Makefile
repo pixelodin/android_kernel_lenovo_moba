@@ -172,6 +172,10 @@ KBUILD_HOSTCFLAGS += -I$(srctree)/tools/lib/
 KBUILD_HOSTCFLAGS += -I$(srctree)/tools/testing/selftests/bpf/
 KBUILD_HOSTCFLAGS += -I$(srctree)/tools/lib/ -I$(srctree)/tools/include
 KBUILD_HOSTCFLAGS += -I$(srctree)/tools/perf
+<<<<<<< HEAD
+=======
+KBUILD_HOSTCFLAGS += -DHAVE_ATTR_TEST=0
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 HOSTCFLAGS_bpf_load.o += -I$(objtree)/usr/include -Wno-unused-variable
 HOSTCFLAGS_trace_helpers.o += -I$(srctree)/tools/lib/bpf/
@@ -220,7 +224,11 @@ all:
 
 clean:
 	$(MAKE) -C ../../ M=$(CURDIR) clean
+<<<<<<< HEAD
 	@rm -f *~
+=======
+	@find $(CURDIR) -type f -name '*~' -delete
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 $(LIBBPF): FORCE
 # Fix up variables inherited from Kbuild that tools/ build system won't like

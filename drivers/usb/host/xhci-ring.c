@@ -1609,7 +1609,10 @@ static void handle_port_status(struct xhci_hcd *xhci,
 		slot_id = xhci_find_slot_id_by_port(hcd, xhci, hcd_portnum + 1);
 		if (slot_id && xhci->devs[slot_id])
 			xhci->devs[slot_id]->flags |= VDEV_PORT_ERROR;
+<<<<<<< HEAD
 		bus_state->port_remote_wakeup &= ~(1 << hcd_portnum);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	if ((portsc & PORT_PLC) && (portsc & PORT_PLS_MASK) == XDEV_RESUME) {
@@ -1630,6 +1633,10 @@ static void handle_port_status(struct xhci_hcd *xhci,
 			bus_state->port_remote_wakeup |= 1 << hcd_portnum;
 			xhci_test_and_clear_bit(xhci, port, PORT_PLC);
 			xhci_set_link_state(xhci, port, XDEV_U0);
+<<<<<<< HEAD
+=======
+			usb_hcd_start_port_resume(&hcd->self, hcd_portnum);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			/* Need to wait until the next link state change
 			 * indicates the device is actually in U0.
 			 */
@@ -1669,7 +1676,10 @@ static void handle_port_status(struct xhci_hcd *xhci,
 		if (slot_id && xhci->devs[slot_id])
 			xhci_ring_device(xhci, slot_id);
 		if (bus_state->port_remote_wakeup & (1 << hcd_portnum)) {
+<<<<<<< HEAD
 			bus_state->port_remote_wakeup &= ~(1 << hcd_portnum);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			xhci_test_and_clear_bit(xhci, port, PORT_PLC);
 			usb_wakeup_notification(hcd->self.root_hub,
 					hcd_portnum + 1);
@@ -2330,7 +2340,12 @@ static int handle_tx_event(struct xhci_hcd *xhci,
 	case COMP_SUCCESS:
 		if (EVENT_TRB_LEN(le32_to_cpu(event->transfer_len)) == 0)
 			break;
+<<<<<<< HEAD
 		if (xhci->quirks & XHCI_TRUST_TX_LENGTH)
+=======
+		if (xhci->quirks & XHCI_TRUST_TX_LENGTH ||
+		    ep_ring->last_td_was_short)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			trb_comp_code = COMP_SHORT_PACKET;
 		else
 			xhci_warn_ratelimited(xhci,
@@ -2693,6 +2708,45 @@ static int xhci_handle_event(struct xhci_hcd *xhci)
 }
 
 /*
+<<<<<<< HEAD
+=======
+ * Update Event Ring Dequeue Pointer:
+ * - When all events have finished
+ * - To avoid "Event Ring Full Error" condition
+ */
+static void xhci_update_erst_dequeue(struct xhci_hcd *xhci,
+		union xhci_trb *event_ring_deq)
+{
+	u64 temp_64;
+	dma_addr_t deq;
+
+	temp_64 = xhci_read_64(xhci, &xhci->ir_set->erst_dequeue);
+	/* If necessary, update the HW's version of the event ring deq ptr. */
+	if (event_ring_deq != xhci->event_ring->dequeue) {
+		deq = xhci_trb_virt_to_dma(xhci->event_ring->deq_seg,
+				xhci->event_ring->dequeue);
+		if (deq == 0)
+			xhci_warn(xhci, "WARN something wrong with SW event ring dequeue ptr\n");
+		/*
+		 * Per 4.9.4, Software writes to the ERDP register shall
+		 * always advance the Event Ring Dequeue Pointer value.
+		 */
+		if ((temp_64 & (u64) ~ERST_PTR_MASK) ==
+				((u64) deq & (u64) ~ERST_PTR_MASK))
+			return;
+
+		/* Update HC event ring dequeue pointer */
+		temp_64 &= ERST_PTR_MASK;
+		temp_64 |= ((u64) deq & (u64) ~ERST_PTR_MASK);
+	}
+
+	/* Clear the event handler busy flag (RW1C) */
+	temp_64 |= ERST_EHB;
+	xhci_write_64(xhci, temp_64, &xhci->ir_set->erst_dequeue);
+}
+
+/*
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * xHCI spec says we can get an interrupt, and if the HC has an error condition,
  * we might get bad data out of the event ring.  Section 4.10.2.7 has a list of
  * indicators of an event TRB error, but we check the status *first* to be safe.
@@ -2703,9 +2757,15 @@ irqreturn_t xhci_irq(struct usb_hcd *hcd)
 	union xhci_trb *event_ring_deq;
 	irqreturn_t ret = IRQ_NONE;
 	unsigned long flags;
+<<<<<<< HEAD
 	dma_addr_t deq;
 	u64 temp_64;
 	u32 status;
+=======
+	u64 temp_64;
+	u32 status;
+	int event_loop = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	spin_lock_irqsave(&xhci->lock, flags);
 	/* Check if the xHC generated the interrupt, or the irq is shared */
@@ -2759,6 +2819,7 @@ irqreturn_t xhci_irq(struct usb_hcd *hcd)
 	/* FIXME this should be a delayed service routine
 	 * that clears the EHB.
 	 */
+<<<<<<< HEAD
 	while (xhci_handle_event(xhci) > 0) {}
 
 	temp_64 = xhci_read_64(xhci, &xhci->ir_set->erst_dequeue);
@@ -2777,6 +2838,16 @@ irqreturn_t xhci_irq(struct usb_hcd *hcd)
 	/* Clear the event handler busy flag (RW1C); event ring is empty. */
 	temp_64 |= ERST_EHB;
 	xhci_write_64(xhci, temp_64, &xhci->ir_set->erst_dequeue);
+=======
+	while (xhci_handle_event(xhci) > 0) {
+		if (event_loop++ < TRBS_PER_SEGMENT / 2)
+			continue;
+		xhci_update_erst_dequeue(xhci, event_ring_deq);
+		event_loop = 0;
+	}
+
+	xhci_update_erst_dequeue(xhci, event_ring_deq);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = IRQ_HANDLED;
 
 out:
@@ -3305,8 +3376,13 @@ int xhci_queue_bulk_tx(struct xhci_hcd *xhci, gfp_t mem_flags,
 			/* New sg entry */
 			--num_sgs;
 			sent_len -= block_len;
+<<<<<<< HEAD
 			if (num_sgs != 0) {
 				sg = sg_next(sg);
+=======
+			sg = sg_next(sg);
+			if (num_sgs != 0 && sg) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				block_len = sg_dma_len(sg);
 				addr = (u64) sg_dma_address(sg);
 				addr += sent_len;

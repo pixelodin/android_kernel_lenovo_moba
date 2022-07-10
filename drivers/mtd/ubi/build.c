@@ -1101,10 +1101,17 @@ int ubi_detach_mtd_dev(int ubi_num, int anyway)
 	ubi_wl_close(ubi);
 	ubi_free_internal_volumes(ubi);
 	vfree(ubi->vtbl);
+<<<<<<< HEAD
 	put_mtd_device(ubi->mtd);
 	vfree(ubi->peb_buf);
 	vfree(ubi->fm_buf);
 	ubi_msg(ubi, "mtd%d is detached", ubi->mtd->index);
+=======
+	vfree(ubi->peb_buf);
+	vfree(ubi->fm_buf);
+	ubi_msg(ubi, "mtd%d is detached", ubi->mtd->index);
+	put_mtd_device(ubi->mtd);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	put_device(&ubi->dev);
 	return 0;
 }

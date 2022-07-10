@@ -46,7 +46,11 @@ static struct usb_interface_descriptor gser_interface_desc = {
 	.bNumEndpoints =	2,
 	.bInterfaceClass =	USB_CLASS_VENDOR_SPEC,
 	.bInterfaceSubClass =	0,
+<<<<<<< HEAD
 	.bInterfaceProtocol =	0,
+=======
+	.bInterfaceProtocol =	0x40,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* .iInterface = DYNAMIC */
 };
 

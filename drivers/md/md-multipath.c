@@ -112,10 +112,16 @@ static bool multipath_make_request(struct mddev *mddev, struct bio * bio)
 	struct multipath_bh * mp_bh;
 	struct multipath_info *multipath;
 
+<<<<<<< HEAD
 	if (unlikely(bio->bi_opf & REQ_PREFLUSH)) {
 		md_flush_request(mddev, bio);
 		return true;
 	}
+=======
+	if (unlikely(bio->bi_opf & REQ_PREFLUSH)
+	    && md_flush_request(mddev, bio))
+		return true;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	mp_bh = mempool_alloc(&conf->pool, GFP_NOIO);
 

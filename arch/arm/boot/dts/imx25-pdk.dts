@@ -12,6 +12,10 @@
 	compatible = "fsl,imx25-pdk", "fsl,imx25";
 
 	memory@80000000 {
+<<<<<<< HEAD
+=======
+		device_type = "memory";
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		reg = <0x80000000 0x4000000>;
 	};
 

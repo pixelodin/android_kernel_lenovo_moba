@@ -724,7 +724,10 @@ start_journal_io:
 				submit_bh(REQ_OP_WRITE, REQ_SYNC, bh);
 			}
 			cond_resched();
+<<<<<<< HEAD
 			stats.run.rs_blocks_logged += bufs;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 			/* Force a new descriptor to be generated next
                            time round the loop. */
@@ -782,7 +785,11 @@ start_journal_io:
 		err = journal_submit_commit_record(journal, commit_transaction,
 						 &cbh, crc32_sum);
 		if (err)
+<<<<<<< HEAD
 			__jbd2_journal_abort_hard(journal);
+=======
+			jbd2_journal_abort(journal, err);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	blk_finish_plug(&plug);
@@ -811,6 +818,10 @@ start_journal_io:
 		if (unlikely(!buffer_uptodate(bh)))
 			err = -EIO;
 		jbd2_unfile_log_bh(bh);
+<<<<<<< HEAD
+=======
+		stats.run.rs_blocks_logged++;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		/*
 		 * The list contains temporary buffer heads created by
@@ -856,6 +867,10 @@ start_journal_io:
 		BUFFER_TRACE(bh, "ph5: control buffer writeout done: unfile");
 		clear_buffer_jwrite(bh);
 		jbd2_unfile_log_bh(bh);
+<<<<<<< HEAD
+=======
+		stats.run.rs_blocks_logged++;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		__brelse(bh);		/* One for getblk */
 		/* AKPM: bforget here */
 	}
@@ -873,10 +888,18 @@ start_journal_io:
 		err = journal_submit_commit_record(journal, commit_transaction,
 						&cbh, crc32_sum);
 		if (err)
+<<<<<<< HEAD
 			__jbd2_journal_abort_hard(journal);
 	}
 	if (cbh)
 		err = journal_wait_on_commit_record(journal, cbh);
+=======
+			jbd2_journal_abort(journal, err);
+	}
+	if (cbh)
+		err = journal_wait_on_commit_record(journal, cbh);
+	stats.run.rs_blocks_logged++;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (jbd2_has_feature_async_commit(journal) &&
 	    journal->j_flags & JBD2_BARRIER) {
 		blkdev_issue_flush(journal->j_dev, GFP_NOFS, NULL);
@@ -969,6 +992,7 @@ restart_loop:
 		 * it. */
 
 		/*
+<<<<<<< HEAD
 		* A buffer which has been freed while still being journaled by
 		* a previous transaction.
 		*/
@@ -992,6 +1016,35 @@ restart_loop:
 			if (!jh->b_next_transaction) {
 				clear_buffer_freed(bh);
 				clear_buffer_jbddirty(bh);
+=======
+		 * A buffer which has been freed while still being journaled
+		 * by a previous transaction, refile the buffer to BJ_Forget of
+		 * the running transaction. If the just committed transaction
+		 * contains "add to orphan" operation, we can completely
+		 * invalidate the buffer now. We are rather through in that
+		 * since the buffer may be still accessible when blocksize <
+		 * pagesize and it is attached to the last partial page.
+		 */
+		if (buffer_freed(bh) && !jh->b_next_transaction) {
+			struct address_space *mapping;
+
+			clear_buffer_freed(bh);
+			clear_buffer_jbddirty(bh);
+
+			/*
+			 * Block device buffers need to stay mapped all the
+			 * time, so it is enough to clear buffer_jbddirty and
+			 * buffer_freed bits. For the file mapping buffers (i.e.
+			 * journalled data) we need to unmap buffer and clear
+			 * more bits. We also need to be careful about the check
+			 * because the data page mapping can get cleared under
+			 * out hands, which alse need not to clear more bits
+			 * because the page and buffers will be freed and can
+			 * never be reused once we are done with them.
+			 */
+			mapping = READ_ONCE(bh->b_page->mapping);
+			if (mapping && !sb_is_blkdev_sb(mapping->host->i_sb)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				clear_buffer_mapped(bh);
 				clear_buffer_new(bh);
 				clear_buffer_req(bh);

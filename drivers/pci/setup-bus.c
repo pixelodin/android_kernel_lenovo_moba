@@ -1820,12 +1820,26 @@ again:
 	/* restore size and flags */
 	list_for_each_entry(fail_res, &fail_head, list) {
 		struct resource *res = fail_res->res;
+<<<<<<< HEAD
+=======
+		int idx;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		res->start = fail_res->start;
 		res->end = fail_res->end;
 		res->flags = fail_res->flags;
+<<<<<<< HEAD
 		if (fail_res->dev->subordinate)
 			res->flags = 0;
+=======
+
+		if (pci_is_bridge(fail_res->dev)) {
+			idx = res - &fail_res->dev->resource[0];
+			if (idx >= PCI_BRIDGE_RESOURCES &&
+			    idx <= PCI_BRIDGE_RESOURCE_END)
+				res->flags = 0;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	free_list(&fail_head);
 
@@ -2066,12 +2080,26 @@ again:
 	/* restore size and flags */
 	list_for_each_entry(fail_res, &fail_head, list) {
 		struct resource *res = fail_res->res;
+<<<<<<< HEAD
+=======
+		int idx;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		res->start = fail_res->start;
 		res->end = fail_res->end;
 		res->flags = fail_res->flags;
+<<<<<<< HEAD
 		if (fail_res->dev->subordinate)
 			res->flags = 0;
+=======
+
+		if (pci_is_bridge(fail_res->dev)) {
+			idx = res - &fail_res->dev->resource[0];
+			if (idx >= PCI_BRIDGE_RESOURCES &&
+			    idx <= PCI_BRIDGE_RESOURCE_END)
+				res->flags = 0;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	free_list(&fail_head);
 

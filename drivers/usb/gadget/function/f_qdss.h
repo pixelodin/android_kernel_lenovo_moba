@@ -50,7 +50,10 @@ struct f_qdss {
 	bool debug_inface_enabled;
 	struct usb_request *endless_req;
 	struct usb_qdss_ch ch;
+<<<<<<< HEAD
 	struct list_head ctrl_write_pool;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* for mdm channel SW path */
 	struct list_head data_write_pool;
@@ -88,4 +91,8 @@ struct usb_qdss_opts {
 
 int uninit_data(struct usb_ep *ep);
 int set_qdss_data_connection(struct f_qdss *qdss, int enable);
+<<<<<<< HEAD
+=======
+int alloc_sps_req(struct usb_ep *data_ep);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif

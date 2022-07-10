@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 /*
+<<<<<<< HEAD
  * Copyright (c) 2002,2007-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2002, 2007-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 #ifndef __KGSL_SHAREDMEM_H
 #define __KGSL_SHAREDMEM_H
@@ -75,6 +79,31 @@ void kgsl_free_secure_page(struct page *page);
 
 struct page *kgsl_alloc_secure_page(void);
 
+<<<<<<< HEAD
+=======
+/**
+ * kgsl_free_pages() - Free pages in the pages array
+ * @memdesc: memdesc that has the array to be freed
+ *
+ * Free the pages in the pages array of memdesc. If pool
+ * is configured, pages are added back to the pool.
+ * If shmem is used for allocation, kgsl refcount on the page
+ * is decremented.
+ */
+void kgsl_free_pages(struct kgsl_memdesc *memdesc);
+
+/**
+ * kgsl_free_pages_from_sgt() - Free scatter-gather list
+ * @memdesc: pointer of the memdesc which has the sgt to be freed
+ *
+ * Free the sg list by collapsing any physical adjacent pages.
+ * If pool is configured, pages are added back to the pool.
+ * If shmem is used for allocation, kgsl refcount on the page
+ * is decremented.
+ */
+void kgsl_free_pages_from_sgt(struct kgsl_memdesc *memdesc);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define MEMFLAGS(_flags, _mask, _shift) \
 	((unsigned int) (((_flags) & (_mask)) >> (_shift)))
 
@@ -201,6 +230,20 @@ kgsl_memdesc_has_guard_page(const struct kgsl_memdesc *memdesc)
 	return (memdesc->priv & KGSL_MEMDESC_GUARD_PAGE) != 0;
 }
 
+<<<<<<< HEAD
+=======
+/**
+ * kgsl_memdesc_is_reclaimed - check if a buffer is reclaimed
+ * @memdesc: the memdesc
+ *
+ * Return: true if the memdesc pages were reclaimed, false otherwise
+ */
+static inline bool kgsl_memdesc_is_reclaimed(const struct kgsl_memdesc *memdesc)
+{
+	return memdesc && (memdesc->priv & KGSL_MEMDESC_RECLAIMED);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * kgsl_memdesc_guard_page_size - returns guard page size
  * @memdesc - the memdesc
@@ -334,8 +377,17 @@ static inline void kgsl_free_sgt(struct sg_table *sgt)
  * Return supported pagesize
  */
 #ifndef CONFIG_ALLOC_BUFFERS_IN_4K_CHUNKS
+<<<<<<< HEAD
 static inline int kgsl_get_page_size(size_t size, unsigned int align)
 {
+=======
+static inline int kgsl_get_page_size(size_t size, unsigned int align,
+			struct kgsl_memdesc *memdesc)
+{
+	if (memdesc->priv & KGSL_MEMDESC_USE_SHMEM)
+		return PAGE_SIZE;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (align >= ilog2(SZ_1M) && size >= SZ_1M &&
 		kgsl_pool_avaialable(SZ_1M))
 		return SZ_1M;
@@ -355,4 +407,54 @@ static inline int kgsl_get_page_size(size_t size, unsigned int align)
 }
 #endif
 
+<<<<<<< HEAD
+=======
+/**
+ * kgsl_gfp_mask() - get gfp_mask to be used
+ * @page_order: order of the page
+ *
+ * Get the gfp_mask to be used for page allocation
+ * based on the order of the page
+ *
+ * Return appropriate gfp_mask
+ */
+unsigned int kgsl_gfp_mask(unsigned int page_order);
+
+/**
+ * kgsl_zero_page() - zero out a page
+ * @p: pointer to the struct page
+ * @order: order of the page
+ *
+ * Map a page into kernel and zero it out
+ */
+void kgsl_zero_page(struct page *page, unsigned int order);
+
+/**
+ * kgsl_flush_page - flush a page
+ * @page: pointer to the struct page
+ *
+ * Map a page into kernel and flush it
+ */
+void kgsl_flush_page(struct page *page);
+
+/**
+ * struct kgsl_process_attribute - basic attribute for a process
+ * @attr: Underlying struct attribute
+ * @show: Attribute show function
+ * @store: Attribute store function
+ */
+struct kgsl_process_attribute {
+	struct attribute attr;
+	ssize_t (*show)(struct kobject *kobj,
+			struct kgsl_process_attribute *attr, char *buf);
+	ssize_t (*store)(struct kobject *kobj,
+		struct kgsl_process_attribute *attr, const char *buf,
+		ssize_t count);
+};
+
+#define PROCESS_ATTR(_name, _mode, _show, _store) \
+	static struct kgsl_process_attribute attr_##_name = \
+			__ATTR(_name, _mode, _show, _store)
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif /* __KGSL_SHAREDMEM_H */

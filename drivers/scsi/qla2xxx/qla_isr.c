@@ -1049,8 +1049,11 @@ global_port_update:
 			ql_dbg(ql_dbg_async, vha, 0x5011,
 			    "Asynchronous PORT UPDATE ignored %04x/%04x/%04x.\n",
 			    mb[1], mb[2], mb[3]);
+<<<<<<< HEAD
 
 			qlt_async_event(mb[0], vha, mb);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			break;
 		}
 
@@ -1067,8 +1070,11 @@ global_port_update:
 		set_bit(LOOP_RESYNC_NEEDED, &vha->dpc_flags);
 		set_bit(LOCAL_LOOP_UPDATE, &vha->dpc_flags);
 		set_bit(VP_CONFIG_OK, &vha->vp_flags);
+<<<<<<< HEAD
 
 		qlt_async_event(mb[0], vha, mb);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 
 	case MBA_RSCN_UPDATE:		/* State Change Registration */
@@ -1880,6 +1886,21 @@ static void qla24xx_nvme_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
 		inbuf = (uint32_t *)&sts->nvme_ersp_data;
 		outbuf = (uint32_t *)fd->rspaddr;
 		iocb->u.nvme.rsp_pyld_len = le16_to_cpu(sts->nvme_rsp_pyld_len);
+<<<<<<< HEAD
+=======
+		if (unlikely(iocb->u.nvme.rsp_pyld_len >
+		    sizeof(struct nvme_fc_ersp_iu))) {
+			if (ql_mask_match(ql_dbg_io)) {
+				WARN_ONCE(1, "Unexpected response payload length %u.\n",
+				    iocb->u.nvme.rsp_pyld_len);
+				ql_log(ql_log_warn, fcport->vha, 0x5100,
+				    "Unexpected response payload length %u.\n",
+				    iocb->u.nvme.rsp_pyld_len);
+			}
+			iocb->u.nvme.rsp_pyld_len =
+			    sizeof(struct nvme_fc_ersp_iu);
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		iter = iocb->u.nvme.rsp_pyld_len >> 2;
 		for (; iter; iter--)
 			*outbuf++ = swab32(*inbuf++);
@@ -2837,6 +2858,10 @@ qla2x00_error_entry(scsi_qla_host_t *vha, struct rsp_que *rsp, sts_entry_t *pkt)
 	case ELS_IOCB_TYPE:
 	case ABORT_IOCB_TYPE:
 	case MBX_IOCB_TYPE:
+<<<<<<< HEAD
+=======
+	default:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		sp = qla2x00_get_sp_from_handle(vha, func, req, pkt);
 		if (sp) {
 			sp->done(sp, res);
@@ -2847,7 +2872,10 @@ qla2x00_error_entry(scsi_qla_host_t *vha, struct rsp_que *rsp, sts_entry_t *pkt)
 	case ABTS_RESP_24XX:
 	case CTIO_TYPE7:
 	case CTIO_CRC2:
+<<<<<<< HEAD
 	default:
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return 1;
 	}
 fatal:
@@ -3121,6 +3149,10 @@ qla24xx_intr_handler(int irq, void *dev_id)
 	uint16_t	mb[8];
 	struct rsp_que *rsp;
 	unsigned long	flags;
+<<<<<<< HEAD
+=======
+	bool process_atio = false;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	rsp = (struct rsp_que *) dev_id;
 	if (!rsp) {
@@ -3181,6 +3213,7 @@ qla24xx_intr_handler(int irq, void *dev_id)
 			qla24xx_process_response_queue(vha, rsp);
 			break;
 		case INTR_ATIO_QUE_UPDATE_27XX:
+<<<<<<< HEAD
 		case INTR_ATIO_QUE_UPDATE:{
 			unsigned long flags2;
 			spin_lock_irqsave(&ha->tgt.atio_lock, flags2);
@@ -3197,6 +3230,15 @@ qla24xx_intr_handler(int irq, void *dev_id)
 			qla24xx_process_response_queue(vha, rsp);
 			break;
 		}
+=======
+		case INTR_ATIO_QUE_UPDATE:
+			process_atio = true;
+			break;
+		case INTR_ATIO_RSP_QUE_UPDATE:
+			process_atio = true;
+			qla24xx_process_response_queue(vha, rsp);
+			break;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		default:
 			ql_dbg(ql_dbg_async, vha, 0x504f,
 			    "Unrecognized interrupt type (%d).\n", stat * 0xff);
@@ -3210,6 +3252,15 @@ qla24xx_intr_handler(int irq, void *dev_id)
 	qla2x00_handle_mbx_completion(ha, status);
 	spin_unlock_irqrestore(&ha->hardware_lock, flags);
 
+<<<<<<< HEAD
+=======
+	if (process_atio) {
+		spin_lock_irqsave(&ha->tgt.atio_lock, flags);
+		qlt_24xx_process_atio_queue(vha, 0);
+		spin_unlock_irqrestore(&ha->tgt.atio_lock, flags);
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return IRQ_HANDLED;
 }
 
@@ -3256,6 +3307,10 @@ qla24xx_msix_default(int irq, void *dev_id)
 	uint32_t	hccr;
 	uint16_t	mb[8];
 	unsigned long flags;
+<<<<<<< HEAD
+=======
+	bool process_atio = false;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	rsp = (struct rsp_que *) dev_id;
 	if (!rsp) {
@@ -3312,6 +3367,7 @@ qla24xx_msix_default(int irq, void *dev_id)
 			qla24xx_process_response_queue(vha, rsp);
 			break;
 		case INTR_ATIO_QUE_UPDATE_27XX:
+<<<<<<< HEAD
 		case INTR_ATIO_QUE_UPDATE:{
 			unsigned long flags2;
 			spin_lock_irqsave(&ha->tgt.atio_lock, flags2);
@@ -3328,6 +3384,15 @@ qla24xx_msix_default(int irq, void *dev_id)
 			qla24xx_process_response_queue(vha, rsp);
 			break;
 		}
+=======
+		case INTR_ATIO_QUE_UPDATE:
+			process_atio = true;
+			break;
+		case INTR_ATIO_RSP_QUE_UPDATE:
+			process_atio = true;
+			qla24xx_process_response_queue(vha, rsp);
+			break;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		default:
 			ql_dbg(ql_dbg_async, vha, 0x5051,
 			    "Unrecognized interrupt type (%d).\n", stat & 0xff);
@@ -3338,6 +3403,15 @@ qla24xx_msix_default(int irq, void *dev_id)
 	qla2x00_handle_mbx_completion(ha, status);
 	spin_unlock_irqrestore(&ha->hardware_lock, flags);
 
+<<<<<<< HEAD
+=======
+	if (process_atio) {
+		spin_lock_irqsave(&ha->tgt.atio_lock, flags);
+		qlt_24xx_process_atio_queue(vha, 0);
+		spin_unlock_irqrestore(&ha->tgt.atio_lock, flags);
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return IRQ_HANDLED;
 }
 
@@ -3422,10 +3496,15 @@ qla24xx_enable_msix(struct qla_hw_data *ha, struct rsp_que *rsp)
 		    ha->msix_count, ret);
 		goto msix_out;
 	} else if (ret < ha->msix_count) {
+<<<<<<< HEAD
 		ql_log(ql_log_warn, vha, 0x00c6,
 		    "MSI-X: Failed to enable support "
 		     "with %d vectors, using %d vectors.\n",
 		    ha->msix_count, ret);
+=======
+		ql_log(ql_log_info, vha, 0x00c6,
+		    "MSI-X: Using %d vectors\n", ret);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ha->msix_count = ret;
 		/* Recalculate queue values */
 		if (ha->mqiobase && (ql2xmqsupport || ql2xnvmeenable)) {
@@ -3583,7 +3662,11 @@ qla2x00_request_irqs(struct qla_hw_data *ha, struct rsp_que *rsp)
 skip_msix:
 
 	ql_log(ql_log_info, vha, 0x0037,
+<<<<<<< HEAD
 	    "Falling back-to MSI mode -%d.\n", ret);
+=======
+	    "Falling back-to MSI mode -- ret=%d.\n", ret);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!IS_QLA24XX(ha) && !IS_QLA2532(ha) && !IS_QLA8432(ha) &&
 	    !IS_QLA8001(ha) && !IS_P3P_TYPE(ha) && !IS_QLAFX00(ha) &&
@@ -3591,13 +3674,21 @@ skip_msix:
 		goto skip_msi;
 
 	ret = pci_alloc_irq_vectors(ha->pdev, 1, 1, PCI_IRQ_MSI);
+<<<<<<< HEAD
 	if (!ret) {
+=======
+	if (ret > 0) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ql_dbg(ql_dbg_init, vha, 0x0038,
 		    "MSI: Enabled.\n");
 		ha->flags.msi_enabled = 1;
 	} else
 		ql_log(ql_log_warn, vha, 0x0039,
+<<<<<<< HEAD
 		    "Falling back-to INTa mode -- %d.\n", ret);
+=======
+		    "Falling back-to INTa mode -- ret=%d.\n", ret);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 skip_msi:
 
 	/* Skip INTx on ISP82xx. */

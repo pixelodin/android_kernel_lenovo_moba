@@ -26,6 +26,10 @@
 #include <linux/of.h>
 #include <linux/module.h>
 #include <linux/pm_runtime.h>
+<<<<<<< HEAD
+=======
+#include <linux/iopoll.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define CDNS_UART_TTY_NAME	"ttyPS"
 #define CDNS_UART_NAME		"xuartps"
@@ -34,6 +38,10 @@
 #define CDNS_UART_NR_PORTS	2
 #define CDNS_UART_FIFO_SIZE	64	/* FIFO size */
 #define CDNS_UART_REGISTER_SPACE	0x1000
+<<<<<<< HEAD
+=======
+#define TX_TIMEOUT		500000
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /* Rx Trigger level */
 static int rx_trigger_level = 56;
@@ -681,18 +689,35 @@ static void cdns_uart_set_termios(struct uart_port *port,
 	unsigned int cval = 0;
 	unsigned int baud, minbaud, maxbaud;
 	unsigned long flags;
+<<<<<<< HEAD
 	unsigned int ctrl_reg, mode_reg;
 
 	spin_lock_irqsave(&port->lock, flags);
+=======
+	unsigned int ctrl_reg, mode_reg, val;
+	int err;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Wait for the transmit FIFO to empty before making changes */
 	if (!(readl(port->membase + CDNS_UART_CR) &
 				CDNS_UART_CR_TX_DIS)) {
+<<<<<<< HEAD
 		while (!(readl(port->membase + CDNS_UART_SR) &
 				CDNS_UART_SR_TXEMPTY)) {
 			cpu_relax();
 		}
 	}
+=======
+		err = readl_poll_timeout(port->membase + CDNS_UART_SR,
+					 val, (val & CDNS_UART_SR_TXEMPTY),
+					 1000, TX_TIMEOUT);
+		if (err) {
+			dev_err(port->dev, "timed out waiting for tx empty");
+			return;
+		}
+	}
+	spin_lock_irqsave(&port->lock, flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Disable the TX and RX to set baud rate */
 	ctrl_reg = readl(port->membase + CDNS_UART_CR);
@@ -1279,6 +1304,7 @@ static struct uart_driver cdns_uart_uart_driver = {
 static int cdns_uart_suspend(struct device *device)
 {
 	struct uart_port *port = dev_get_drvdata(device);
+<<<<<<< HEAD
 	struct tty_struct *tty;
 	struct device *tty_dev;
 	int may_wake = 0;
@@ -1297,6 +1323,13 @@ static int cdns_uart_suspend(struct device *device)
 	 */
 	uart_suspend_port(&cdns_uart_uart_driver, port);
 	if (!(console_suspend_enabled && !may_wake)) {
+=======
+	int may_wake;
+
+	may_wake = device_may_wakeup(device);
+
+	if (console_suspend_enabled && may_wake) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		unsigned long flags = 0;
 
 		spin_lock_irqsave(&port->lock, flags);
@@ -1311,7 +1344,15 @@ static int cdns_uart_suspend(struct device *device)
 		spin_unlock_irqrestore(&port->lock, flags);
 	}
 
+<<<<<<< HEAD
 	return 0;
+=======
+	/*
+	 * Call the API provided in serial_core.c file which handles
+	 * the suspend.
+	 */
+	return uart_suspend_port(&cdns_uart_uart_driver, port);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /**
@@ -1325,6 +1366,7 @@ static int cdns_uart_resume(struct device *device)
 	struct uart_port *port = dev_get_drvdata(device);
 	unsigned long flags = 0;
 	u32 ctrl_reg;
+<<<<<<< HEAD
 	struct tty_struct *tty;
 	struct device *tty_dev;
 	int may_wake = 0;
@@ -1336,6 +1378,11 @@ static int cdns_uart_resume(struct device *device)
 		may_wake = device_may_wakeup(tty_dev);
 		tty_kref_put(tty);
 	}
+=======
+	int may_wake;
+
+	may_wake = device_may_wakeup(device);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (console_suspend_enabled && !may_wake) {
 		struct cdns_uart *cdns_uart = port->private_data;

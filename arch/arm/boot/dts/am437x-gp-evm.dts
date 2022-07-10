@@ -83,7 +83,11 @@
 		};
 
 	lcd0: display {
+<<<<<<< HEAD
 		compatible = "osddisplays,osd057T0559-34ts", "panel-dpi";
+=======
+		compatible = "osddisplays,osd070t1718-19ts", "panel-dpi";
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		label = "lcd";
 
 		backlight = <&lcd_bl>;

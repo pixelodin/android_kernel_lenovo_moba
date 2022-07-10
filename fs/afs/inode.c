@@ -398,12 +398,18 @@ int afs_validate(struct afs_vnode *vnode, struct key *key)
 			vnode->cb_s_break = vnode->cb_interest->server->cb_s_break;
 			vnode->cb_v_break = vnode->volume->cb_v_break;
 			valid = false;
+<<<<<<< HEAD
 		} else if (vnode->status.type == AFS_FTYPE_DIR &&
 			   (!test_bit(AFS_VNODE_DIR_VALID, &vnode->flags) ||
 			    vnode->cb_expires_at - 10 <= now)) {
 			valid = false;
 		} else if (test_bit(AFS_VNODE_ZAP_DATA, &vnode->flags) ||
 			   vnode->cb_expires_at - 10 <= now) {
+=======
+		} else if (test_bit(AFS_VNODE_ZAP_DATA, &vnode->flags)) {
+			valid = false;
+		} else if (vnode->cb_expires_at - 10 <= now) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			valid = false;
 		} else {
 			valid = true;
@@ -541,6 +547,10 @@ void afs_evict_inode(struct inode *inode)
 	}
 #endif
 
+<<<<<<< HEAD
+=======
+	afs_prune_wb_keys(vnode);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	afs_put_permits(rcu_access_pointer(vnode->permit_cache));
 	key_put(vnode->lock_key);
 	vnode->lock_key = NULL;

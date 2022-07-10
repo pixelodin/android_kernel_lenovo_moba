@@ -734,7 +734,11 @@ static int alps_input_configured(struct hid_device *hdev, struct hid_input *hi)
 	if (data->has_sp) {
 		input2 = input_allocate_device();
 		if (!input2) {
+<<<<<<< HEAD
 			input_free_device(input2);
+=======
+			ret = -ENOMEM;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			goto exit;
 		}
 

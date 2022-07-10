@@ -82,6 +82,7 @@ static int ravb_config(struct net_device *ndev)
 	return error;
 }
 
+<<<<<<< HEAD
 static void ravb_set_duplex(struct net_device *ndev)
 {
 	struct ravb_private *priv = netdev_priv(ndev);
@@ -89,6 +90,8 @@ static void ravb_set_duplex(struct net_device *ndev)
 	ravb_modify(ndev, ECMR, ECMR_DM, priv->duplex ? ECMR_DM : 0);
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static void ravb_set_rate(struct net_device *ndev)
 {
 	struct ravb_private *priv = netdev_priv(ndev);
@@ -398,13 +401,20 @@ error:
 /* E-MAC init function */
 static void ravb_emac_init(struct net_device *ndev)
 {
+<<<<<<< HEAD
 	struct ravb_private *priv = netdev_priv(ndev);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Receive frame limit set register */
 	ravb_write(ndev, ndev->mtu + ETH_HLEN + VLAN_HLEN + ETH_FCS_LEN, RFLR);
 
 	/* EMAC Mode: PAUSE prohibition; Duplex; RX Checksum; TX; RX */
+<<<<<<< HEAD
 	ravb_write(ndev, ECMR_ZPF | (priv->duplex ? ECMR_DM : 0) |
+=======
+	ravb_write(ndev, ECMR_ZPF | ECMR_DM |
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		   (ndev->features & NETIF_F_RXCSUM ? ECMR_RCSC : 0) |
 		   ECMR_TE | ECMR_RE, ECMR);
 
@@ -992,12 +1002,15 @@ static void ravb_adjust_link(struct net_device *ndev)
 		ravb_rcv_snd_disable(ndev);
 
 	if (phydev->link) {
+<<<<<<< HEAD
 		if (phydev->duplex != priv->duplex) {
 			new_state = true;
 			priv->duplex = phydev->duplex;
 			ravb_set_duplex(ndev);
 		}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (phydev->speed != priv->speed) {
 			new_state = true;
 			priv->speed = phydev->speed;
@@ -1012,7 +1025,10 @@ static void ravb_adjust_link(struct net_device *ndev)
 		new_state = true;
 		priv->link = 0;
 		priv->speed = 0;
+<<<<<<< HEAD
 		priv->duplex = -1;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	/* Enable TX and RX right over here, if E-MAC change is ignored */
@@ -1042,7 +1058,10 @@ static int ravb_phy_init(struct net_device *ndev)
 
 	priv->link = 0;
 	priv->speed = 0;
+<<<<<<< HEAD
 	priv->duplex = -1;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Try connecting to PHY */
 	pn = of_parse_phandle(np, "phy-handle", 0);

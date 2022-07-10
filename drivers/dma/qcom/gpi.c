@@ -279,6 +279,10 @@ static const char *const gpi_cb_event_str[MSM_GPI_QUP_MAX_EVENT] = {
 	[MSM_GPI_QUP_NOTIFY] = "NOTIFY",
 	[MSM_GPI_QUP_ERROR] = "GLOBAL ERROR",
 	[MSM_GPI_QUP_CH_ERROR] = "CHAN ERROR",
+<<<<<<< HEAD
+=======
+	[MSM_GPI_QUP_FW_ERROR] = "UNHANDLED ERROR",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	[MSM_GPI_QUP_PENDING_EVENT] = "PENDING EVENT",
 	[MSM_GPI_QUP_EOT_DESC_MISMATCH] = "EOT/DESC MISMATCH",
 	[MSM_GPI_QUP_SW_ERROR] = "SW ERROR",
@@ -2238,6 +2242,13 @@ int gpi_terminate_all(struct dma_chan *chan)
 		if (ret) {
 			GPII_ERR(gpii, gpii_chan->chid,
 				 "Error resetting channel ret:%d\n", ret);
+<<<<<<< HEAD
+=======
+			if (!gpii->reg_table_dump) {
+				gpi_dump_debug_reg(gpii);
+				gpii->reg_table_dump = true;
+			}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			goto terminate_exit;
 		}
 

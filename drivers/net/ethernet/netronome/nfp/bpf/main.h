@@ -206,6 +206,14 @@ enum nfp_bpf_map_use {
 	NFP_MAP_USE_ATOMIC_CNT,
 };
 
+<<<<<<< HEAD
+=======
+struct nfp_bpf_map_word {
+	unsigned char type		:4;
+	unsigned char non_zero_update	:1;
+};
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /**
  * struct nfp_bpf_map - private per-map data attached to BPF maps for offload
  * @offmap:	pointer to the offloaded BPF map
@@ -219,7 +227,11 @@ struct nfp_bpf_map {
 	struct nfp_app_bpf *bpf;
 	u32 tid;
 	struct list_head l;
+<<<<<<< HEAD
 	enum nfp_bpf_map_use use_map[];
+=======
+	struct nfp_bpf_map_word use_map[];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct nfp_bpf_neutral_map {

@@ -54,7 +54,11 @@ static int vcpu_online(unsigned int cpu)
 }
 static void vcpu_hotplug(unsigned int cpu)
 {
+<<<<<<< HEAD
 	if (!cpu_possible(cpu))
+=======
+	if (cpu >= nr_cpu_ids || !cpu_possible(cpu))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return;
 
 	switch (vcpu_online(cpu)) {

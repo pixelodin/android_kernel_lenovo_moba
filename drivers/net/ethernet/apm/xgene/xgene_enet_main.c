@@ -2034,7 +2034,11 @@ static int xgene_enet_probe(struct platform_device *pdev)
 	int ret;
 
 	ndev = alloc_etherdev_mqs(sizeof(struct xgene_enet_pdata),
+<<<<<<< HEAD
 				  XGENE_NUM_RX_RING, XGENE_NUM_TX_RING);
+=======
+				  XGENE_NUM_TX_RING, XGENE_NUM_RX_RING);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!ndev)
 		return -ENOMEM;
 

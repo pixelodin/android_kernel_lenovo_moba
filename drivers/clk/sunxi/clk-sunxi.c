@@ -1086,8 +1086,13 @@ static struct clk ** __init sunxi_divs_clk_setup(struct device_node *node,
 						 rate_hw, rate_ops,
 						 gate_hw, &clk_gate_ops,
 						 clkflags |
+<<<<<<< HEAD
 						 data->div[i].critical ?
 							CLK_IS_CRITICAL : 0);
+=======
+						 (data->div[i].critical ?
+							CLK_IS_CRITICAL : 0));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		WARN_ON(IS_ERR(clk_data->clks[i]));
 	}

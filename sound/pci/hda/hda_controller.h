@@ -176,11 +176,18 @@ struct azx {
 #define azx_bus(chip)	(&(chip)->bus.core)
 #define bus_to_azx(_bus)	container_of(_bus, struct azx, bus.core)
 
+<<<<<<< HEAD
 #ifdef CONFIG_X86
 #define azx_snoop(chip)		((chip)->snoop)
 #else
 #define azx_snoop(chip)		true
 #endif
+=======
+static inline bool azx_snoop(struct azx *chip)
+{
+	return !IS_ENABLED(CONFIG_X86) || chip->snoop;
+}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /*
  * macros for easy use

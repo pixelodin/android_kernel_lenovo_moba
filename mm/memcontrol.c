@@ -419,8 +419,15 @@ int memcg_expand_shrinker_maps(int new_id)
 		if (mem_cgroup_is_root(memcg))
 			continue;
 		ret = memcg_expand_one_shrinker_map(memcg, size, old_size);
+<<<<<<< HEAD
 		if (ret)
 			goto unlock;
+=======
+		if (ret) {
+			mem_cgroup_iter_break(NULL, memcg);
+			goto unlock;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 unlock:
 	if (!ret)
@@ -851,7 +858,11 @@ struct mem_cgroup *get_mem_cgroup_from_mm(struct mm_struct *mm)
 			if (unlikely(!memcg))
 				memcg = root_mem_cgroup;
 		}
+<<<<<<< HEAD
 	} while (!css_tryget_online(&memcg->css));
+=======
+	} while (!css_tryget(&memcg->css));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rcu_read_unlock();
 	return memcg;
 }
@@ -2225,6 +2236,18 @@ retry:
 	}
 
 	/*
+<<<<<<< HEAD
+=======
+	 * Memcg doesn't have a dedicated reserve for atomic
+	 * allocations. But like the global atomic pool, we need to
+	 * put the burden of reclaim on regular allocation requests
+	 * and let these go through as privileged allocations.
+	 */
+	if (gfp_mask & __GFP_ATOMIC)
+		goto force;
+
+	/*
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	 * Unlike in global OOM situations, memcg is not in a physical
 	 * memory shortage.  Allow dying and OOM-killed tasks to
 	 * bypass the last charges so that they can exit quickly and
@@ -2669,7 +2692,11 @@ int memcg_kmem_charge(struct page *page, gfp_t gfp, int order)
 	struct mem_cgroup *memcg;
 	int ret = 0;
 
+<<<<<<< HEAD
 	if (memcg_kmem_bypass())
+=======
+	if (mem_cgroup_disabled() || memcg_kmem_bypass())
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return 0;
 
 	memcg = get_mem_cgroup_from_current();
@@ -3748,7 +3775,11 @@ static void __mem_cgroup_usage_unregister_event(struct mem_cgroup *memcg,
 	struct mem_cgroup_thresholds *thresholds;
 	struct mem_cgroup_threshold_ary *new;
 	unsigned long usage;
+<<<<<<< HEAD
 	int i, j, size;
+=======
+	int i, j, size, entries;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	mutex_lock(&memcg->thresholds_lock);
 
@@ -3768,14 +3799,30 @@ static void __mem_cgroup_usage_unregister_event(struct mem_cgroup *memcg,
 	__mem_cgroup_threshold(memcg, type == _MEMSWAP);
 
 	/* Calculate new number of threshold */
+<<<<<<< HEAD
 	size = 0;
 	for (i = 0; i < thresholds->primary->size; i++) {
 		if (thresholds->primary->entries[i].eventfd != eventfd)
 			size++;
+=======
+	size = entries = 0;
+	for (i = 0; i < thresholds->primary->size; i++) {
+		if (thresholds->primary->entries[i].eventfd != eventfd)
+			size++;
+		else
+			entries++;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	new = thresholds->spare;
 
+<<<<<<< HEAD
+=======
+	/* If no items related to eventfd have been cleared, nothing to do */
+	if (!entries)
+		goto unlock;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Set thresholds array to NULL if we don't have thresholds */
 	if (!size) {
 		kfree(new);
@@ -6296,6 +6343,7 @@ void mem_cgroup_sk_alloc(struct sock *sk)
 	if (!mem_cgroup_sockets_enabled)
 		return;
 
+<<<<<<< HEAD
 	/*
 	 * Socket cloning can throw us here with sk_memcg already
 	 * filled. It won't however, necessarily happen from
@@ -6309,6 +6357,11 @@ void mem_cgroup_sk_alloc(struct sock *sk)
 		css_get(&sk->sk_memcg->css);
 		return;
 	}
+=======
+	/* Do not associate the sock with unrelated interrupted task's memcg. */
+	if (in_interrupt())
+		return;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	rcu_read_lock();
 	memcg = mem_cgroup_from_task(current);

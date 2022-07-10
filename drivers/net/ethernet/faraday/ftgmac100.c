@@ -712,8 +712,13 @@ static bool ftgmac100_prep_tx_csum(struct sk_buff *skb, u32 *csum_vlan)
 	return skb_checksum_help(skb) == 0;
 }
 
+<<<<<<< HEAD
 static int ftgmac100_hard_start_xmit(struct sk_buff *skb,
 				     struct net_device *netdev)
+=======
+static netdev_tx_t ftgmac100_hard_start_xmit(struct sk_buff *skb,
+					     struct net_device *netdev)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct ftgmac100 *priv = netdev_priv(netdev);
 	struct ftgmac100_txdes *txdes, *first;
@@ -739,6 +744,21 @@ static int ftgmac100_hard_start_xmit(struct sk_buff *skb,
 	 */
 	nfrags = skb_shinfo(skb)->nr_frags;
 
+<<<<<<< HEAD
+=======
+	/* Setup HW checksumming */
+	csum_vlan = 0;
+	if (skb->ip_summed == CHECKSUM_PARTIAL &&
+	    !ftgmac100_prep_tx_csum(skb, &csum_vlan))
+		goto drop;
+
+	/* Add VLAN tag */
+	if (skb_vlan_tag_present(skb)) {
+		csum_vlan |= FTGMAC100_TXDES1_INS_VLANTAG;
+		csum_vlan |= skb_vlan_tag_get(skb) & 0xffff;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Get header len */
 	len = skb_headlen(skb);
 
@@ -765,6 +785,7 @@ static int ftgmac100_hard_start_xmit(struct sk_buff *skb,
 	if (nfrags == 0)
 		f_ctl_stat |= FTGMAC100_TXDES0_LTS;
 	txdes->txdes3 = cpu_to_le32(map);
+<<<<<<< HEAD
 
 	/* Setup HW checksumming */
 	csum_vlan = 0;
@@ -778,6 +799,8 @@ static int ftgmac100_hard_start_xmit(struct sk_buff *skb,
 		csum_vlan |= skb_vlan_tag_get(skb) & 0xffff;
 	}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	txdes->txdes1 = cpu_to_le32(csum_vlan);
 
 	/* Next descriptor */

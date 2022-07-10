@@ -19,13 +19,20 @@
 #include <linux/component.h>
 #include <linux/device.h>
 #include <linux/io.h>
+<<<<<<< HEAD
+=======
+#include <linux/io-pgtable.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/iommu.h>
 #include <linux/list.h>
 #include <linux/spinlock.h>
 #include <soc/mediatek/smi.h>
 
+<<<<<<< HEAD
 #include "io-pgtable.h"
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct mtk_iommu_suspend_reg {
 	u32				standard_axi_mode;
 	u32				dcm_dis;

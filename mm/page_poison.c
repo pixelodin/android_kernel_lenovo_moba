@@ -19,6 +19,14 @@ static int __init early_page_poison_param(char *buf)
 }
 early_param("page_poison", early_page_poison_param);
 
+<<<<<<< HEAD
+=======
+/**
+ * page_poisoning_enabled - check if page poisoning is enabled
+ *
+ * Return true if page poisoning is enabled, or false if not.
+ */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 bool page_poisoning_enabled(void)
 {
 	/*
@@ -31,6 +39,10 @@ bool page_poisoning_enabled(void)
 		(!IS_ENABLED(CONFIG_ARCH_SUPPORTS_DEBUG_PAGEALLOC) &&
 		debug_pagealloc_enabled()));
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(page_poisoning_enabled);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 static void poison_page(struct page *page)
 {

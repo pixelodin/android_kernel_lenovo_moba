@@ -45,6 +45,7 @@
 #define __efi_call_virt(f, args...) \
 	__efi_call_virt_pointer(efi.systab->runtime, f, args)
 
+<<<<<<< HEAD
 /* efi_runtime_service() function identifiers */
 enum efi_rts_ids {
 	GET_TIME,
@@ -78,6 +79,9 @@ struct efi_runtime_work {
 	enum efi_rts_ids efi_rts_id;
 	struct completion efi_rts_comp;
 };
+=======
+struct efi_runtime_work efi_rts_work;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /*
  * efi_queue_work:	Queue efi_runtime_service() and wait until it's done
@@ -91,7 +95,10 @@ struct efi_runtime_work {
  */
 #define efi_queue_work(_rts, _arg1, _arg2, _arg3, _arg4, _arg5)		\
 ({									\
+<<<<<<< HEAD
 	struct efi_runtime_work efi_rts_work;				\
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	efi_rts_work.status = EFI_ABORTED;				\
 									\
 	init_completion(&efi_rts_work.efi_rts_comp);			\
@@ -191,6 +198,7 @@ extern struct semaphore __efi_uv_runtime_lock __alias(efi_runtime_lock);
  */
 static void efi_call_rts(struct work_struct *work)
 {
+<<<<<<< HEAD
 	struct efi_runtime_work *efi_rts_work;
 	void *arg1, *arg2, *arg3, *arg4, *arg5;
 	efi_status_t status = EFI_NOT_FOUND;
@@ -203,6 +211,18 @@ static void efi_call_rts(struct work_struct *work)
 	arg5 = efi_rts_work->arg5;
 
 	switch (efi_rts_work->efi_rts_id) {
+=======
+	void *arg1, *arg2, *arg3, *arg4, *arg5;
+	efi_status_t status = EFI_NOT_FOUND;
+
+	arg1 = efi_rts_work.arg1;
+	arg2 = efi_rts_work.arg2;
+	arg3 = efi_rts_work.arg3;
+	arg4 = efi_rts_work.arg4;
+	arg5 = efi_rts_work.arg5;
+
+	switch (efi_rts_work.efi_rts_id) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	case GET_TIME:
 		status = efi_call_virt(get_time, (efi_time_t *)arg1,
 				       (efi_time_cap_t *)arg2);
@@ -260,8 +280,13 @@ static void efi_call_rts(struct work_struct *work)
 		 */
 		pr_err("Requested executing invalid EFI Runtime Service.\n");
 	}
+<<<<<<< HEAD
 	efi_rts_work->status = status;
 	complete(&efi_rts_work->efi_rts_comp);
+=======
+	efi_rts_work.status = status;
+	complete(&efi_rts_work.efi_rts_comp);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static efi_status_t virt_efi_get_time(efi_time_t *tm, efi_time_cap_t *tc)

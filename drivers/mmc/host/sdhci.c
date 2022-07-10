@@ -892,12 +892,15 @@ static u8 sdhci_calc_timeout(struct sdhci_host *host, struct mmc_command *cmd,
 	if (!data && !cmd->busy_timeout)
 		return 0xE;
 
+<<<<<<< HEAD
 	/* During initialization, don't use max timeout as the clock is slow */
 	if ((host->quirks2 & SDHCI_QUIRK2_USE_RESERVED_MAX_TIMEOUT) &&
 		(host->clock > 400000)) {
 		return 0xF;
 	}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* timeout in us */
 	target_timeout = sdhci_target_timeout(host, cmd, data);
 
@@ -927,9 +930,15 @@ static u8 sdhci_calc_timeout(struct sdhci_host *host, struct mmc_command *cmd,
 			break;
 	}
 
+<<<<<<< HEAD
 	if (count >= 0xF) {
 		if (!(host->quirks2 & SDHCI_QUIRK2_DISABLE_HW_TIMEOUT) ||
 		    !(host->quirks2 & SDHCI_QUIRK2_USE_RESERVED_MAX_TIMEOUT))
+=======
+	if (count >= 0xF &&
+		!(host->quirks2 & SDHCI_QUIRK2_USE_RESERVED_MAX_TIMEOUT)) {
+		if (!(host->quirks2 & SDHCI_QUIRK2_DISABLE_HW_TIMEOUT))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			DBG("Too large timeout 0x%x requested for CMD%d!\n",
 			    count, cmd->opcode);
 		count = 0xE;
@@ -1922,6 +1931,7 @@ static int sdhci_get_tuning_cmd(struct sdhci_host *host)
 		return MMC_SEND_TUNING_BLOCK;
 }
 
+<<<<<<< HEAD
 static int sdhci_crypto_cfg(struct sdhci_host *host, struct mmc_request *mrq,
 		u32 slot)
 {
@@ -1966,6 +1976,8 @@ static int sdhci_crypto_cfg_end(struct sdhci_host *host,
 	return 0;
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
 {
 	struct sdhci_host *host;
@@ -2032,6 +2044,7 @@ static void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
 					sdhci_get_tuning_cmd(host));
 		}
 
+<<<<<<< HEAD
 		if (host->is_crypto_en) {
 			spin_unlock_irqrestore(&host->lock, flags);
 			if (sdhci_crypto_cfg(host, mrq, 0))
@@ -2039,6 +2052,8 @@ static void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
 			spin_lock_irqsave(&host->lock, flags);
 		}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (mrq->sbc && !(host->flags & SDHCI_AUTO_CMD23))
 			sdhci_send_command(host, mrq->sbc);
 		else
@@ -2048,6 +2063,7 @@ static void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
 	mmiowb();
 	spin_unlock_irqrestore(&host->lock, flags);
 	return;
+<<<<<<< HEAD
 end_req:
 	mrq->cmd->error = -EIO;
 	if (mrq->data)
@@ -2055,6 +2071,8 @@ end_req:
 	host->mrq = NULL;
 	sdhci_dumpregs(host);
 	mmc_request_done(host->mmc, mrq);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 void sdhci_set_bus_width(struct sdhci_host *host, int width)
@@ -2089,9 +2107,13 @@ void sdhci_set_uhs_signaling(struct sdhci_host *host, unsigned timing)
 		ctrl_2 |= SDHCI_CTRL_UHS_SDR104;
 	else if (timing == MMC_TIMING_UHS_SDR12)
 		ctrl_2 |= SDHCI_CTRL_UHS_SDR12;
+<<<<<<< HEAD
 	else if (timing == MMC_TIMING_SD_HS ||
 		 timing == MMC_TIMING_MMC_HS ||
 		 timing == MMC_TIMING_UHS_SDR25)
+=======
+	else if (timing == MMC_TIMING_UHS_SDR25)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ctrl_2 |= SDHCI_CTRL_UHS_SDR25;
 	else if (timing == MMC_TIMING_UHS_SDR50)
 		ctrl_2 |= SDHCI_CTRL_UHS_SDR50;
@@ -2734,8 +2756,13 @@ static void __sdhci_execute_tuning(struct sdhci_host *host, u32 opcode)
 		sdhci_send_tuning(host, opcode);
 
 		if (!host->tuning_done) {
+<<<<<<< HEAD
 			pr_info("%s: Tuning timeout, falling back to fixed sampling clock\n",
 				mmc_hostname(host->mmc));
+=======
+			pr_debug("%s: Tuning timeout, falling back to fixed sampling clock\n",
+				 mmc_hostname(host->mmc));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			sdhci_abort_tuning(host, opcode);
 			return;
 		}
@@ -3123,7 +3150,10 @@ static bool sdhci_request_done(struct sdhci_host *host)
 	mmiowb();
 	spin_unlock_irqrestore(&host->lock, flags);
 
+<<<<<<< HEAD
 	sdhci_crypto_cfg_end(host, mrq);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mmc_request_done(host->mmc, mrq);
 
 	return false;
@@ -4258,6 +4288,12 @@ int sdhci_setup_host(struct sdhci_host *host)
 		       mmc_hostname(mmc), host->version);
 	}
 
+<<<<<<< HEAD
+=======
+	if (host->quirks & SDHCI_QUIRK_BROKEN_CQE)
+		mmc->caps2 &= ~MMC_CAP2_CQE;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (host->quirks & SDHCI_QUIRK_FORCE_DMA)
 		host->flags |= SDHCI_USE_SDMA;
 	else if (!(host->caps & SDHCI_CAN_DO_SDMA))
@@ -4406,11 +4442,21 @@ int sdhci_setup_host(struct sdhci_host *host)
 	if (host->ops->get_min_clock)
 		mmc->f_min = host->ops->get_min_clock(host);
 	else if (host->version >= SDHCI_SPEC_300) {
+<<<<<<< HEAD
 		if (host->clk_mul) {
 			mmc->f_min = (host->max_clk * host->clk_mul) / 1024;
 			max_clk = host->max_clk * host->clk_mul;
 		} else
 			mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
+=======
+		if (host->clk_mul)
+			max_clk = host->max_clk * host->clk_mul;
+		/*
+		 * Divided Clock Mode minimum clock rate is always less than
+		 * Programmable Clock Mode minimum clock rate.
+		 */
+		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_300;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	} else
 		mmc->f_min = host->max_clk / SDHCI_MAX_DIV_SPEC_200;
 

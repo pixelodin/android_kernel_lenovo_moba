@@ -1082,6 +1082,7 @@ done:
 	return ret;
 }
 
+<<<<<<< HEAD
 static void _rtl_pci_irq_tasklet(struct ieee80211_hw *hw)
 {
 	_rtl_pci_tx_chk_waitq(hw);
@@ -1089,6 +1090,17 @@ static void _rtl_pci_irq_tasklet(struct ieee80211_hw *hw)
 
 static void _rtl_pci_prepare_bcn_tasklet(struct ieee80211_hw *hw)
 {
+=======
+static void _rtl_pci_irq_tasklet(unsigned long data)
+{
+	struct ieee80211_hw *hw = (struct ieee80211_hw *)data;
+	_rtl_pci_tx_chk_waitq(hw);
+}
+
+static void _rtl_pci_prepare_bcn_tasklet(unsigned long data)
+{
+	struct ieee80211_hw *hw = (struct ieee80211_hw *)data;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct rtl_priv *rtlpriv = rtl_priv(hw);
 	struct rtl_pci *rtlpci = rtl_pcidev(rtl_pcipriv(hw));
 	struct rtl_mac *mac = rtl_mac(rtl_priv(hw));
@@ -1214,10 +1226,17 @@ static void _rtl_pci_init_struct(struct ieee80211_hw *hw,
 
 	/*task */
 	tasklet_init(&rtlpriv->works.irq_tasklet,
+<<<<<<< HEAD
 		     (void (*)(unsigned long))_rtl_pci_irq_tasklet,
 		     (unsigned long)hw);
 	tasklet_init(&rtlpriv->works.irq_prepare_bcn_tasklet,
 		     (void (*)(unsigned long))_rtl_pci_prepare_bcn_tasklet,
+=======
+		     _rtl_pci_irq_tasklet,
+		     (unsigned long)hw);
+	tasklet_init(&rtlpriv->works.irq_prepare_bcn_tasklet,
+		     _rtl_pci_prepare_bcn_tasklet,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		     (unsigned long)hw);
 	INIT_WORK(&rtlpriv->works.lps_change_work,
 		  rtl_lps_change_work_callback);

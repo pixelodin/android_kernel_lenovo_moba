@@ -1340,7 +1340,11 @@ static int stm32_adc_dma_start(struct iio_dev *indio_dev)
 	cookie = dmaengine_submit(desc);
 	ret = dma_submit_error(cookie);
 	if (ret) {
+<<<<<<< HEAD
 		dmaengine_terminate_all(adc->dma_chan);
+=======
+		dmaengine_terminate_sync(adc->dma_chan);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return ret;
 	}
 
@@ -1413,7 +1417,11 @@ static int stm32_adc_buffer_predisable(struct iio_dev *indio_dev)
 		dev_err(&indio_dev->dev, "predisable failed\n");
 
 	if (adc->dma_chan)
+<<<<<<< HEAD
 		dmaengine_terminate_all(adc->dma_chan);
+=======
+		dmaengine_terminate_sync(adc->dma_chan);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (stm32_adc_set_trig(indio_dev, NULL))
 		dev_err(&indio_dev->dev, "Can't clear trigger\n");

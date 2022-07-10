@@ -105,7 +105,10 @@
 static int kernel_init(void *);
 
 extern void init_IRQ(void);
+<<<<<<< HEAD
 extern void fork_init(void);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 extern void radix_tree_init(void);
 
 /*
@@ -507,6 +510,32 @@ static inline void initcall_debug_enable(void)
 }
 #endif
 
+<<<<<<< HEAD
+=======
+/* Report memory auto-initialization states for this boot. */
+static void __init report_meminit(void)
+{
+	const char *stack;
+
+	if (IS_ENABLED(CONFIG_INIT_STACK_ALL))
+		stack = "all";
+	else if (IS_ENABLED(CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL))
+		stack = "byref_all";
+	else if (IS_ENABLED(CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF))
+		stack = "byref";
+	else if (IS_ENABLED(CONFIG_GCC_PLUGIN_STRUCTLEAK_USER))
+		stack = "__user";
+	else
+		stack = "off";
+
+	pr_info("mem auto-init: stack:%s, heap alloc:%s, heap free:%s\n",
+		stack, want_init_on_alloc(GFP_KERNEL) ? "on" : "off",
+		want_init_on_free() ? "on" : "off");
+	if (want_init_on_free())
+		pr_info("mem auto-init: clearing system memory may take some time...\n");
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * Set up kernel memory allocators
  */
@@ -517,6 +546,10 @@ static void __init mm_init(void)
 	 * bigger than MAX_ORDER unless SPARSEMEM.
 	 */
 	page_ext_init_flatmem();
+<<<<<<< HEAD
+=======
+	report_meminit();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mem_init();
 	kmem_cache_init();
 	pgtable_init();
@@ -550,6 +583,7 @@ asmlinkage __visible void __init start_kernel(void)
 	page_address_init();
 	pr_notice("%s", linux_banner);
 	setup_arch(&command_line);
+<<<<<<< HEAD
 	/*
 	 * Set up the the initial canary and entropy after arch
 	 * and after adding latent and command line entropy.
@@ -557,6 +591,8 @@ asmlinkage __visible void __init start_kernel(void)
 	add_latent_entropy();
 	add_device_randomness(command_line, strlen(command_line));
 	boot_init_stack_canary();
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mm_init_cpumask(&init_mm);
 	setup_command_line(command_line);
 	setup_nr_cpu_ids();
@@ -641,6 +677,23 @@ asmlinkage __visible void __init start_kernel(void)
 	hrtimers_init();
 	softirq_init();
 	timekeeping_init();
+<<<<<<< HEAD
+=======
+
+	/*
+	 * For best initial stack canary entropy, prepare it after:
+	 * - setup_arch() for any UEFI RNG entropy and boot cmdline access
+	 * - timekeeping_init() for ktime entropy used in rand_initialize()
+	 * - rand_initialize() to get any arch-specific entropy like RDRAND
+	 * - add_latent_entropy() to get any latent entropy
+	 * - adding command line entropy
+	 */
+	rand_initialize();
+	add_latent_entropy();
+	add_device_randomness(command_line, strlen(command_line));
+	boot_init_stack_canary();
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	time_init();
 	printk_safe_init();
 	perf_event_init();

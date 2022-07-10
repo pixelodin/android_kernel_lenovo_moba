@@ -202,7 +202,11 @@ int fuse_open_common(struct inode *inode, struct file *file, bool isdir)
 {
 	struct fuse_conn *fc = get_fuse_conn(inode);
 	int err;
+<<<<<<< HEAD
 	bool lock_inode = (file->f_flags & O_TRUNC) &&
+=======
+	bool is_wb_truncate = (file->f_flags & O_TRUNC) &&
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			  fc->atomic_o_trunc &&
 			  fc->writeback_cache;
 
@@ -210,16 +214,30 @@ int fuse_open_common(struct inode *inode, struct file *file, bool isdir)
 	if (err)
 		return err;
 
+<<<<<<< HEAD
 	if (lock_inode)
 		inode_lock(inode);
+=======
+	if (is_wb_truncate) {
+		inode_lock(inode);
+		fuse_set_nowrite(inode);
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	err = fuse_do_open(fc, get_node_id(inode), file, isdir);
 
 	if (!err)
 		fuse_finish_open(inode, file);
 
+<<<<<<< HEAD
 	if (lock_inode)
 		inode_unlock(inode);
+=======
+	if (is_wb_truncate) {
+		fuse_release_nowrite(inode);
+		inode_unlock(inode);
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return err;
 }
@@ -841,9 +859,15 @@ struct fuse_fill_data {
 	unsigned nr_pages;
 };
 
+<<<<<<< HEAD
 static int fuse_readpages_fill(struct file *_data, struct page *page)
 {
 	struct fuse_fill_data *data = (struct fuse_fill_data *)_data;
+=======
+static int fuse_readpages_fill(void *_data, struct page *page)
+{
+	struct fuse_fill_data *data = _data;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct fuse_req *req = data->req;
 	struct inode *inode = data->inode;
 	struct fuse_conn *fc = get_fuse_conn(inode);

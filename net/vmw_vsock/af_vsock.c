@@ -107,6 +107,10 @@
 #include <linux/mutex.h>
 #include <linux/net.h>
 #include <linux/poll.h>
+<<<<<<< HEAD
+=======
+#include <linux/random.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/skbuff.h>
 #include <linux/smp.h>
 #include <linux/socket.h>
@@ -480,9 +484,19 @@ out:
 static int __vsock_bind_stream(struct vsock_sock *vsk,
 			       struct sockaddr_vm *addr)
 {
+<<<<<<< HEAD
 	static u32 port = LAST_RESERVED_PORT + 1;
 	struct sockaddr_vm new_addr;
 
+=======
+	static u32 port = 0;
+	struct sockaddr_vm new_addr;
+
+	if (!port)
+		port = LAST_RESERVED_PORT + 1 +
+			prandom_u32_max(U32_MAX - LAST_RESERVED_PORT);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	vsock_addr_init(&new_addr, addr->svm_cid, addr->svm_port);
 
 	if (addr->svm_port == VMADDR_PORT_ANY) {
@@ -873,7 +887,11 @@ static __poll_t vsock_poll(struct file *file, struct socket *sock,
 		 * the queue and write as long as the socket isn't shutdown for
 		 * sending.
 		 */
+<<<<<<< HEAD
 		if (!skb_queue_empty(&sk->sk_receive_queue) ||
+=======
+		if (!skb_queue_empty_lockless(&sk->sk_receive_queue) ||
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		    (sk->sk_shutdown & RCV_SHUTDOWN)) {
 			mask |= EPOLLIN | EPOLLRDNORM;
 		}

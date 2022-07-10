@@ -1076,10 +1076,14 @@ static long mtp_send_receive_ioctl(struct file *fp, unsigned int code,
 	struct file *filp = NULL;
 	struct work_struct *work;
 	int ret = -EINVAL;
+<<<<<<< HEAD
 #ifdef CONFIG_PRODUCT_MOBA
 	extern bool is_protect_data;
        is_protect_data=1;
 #endif
+=======
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (mtp_lock(&dev->ioctl_excl)) {
 		mtp_log("ioctl returning EBUSY state:%d\n", dev->state);
 		return -EBUSY;
@@ -1131,6 +1135,7 @@ static long mtp_send_receive_ioctl(struct file *fp, unsigned int code,
 	 * in kernel context, which is necessary for vfs_read and
 	 * vfs_write to use our buffers in the kernel address space.
 	 */
+<<<<<<< HEAD
 	dev->xfer_result = 0;
 	if (dev->xfer_file_length) {
 		queue_work(dev->wq, work);
@@ -1143,6 +1148,17 @@ static long mtp_send_receive_ioctl(struct file *fp, unsigned int code,
 	ret = dev->xfer_result;
 	fput(filp);
 
+=======
+	queue_work(dev->wq, work);
+	/* wait for operation to complete */
+	flush_workqueue(dev->wq);
+	fput(filp);
+
+	/* read the result */
+	smp_rmb();
+	ret = dev->xfer_result;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 fail:
 	spin_lock_irq(&dev->lock);
 	if (dev->state == STATE_CANCELED)
@@ -1151,9 +1167,12 @@ fail:
 		dev->state = STATE_READY;
 	spin_unlock_irq(&dev->lock);
 out:
+<<<<<<< HEAD
 #ifdef CONFIG_PRODUCT_MOBA
 	is_protect_data=0;
 #endif
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mtp_unlock(&dev->ioctl_excl);
 	mtp_log("ioctl returning %d\n", ret);
 	return ret;
@@ -1598,7 +1617,11 @@ static int debug_mtp_read_stats(struct seq_file *s, void *unused)
 	}
 
 	seq_printf(s, "vfs_write(time in usec) min:%d\t max:%d\t avg:%d\n",
+<<<<<<< HEAD
 						min, max, sum / iteration);
+=======
+				min, max, (iteration ? (sum / iteration) : 0));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	min = max = sum = iteration = 0;
 	seq_puts(s, "\n=======================\n");
 	seq_puts(s, "MTP Read Stats:\n");
@@ -1620,7 +1643,11 @@ static int debug_mtp_read_stats(struct seq_file *s, void *unused)
 	}
 
 	seq_printf(s, "vfs_read(time in usec) min:%d\t max:%d\t avg:%d\n",
+<<<<<<< HEAD
 						min, max, sum / iteration);
+=======
+				min, max, (iteration ? (sum / iteration) : 0));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	spin_unlock_irqrestore(&dev->lock, flags);
 	return 0;
 }
@@ -1815,7 +1842,10 @@ struct usb_function_instance *alloc_inst_mtp_ptp(bool mtp_config)
 {
 	struct mtp_instance *fi_mtp;
 	int ret = 0;
+<<<<<<< HEAD
 	static int is_mtp = 0;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct usb_os_desc *descs[1];
 	char *names[1];
 
@@ -1831,16 +1861,22 @@ struct usb_function_instance *alloc_inst_mtp_ptp(bool mtp_config)
 	names[0] = "MTP";
 
 	if (mtp_config) {
+<<<<<<< HEAD
 	    if(!is_mtp){
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ret = mtp_setup_configfs(fi_mtp);
 		if (ret) {
 			kfree(fi_mtp);
 			pr_err("Error setting MTP\n");
 			return ERR_PTR(ret);
 		}
+<<<<<<< HEAD
 		is_mtp = 1;
 	     }else
 		    fi_mtp->dev = _mtp_dev;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	} else
 		fi_mtp->dev = _mtp_dev;
 
@@ -1924,13 +1960,21 @@ static struct usb_function *mtp_alloc(struct usb_function_instance *fi)
 }
 
 DECLARE_USB_FUNCTION(mtp, mtp_alloc_inst, mtp_alloc);
+<<<<<<< HEAD
 DECLARE_USB_FUNCTION(mtp_sec, mtp_alloc_inst, mtp_alloc);
+=======
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int mtp_init(void)
 {
 	_mtp_ipc_log = ipc_log_context_create(NUM_PAGES, "usb_mtp", 0);
 	if (IS_ERR_OR_NULL(_mtp_ipc_log))
 		_mtp_ipc_log =  NULL;
+<<<<<<< HEAD
         usb_function_register(&mtp_secusb_func);
+=======
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return usb_function_register(&mtpusb_func);
 }
 module_init(mtp_init);

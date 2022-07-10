@@ -5,6 +5,10 @@
 #include <uapi/linux/types.h>
 #include <linux/seq_file.h>
 #include <linux/compiler.h>
+<<<<<<< HEAD
+=======
+#include <linux/ctype.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/errno.h>
 #include <linux/slab.h>
 #include <linux/anon_inodes.h>
@@ -426,6 +430,33 @@ static bool btf_name_offset_valid(const struct btf *btf, u32 offset)
 		offset < btf->hdr.str_len;
 }
 
+<<<<<<< HEAD
+=======
+/* Only C-style identifier is permitted. This can be relaxed if
+ * necessary.
+ */
+static bool btf_name_valid_identifier(const struct btf *btf, u32 offset)
+{
+	/* offset must be valid */
+	const char *src = &btf->strings[offset];
+	const char *src_limit;
+
+	if (!isalpha(*src) && *src != '_')
+		return false;
+
+	/* set a limit on identifier length */
+	src_limit = src + KSYM_NAME_LEN;
+	src++;
+	while (*src && src < src_limit) {
+		if (!isalnum(*src) && *src != '_')
+			return false;
+		src++;
+	}
+
+	return !*src;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static const char *btf_name_by_offset(const struct btf *btf, u32 offset)
 {
 	if (!offset)
@@ -1143,6 +1174,25 @@ static int btf_ref_type_check_meta(struct btf_verifier_env *env,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	/* typedef type must have a valid name, and other ref types,
+	 * volatile, const, restrict, should have a null name.
+	 */
+	if (BTF_INFO_KIND(t->info) == BTF_KIND_TYPEDEF) {
+		if (!t->name_off ||
+		    !btf_name_valid_identifier(env->btf, t->name_off)) {
+			btf_verifier_log_type(env, t, "Invalid name");
+			return -EINVAL;
+		}
+	} else {
+		if (t->name_off) {
+			btf_verifier_log_type(env, t, "Invalid name");
+			return -EINVAL;
+		}
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	btf_verifier_log_type(env, t, NULL);
 
 	return 0;
@@ -1300,6 +1350,16 @@ static s32 btf_fwd_check_meta(struct btf_verifier_env *env,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	/* fwd type must have a valid name */
+	if (!t->name_off ||
+	    !btf_name_valid_identifier(env->btf, t->name_off)) {
+		btf_verifier_log_type(env, t, "Invalid name");
+		return -EINVAL;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	btf_verifier_log_type(env, t, NULL);
 
 	return 0;
@@ -1356,6 +1416,15 @@ static s32 btf_array_check_meta(struct btf_verifier_env *env,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	/* array type should not have a name */
+	if (t->name_off) {
+		btf_verifier_log_type(env, t, "Invalid name");
+		return -EINVAL;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (btf_type_vlen(t)) {
 		btf_verifier_log_type(env, t, "vlen != 0");
 		return -EINVAL;
@@ -1532,6 +1601,16 @@ static s32 btf_struct_check_meta(struct btf_verifier_env *env,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	/* struct type either no name or a valid one */
+	if (t->name_off &&
+	    !btf_name_valid_identifier(env->btf, t->name_off)) {
+		btf_verifier_log_type(env, t, "Invalid name");
+		return -EINVAL;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	btf_verifier_log_type(env, t, NULL);
 
 	last_offset = 0;
@@ -1543,6 +1622,15 @@ static s32 btf_struct_check_meta(struct btf_verifier_env *env,
 			return -EINVAL;
 		}
 
+<<<<<<< HEAD
+=======
+		/* struct member either no name or a valid one */
+		if (member->name_off &&
+		    !btf_name_valid_identifier(btf, member->name_off)) {
+			btf_verifier_log_member(env, t, member, "Invalid name");
+			return -EINVAL;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/* A member cannot be in type void */
 		if (!member->type || !BTF_TYPE_ID_VALID(member->type)) {
 			btf_verifier_log_member(env, t, member,
@@ -1730,6 +1818,16 @@ static s32 btf_enum_check_meta(struct btf_verifier_env *env,
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	/* enum type either no name or a valid one */
+	if (t->name_off &&
+	    !btf_name_valid_identifier(env->btf, t->name_off)) {
+		btf_verifier_log_type(env, t, "Invalid name");
+		return -EINVAL;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	btf_verifier_log_type(env, t, NULL);
 
 	for (i = 0; i < nr_enums; i++) {
@@ -1739,6 +1837,17 @@ static s32 btf_enum_check_meta(struct btf_verifier_env *env,
 			return -EINVAL;
 		}
 
+<<<<<<< HEAD
+=======
+		/* enum member must have a valid name */
+		if (!enums[i].name_off ||
+		    !btf_name_valid_identifier(btf, enums[i].name_off)) {
+			btf_verifier_log_type(env, t, "Invalid name");
+			return -EINVAL;
+		}
+
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		btf_verifier_log(env, "\t%s val=%d\n",
 				 btf_name_by_offset(btf, enums[i].name_off),
 				 enums[i].val);
@@ -2067,6 +2176,7 @@ static int btf_check_sec_info(struct btf_verifier_env *env,
 	return 0;
 }
 
+<<<<<<< HEAD
 static int btf_parse_hdr(struct btf_verifier_env *env, void __user *btf_data,
 			 u32 btf_data_size)
 {
@@ -2082,25 +2192,44 @@ static int btf_parse_hdr(struct btf_verifier_env *env, void __user *btf_data,
 		u8	flags;
 		u32	hdr_len;
 	} __user *min_hdr;
+=======
+static int btf_parse_hdr(struct btf_verifier_env *env)
+{
+	u32 hdr_len, hdr_copy, btf_data_size;
+	const struct btf_header *hdr;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct btf *btf;
 	int err;
 
 	btf = env->btf;
+<<<<<<< HEAD
 	min_hdr = btf_data;
 
 	if (btf_data_size < sizeof(*min_hdr)) {
+=======
+	btf_data_size = btf->data_size;
+
+	if (btf_data_size <
+	    offsetof(struct btf_header, hdr_len) + sizeof(hdr->hdr_len)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		btf_verifier_log(env, "hdr_len not found");
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	if (get_user(hdr_len, &min_hdr->hdr_len))
 		return -EFAULT;
 
+=======
+	hdr = btf->data;
+	hdr_len = hdr->hdr_len;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (btf_data_size < hdr_len) {
 		btf_verifier_log(env, "btf_header not found");
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	err = bpf_check_uarg_tail_zero(btf_data, sizeof(btf->hdr), hdr_len);
 	if (err) {
 		if (err == -E2BIG)
@@ -2114,6 +2243,29 @@ static int btf_parse_hdr(struct btf_verifier_env *env, void __user *btf_data,
 
 	hdr = &btf->hdr;
 
+=======
+	/* Ensure the unsupported header fields are zero */
+	if (hdr_len > sizeof(btf->hdr)) {
+		u8 *expected_zero = btf->data + sizeof(btf->hdr);
+		u8 *end = btf->data + hdr_len;
+
+		for (; expected_zero < end; expected_zero++) {
+			if (*expected_zero) {
+				btf_verifier_log(env, "Unsupported btf_header");
+				return -E2BIG;
+			}
+		}
+	}
+
+	hdr_copy = min_t(u32, hdr_len, sizeof(btf->hdr));
+	memcpy(&btf->hdr, btf->data, hdr_copy);
+
+	hdr = &btf->hdr;
+
+	if (hdr->hdr_len != hdr_len)
+		return -EINVAL;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	btf_verifier_log_hdr(env, btf_data_size);
 
 	if (hdr->magic != BTF_MAGIC) {
@@ -2183,10 +2335,13 @@ static struct btf *btf_parse(void __user *btf_data, u32 btf_data_size,
 	}
 	env->btf = btf;
 
+<<<<<<< HEAD
 	err = btf_parse_hdr(env, btf_data, btf_data_size);
 	if (err)
 		goto errout;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	data = kvmalloc(btf_data_size, GFP_KERNEL | __GFP_NOWARN);
 	if (!data) {
 		err = -ENOMEM;
@@ -2195,13 +2350,25 @@ static struct btf *btf_parse(void __user *btf_data, u32 btf_data_size,
 
 	btf->data = data;
 	btf->data_size = btf_data_size;
+<<<<<<< HEAD
 	btf->nohdr_data = btf->data + btf->hdr.hdr_len;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (copy_from_user(data, btf_data, btf_data_size)) {
 		err = -EFAULT;
 		goto errout;
 	}
 
+<<<<<<< HEAD
+=======
+	err = btf_parse_hdr(env);
+	if (err)
+		goto errout;
+
+	btf->nohdr_data = btf->data + btf->hdr.hdr_len;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	err = btf_parse_str_sec(env);
 	if (err)
 		goto errout;
@@ -2307,7 +2474,11 @@ int btf_get_info_by_fd(const struct btf *btf,
 		       union bpf_attr __user *uattr)
 {
 	struct bpf_btf_info __user *uinfo;
+<<<<<<< HEAD
 	struct bpf_btf_info info = {};
+=======
+	struct bpf_btf_info info;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u32 info_copy, btf_copy;
 	void __user *ubtf;
 	u32 uinfo_len;
@@ -2316,6 +2487,10 @@ int btf_get_info_by_fd(const struct btf *btf,
 	uinfo_len = attr->info.info_len;
 
 	info_copy = min_t(u32, uinfo_len, sizeof(info));
+<<<<<<< HEAD
+=======
+	memset(&info, 0, sizeof(info));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (copy_from_user(&info, uinfo, info_copy))
 		return -EFAULT;
 

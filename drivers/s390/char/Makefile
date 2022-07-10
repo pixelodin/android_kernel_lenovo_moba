@@ -11,6 +11,10 @@ endif
 GCOV_PROFILE_sclp_early_core.o		:= n
 KCOV_INSTRUMENT_sclp_early_core.o	:= n
 UBSAN_SANITIZE_sclp_early_core.o	:= n
+<<<<<<< HEAD
+=======
+KASAN_SANITIZE_sclp_early_core.o	:= n
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 CFLAGS_sclp_early_core.o		+= -D__NO_FORTIFY
 

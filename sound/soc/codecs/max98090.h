@@ -1533,7 +1533,10 @@ struct max98090_priv {
 	struct delayed_work jack_work;
 	struct delayed_work pll_det_enable_work;
 	struct work_struct pll_det_disable_work;
+<<<<<<< HEAD
 	struct work_struct pll_work;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct snd_soc_jack *jack;
 	unsigned int dai_fmt;
 	int tdm_slots;

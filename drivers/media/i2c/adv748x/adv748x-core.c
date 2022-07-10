@@ -569,7 +569,12 @@ static int adv748x_parse_dt(struct adv748x_state *state)
 {
 	struct device_node *ep_np = NULL;
 	struct of_endpoint ep;
+<<<<<<< HEAD
 	bool found = false;
+=======
+	bool out_found = false;
+	bool in_found = false;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	for_each_endpoint_of_node(state->dev->of_node, ep_np) {
 		of_graph_parse_endpoint(ep_np, &ep);
@@ -592,10 +597,24 @@ static int adv748x_parse_dt(struct adv748x_state *state)
 		of_node_get(ep_np);
 		state->endpoints[ep.port] = ep_np;
 
+<<<<<<< HEAD
 		found = true;
 	}
 
 	return found ? 0 : -ENODEV;
+=======
+		/*
+		 * At least one input endpoint and one output endpoint shall
+		 * be defined.
+		 */
+		if (ep.port < ADV748X_PORT_TXA)
+			in_found = true;
+		else
+			out_found = true;
+	}
+
+	return in_found && out_found ? 0 : -ENODEV;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void adv748x_dt_cleanup(struct adv748x_state *state)
@@ -627,6 +646,20 @@ static int adv748x_probe(struct i2c_client *client,
 	state->i2c_clients[ADV748X_PAGE_IO] = client;
 	i2c_set_clientdata(client, state);
 
+<<<<<<< HEAD
+=======
+	/*
+	 * We can not use container_of to get back to the state with two TXs;
+	 * Initialize the TXs's fields unconditionally on the endpoint
+	 * presence to access them later.
+	 */
+	state->txa.state = state->txb.state = state;
+	state->txa.page = ADV748X_PAGE_TXA;
+	state->txb.page = ADV748X_PAGE_TXB;
+	state->txa.port = ADV748X_PORT_TXA;
+	state->txb.port = ADV748X_PORT_TXB;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Discover and process ports declared by the Device tree endpoints */
 	ret = adv748x_parse_dt(state);
 	if (ret) {

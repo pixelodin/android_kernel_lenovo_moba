@@ -25,7 +25,11 @@ void print_internal_buffer(u32 tag, const char *str,
 		dprintk(tag,
 		"%s: %x : idx %2d fd %d off %d %s size %d flags %#x iova %#x",
 		str, hash32_ptr(inst->session), cbuf->buf.index, cbuf->buf.fd,
+<<<<<<< HEAD
 		cbuf->buf.offset, cbuf->smem.dma_buf->name, cbuf->buf.size,
+=======
+		cbuf->buf.offset, cbuf->smem.dma_buf->buf_name, cbuf->buf.size,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		cbuf->buf.flags, cbuf->smem.device_addr);
 	} else {
 		dprintk(tag,
@@ -438,7 +442,11 @@ static int msm_cvp_map_buf_user_persist(struct msm_cvp_inst *inst,
 
 	dprintk(CVP_DBG,
 	"%s: %x : fd %d %s size %d", "map persist", hash32_ptr(inst->session),
+<<<<<<< HEAD
 	cbuf->smem.fd, cbuf->smem.dma_buf->name, cbuf->smem.size);
+=======
+	cbuf->smem.fd, cbuf->smem.dma_buf->buf_name, cbuf->smem.size);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return rc;
 
 exit:
@@ -2347,7 +2355,11 @@ int msm_cvp_session_deinit(struct msm_cvp_inst *inst)
 				"remove from frame list",
 				hash32_ptr(inst->session),
 				buf->fd, buf->offset, buf->size,
+<<<<<<< HEAD
 				buf->dbuf->name);
+=======
+				buf->dbuf->buf_name);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 			list_del(&frame_buf->list);
 			kmem_cache_free(cvp_driver->frame_buf_cache,

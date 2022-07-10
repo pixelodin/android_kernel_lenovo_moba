@@ -486,8 +486,33 @@ struct sock *inet_csk_accept(struct sock *sk, int flags, int *err, bool kern)
 		}
 		spin_unlock_bh(&queue->fastopenq.lock);
 	}
+<<<<<<< HEAD
 out:
 	release_sock(sk);
+=======
+
+out:
+	release_sock(sk);
+	if (newsk && mem_cgroup_sockets_enabled) {
+		int amt;
+
+		/* atomically get the memory usage, set and charge the
+		 * newsk->sk_memcg.
+		 */
+		lock_sock(newsk);
+
+		/* The socket has not been accepted yet, no need to look at
+		 * newsk->sk_wmem_queued.
+		 */
+		amt = sk_mem_pages(newsk->sk_forward_alloc +
+				   atomic_read(&newsk->sk_rmem_alloc));
+		mem_cgroup_sk_alloc(newsk);
+		if (newsk->sk_memcg && amt)
+			mem_cgroup_charge_skmem(newsk->sk_memcg, amt);
+
+		release_sock(newsk);
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (req)
 		reqsk_put(req);
 	return newsk;
@@ -944,7 +969,11 @@ struct sock *inet_csk_reqsk_queue_add(struct sock *sk,
 		req->sk = child;
 		req->dl_next = NULL;
 		if (queue->rskq_accept_head == NULL)
+<<<<<<< HEAD
 			queue->rskq_accept_head = req;
+=======
+			WRITE_ONCE(queue->rskq_accept_head, req);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		else
 			queue->rskq_accept_tail->dl_next = req;
 		queue->rskq_accept_tail = req;
@@ -1096,7 +1125,11 @@ struct dst_entry *inet_csk_update_pmtu(struct sock *sk, u32 mtu)
 		if (!dst)
 			goto out;
 	}
+<<<<<<< HEAD
 	dst->ops->update_pmtu(dst, sk, NULL, mtu);
+=======
+	dst->ops->update_pmtu(dst, sk, NULL, mtu, true);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	dst = __sk_dst_check(sk, 0);
 	if (!dst)

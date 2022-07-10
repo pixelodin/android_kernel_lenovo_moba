@@ -29,6 +29,10 @@
 #include <linux/dma-iommu.h>
 #include <linux/err.h>
 #include <linux/interrupt.h>
+<<<<<<< HEAD
+=======
+#include <linux/io-pgtable.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/iommu.h>
 #include <linux/iopoll.h>
 #include <linux/module.h>
@@ -42,8 +46,11 @@
 
 #include <linux/amba/bus.h>
 
+<<<<<<< HEAD
 #include "io-pgtable.h"
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* MMIO registers */
 #define ARM_SMMU_IDR0			0x0
 #define IDR0_ST_LVL			GENMASK(28, 27)
@@ -567,7 +574,11 @@ struct arm_smmu_device {
 
 	int				gerr_irq;
 	int				combined_irq;
+<<<<<<< HEAD
 	atomic_t			sync_nr;
+=======
+	u32				sync_nr;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	unsigned long			ias; /* IPA */
 	unsigned long			oas; /* PA */
@@ -810,6 +821,10 @@ static int arm_smmu_cmdq_build_cmd(u64 *cmd, struct arm_smmu_cmdq_ent *ent)
 		cmd[1] |= FIELD_PREP(CMDQ_CFGI_1_RANGE, 31);
 		break;
 	case CMDQ_OP_TLBI_NH_VA:
+<<<<<<< HEAD
+=======
+		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_VMID, ent->tlbi.vmid);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		cmd[0] |= FIELD_PREP(CMDQ_TLBI_0_ASID, ent->tlbi.asid);
 		cmd[1] |= FIELD_PREP(CMDQ_TLBI_1_LEAF, ent->tlbi.leaf);
 		cmd[1] |= ent->tlbi.addr & CMDQ_TLBI_1_VA_MASK;
@@ -964,14 +979,23 @@ static int __arm_smmu_cmdq_issue_sync_msi(struct arm_smmu_device *smmu)
 	struct arm_smmu_cmdq_ent ent = {
 		.opcode = CMDQ_OP_CMD_SYNC,
 		.sync	= {
+<<<<<<< HEAD
 			.msidata = atomic_inc_return_relaxed(&smmu->sync_nr),
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			.msiaddr = virt_to_phys(&smmu->sync_count),
 		},
 	};
 
+<<<<<<< HEAD
 	arm_smmu_cmdq_build_cmd(cmd, &ent);
 
 	spin_lock_irqsave(&smmu->cmdq.lock, flags);
+=======
+	spin_lock_irqsave(&smmu->cmdq.lock, flags);
+	ent.sync.msidata = ++smmu->sync_nr;
+	arm_smmu_cmdq_build_cmd(cmd, &ent);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	arm_smmu_cmdq_insert_cmd(smmu, cmd);
 	spin_unlock_irqrestore(&smmu->cmdq.lock, flags);
 
@@ -1185,7 +1209,12 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_device *smmu, u32 sid,
 	}
 
 	arm_smmu_sync_ste_for_sid(smmu, sid);
+<<<<<<< HEAD
 	dst[0] = cpu_to_le64(val);
+=======
+	/* See comment in arm_smmu_write_ctx_desc() */
+	WRITE_ONCE(dst[0], cpu_to_le64(val));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	arm_smmu_sync_ste_for_sid(smmu, sid);
 
 	/* It's likely that we'll want to use the new STE soon */
@@ -2196,7 +2225,10 @@ static int arm_smmu_init_structures(struct arm_smmu_device *smmu)
 {
 	int ret;
 
+<<<<<<< HEAD
 	atomic_set(&smmu->sync_nr, 0);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = arm_smmu_init_queues(smmu);
 	if (ret)
 		return ret;

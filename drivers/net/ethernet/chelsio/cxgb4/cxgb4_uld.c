@@ -673,10 +673,17 @@ static void uld_init(struct adapter *adap, struct cxgb4_lld_info *lld)
 	lld->write_cmpl_support = adap->params.write_cmpl_support;
 }
 
+<<<<<<< HEAD
 static void uld_attach(struct adapter *adap, unsigned int uld)
 {
 	void *handle;
 	struct cxgb4_lld_info lli;
+=======
+static int uld_attach(struct adapter *adap, unsigned int uld)
+{
+	struct cxgb4_lld_info lli;
+	void *handle;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	uld_init(adap, &lli);
 	uld_queue_init(adap, uld, &lli);
@@ -686,7 +693,11 @@ static void uld_attach(struct adapter *adap, unsigned int uld)
 		dev_warn(adap->pdev_dev,
 			 "could not attach to the %s driver, error %ld\n",
 			 adap->uld[uld].name, PTR_ERR(handle));
+<<<<<<< HEAD
 		return;
+=======
+		return PTR_ERR(handle);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	adap->uld[uld].handle = handle;
@@ -694,6 +705,7 @@ static void uld_attach(struct adapter *adap, unsigned int uld)
 
 	if (adap->flags & FULL_INIT_DONE)
 		adap->uld[uld].state_change(handle, CXGB4_STATE_UP);
+<<<<<<< HEAD
 }
 
 /**
@@ -704,13 +716,32 @@ static void uld_attach(struct adapter *adap, unsigned int uld)
  *	Registers an upper-layer driver with this driver and notifies the ULD
  *	about any presently available devices that support its type.  Returns
  *	%-EBUSY if a ULD of the same type is already registered.
+=======
+
+	return 0;
+}
+
+/* cxgb4_register_uld - register an upper-layer driver
+ * @type: the ULD type
+ * @p: the ULD methods
+ *
+ * Registers an upper-layer driver with this driver and notifies the ULD
+ * about any presently available devices that support its type.  Returns
+ * %-EBUSY if a ULD of the same type is already registered.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 int cxgb4_register_uld(enum cxgb4_uld type,
 		       const struct cxgb4_uld_info *p)
 {
+<<<<<<< HEAD
 	int ret = 0;
 	unsigned int adap_idx = 0;
 	struct adapter *adap;
+=======
+	unsigned int adap_idx = 0;
+	struct adapter *adap;
+	int ret = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (type >= CXGB4_ULD_MAX)
 		return -EINVAL;
@@ -744,12 +775,23 @@ int cxgb4_register_uld(enum cxgb4_uld type,
 		if (ret)
 			goto free_irq;
 		adap->uld[type] = *p;
+<<<<<<< HEAD
 		uld_attach(adap, type);
+=======
+		ret = uld_attach(adap, type);
+		if (ret)
+			goto free_txq;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		adap_idx++;
 	}
 	mutex_unlock(&uld_mutex);
 	return 0;
 
+<<<<<<< HEAD
+=======
+free_txq:
+	release_sge_txq_uld(adap, type);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 free_irq:
 	if (adap->flags & FULL_INIT_DONE)
 		quiesce_rx_uld(adap, type);

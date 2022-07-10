@@ -87,10 +87,21 @@ static unsigned intel_find_arch_event(struct kvm_pmu *pmu,
 
 static unsigned intel_find_fixed_event(int idx)
 {
+<<<<<<< HEAD
 	if (idx >= ARRAY_SIZE(fixed_pmc_events))
 		return PERF_COUNT_HW_MAX;
 
 	return intel_arch_events[fixed_pmc_events[idx]].event_type;
+=======
+	u32 event;
+	size_t size = ARRAY_SIZE(fixed_pmc_events);
+
+	if (idx >= size)
+		return PERF_COUNT_HW_MAX;
+
+	event = fixed_pmc_events[array_index_nospec(idx, size)];
+	return intel_arch_events[event].event_type;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /* check if a PMC is enabled by comparing it with globl_ctrl bits. */
@@ -131,6 +142,7 @@ static struct kvm_pmc *intel_msr_idx_to_pmc(struct kvm_vcpu *vcpu,
 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
 	bool fixed = idx & (1u << 30);
 	struct kvm_pmc *counters;
+<<<<<<< HEAD
 
 	idx &= ~(3u << 30);
 	if (!fixed && idx >= pmu->nr_arch_gp_counters)
@@ -141,6 +153,22 @@ static struct kvm_pmc *intel_msr_idx_to_pmc(struct kvm_vcpu *vcpu,
 	*mask &= pmu->counter_bitmask[fixed ? KVM_PMC_FIXED : KVM_PMC_GP];
 
 	return &counters[idx];
+=======
+	unsigned int num_counters;
+
+	idx &= ~(3u << 30);
+	if (fixed) {
+		counters = pmu->fixed_counters;
+		num_counters = pmu->nr_arch_fixed_counters;
+	} else {
+		counters = pmu->gp_counters;
+		num_counters = pmu->nr_arch_gp_counters;
+	}
+	if (idx >= num_counters)
+		return NULL;
+	*mask &= pmu->counter_bitmask[fixed ? KVM_PMC_FIXED : KVM_PMC_GP];
+	return &counters[array_index_nospec(idx, num_counters)];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)

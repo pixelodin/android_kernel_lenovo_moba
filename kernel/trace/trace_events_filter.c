@@ -1642,7 +1642,11 @@ static int process_system_preds(struct trace_subsystem_dir *dir,
 	parse_error(pe, FILT_ERR_BAD_SUBSYS_FILTER, 0);
 	return -EINVAL;
  fail_mem:
+<<<<<<< HEAD
 	kfree(filter);
+=======
+	__free_filter(filter);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* If any call succeeded, we still need to sync */
 	if (!fail)
 		tracepoint_synchronize_unregister();

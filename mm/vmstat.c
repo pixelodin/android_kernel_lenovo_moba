@@ -1117,6 +1117,12 @@ const char * const vmstat_text[] = {
 	"nr_mlock",
 	"nr_page_table_pages",
 	"nr_kernel_stack",
+<<<<<<< HEAD
+=======
+#if IS_ENABLED(CONFIG_SHADOW_CALL_STACK)
+	"nr_shadow_call_stack_bytes",
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	"nr_bounce",
 #if IS_ENABLED(CONFIG_ZSMALLOC)
 	"nr_zspages",
@@ -1162,7 +1168,11 @@ const char * const vmstat_text[] = {
 	"nr_vmscan_immediate_reclaim",
 	"nr_dirtied",
 	"nr_written",
+<<<<<<< HEAD
 	"nr_indirectly_reclaimable",
+=======
+	"nr_kernel_misc_reclaimable",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	"nr_unreclaimable_pages",
 
 	/* enum writeback_stat_item counters */
@@ -1712,10 +1722,13 @@ static int vmstat_show(struct seq_file *m, void *arg)
 	unsigned long *l = arg;
 	unsigned long off = l - (unsigned long *)m->private;
 
+<<<<<<< HEAD
 	/* Skip hidden vmstat items. */
 	if (*vmstat_text[off] == '\0')
 		return 0;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	seq_puts(m, vmstat_text[off]);
 	seq_put_decimal_ull(m, " ", *l);
 	seq_putc(m, '\n');
@@ -1833,12 +1846,22 @@ static bool need_update(int cpu)
 
 		/*
 		 * The fast way of checking if there are any vmstat diffs.
+<<<<<<< HEAD
 		 * This works because the diffs are byte sized items.
 		 */
 		if (memchr_inv(p->vm_stat_diff, 0, NR_VM_ZONE_STAT_ITEMS))
 			return true;
 #ifdef CONFIG_NUMA
 		if (memchr_inv(p->vm_numa_stat_diff, 0, NR_VM_NUMA_STAT_ITEMS))
+=======
+		 */
+		if (memchr_inv(p->vm_stat_diff, 0, NR_VM_ZONE_STAT_ITEMS *
+			       sizeof(p->vm_stat_diff[0])))
+			return true;
+#ifdef CONFIG_NUMA
+		if (memchr_inv(p->vm_numa_stat_diff, 0, NR_VM_NUMA_STAT_ITEMS *
+			       sizeof(p->vm_numa_stat_diff[0])))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			return true;
 #endif
 	}
@@ -1980,7 +2003,11 @@ void __init init_mm_internals(void)
 #endif
 #ifdef CONFIG_PROC_FS
 	proc_create_seq("buddyinfo", 0444, NULL, &fragmentation_op);
+<<<<<<< HEAD
 	proc_create_seq("pagetypeinfo", 0444, NULL, &pagetypeinfo_op);
+=======
+	proc_create_seq("pagetypeinfo", 0400, NULL, &pagetypeinfo_op);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	proc_create_seq("vmstat", 0444, NULL, &vmstat_op);
 	proc_create_seq("zoneinfo", 0444, NULL, &zoneinfo_op);
 #endif

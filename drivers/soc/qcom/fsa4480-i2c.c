@@ -9,12 +9,15 @@
 #include <linux/i2c.h>
 #include <linux/mutex.h>
 #include <linux/soc/qcom/fsa4480-i2c.h>
+<<<<<<< HEAD
 #include <linux/of.h>
 #include <linux/of_device.h>
 #include <linux/of_gpio.h>
 #include <linux/gpio.h>
 #include  <linux/soc/qcom/audio-swtich.h>
 #include <linux/mutex.h>
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define FSA4480_I2C_NAME	"fsa4480-driver"
 
@@ -31,6 +34,7 @@
 #define FSA4480_DELAY_L_SENSE   0x0F
 #define FSA4480_DELAY_L_AGND    0x10
 #define FSA4480_RESET           0x1E
+<<<<<<< HEAD
 DEFINE_MUTEX(jzw_detect_completed_mutex);
 EXPORT_SYMBOL(jzw_detect_completed_mutex);
 unsigned int jzw_4480_headset_ref=0;
@@ -46,6 +50,9 @@ bool jzw_detect_complete=false;
 EXPORT_SYMBOL(jzw_detect_complete);
 u32 jzw_switch_status = 0;
 static bool jzw_first_delay=true;
+=======
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct fsa4480_priv {
 	struct regmap *regmap;
 	struct device *dev;
@@ -124,7 +131,11 @@ static int fsa4480_usbc_event_changed(struct notifier_block *nb,
 		return ret;
 	}
 
+<<<<<<< HEAD
 	dev_err(dev, "%s: USB change event received, supply mode %d, usbc mode %d, expected %d\n",
+=======
+	dev_dbg(dev, "%s: USB change event received, supply mode %d, usbc mode %d, expected %d\n",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		__func__, mode.intval, fsa_priv->usbc_mode.counter,
 		POWER_SUPPLY_TYPEC_SINK_AUDIO_ADAPTER);
 
@@ -134,6 +145,7 @@ static int fsa4480_usbc_event_changed(struct notifier_block *nb,
 		if (atomic_read(&(fsa_priv->usbc_mode)) == mode.intval)
 			break; /* filter notifications received before */
 		atomic_set(&(fsa_priv->usbc_mode), mode.intval);
+<<<<<<< HEAD
 		if(mode.intval==POWER_SUPPLY_TYPEC_SINK_AUDIO_ADAPTER){
 			if(jzw_boot_flag == true)
 				jzw_4480_headset_ref++;
@@ -141,6 +153,8 @@ static int fsa4480_usbc_event_changed(struct notifier_block *nb,
 			if(jzw_4480_headset_ref>0)
 				jzw_4480_headset_ref--;
 		}
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		dev_dbg(dev, "%s: queueing usbc_analog_work\n",
 			__func__);
@@ -156,10 +170,15 @@ static int fsa4480_usbc_event_changed(struct notifier_block *nb,
 static int fsa4480_usbc_analog_setup_switches(struct fsa4480_priv *fsa_priv)
 {
 	int rc = 0;
+<<<<<<< HEAD
 	int switch_control=0;
 	union power_supply_propval mode;
 	struct device *dev;
 	bool this_time=false;
+=======
+	union power_supply_propval mode;
+	struct device *dev;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!fsa_priv)
 		return -EINVAL;
@@ -176,6 +195,7 @@ static int fsa4480_usbc_analog_setup_switches(struct fsa4480_priv *fsa_priv)
 			__func__, rc);
 		goto done;
 	}
+<<<<<<< HEAD
 
 	dev_dbg(dev, "%s: setting GPIOs active = %d\n",
 		__func__, mode.intval != POWER_SUPPLY_TYPEC_NONE);
@@ -229,11 +249,26 @@ static int fsa4480_usbc_analog_setup_switches(struct fsa4480_priv *fsa_priv)
 			mutex_unlock(&jzw_detect_completed_mutex);
 			jzw_4480_second=true;
 		}
+=======
+	dev_dbg(dev, "%s: setting GPIOs active = %d\n",
+		__func__, mode.intval != POWER_SUPPLY_TYPEC_NONE);
+
+	switch (mode.intval) {
+	/* add all modes FSA should notify for in here */
+	case POWER_SUPPLY_TYPEC_SINK_AUDIO_ADAPTER:
+		/* activate switches */
+		fsa4480_usbc_update_settings(fsa_priv, 0x00, 0x9F);
+
+		/* notify call chain on event */
+		blocking_notifier_call_chain(&fsa_priv->fsa4480_notifier,
+		mode.intval, NULL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 	case POWER_SUPPLY_TYPEC_NONE:
 		/* notify call chain on event */
 		blocking_notifier_call_chain(&fsa_priv->fsa4480_notifier,
 				POWER_SUPPLY_TYPEC_NONE, NULL);
+<<<<<<< HEAD
 		if(fsa4480_logic_data->irq_gpio){
 			gpio_direction_output(fsa4480_logic_data->irq_gpio, 0);
 			msleep(50);
@@ -254,6 +289,11 @@ static int fsa4480_usbc_analog_setup_switches(struct fsa4480_priv *fsa_priv)
 			blocking_notifier_call_chain(&jzw_4480_priv2->fsa4480_notifier,
 		1, NULL);
 		}
+=======
+
+		/* deactivate switches */
+		fsa4480_usbc_update_settings(fsa_priv, 0x18, 0x98);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 	default:
 		/* ignore other usb connection modes */
@@ -282,10 +322,18 @@ int fsa4480_reg_notifier(struct notifier_block *nb,
 
 	if (!client)
 		return -EINVAL;
+<<<<<<< HEAD
 	fsa_priv = (struct fsa4480_priv *)i2c_get_clientdata(client);
 	if (!fsa_priv)
 		return -EINVAL;
 	jzw_4480_priv1 = fsa_priv;
+=======
+
+	fsa_priv = (struct fsa4480_priv *)i2c_get_clientdata(client);
+	if (!fsa_priv)
+		return -EINVAL;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rc = blocking_notifier_chain_register
 				(&fsa_priv->fsa4480_notifier, nb);
 	if (rc)
@@ -397,7 +445,10 @@ int fsa4480_switch_event(struct device_node *node,
 		else
 			switch_control = 0x7;
 		fsa4480_usbc_update_settings(fsa_priv, switch_control, 0x9F);
+<<<<<<< HEAD
 		pr_err("jzw first FSA_MIC_GND_SWAP");
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 	case FSA_USBC_ORIENTATION_CC1:
 		fsa4480_usbc_update_settings(fsa_priv, 0x18, 0xF8);
@@ -494,8 +545,11 @@ static int fsa4480_probe(struct i2c_client *i2c,
 		((fsa_priv->fsa4480_notifier).rwsem);
 	fsa_priv->fsa4480_notifier.head = NULL;
 
+<<<<<<< HEAD
 	dev_info(fsa_priv->dev, "success \n");
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 
 err_supply:

@@ -513,9 +513,15 @@ lpfc_init_link(struct lpfc_hba * phba,
 		break;
 	}
 
+<<<<<<< HEAD
 	if (phba->pcidev->device == PCI_DEVICE_ID_LANCER_G6_FC &&
 		mb->un.varInitLnk.link_flags & FLAGS_TOPOLOGY_MODE_LOOP) {
 		/* Failover is not tried for Lancer G6 */
+=======
+	if ((phba->pcidev->device == PCI_DEVICE_ID_LANCER_G6_FC ||
+	     phba->pcidev->device == PCI_DEVICE_ID_LANCER_G7_FC) &&
+	    mb->un.varInitLnk.link_flags & FLAGS_TOPOLOGY_MODE_LOOP) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		mb->un.varInitLnk.link_flags = FLAGS_TOPOLOGY_MODE_PT_PT;
 		phba->cfg_topology = FLAGS_TOPOLOGY_MODE_PT_PT;
 	}

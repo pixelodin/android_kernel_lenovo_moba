@@ -244,6 +244,14 @@ ENTRY(efi32_stub_entry)
 	leal	efi32_config(%ebp), %eax
 	movl	%eax, efi_config(%ebp)
 
+<<<<<<< HEAD
+=======
+	/* Disable paging */
+	movl	%cr0, %eax
+	btrl	$X86_CR0_PG_BIT, %eax
+	movl	%eax, %cr0
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	jmp	startup_32
 ENDPROC(efi32_stub_entry)
 #endif

@@ -1558,3 +1558,13 @@
  */
 #define UNJO_VID			0x22B7
 #define UNJO_ISODEBUG_V1_PID		0x150D
+<<<<<<< HEAD
+=======
+
+/*
+ * U-Blox products (http://www.u-blox.com).
+ */
+#define UBLOX_VID			0x1546
+#define UBLOX_C099F9P_ZED_PID		0x0502
+#define UBLOX_C099F9P_ODIN_PID		0x0503
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

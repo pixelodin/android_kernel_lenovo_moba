@@ -49,7 +49,11 @@ struct exynos_cpuclk_cfg_data {
  */
 struct exynos_cpuclk {
 	struct clk_hw				hw;
+<<<<<<< HEAD
 	struct clk				*alt_parent;
+=======
+	struct clk_hw				*alt_parent;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	void __iomem				*ctrl_base;
 	spinlock_t				*lock;
 	const struct exynos_cpuclk_cfg_data	*cfg;

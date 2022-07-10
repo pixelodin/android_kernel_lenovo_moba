@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #define pr_fmt(fmt) "%s: " fmt, __func__
@@ -17,19 +21,31 @@
 #include <linux/gpio.h>
 #include <linux/interrupt.h>
 #include <linux/component.h>
+<<<<<<< HEAD
+=======
+#include <linux/workqueue.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/of_gpio.h>
 #include <linux/of_graph.h>
 #include <linux/of_irq.h>
 #include <linux/regulator/consumer.h>
 #include <linux/firmware.h>
 #include <linux/hdmi.h>
+<<<<<<< HEAD
+=======
+#include <linux/string.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <drm/drmP.h>
 #include <drm/drm_atomic.h>
 #include <drm/drm_atomic_helper.h>
 #include <drm/drm_edid.h>
 #include <drm/drm_mipi_dsi.h>
 #include <drm/drm_crtc_helper.h>
+<<<<<<< HEAD
 #include <linux/string.h>
+=======
+#include <drm/drm_client.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define CFG_HPD_INTERRUPTS BIT(0)
 #define CFG_EDID_INTERRUPTS BIT(1)
@@ -39,8 +55,11 @@
 #define EDID_SEG_SIZE 256
 #define READ_BUF_MAX_SIZE 64
 #define WRITE_BUF_MAX_SIZE 64
+<<<<<<< HEAD
 #define HPD_UEVENT_BUFFER_SIZE 30
 #define VERSION_NUM	0x32
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 struct lt9611_reg_cfg {
 	u8 reg;
@@ -119,10 +138,20 @@ struct lt9611 {
 	struct drm_display_mode curr_mode;
 	struct lt9611_video_cfg video_cfg;
 
+<<<<<<< HEAD
+=======
+	struct workqueue_struct *wq;
+	struct work_struct work;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u8 edid_buf[EDID_SEG_SIZE];
 	u8 i2c_wbuf[WRITE_BUF_MAX_SIZE];
 	u8 i2c_rbuf[READ_BUF_MAX_SIZE];
 	bool hdmi_mode;
+<<<<<<< HEAD
+=======
+	bool hpd_support;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	enum lt9611_fw_upgrade_status fw_status;
 };
 
@@ -136,6 +165,10 @@ struct lt9611_timing_info {
 };
 
 static struct lt9611_timing_info lt9611_supp_timing_cfg[] = {
+<<<<<<< HEAD
+=======
+	{3840, 2160, 24, 60, 4, 2}, /* 3840x2160 24bit 60Hz 4Lane 2ports */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	{3840, 2160, 24, 30, 4, 2}, /* 3840x2160 24bit 30Hz 4Lane 2ports */
 	{1920, 1080, 24, 60, 4, 1}, /* 1080P 24bit 60Hz 4lane 1port */
 	{1920, 1080, 24, 30, 3, 1}, /* 1080P 24bit 30Hz 3lane 1port */
@@ -146,6 +179,49 @@ static struct lt9611_timing_info lt9611_supp_timing_cfg[] = {
 	{0xffff, 0xffff, 0xff, 0xff, 0xff},
 };
 
+<<<<<<< HEAD
+=======
+void lt9611_hpd_work(struct work_struct *work)
+{
+	char name[32], status[32];
+	char *envp[5];
+	char *event_string = "HOTPLUG=1";
+	enum drm_connector_status last_status;
+	struct drm_device *dev = NULL;
+	struct lt9611 *pdata = container_of(work, struct lt9611, work);
+
+	if (!pdata || !pdata->connector.funcs ||
+		!pdata->connector.funcs->detect)
+		return;
+
+	dev = pdata->connector.dev;
+	last_status = pdata->connector.status;
+	pdata->connector.status =
+		pdata->connector.funcs->detect(&pdata->connector, true);
+
+	if (last_status == pdata->connector.status)
+		return;
+
+	scnprintf(name, 32, "name=%s",
+		  pdata->connector.name);
+	scnprintf(status, 32, "status=%s",
+		  drm_get_connector_status_name(pdata->connector.status));
+	pr_debug("[%s]:[%s]\n", name, status);
+	envp[0] = name;
+	envp[1] = status;
+	envp[2] = event_string;
+	envp[3] = NULL;
+	envp[4] = NULL;
+	kobject_uevent_env(&dev->primary->kdev->kobj, KOBJ_CHANGE,
+			   envp);
+
+	if (dev->mode_config.funcs->output_poll_changed)
+		dev->mode_config.funcs->output_poll_changed(dev);
+
+	drm_client_dev_hotplug(dev);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static struct lt9611 *bridge_to_lt9611(struct drm_bridge *bridge)
 {
 	return container_of(bridge, struct lt9611, bridge);
@@ -290,6 +366,10 @@ u8 lt9611_get_version(struct lt9611 *pdata)
 
 	lt9611_write_byte(pdata, 0xFF, 0x80);
 	lt9611_write_byte(pdata, 0xEE, 0x00);
+<<<<<<< HEAD
+=======
+	msleep(50);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return revison;
 }
@@ -813,13 +893,42 @@ static int lt9611_read_device_id(struct lt9611 *pdata)
 
 	lt9611_write_byte(pdata, 0xFF, 0x80);
 	lt9611_write_byte(pdata, 0xEE, 0x00);
+<<<<<<< HEAD
+=======
+	msleep(50);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return ret;
 }
 
 static irqreturn_t lt9611_irq_thread_handler(int irq, void *dev_id)
 {
+<<<<<<< HEAD
 	pr_debug("irq_thread_handler\n");
+=======
+	u8 irq_status = 0, hpd_status = 0;
+	struct lt9611 *pdata = (struct lt9611 *)dev_id;
+
+	lt9611_write_byte(pdata, 0xFF, 0x80);
+	lt9611_write_byte(pdata, 0xEE, 0x01);
+	lt9611_write_byte(pdata, 0xFF, 0xB0);
+	if (!lt9611_read(pdata, 0x22, &irq_status, 1)) {
+		pr_debug("irq status 0x%x\n", irq_status);
+		if (irq_status) {
+			lt9611_write_byte(pdata, 0x22, 0);
+			lt9611_read(pdata, 0x23, &hpd_status, 1);
+			pr_debug("irq hpd status 0x%x\n", hpd_status);
+		}
+	} else
+		pr_err("get irq status failed\n");
+	lt9611_write_byte(pdata, 0xFF, 0x80);
+	lt9611_write_byte(pdata, 0xEE, 0x00);
+
+	msleep(50);
+	if (irq_status & (BIT(0) | BIT(1)))
+		queue_work(pdata->wq, &pdata->work);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return IRQ_HANDLED;
 }
 
@@ -832,7 +941,11 @@ static void lt9611_reset(struct lt9611 *pdata, bool on_off)
 		gpio_set_value(pdata->reset_gpio, 0);
 		msleep(20);
 		gpio_set_value(pdata->reset_gpio, 1);
+<<<<<<< HEAD
 		msleep(20);
+=======
+		msleep(180);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	} else {
 		gpio_set_value(pdata->reset_gpio, 0);
 	}
@@ -1238,7 +1351,28 @@ static void lt9611_get_video_cfg(struct lt9611 *pdata,
 static enum drm_connector_status
 lt9611_connector_detect(struct drm_connector *connector, bool force)
 {
+<<<<<<< HEAD
 	struct lt9611 *pdata = connector_to_lt9611(connector);
+=======
+	u8 hpd_status = 0;
+	struct lt9611 *pdata = connector_to_lt9611(connector);
+
+	pdata->status = connector_status_disconnected;
+	if (force && pdata->hpd_support) {
+		lt9611_write_byte(pdata, 0xFF, 0x80);
+		lt9611_write_byte(pdata, 0xEE, 0x01);
+		lt9611_write_byte(pdata, 0xFF, 0xB0);
+		if (!lt9611_read(pdata, 0x23, &hpd_status, 1)) {
+			if (hpd_status & BIT(1))
+				pdata->status = connector_status_connected;
+			pr_debug("hpd status %x\n", hpd_status);
+		} else
+			pr_err("read hpd status failed\n");
+		lt9611_write_byte(pdata, 0xFF, 0x80);
+		lt9611_write_byte(pdata, 0xEE, 0x00);
+		msleep(50);
+	} else
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		pdata->status = connector_status_connected;
 
 	return pdata->status;
@@ -1455,10 +1589,14 @@ err_dsi_device:
 
 static void lt9611_bridge_pre_enable(struct drm_bridge *bridge)
 {
+<<<<<<< HEAD
 	struct lt9611 *pdata = bridge_to_lt9611(bridge);
 
 	pr_debug("bridge pre_enable\n");
 	lt9611_reset(pdata, true);
+=======
+	pr_debug("bridge pre_enable\n");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static bool lt9611_bridge_mode_fixup(struct drm_bridge *bridge,
@@ -1591,6 +1729,10 @@ static int lt9611_probe(struct i2c_client *client,
 {
 	struct lt9611 *pdata;
 	int ret = 0;
+<<<<<<< HEAD
+=======
+	u8 chip_version = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!client || !client->dev.of_node) {
 		pr_err("invalid input\n");
@@ -1638,6 +1780,7 @@ static int lt9611_probe(struct i2c_client *client,
 
 	lt9611_reset(pdata, true);
 
+<<<<<<< HEAD
 	pdata->irq = gpio_to_irq(pdata->irq_gpio);
 	ret = request_threaded_irq(pdata->irq, NULL, lt9611_irq_thread_handler,
 		IRQF_TRIGGER_FALLING | IRQF_ONESHOT, "lt9611", pdata);
@@ -1659,6 +1802,29 @@ static int lt9611_probe(struct i2c_client *client,
 
 	if (lt9611_get_version(pdata) == VERSION_NUM) {
 		pr_info("LT9611 works, no need to upgrade FW\n");
+=======
+	ret = lt9611_read_device_id(pdata);
+	if (ret) {
+		pr_err("failed to read chip rev\n");
+		goto err_i2c_prog;
+	}
+
+	i2c_set_clientdata(client, pdata);
+	dev_set_drvdata(&client->dev, pdata);
+
+	ret = lt9611_sysfs_init(&client->dev);
+	if (ret) {
+		pr_err("sysfs init failed\n");
+		goto err_i2c_prog;
+	}
+
+	chip_version = lt9611_get_version(pdata);
+	pdata->hpd_support = false;
+	if (chip_version) {
+		pr_info("LT9611 works, no need to upgrade FW\n");
+		if (chip_version >= 0x40)
+			pdata->hpd_support = true;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	} else {
 		ret = request_firmware_nowait(THIS_MODULE, true,
 			"lt9611_fw.bin", &client->dev, GFP_KERNEL, pdata,
@@ -1666,17 +1832,24 @@ static int lt9611_probe(struct i2c_client *client,
 		if (ret) {
 			dev_err(&client->dev,
 				"Failed to invoke firmware loader: %d\n", ret);
+<<<<<<< HEAD
 			goto err_sysfs_init;
+=======
+			goto err_i2c_prog;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		} else
 			return 0;
 	}
 
+<<<<<<< HEAD
 	ret = lt9611_sysfs_init(&client->dev);
 	if (ret) {
 		pr_err("sysfs init failed\n");
 		goto err_sysfs_init;
 	}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #if IS_ENABLED(CONFIG_OF)
 	pdata->bridge.of_node = client->dev.of_node;
 #endif
@@ -1684,11 +1857,31 @@ static int lt9611_probe(struct i2c_client *client,
 	pdata->bridge.funcs = &lt9611_bridge_funcs;
 	drm_bridge_add(&pdata->bridge);
 
+<<<<<<< HEAD
 	return 0;
 
 err_sysfs_init:
 	disable_irq(pdata->irq);
 	free_irq(pdata->irq, pdata);
+=======
+	pdata->wq = create_singlethread_workqueue("lt9611_wk");
+	if (!pdata->wq) {
+		pr_err("Error creating lt9611 wq\n");
+		goto err_i2c_prog;
+	}
+	INIT_WORK(&pdata->work, lt9611_hpd_work);
+
+	pdata->irq = gpio_to_irq(pdata->irq_gpio);
+	ret = request_threaded_irq(pdata->irq, NULL, lt9611_irq_thread_handler,
+		IRQF_TRIGGER_FALLING | IRQF_ONESHOT, "lt9611_irq", pdata);
+	if (ret) {
+		pr_err("failed to request irq\n");
+		goto err_i2c_prog;
+	}
+
+	return 0;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 err_i2c_prog:
 	lt9611_gpio_configure(pdata, false);
 err_dt_supply:
@@ -1729,7 +1922,12 @@ static int lt9611_remove(struct i2c_client *client)
 	}
 
 	devm_kfree(&client->dev, pdata);
+<<<<<<< HEAD
 
+=======
+	if (pdata->wq)
+		destroy_workqueue(pdata->wq);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 end:
 	return ret;
 }

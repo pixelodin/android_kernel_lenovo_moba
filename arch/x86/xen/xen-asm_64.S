@@ -12,6 +12,10 @@
 #include <asm/segment.h>
 #include <asm/asm-offsets.h>
 #include <asm/thread_info.h>
+<<<<<<< HEAD
+=======
+#include <asm/asm.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #include <xen/interface/xen.h>
 
@@ -24,6 +28,10 @@ ENTRY(xen_\name)
 	pop %r11
 	jmp  \name
 END(xen_\name)
+<<<<<<< HEAD
+=======
+_ASM_NOKPROBE(xen_\name)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 .endm
 
 xen_pv_trap divide_error

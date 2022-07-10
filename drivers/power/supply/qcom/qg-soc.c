@@ -332,14 +332,21 @@ skip_entry_count:
 static int qg_process_bass_soc(struct qpnp_qg *chip, int sys_soc)
 {
 	int bass_soc = sys_soc, msoc = chip->msoc;
+<<<<<<< HEAD
 	int batt_soc = CAP(0, 100, DIV_ROUND_CLOSEST(chip->batt_soc, 100));
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!chip->dt.bass_enable && !(qg_ss_feature & QG_BASS))
 		goto exit_soc_scale;
 
 	qg_dbg(chip, QG_DEBUG_SOC, "BASS Entry: fifo_i=%d sys_soc=%d msoc=%d batt_soc=%d fvss_active=%d\n",
 			chip->last_fifo_i_ua, sys_soc, msoc,
+<<<<<<< HEAD
 			batt_soc, chip->fvss_active);
+=======
+			chip->batt_soc, chip->fvss_active);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Skip BASS if FVSS is active */
 	if (chip->fvss_active)
@@ -351,11 +358,19 @@ static int qg_process_bass_soc(struct qpnp_qg *chip, int sys_soc)
 
 	if (!chip->bass_active) {
 		chip->bass_active = true;
+<<<<<<< HEAD
 		chip->bsoc_bass_entry = batt_soc;
 	}
 
 	/* Drop the sys_soc by 1% if batt_soc has dropped */
 	if ((chip->bsoc_bass_entry - batt_soc) >= 1) {
+=======
+		chip->bsoc_bass_entry = chip->batt_soc;
+	}
+
+	/* Drop the sys_soc by 1% if batt_soc has dropped */
+	if ((chip->bsoc_bass_entry - chip->batt_soc) >= 100) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		bass_soc = (msoc > 0) ? msoc - 1 : 0;
 		chip->bass_active = false;
 	}
@@ -486,8 +501,14 @@ static bool is_scaling_required(struct qpnp_qg *chip)
 
 	if (chip->catch_up_soc > chip->msoc && input_present &&
 			(chip->charge_status != POWER_SUPPLY_STATUS_CHARGING &&
+<<<<<<< HEAD
 			chip->charge_status != POWER_SUPPLY_STATUS_FULL))
 		/* USB is present, but not charging */
+=======
+			chip->charge_status != POWER_SUPPLY_STATUS_FULL
+			&& chip->msoc != 0))
+		/* USB is present, but not charging. Ignore when msoc = 0 */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return false;
 
 	return true;

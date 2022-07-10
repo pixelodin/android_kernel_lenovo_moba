@@ -283,8 +283,11 @@ static void free_fw_priv(struct fw_priv *fw_priv)
 static char fw_path_para[256];
 static const char * const fw_path[] = {
 	fw_path_para,
+<<<<<<< HEAD
 	"/vendor/firmware/awinic",
 	"/vendor/firmware/aw8697",
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	"/lib/firmware/updates/" UTS_RELEASE,
 	"/lib/firmware/updates",
 	"/lib/firmware/" UTS_RELEASE,

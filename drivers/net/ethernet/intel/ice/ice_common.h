@@ -23,7 +23,11 @@ enum ice_status
 ice_get_link_status(struct ice_port_info *pi, bool *link_up);
 enum ice_status
 ice_acquire_res(struct ice_hw *hw, enum ice_aq_res_ids res,
+<<<<<<< HEAD
 		enum ice_aq_res_access_type access);
+=======
+		enum ice_aq_res_access_type access, u32 timeout);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 void ice_release_res(struct ice_hw *hw, enum ice_aq_res_ids res);
 enum ice_status ice_init_nvm(struct ice_hw *hw);
 enum ice_status

@@ -8,6 +8,10 @@
 
 #include <linux/module.h>
 #include <linux/kprobes.h>
+<<<<<<< HEAD
+=======
+#include <linux/security.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include "trace.h"
 #include "trace_probe.h"
 
@@ -26,8 +30,15 @@ static int	total_ref_count;
 static int perf_trace_event_perm(struct trace_event_call *tp_event,
 				 struct perf_event *p_event)
 {
+<<<<<<< HEAD
 	if (tp_event->perf_perm) {
 		int ret = tp_event->perf_perm(tp_event, p_event);
+=======
+	int ret;
+
+	if (tp_event->perf_perm) {
+		ret = tp_event->perf_perm(tp_event, p_event);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (ret)
 			return ret;
 	}
@@ -46,8 +57,14 @@ static int perf_trace_event_perm(struct trace_event_call *tp_event,
 
 	/* The ftrace function trace is allowed only for root. */
 	if (ftrace_event_is_function(tp_event)) {
+<<<<<<< HEAD
 		if (perf_paranoid_tracepoint_raw() && !capable(CAP_SYS_ADMIN))
 			return -EPERM;
+=======
+		ret = perf_allow_tracepoint(&p_event->attr);
+		if (ret)
+			return ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		if (!is_sampling_event(p_event))
 			return 0;
@@ -82,8 +99,14 @@ static int perf_trace_event_perm(struct trace_event_call *tp_event,
 	 * ...otherwise raw tracepoint data can be a severe data leak,
 	 * only allow root to have these.
 	 */
+<<<<<<< HEAD
 	if (perf_paranoid_tracepoint_raw() && !capable(CAP_SYS_ADMIN))
 		return -EPERM;
+=======
+	ret = perf_allow_tracepoint(&p_event->attr);
+	if (ret)
+		return ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return 0;
 }

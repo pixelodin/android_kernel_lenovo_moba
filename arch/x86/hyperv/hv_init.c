@@ -17,6 +17,10 @@
  *
  */
 
+<<<<<<< HEAD
+=======
+#include <linux/efi.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/types.h>
 #include <asm/apic.h>
 #include <asm/desc.h>
@@ -257,6 +261,25 @@ static int hv_cpu_die(unsigned int cpu)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int __init hv_pci_init(void)
+{
+	int gen2vm = efi_enabled(EFI_BOOT);
+
+	/*
+	 * For Generation-2 VM, we exit from pci_arch_init() by returning 0.
+	 * The purpose is to suppress the harmless warning:
+	 * "PCI: Fatal: No config space access function found"
+	 */
+	if (gen2vm)
+		return 0;
+
+	/* For Generation-1 VM, we'll proceed in pci_arch_init().  */
+	return 1;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * This function is to be invoked early in the boot sequence after the
  * hypervisor has been detected.
@@ -333,6 +356,11 @@ void __init hyperv_init(void)
 
 	hv_apic_init();
 
+<<<<<<< HEAD
+=======
+	x86_init.pci.arch_init = hv_pci_init;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/*
 	 * Register Hyper-V specific clocksource.
 	 */

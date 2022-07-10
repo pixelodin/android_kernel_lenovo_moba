@@ -258,7 +258,11 @@ qla2x00_process_els(struct bsg_job *bsg_job)
 	srb_t *sp;
 	const char *type;
 	int req_sg_cnt, rsp_sg_cnt;
+<<<<<<< HEAD
 	int rval =  (DRIVER_ERROR << 16);
+=======
+	int rval =  (DID_ERROR << 16);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	uint16_t nextlid = 0;
 
 	if (bsg_request->msgcode == FC_BSG_RPT_ELS) {
@@ -342,6 +346,11 @@ qla2x00_process_els(struct bsg_job *bsg_job)
 		dma_map_sg(&ha->pdev->dev, bsg_job->request_payload.sg_list,
 		bsg_job->request_payload.sg_cnt, DMA_TO_DEVICE);
 	if (!req_sg_cnt) {
+<<<<<<< HEAD
+=======
+		dma_unmap_sg(&ha->pdev->dev, bsg_job->request_payload.sg_list,
+		    bsg_job->request_payload.sg_cnt, DMA_TO_DEVICE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		rval = -ENOMEM;
 		goto done_free_fcport;
 	}
@@ -349,6 +358,11 @@ qla2x00_process_els(struct bsg_job *bsg_job)
 	rsp_sg_cnt = dma_map_sg(&ha->pdev->dev, bsg_job->reply_payload.sg_list,
 		bsg_job->reply_payload.sg_cnt, DMA_FROM_DEVICE);
         if (!rsp_sg_cnt) {
+<<<<<<< HEAD
+=======
+		dma_unmap_sg(&ha->pdev->dev, bsg_job->reply_payload.sg_list,
+		    bsg_job->reply_payload.sg_cnt, DMA_FROM_DEVICE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		rval = -ENOMEM;
 		goto done_free_fcport;
 	}
@@ -433,7 +447,11 @@ qla2x00_process_ct(struct bsg_job *bsg_job)
 	struct Scsi_Host *host = fc_bsg_to_shost(bsg_job);
 	scsi_qla_host_t *vha = shost_priv(host);
 	struct qla_hw_data *ha = vha->hw;
+<<<<<<< HEAD
 	int rval = (DRIVER_ERROR << 16);
+=======
+	int rval = (DID_ERROR << 16);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int req_sg_cnt, rsp_sg_cnt;
 	uint16_t loop_id;
 	struct fc_port *fcport;
@@ -1775,8 +1793,13 @@ qla24xx_process_bidir_cmd(struct bsg_job *bsg_job)
 	uint16_t nextlid = 0;
 	uint32_t tot_dsds;
 	srb_t *sp = NULL;
+<<<<<<< HEAD
 	uint32_t req_data_len = 0;
 	uint32_t rsp_data_len = 0;
+=======
+	uint32_t req_data_len;
+	uint32_t rsp_data_len;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Check the type of the adapter */
 	if (!IS_BIDI_CAPABLE(ha)) {
@@ -1881,6 +1904,12 @@ qla24xx_process_bidir_cmd(struct bsg_job *bsg_job)
 		goto done_unmap_sg;
 	}
 
+<<<<<<< HEAD
+=======
+	req_data_len = bsg_job->request_payload.payload_len;
+	rsp_data_len = bsg_job->reply_payload.payload_len;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (req_data_len != rsp_data_len) {
 		rval = EXT_STATUS_BUSY;
 		ql_log(ql_log_warn, vha, 0x70aa,
@@ -1888,10 +1917,13 @@ qla24xx_process_bidir_cmd(struct bsg_job *bsg_job)
 		goto done_unmap_sg;
 	}
 
+<<<<<<< HEAD
 	req_data_len = bsg_job->request_payload.payload_len;
 	rsp_data_len = bsg_job->reply_payload.payload_len;
 
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Alloc SRB structure */
 	sp = qla2x00_get_sp(vha, &(vha->bidir_fcport), GFP_KERNEL);
 	if (!sp) {
@@ -1948,7 +1980,11 @@ qlafx00_mgmt_cmd(struct bsg_job *bsg_job)
 	struct Scsi_Host *host = fc_bsg_to_shost(bsg_job);
 	scsi_qla_host_t *vha = shost_priv(host);
 	struct qla_hw_data *ha = vha->hw;
+<<<<<<< HEAD
 	int rval = (DRIVER_ERROR << 16);
+=======
+	int rval = (DID_ERROR << 16);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct qla_mt_iocb_rqst_fx00 *piocb_rqst;
 	srb_t *sp;
 	int req_sg_cnt = 0, rsp_sg_cnt = 0;

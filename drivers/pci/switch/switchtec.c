@@ -13,7 +13,11 @@
 #include <linux/uaccess.h>
 #include <linux/poll.h>
 #include <linux/wait.h>
+<<<<<<< HEAD
 
+=======
+#include <linux/io-64-nonatomic-lo-hi.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/nospec.h>
 
 MODULE_DESCRIPTION("Microsemi Switchtec(tm) PCIe Management Driver");
@@ -134,10 +138,13 @@ static void mrpc_cmd_submit(struct switchtec_dev *stdev)
 		    stuser->data, stuser->data_len);
 	iowrite32(stuser->cmd, &stdev->mmio_mrpc->cmd);
 
+<<<<<<< HEAD
 	stuser->status = ioread32(&stdev->mmio_mrpc->status);
 	if (stuser->status != SWITCHTEC_MRPC_STATUS_INPROGRESS)
 		mrpc_complete_cmd(stdev);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	schedule_delayed_work(&stdev->mrpc_timeout,
 			      msecs_to_jiffies(500));
 }
@@ -633,7 +640,11 @@ static int ioctl_event_summary(struct switchtec_dev *stdev,
 	u32 reg;
 
 	s.global = ioread32(&stdev->mmio_sw_event->global_summary);
+<<<<<<< HEAD
 	s.part_bitmap = ioread32(&stdev->mmio_sw_event->part_event_bitmap);
+=======
+	s.part_bitmap = readq(&stdev->mmio_sw_event->part_event_bitmap);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	s.local_part = ioread32(&stdev->mmio_part_cfg->part_event_summary);
 
 	for (i = 0; i < stdev->partition_count; i++) {
@@ -1190,7 +1201,11 @@ static int switchtec_init_isr(struct switchtec_dev *stdev)
 	if (nvecs < 0)
 		return nvecs;
 
+<<<<<<< HEAD
 	event_irq = ioread32(&stdev->mmio_part_cfg->vep_vector_number);
+=======
+	event_irq = ioread16(&stdev->mmio_part_cfg->vep_vector_number);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (event_irq < 0 || event_irq >= nvecs)
 		return -EFAULT;
 

@@ -199,6 +199,7 @@ int pwm_backlight_brightness_default(struct device *dev,
 				     struct platform_pwm_backlight_data *data,
 				     unsigned int period)
 {
+<<<<<<< HEAD
 	unsigned int counter = 0;
 	unsigned int i, n;
 	u64 retval;
@@ -222,6 +223,19 @@ int pwm_backlight_brightness_default(struct device *dev,
 	}
 
 	data->max_brightness = DIV_ROUND_UP(period, counter);
+=======
+	unsigned int i;
+	u64 retval;
+
+	/*
+	 * Once we have 4096 levels there's little point going much higher...
+	 * neither interactive sliders nor animation benefits from having
+	 * more values in the table.
+	 */
+	data->max_brightness =
+		min((int)DIV_ROUND_UP(period, fls(period)), 4096);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	data->levels = devm_kcalloc(dev, data->max_brightness,
 				    sizeof(*data->levels), GFP_KERNEL);
 	if (!data->levels)

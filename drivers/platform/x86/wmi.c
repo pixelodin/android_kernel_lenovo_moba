@@ -768,6 +768,12 @@ static int wmi_dev_match(struct device *dev, struct device_driver *driver)
 	struct wmi_block *wblock = dev_to_wblock(dev);
 	const struct wmi_device_id *id = wmi_driver->id_table;
 
+<<<<<<< HEAD
+=======
+	if (id == NULL)
+		return 0;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	while (id->guid_string) {
 		uuid_le driver_guid;
 

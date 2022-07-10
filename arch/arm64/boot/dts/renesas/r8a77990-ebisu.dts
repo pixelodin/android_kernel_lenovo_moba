@@ -33,7 +33,10 @@
 &avb {
 	pinctrl-0 = <&avb_pins>;
 	pinctrl-names = "default";
+<<<<<<< HEAD
 	renesas,no-ether-link;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	phy-handle = <&phy0>;
 	phy-mode = "rgmii-txid";
 	status = "okay";

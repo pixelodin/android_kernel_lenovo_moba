@@ -166,7 +166,10 @@ static __le16 ieee80211_duration(struct ieee80211_tx_data *tx,
 			break;
 		}
 		case NL80211_BAND_5GHZ:
+<<<<<<< HEAD
 		case NL80211_BAND_6GHZ:
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			if (r->flags & IEEE80211_RATE_MANDATORY_A)
 				mrate = r->bitrate;
 			break;

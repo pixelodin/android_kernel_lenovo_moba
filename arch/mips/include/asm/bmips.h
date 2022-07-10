@@ -75,11 +75,19 @@ static inline int register_bmips_smp_ops(void)
 #endif
 }
 
+<<<<<<< HEAD
 extern char bmips_reset_nmi_vec;
 extern char bmips_reset_nmi_vec_end;
 extern char bmips_smp_movevec;
 extern char bmips_smp_int_vec;
 extern char bmips_smp_int_vec_end;
+=======
+extern char bmips_reset_nmi_vec[];
+extern char bmips_reset_nmi_vec_end[];
+extern char bmips_smp_movevec[];
+extern char bmips_smp_int_vec[];
+extern char bmips_smp_int_vec_end[];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 extern int bmips_smp_enabled;
 extern int bmips_cpu_offset;

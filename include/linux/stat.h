@@ -33,7 +33,12 @@ struct kstat {
 	 STATX_ATTR_IMMUTABLE |				\
 	 STATX_ATTR_APPEND |				\
 	 STATX_ATTR_NODUMP |				\
+<<<<<<< HEAD
 	 STATX_ATTR_ENCRYPTED				\
+=======
+	 STATX_ATTR_ENCRYPTED |				\
+	 STATX_ATTR_VERITY				\
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	 )/* Attrs corresponding to FS_*_FL flags */
 	u64		ino;
 	dev_t		dev;

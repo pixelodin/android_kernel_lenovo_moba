@@ -1029,7 +1029,10 @@ struct ravb_private {
 	phy_interface_t phy_interface;
 	int msg_enable;
 	int speed;
+<<<<<<< HEAD
 	int duplex;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int emac_irq;
 	enum ravb_chip_id chip_id;
 	int rx_irqs[NUM_RX_QUEUE];

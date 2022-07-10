@@ -744,7 +744,11 @@ capi_poll(struct file *file, poll_table *wait)
 
 	poll_wait(file, &(cdev->recvwait), wait);
 	mask = EPOLLOUT | EPOLLWRNORM;
+<<<<<<< HEAD
 	if (!skb_queue_empty(&cdev->recvqueue))
+=======
+	if (!skb_queue_empty_lockless(&cdev->recvqueue))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		mask |= EPOLLIN | EPOLLRDNORM;
 	return mask;
 }

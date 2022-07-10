@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2012-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2012-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include <linux/file.h>
@@ -309,8 +313,12 @@ int kgsl_sync_timeline_create(struct kgsl_context *context)
 	}
 
 	kref_init(&ktimeline->kref);
+<<<<<<< HEAD
 	snprintf(ktimeline->name, sizeof(ktimeline->name),
 		"%s_%d-%.15s(%d)-%.15s(%d)",
+=======
+	ktimeline->name = kasprintf(GFP_KERNEL, "%s_%d-%.15s(%d)-%.15s(%d)",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		context->device->name, context->id,
 		current->group_leader->comm, current->group_leader->pid,
 		current->comm, current->pid);
@@ -354,7 +362,14 @@ static void kgsl_sync_timeline_signal(struct kgsl_sync_timeline *ktimeline,
 
 void kgsl_sync_timeline_destroy(struct kgsl_context *context)
 {
+<<<<<<< HEAD
 	kfree(context->ktimeline);
+=======
+	struct kgsl_sync_timeline *ktimeline = context->ktimeline;
+
+	kfree(ktimeline->name);
+	kfree(ktimeline);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void kgsl_sync_timeline_release(struct kref *kref)

@@ -20,6 +20,10 @@
 #include <linux/thread_info.h>
 #include <linux/firmware.h>
 #include <linux/soc/qcom/qmi.h>
+<<<<<<< HEAD
+=======
+#include <linux/platform_device.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <soc/qcom/icnss2.h>
 #include <soc/qcom/service-locator.h>
 #include <soc/qcom/service-notifier.h>
@@ -413,6 +417,85 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+int wlfw_send_soc_wake_msg(struct icnss_priv *priv,
+			   enum wlfw_soc_wake_enum_v01 type)
+{
+	int ret;
+	struct wlfw_soc_wake_req_msg_v01 *req;
+	struct wlfw_soc_wake_resp_msg_v01 *resp;
+	struct qmi_txn txn;
+
+	if (!priv)
+		return -ENODEV;
+
+	if (test_bit(ICNSS_FW_DOWN, &priv->state))
+		return -EINVAL;
+
+	icnss_pr_dbg("Sending soc wake msg, type: 0x%x\n",
+		     type);
+
+	req = kzalloc(sizeof(*req), GFP_KERNEL);
+	if (!req)
+		return -ENOMEM;
+
+	resp = kzalloc(sizeof(*resp), GFP_KERNEL);
+	if (!resp) {
+		kfree(req);
+		return -ENOMEM;
+	}
+	req->wake_valid = 1;
+	req->wake = type;
+
+	priv->stats.soc_wake_req++;
+
+	ret = qmi_txn_init(&priv->qmi, &txn,
+			   wlfw_soc_wake_resp_msg_v01_ei, resp);
+
+	if (ret < 0) {
+		icnss_pr_err("Fail to init txn for wake msg resp %d\n",
+			     ret);
+		goto out;
+	}
+
+	ret = qmi_send_request(&priv->qmi, NULL, &txn,
+			       QMI_WLFW_SOC_WAKE_REQ_V01,
+			       WLFW_SOC_WAKE_REQ_MSG_V01_MAX_MSG_LEN,
+			       wlfw_soc_wake_req_msg_v01_ei, req);
+	if (ret < 0) {
+		qmi_txn_cancel(&txn);
+		icnss_pr_err("Fail to send soc wake msg %d\n", ret);
+		goto out;
+	}
+
+	ret = qmi_txn_wait(&txn, priv->ctrl_params.qmi_timeout);
+	if (ret < 0) {
+		icnss_qmi_fatal_err("SOC wake timed out with ret %d\n",
+				    ret);
+		goto out;
+	} else if (resp->resp.result != QMI_RESULT_SUCCESS_V01) {
+		icnss_qmi_fatal_err(
+			"SOC wake request rejected,result:%d error:%d\n",
+			resp->resp.result, resp->resp.error);
+		ret = -resp->resp.result;
+		goto out;
+	}
+
+	priv->stats.soc_wake_resp++;
+
+	kfree(resp);
+	kfree(req);
+	return 0;
+
+out:
+	kfree(req);
+	kfree(resp);
+	priv->stats.soc_wake_err++;
+	return ret;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 int wlfw_ind_register_send_sync_msg(struct icnss_priv *priv)
 {
 	int ret;
@@ -533,7 +616,12 @@ int wlfw_cap_send_sync_msg(struct icnss_priv *priv)
 	if (!priv)
 		return -ENODEV;
 
+<<<<<<< HEAD
 	icnss_pr_dbg("Sending capability message, state: 0x%lx\n", priv->state);
+=======
+	icnss_pr_dbg("Sending target capability message, state: 0x%lx\n",
+		     priv->state);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	req = kzalloc(sizeof(*req), GFP_KERNEL);
 	if (!req)
@@ -598,6 +686,17 @@ int wlfw_cap_send_sync_msg(struct icnss_priv *priv)
 				resp->fw_version_info.fw_build_timestamp,
 				WLFW_MAX_TIMESTAMP_LEN + 1);
 	}
+<<<<<<< HEAD
+=======
+
+	if (resp->voltage_mv_valid) {
+		priv->cpr_info.voltage = resp->voltage_mv;
+		icnss_pr_dbg("Voltage for CPR: %dmV\n",
+			    priv->cpr_info.voltage);
+		icnss_update_cpr_info(priv);
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (resp->fw_build_id_valid)
 		strlcpy(priv->fw_build_id, resp->fw_build_id,
 			QMI_WLFW_MAX_BUILD_ID_LEN_V01 + 1);
@@ -1220,6 +1319,11 @@ int wlfw_athdiag_write_send_sync_msg(struct icnss_priv *priv,
 			resp->resp.result, resp->resp.error);
 		ret = -resp->resp.result;
 		goto out;
+<<<<<<< HEAD
+=======
+	} else {
+		ret = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 out:
@@ -1381,7 +1485,11 @@ out:
 void icnss_handle_rejuvenate(struct icnss_priv *priv)
 {
 	struct icnss_event_pd_service_down_data *event_data;
+<<<<<<< HEAD
 	struct icnss_uevent_fw_down_data fw_down_data;
+=======
+	struct icnss_uevent_fw_down_data fw_down_data = {0};
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	event_data = kzalloc(sizeof(*event_data), GFP_KERNEL);
 	if (event_data == NULL)
@@ -1495,6 +1603,13 @@ static void msa_ready_ind_cb(struct qmi_handle *qmi, struct sockaddr_qrtr *sq,
 			     struct qmi_txn *txn, const void *data)
 {
 	struct icnss_priv *priv = container_of(qmi, struct icnss_priv, qmi);
+<<<<<<< HEAD
+=======
+	struct device *dev = &priv->pdev->dev;
+	const struct wlfw_msa_ready_ind_msg_v01 *ind_msg = data;
+	uint64_t msa_base_addr = priv->msa_pa;
+	phys_addr_t hang_data_phy_addr;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	icnss_pr_dbg("Received MSA Ready Indication\n");
 
@@ -1504,6 +1619,62 @@ static void msa_ready_ind_cb(struct qmi_handle *qmi, struct sockaddr_qrtr *sq,
 	}
 
 	priv->stats.msa_ready_ind++;
+<<<<<<< HEAD
+=======
+
+	/* Check if the length is valid &
+	 * the length should not be 0 and
+	 * should be <=  WLFW_MAX_HANG_EVENT_DATA_SIZE(400)
+	 */
+
+	if (ind_msg->hang_data_length_valid &&
+	    ind_msg->hang_data_length &&
+	    ind_msg->hang_data_length <= WLFW_MAX_HANG_EVENT_DATA_SIZE)
+		priv->hang_event_data_len = ind_msg->hang_data_length;
+	else
+		goto out;
+
+	/* Check if the offset is valid &
+	 * the offset should be in range of 0 to msa_mem_size-hang_data_length
+	 */
+
+	if (ind_msg->hang_data_addr_offset_valid &&
+	    (ind_msg->hang_data_addr_offset <= (priv->msa_mem_size -
+						 ind_msg->hang_data_length)))
+		hang_data_phy_addr = msa_base_addr +
+						ind_msg->hang_data_addr_offset;
+	else
+		goto out;
+
+	if (priv->hang_event_data_pa == hang_data_phy_addr)
+		goto exit;
+
+	priv->hang_event_data_pa = hang_data_phy_addr;
+	priv->hang_event_data_va = devm_ioremap(dev, priv->hang_event_data_pa,
+						ind_msg->hang_data_length);
+
+	if (!priv->hang_event_data_va) {
+		icnss_pr_err("Hang Data ioremap failed: phy addr: %pa\n",
+			     &priv->hang_event_data_pa);
+		goto fail;
+	}
+exit:
+	icnss_pr_dbg("Hang Event Data details,Offset:0x%x, Length:0x%x,va_addr: 0x%pK\n",
+		     ind_msg->hang_data_addr_offset,
+		     ind_msg->hang_data_length,
+		     priv->hang_event_data_va);
+
+	return;
+
+out:
+	icnss_pr_err("Invalid Hang Data details, Offset:0x%x, Length:0x%x",
+		     ind_msg->hang_data_addr_offset,
+		     ind_msg->hang_data_length);
+fail:
+	priv->hang_event_data_va = NULL;
+	priv->hang_event_data_pa = 0;
+	priv->hang_event_data_len = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void pin_connect_result_ind_cb(struct qmi_handle *qmi,
@@ -1857,12 +2028,30 @@ out:
 
 int icnss_clear_server(struct icnss_priv *priv)
 {
+<<<<<<< HEAD
+=======
+	int ret;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!priv)
 		return -ENODEV;
 
 	icnss_pr_info("QMI Service Disconnected: 0x%lx\n", priv->state);
 	clear_bit(ICNSS_WLFW_CONNECTED, &priv->state);
 
+<<<<<<< HEAD
+=======
+	icnss_unregister_fw_service(priv);
+
+	clear_bit(ICNSS_DEL_SERVER, &priv->state);
+
+	ret =  icnss_register_fw_service(priv);
+	if (ret < 0) {
+		icnss_pr_err("WLFW server registration failed\n");
+		ICNSS_ASSERT(0);
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 }
 
@@ -1873,6 +2062,15 @@ static int wlfw_new_server(struct qmi_handle *qmi,
 		container_of(qmi, struct icnss_priv, qmi);
 	struct icnss_event_server_arrive_data *event_data;
 
+<<<<<<< HEAD
+=======
+	if (priv && test_bit(ICNSS_DEL_SERVER, &priv->state)) {
+		icnss_pr_info("WLFW server delete in progress, Ignore server arrive: 0x%lx\n",
+			      priv->state);
+		return 0;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	icnss_pr_dbg("WLFW server arrive: node %u port %u\n",
 		     service->node, service->port);
 
@@ -1894,9 +2092,22 @@ static void wlfw_del_server(struct qmi_handle *qmi,
 {
 	struct icnss_priv *priv = container_of(qmi, struct icnss_priv, qmi);
 
+<<<<<<< HEAD
 	icnss_pr_dbg("WLFW server delete\n");
 
 	if (priv) {
+=======
+	if (priv && test_bit(ICNSS_DEL_SERVER, &priv->state)) {
+		icnss_pr_info("WLFW server delete in progress, Ignore server delete:  0x%lx\n",
+			      priv->state);
+		return;
+	}
+
+	icnss_pr_dbg("WLFW server delete\n");
+
+	if (priv) {
+		set_bit(ICNSS_DEL_SERVER, &priv->state);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		set_bit(ICNSS_FW_DOWN, &priv->state);
 		icnss_ignore_fw_timeout(true);
 	}
@@ -2103,12 +2314,32 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_ICNSS2_DEBUG
+static inline u32 icnss_get_host_build_type(void)
+{
+	return QMI_HOST_BUILD_TYPE_PRIMARY_V01;
+}
+#else
+static inline u32 icnss_get_host_build_type(void)
+{
+	return QMI_HOST_BUILD_TYPE_SECONDARY_V01;
+}
+#endif
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 int wlfw_host_cap_send_sync(struct icnss_priv *priv)
 {
 	struct wlfw_host_cap_req_msg_v01 *req;
 	struct wlfw_host_cap_resp_msg_v01 *resp;
 	struct qmi_txn txn;
 	int ret = 0;
+<<<<<<< HEAD
+=======
+	u64 iova_start = 0, iova_size = 0,
+	    iova_ipa_start = 0, iova_ipa_size = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	icnss_pr_dbg("Sending host capability message, state: 0x%lx\n",
 		    priv->state);
@@ -2138,6 +2369,27 @@ int wlfw_host_cap_send_sync(struct icnss_priv *priv)
 	req->cal_done = priv->cal_done;
 	icnss_pr_dbg("Calibration done is %d\n", priv->cal_done);
 
+<<<<<<< HEAD
+=======
+	if (priv->smmu_s1_enable &&
+	    !icnss_get_iova(priv, &iova_start, &iova_size) &&
+	    !icnss_get_iova_ipa(priv, &iova_ipa_start,
+				&iova_ipa_size)) {
+		req->ddr_range_valid = 1;
+		req->ddr_range[0].start = iova_start;
+		req->ddr_range[0].size = iova_size + iova_ipa_size;
+		req->ddr_range[1].start = priv->msa_pa;
+		req->ddr_range[1].size = priv->msa_mem_size;
+		icnss_pr_dbg("Sending iova starting 0x%llx with size 0x%llx\n",
+			    req->ddr_range[0].start, req->ddr_range[0].size);
+		icnss_pr_dbg("Sending msa starting 0x%llx with size 0x%llx\n",
+			    req->ddr_range[1].start, req->ddr_range[1].size);
+	}
+
+	req->host_build_type_valid = 1;
+	req->host_build_type = icnss_get_host_build_type();
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = qmi_txn_init(&priv->qmi, &txn,
 			   wlfw_host_cap_resp_msg_v01_ei, resp);
 	if (ret < 0) {
@@ -2196,7 +2448,11 @@ int icnss_wlfw_get_info_send_sync(struct icnss_priv *plat_priv, int type,
 	if (cmd_len > QMI_WLFW_MAX_DATA_SIZE_V01)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (test_bit(ICNSS_FW_DOWN, &priv->state))
+=======
+	if (test_bit(ICNSS_FW_DOWN, &plat_priv->state))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EINVAL;
 
 	req = kzalloc(sizeof(*req), GFP_KERNEL);

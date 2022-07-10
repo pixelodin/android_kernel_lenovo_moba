@@ -63,6 +63,20 @@
 /* Default time granularity in nanoseconds */
 #define DEFAULT_TIME_GRAN 1000000000
 
+<<<<<<< HEAD
+=======
+static int get_default_compressor(struct ubifs_info *c)
+{
+	if (ubifs_compr_present(c, UBIFS_COMPR_LZO))
+		return UBIFS_COMPR_LZO;
+
+	if (ubifs_compr_present(c, UBIFS_COMPR_ZLIB))
+		return UBIFS_COMPR_ZLIB;
+
+	return UBIFS_COMPR_NONE;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /**
  * create_default_filesystem - format empty UBI volume.
  * @c: UBIFS file-system description object
@@ -186,7 +200,11 @@ static int create_default_filesystem(struct ubifs_info *c)
 	if (c->mount_opts.override_compr)
 		sup->default_compr = cpu_to_le16(c->mount_opts.compr_type);
 	else
+<<<<<<< HEAD
 		sup->default_compr = cpu_to_le16(UBIFS_COMPR_LZO);
+=======
+		sup->default_compr = cpu_to_le16(get_default_compressor(c));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	generate_random_uuid(sup->uuid);
 

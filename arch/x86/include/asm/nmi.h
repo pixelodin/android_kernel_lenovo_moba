@@ -41,7 +41,10 @@ struct nmiaction {
 	struct list_head	list;
 	nmi_handler_t		handler;
 	u64			max_duration;
+<<<<<<< HEAD
 	struct irq_work		irq_work;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	unsigned long		flags;
 	const char		*name;
 };

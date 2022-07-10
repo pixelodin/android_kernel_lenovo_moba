@@ -685,8 +685,12 @@ int __vm_enough_memory(struct mm_struct *mm, long pages, int cap_sys_admin)
 		 * Part of the kernel memory, which can be released
 		 * under memory pressure.
 		 */
+<<<<<<< HEAD
 		free += global_node_page_state(
 			NR_INDIRECTLY_RECLAIMABLE_BYTES) >> PAGE_SHIFT;
+=======
+		free += global_node_page_state(NR_KERNEL_MISC_RECLAIMABLE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		/*
 		 * Leave reserved pages. The pages are not for anonymous pages.

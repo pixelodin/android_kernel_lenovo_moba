@@ -1270,7 +1270,11 @@
  *	@cred contains the credentials to use.
  *	@ns contains the user namespace we want the capability in
  *	@cap contains the capability <include/linux/capability.h>.
+<<<<<<< HEAD
  *	@audit contains whether to write an audit message or not
+=======
+ *	@opts contains options for the capable check <include/linux/security.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  *	Return 0 if the capability is granted for @tsk.
  * @syslog:
  *	Check permission before accessing the kernel message ring or changing
@@ -1446,8 +1450,15 @@ union security_list_options {
 			const kernel_cap_t *effective,
 			const kernel_cap_t *inheritable,
 			const kernel_cap_t *permitted);
+<<<<<<< HEAD
 	int (*capable)(const struct cred *cred, struct user_namespace *ns,
 			int cap, int audit);
+=======
+	int (*capable)(const struct cred *cred,
+			struct user_namespace *ns,
+			int cap,
+			unsigned int opts);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int (*quotactl)(int cmds, int type, int id, struct super_block *sb);
 	int (*quota_on)(struct dentry *dentry);
 	int (*syslog)(int type);
@@ -1516,8 +1527,11 @@ union security_list_options {
 					size_t *len);
 	int (*inode_create)(struct inode *dir, struct dentry *dentry,
 				umode_t mode);
+<<<<<<< HEAD
 	int (*inode_post_create)(struct inode *dir, struct dentry *dentry,
 				umode_t mode);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int (*inode_link)(struct dentry *old_dentry, struct inode *dir,
 				struct dentry *new_dentry);
 	int (*inode_unlink)(struct inode *dir, struct dentry *dentry);
@@ -1779,6 +1793,17 @@ union security_list_options {
 	int (*bpf_prog_alloc_security)(struct bpf_prog_aux *aux);
 	void (*bpf_prog_free_security)(struct bpf_prog_aux *aux);
 #endif /* CONFIG_BPF_SYSCALL */
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PERF_EVENTS
+	int (*perf_event_open)(struct perf_event_attr *attr, int type);
+	int (*perf_event_alloc)(struct perf_event *event);
+	void (*perf_event_free)(struct perf_event *event);
+	int (*perf_event_read)(struct perf_event *event);
+	int (*perf_event_write)(struct perf_event *event);
+
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct security_hook_heads {
@@ -1832,7 +1857,10 @@ struct security_hook_heads {
 	struct hlist_head inode_free_security;
 	struct hlist_head inode_init_security;
 	struct hlist_head inode_create;
+<<<<<<< HEAD
 	struct hlist_head inode_post_create;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct hlist_head inode_link;
 	struct hlist_head inode_unlink;
 	struct hlist_head inode_symlink;
@@ -2014,6 +2042,16 @@ struct security_hook_heads {
 	struct hlist_head bpf_prog_alloc_security;
 	struct hlist_head bpf_prog_free_security;
 #endif /* CONFIG_BPF_SYSCALL */
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PERF_EVENTS
+	struct hlist_head perf_event_open;
+	struct hlist_head perf_event_alloc;
+	struct hlist_head perf_event_free;
+	struct hlist_head perf_event_read;
+	struct hlist_head perf_event_write;
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 } __randomize_layout;
 
 /*

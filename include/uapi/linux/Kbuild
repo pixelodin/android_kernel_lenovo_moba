@@ -4,6 +4,11 @@ ifeq ($(wildcard $(srctree)/arch/$(SRCARCH)/include/uapi/asm/a.out.h),)
 no-export-headers += a.out.h
 endif
 
+<<<<<<< HEAD
+=======
+header-y += hbtp_input.h
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 ifeq ($(wildcard $(srctree)/arch/$(SRCARCH)/include/uapi/asm/kvm.h),)
 no-export-headers += kvm.h
 endif

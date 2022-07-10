@@ -1304,8 +1304,14 @@ static void handle_irq_ucode_debug(struct b43legacy_wldev *dev)
 }
 
 /* Interrupt handler bottom-half */
+<<<<<<< HEAD
 static void b43legacy_interrupt_tasklet(struct b43legacy_wldev *dev)
 {
+=======
+static void b43legacy_interrupt_tasklet(unsigned long data)
+{
+	struct b43legacy_wldev *dev = (struct b43legacy_wldev *)data;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u32 reason;
 	u32 dma_reason[ARRAY_SIZE(dev->dma_reason)];
 	u32 merged_dma_reason = 0;
@@ -3775,7 +3781,11 @@ static int b43legacy_one_core_attach(struct ssb_device *dev,
 	b43legacy_set_status(wldev, B43legacy_STAT_UNINIT);
 	wldev->bad_frames_preempt = modparam_bad_frames_preempt;
 	tasklet_init(&wldev->isr_tasklet,
+<<<<<<< HEAD
 		     (void (*)(unsigned long))b43legacy_interrupt_tasklet,
+=======
+		     b43legacy_interrupt_tasklet,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		     (unsigned long)wldev);
 	if (modparam_pio)
 		wldev->__using_pio = true;

@@ -229,7 +229,11 @@ static void * r10buf_pool_alloc(gfp_t gfp_flags, void *data)
 
 out_free_pages:
 	while (--j >= 0)
+<<<<<<< HEAD
 		resync_free_pages(&rps[j * 2]);
+=======
+		resync_free_pages(&rps[j]);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	j = 0;
 out_free_bio:
@@ -1562,10 +1566,16 @@ static bool raid10_make_request(struct mddev *mddev, struct bio *bio)
 	int chunk_sects = chunk_mask + 1;
 	int sectors = bio_sectors(bio);
 
+<<<<<<< HEAD
 	if (unlikely(bio->bi_opf & REQ_PREFLUSH)) {
 		md_flush_request(mddev, bio);
 		return true;
 	}
+=======
+	if (unlikely(bio->bi_opf & REQ_PREFLUSH)
+	    && md_flush_request(mddev, bio))
+		return true;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!md_write_start(mddev, bio))
 		return false;

@@ -1190,7 +1190,11 @@ static int ath10k_wcn3990_clk_init(struct ath10k *ar)
 	return 0;
 
 err_clock_config:
+<<<<<<< HEAD
 	for (; i >= 0; i--) {
+=======
+	for (i = i - 1; i >= 0; i--) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		clk_info = &ar_snoc->clk[i];
 
 		if (!clk_info->handle)

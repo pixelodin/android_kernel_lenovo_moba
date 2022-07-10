@@ -292,7 +292,11 @@ static int msm_rtb_probe(struct platform_device *pdev)
 	md_entry.phys_addr = msm_rtb.phys;
 	md_entry.size = msm_rtb.size;
 	md_entry.id = MINIDUMP_DEFAULT_ID;
+<<<<<<< HEAD
 	if (msm_minidump_add_region(&md_entry))
+=======
+	if (msm_minidump_add_region(&md_entry) < 0)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		pr_info("Failed to add RTB in Minidump\n");
 
 #if defined(CONFIG_QCOM_RTB_SEPARATE_CPUS)

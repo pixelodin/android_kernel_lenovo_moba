@@ -681,6 +681,7 @@ int machine__process_switch_event(struct machine *machine __maybe_unused,
 	return 0;
 }
 
+<<<<<<< HEAD
 static void dso__adjust_kmod_long_name(struct dso *dso, const char *filename)
 {
 	const char *dup_filename;
@@ -699,6 +700,8 @@ static void dso__adjust_kmod_long_name(struct dso *dso, const char *filename)
 	dso__set_long_name(dso, dup_filename, true);
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct map *machine__findnew_module_map(struct machine *machine, u64 start,
 					const char *filename)
 {
@@ -710,6 +713,7 @@ struct map *machine__findnew_module_map(struct machine *machine, u64 start,
 		return NULL;
 
 	map = map_groups__find_by_name(&machine->kmaps, m.name);
+<<<<<<< HEAD
 	if (map) {
 		/*
 		 * If the map's dso is an offline module, give dso__load()
@@ -719,6 +723,10 @@ struct map *machine__findnew_module_map(struct machine *machine, u64 start,
 		dso__adjust_kmod_long_name(map->dso, filename);
 		goto out;
 	}
+=======
+	if (map)
+		goto out;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	dso = machine__findnew_module_dso(machine, &m, filename);
 	if (dso == NULL)
@@ -2276,7 +2284,11 @@ static int thread__resolve_callchain_sample(struct thread *thread,
 	}
 
 check_calls:
+<<<<<<< HEAD
 	if (callchain_param.order != ORDER_CALLEE) {
+=======
+	if (chain && callchain_param.order != ORDER_CALLEE) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		err = find_prev_cpumode(chain, thread, cursor, parent, root_al,
 					&cpumode, chain->nr - first_call);
 		if (err)

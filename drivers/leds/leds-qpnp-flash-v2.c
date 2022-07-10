@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #define pr_fmt(fmt)	"flashv2: %s: " fmt, __func__
@@ -1762,7 +1766,11 @@ static int qpnp_flash_led_regulator_control(struct led_classdev *led_cdev,
 	return 0;
 }
 
+<<<<<<< HEAD
 int qpnp_flash_led_prepare(struct led_trigger *trig, int options,
+=======
+static int qpnp_flash_leds_prepare(struct led_trigger *trig, int options,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 					int *max_current)
 {
 	struct led_classdev *led_cdev;
@@ -3116,6 +3124,16 @@ static int qpnp_flash_led_probe(struct platform_device *pdev)
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	rc = qpnp_flash_register_led_prepare(&pdev->dev,
+					     qpnp_flash_leds_prepare);
+	if (rc < 0) {
+		pr_err("Failed to register flash_led_prepare, rc=%d\n", rc);
+		goto sysfs_fail;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	dev_set_drvdata(&pdev->dev, led);
 
 	return 0;

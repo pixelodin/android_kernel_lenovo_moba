@@ -34,7 +34,10 @@
 #include <linux/slab.h>
 
 #include <video/mipi_display.h>
+<<<<<<< HEAD
 #include <linux/delay.h>
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /**
  * DOC: dsi helpers
@@ -1059,7 +1062,11 @@ EXPORT_SYMBOL(mipi_dsi_dcs_set_tear_scanline);
 int mipi_dsi_dcs_set_display_brightness(struct mipi_dsi_device *dsi,
 					u16 brightness)
 {
+<<<<<<< HEAD
 	u8 payload[2] = { brightness >> 8, brightness & 0xff};
+=======
+	u8 payload[2] = { brightness & 0xff, brightness >> 8 };
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ssize_t err;
 
 	err = mipi_dsi_dcs_write(dsi, MIPI_DCS_SET_DISPLAY_BRIGHTNESS,
@@ -1097,6 +1104,7 @@ int mipi_dsi_dcs_get_display_brightness(struct mipi_dsi_device *dsi,
 }
 EXPORT_SYMBOL(mipi_dsi_dcs_get_display_brightness);
 
+<<<<<<< HEAD
 #ifdef CONFIG_PRODUCT_MOBA
 extern u8 osc_val[28];
 extern u8 gamma_c7[154];
@@ -1473,6 +1481,8 @@ int mipi_dsi_dcs_set_display_gamma_normal(struct mipi_dsi_device *dsi)
 EXPORT_SYMBOL(mipi_dsi_dcs_set_display_gamma_normal);
 #endif
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int mipi_dsi_drv_probe(struct device *dev)
 {
 	struct mipi_dsi_driver *drv = to_mipi_dsi_driver(dev->driver);

@@ -4183,7 +4183,11 @@ static void ar9003_hw_thermometer_apply(struct ath_hw *ah)
 
 static void ar9003_hw_thermo_cal_apply(struct ath_hw *ah)
 {
+<<<<<<< HEAD
 	u32 data, ko, kg;
+=======
+	u32 data = 0, ko, kg;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!AR_SREV_9462_20_OR_LATER(ah))
 		return;

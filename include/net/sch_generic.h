@@ -273,7 +273,12 @@ struct tcf_proto_ops {
 	int			(*reoffload)(struct tcf_proto *tp, bool add,
 					     tc_setup_cb_t *cb, void *cb_priv,
 					     struct netlink_ext_ack *extack);
+<<<<<<< HEAD
 	void			(*bind_class)(void *, u32, unsigned long);
+=======
+	void			(*bind_class)(void *, u32, unsigned long,
+					      void *, unsigned long);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	void *			(*tmplt_create)(struct net *net,
 						struct tcf_chain *chain,
 						struct nlattr **tca,
@@ -421,6 +426,14 @@ static inline struct Qdisc *qdisc_root(const struct Qdisc *qdisc)
 	return q;
 }
 
+<<<<<<< HEAD
+=======
+static inline struct Qdisc *qdisc_root_bh(const struct Qdisc *qdisc)
+{
+	return rcu_dereference_bh(qdisc->dev_queue->qdisc);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static inline struct Qdisc *qdisc_root_sleeping(const struct Qdisc *qdisc)
 {
 	return qdisc->dev_queue->qdisc_sleeping;

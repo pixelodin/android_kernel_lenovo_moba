@@ -406,6 +406,7 @@ static inline void *index_to_obj(struct kmem_cache *cache, struct page *page,
 	return page->s_mem + cache->size * idx;
 }
 
+<<<<<<< HEAD
 /*
  * We want to avoid an expensive divide : (offset / cache->size)
  *   Using the fact that size is a constant for a particular cache,
@@ -419,6 +420,8 @@ static inline unsigned int obj_to_index(const struct kmem_cache *cache,
 	return reciprocal_divide(offset, cache->reciprocal_buffer_size);
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define BOOT_CPUCACHE_ENTRIES	1
 /* internal cache of cache description objs */
 static struct kmem_cache kmem_cache_boot = {
@@ -1291,7 +1294,11 @@ void __init kmem_cache_init(void)
 	 * Initialize the caches that provide memory for the  kmem_cache_node
 	 * structures first.  Without this, further allocations will bug.
 	 */
+<<<<<<< HEAD
 	kmalloc_caches[INDEX_NODE] = create_kmalloc_cache(
+=======
+	kmalloc_caches[KMALLOC_NORMAL][INDEX_NODE] = create_kmalloc_cache(
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				kmalloc_info[INDEX_NODE].name,
 				kmalloc_size(INDEX_NODE), ARCH_KMALLOC_FLAGS,
 				0, kmalloc_size(INDEX_NODE));
@@ -1307,7 +1314,11 @@ void __init kmem_cache_init(void)
 		for_each_online_node(nid) {
 			init_list(kmem_cache, &init_kmem_cache_node[CACHE_CACHE + nid], nid);
 
+<<<<<<< HEAD
 			init_list(kmalloc_caches[INDEX_NODE],
+=======
+			init_list(kmalloc_caches[KMALLOC_NORMAL][INDEX_NODE],
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 					  &init_kmem_cache_node[SIZE_NODE + nid], nid);
 		}
 	}
@@ -1903,6 +1914,17 @@ static bool set_objfreelist_slab_cache(struct kmem_cache *cachep,
 
 	cachep->num = 0;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * If slab auto-initialization on free is enabled, store the freelist
+	 * off-slab, so that its contents don't end up in one of the allocated
+	 * objects.
+	 */
+	if (unlikely(slab_want_init_on_free(cachep)))
+		return false;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (cachep->ctor || flags & SLAB_TYPESAFE_BY_RCU)
 		return false;
 
@@ -2384,6 +2406,10 @@ static void *alloc_slabmgmt(struct kmem_cache *cachep,
 		/* Slab management obj is off-slab. */
 		freelist = kmem_cache_alloc_node(cachep->freelist_cache,
 					      local_flags, nodeid);
+<<<<<<< HEAD
+=======
+		freelist = kasan_reset_tag(freelist);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (!freelist)
 			return NULL;
 	} else {
@@ -2579,7 +2605,11 @@ static void cache_init_objs(struct kmem_cache *cachep,
 
 	for (i = 0; i < cachep->num; i++) {
 		objp = index_to_obj(cachep, page, i);
+<<<<<<< HEAD
 		kasan_init_slab_obj(cachep, objp);
+=======
+		objp = kasan_init_slab_obj(cachep, objp);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		/* constructor could break poison info */
 		if (DEBUG == 0 && cachep->ctor) {
@@ -2697,6 +2727,16 @@ static struct page *cache_grow_begin(struct kmem_cache *cachep,
 
 	offset *= cachep->colour_off;
 
+<<<<<<< HEAD
+=======
+	/*
+	 * Call kasan_poison_slab() before calling alloc_slabmgmt(), so
+	 * page_address() in the latter returns a non-tagged pointer,
+	 * as it should be for slab pages.
+	 */
+	kasan_poison_slab(page);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Get slab management. */
 	freelist = alloc_slabmgmt(cachep, page, offset,
 			local_flags & ~GFP_CONSTRAINT_MASK, page_node);
@@ -2705,7 +2745,10 @@ static struct page *cache_grow_begin(struct kmem_cache *cachep,
 
 	slab_map_pages(cachep, page, freelist);
 
+<<<<<<< HEAD
 	kasan_poison_slab(page);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	cache_init_objs(cachep, page);
 
 	if (gfpflags_allow_blocking(local_flags))
@@ -3334,7 +3377,11 @@ slab_alloc_node(struct kmem_cache *cachep, gfp_t flags, int nodeid,
 	local_irq_restore(save_flags);
 	ptr = cache_alloc_debugcheck_after(cachep, flags, ptr, caller);
 
+<<<<<<< HEAD
 	if (unlikely(flags & __GFP_ZERO) && ptr)
+=======
+	if (unlikely(slab_want_init_on_alloc(flags, cachep)) && ptr)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		memset(ptr, 0, cachep->object_size);
 
 	slab_post_alloc_hook(cachep, flags, 1, &ptr);
@@ -3391,7 +3438,11 @@ slab_alloc(struct kmem_cache *cachep, gfp_t flags, unsigned long caller)
 	objp = cache_alloc_debugcheck_after(cachep, flags, objp, caller);
 	prefetchw(objp);
 
+<<<<<<< HEAD
 	if (unlikely(flags & __GFP_ZERO) && objp)
+=======
+	if (unlikely(slab_want_init_on_alloc(flags, cachep)) && objp)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		memset(objp, 0, cachep->object_size);
 
 	slab_post_alloc_hook(cachep, flags, 1, &objp);
@@ -3512,6 +3563,11 @@ void ___cache_free(struct kmem_cache *cachep, void *objp,
 	struct array_cache *ac = cpu_cache_get(cachep);
 
 	check_irq_off();
+<<<<<<< HEAD
+=======
+	if (unlikely(slab_want_init_on_free(cachep)))
+		memset(objp, 0, cachep->object_size);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	kmemleak_free_recursive(objp, cachep->flags);
 	objp = cache_free_debugcheck(cachep, objp, caller);
 
@@ -3556,7 +3612,10 @@ void *kmem_cache_alloc(struct kmem_cache *cachep, gfp_t flags)
 {
 	void *ret = slab_alloc(cachep, flags, _RET_IP_);
 
+<<<<<<< HEAD
 	kasan_slab_alloc(cachep, ret, flags);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	trace_kmem_cache_alloc(_RET_IP_, ret,
 			       cachep->object_size, cachep->size, flags);
 
@@ -3598,7 +3657,11 @@ int kmem_cache_alloc_bulk(struct kmem_cache *s, gfp_t flags, size_t size,
 	cache_alloc_debugcheck_after_bulk(s, flags, size, p, _RET_IP_);
 
 	/* Clear memory outside IRQ disabled section */
+<<<<<<< HEAD
 	if (unlikely(flags & __GFP_ZERO))
+=======
+	if (unlikely(slab_want_init_on_alloc(flags, s)))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		for (i = 0; i < size; i++)
 			memset(p[i], 0, s->object_size);
 
@@ -3622,7 +3685,11 @@ kmem_cache_alloc_trace(struct kmem_cache *cachep, gfp_t flags, size_t size)
 
 	ret = slab_alloc(cachep, flags, _RET_IP_);
 
+<<<<<<< HEAD
 	kasan_kmalloc(cachep, ret, size, flags);
+=======
+	ret = kasan_kmalloc(cachep, ret, size, flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	trace_kmalloc(_RET_IP_, ret,
 		      size, cachep->size, flags);
 	return ret;
@@ -3646,7 +3713,10 @@ void *kmem_cache_alloc_node(struct kmem_cache *cachep, gfp_t flags, int nodeid)
 {
 	void *ret = slab_alloc_node(cachep, flags, nodeid, _RET_IP_);
 
+<<<<<<< HEAD
 	kasan_slab_alloc(cachep, ret, flags);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	trace_kmem_cache_alloc_node(_RET_IP_, ret,
 				    cachep->object_size, cachep->size,
 				    flags, nodeid);
@@ -3665,7 +3735,11 @@ void *kmem_cache_alloc_node_trace(struct kmem_cache *cachep,
 
 	ret = slab_alloc_node(cachep, flags, nodeid, _RET_IP_);
 
+<<<<<<< HEAD
 	kasan_kmalloc(cachep, ret, size, flags);
+=======
+	ret = kasan_kmalloc(cachep, ret, size, flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	trace_kmalloc_node(_RET_IP_, ret,
 			   size, cachep->size,
 			   flags, nodeid);
@@ -3686,7 +3760,11 @@ __do_kmalloc_node(size_t size, gfp_t flags, int node, unsigned long caller)
 	if (unlikely(ZERO_OR_NULL_PTR(cachep)))
 		return cachep;
 	ret = kmem_cache_alloc_node_trace(cachep, flags, node, size);
+<<<<<<< HEAD
 	kasan_kmalloc(cachep, ret, size, flags);
+=======
+	ret = kasan_kmalloc(cachep, ret, size, flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return ret;
 }
@@ -3724,7 +3802,11 @@ static __always_inline void *__do_kmalloc(size_t size, gfp_t flags,
 		return cachep;
 	ret = slab_alloc(cachep, flags, caller);
 
+<<<<<<< HEAD
 	kasan_kmalloc(cachep, ret, size, flags);
+=======
+	ret = kasan_kmalloc(cachep, ret, size, flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	trace_kmalloc(caller, ret,
 		      size, cachep->size, flags);
 
@@ -4429,6 +4511,11 @@ void __check_heap_object(const void *ptr, unsigned long n, struct page *page,
 	unsigned int objnr;
 	unsigned long offset;
 
+<<<<<<< HEAD
+=======
+	ptr = kasan_reset_tag(ptr);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Find and validate object. */
 	cachep = page->slab_cache;
 	objnr = obj_to_index(cachep, page, (void *)ptr);

@@ -694,11 +694,19 @@ static ssize_t amdgpu_debugfs_gpr_read(struct file *f, char __user *buf,
 	ssize_t result = 0;
 	uint32_t offset, se, sh, cu, wave, simd, thread, bank, *data;
 
+<<<<<<< HEAD
 	if (size & 3 || *pos & 3)
 		return -EINVAL;
 
 	/* decode offset */
 	offset = *pos & GENMASK_ULL(11, 0);
+=======
+	if (size > 4096 || size & 3 || *pos & 3)
+		return -EINVAL;
+
+	/* decode offset */
+	offset = (*pos & GENMASK_ULL(11, 0)) >> 2;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	se = (*pos & GENMASK_ULL(19, 12)) >> 12;
 	sh = (*pos & GENMASK_ULL(27, 20)) >> 20;
 	cu = (*pos & GENMASK_ULL(35, 28)) >> 28;
@@ -729,7 +737,11 @@ static ssize_t amdgpu_debugfs_gpr_read(struct file *f, char __user *buf,
 	while (size) {
 		uint32_t value;
 
+<<<<<<< HEAD
 		value = data[offset++];
+=======
+		value = data[result >> 2];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		r = put_user(value, (uint32_t *)buf);
 		if (r) {
 			result = r;

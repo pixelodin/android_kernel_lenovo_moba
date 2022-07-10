@@ -248,7 +248,11 @@ static void *usbpd_ipc_log;
 #define PD_MAX_DATA_OBJ		7
 
 #define PD_SRC_CAP_EXT_DB_LEN	24
+<<<<<<< HEAD
 #define PD_STATUS_DB_LEN	5
+=======
+#define PD_STATUS_DB_LEN	6
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define PD_BATTERY_CAP_DB_LEN	9
 
 #define PD_MAX_EXT_MSG_LEN		260
@@ -1377,10 +1381,19 @@ int usbpd_send_svdm(struct usbpd *pd, u16 svid, u8 cmd,
 		enum usbpd_svdm_cmd_type cmd_type, int obj_pos,
 		const u32 *vdos, int num_vdos)
 {
+<<<<<<< HEAD
 	u32 svdm_hdr = SVDM_HDR(svid, 0, obj_pos, cmd_type, cmd);
 
 	usbpd_dbg(&pd->dev, "VDM tx: svid:%x cmd:%x cmd_type:%x svdm_hdr:%x\n",
 			svid, cmd, cmd_type, svdm_hdr);
+=======
+	u32 svdm_hdr = SVDM_HDR(svid, pd->spec_rev == USBPD_REV_30 ? 1 : 0,
+			obj_pos, cmd_type, cmd);
+
+	usbpd_dbg(&pd->dev, "VDM tx: svid:%04x ver:%d obj_pos:%d cmd:%x cmd_type:%x svdm_hdr:%x\n",
+			svid, pd->spec_rev == USBPD_REV_30 ? 1 : 0, obj_pos,
+			cmd, cmd_type, svdm_hdr);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return usbpd_send_vdm(pd, svdm_hdr, vdos, num_vdos);
 }
@@ -1547,7 +1560,11 @@ static void handle_vdm_rx(struct usbpd *pd, struct rx_msg *rx_msg)
 	ktime_t recvd_time = ktime_get();
 
 	usbpd_dbg(&pd->dev,
+<<<<<<< HEAD
 			"VDM rx: svid:%x cmd:%x cmd_type:%x vdm_hdr:%x has_dp: %s\n",
+=======
+			"VDM rx: svid:%04x cmd:%x cmd_type:%x vdm_hdr:%x has_dp: %s\n",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			svid, cmd, cmd_type, vdm_hdr,
 			pd->has_dp ? "true" : "false");
 
@@ -1574,11 +1591,17 @@ static void handle_vdm_rx(struct usbpd *pd, struct rx_msg *rx_msg)
 		return;
 	}
 
+<<<<<<< HEAD
 	if (SVDM_HDR_VER(vdm_hdr) > 1) {
 		usbpd_dbg(&pd->dev, "Discarding SVDM with incorrect version:%d\n",
 				SVDM_HDR_VER(vdm_hdr));
 		return;
 	}
+=======
+	if (SVDM_HDR_VER(vdm_hdr) > 1)
+		usbpd_dbg(&pd->dev, "Received SVDM with unsupported version:%d\n",
+				SVDM_HDR_VER(vdm_hdr));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (cmd_type != SVDM_CMD_TYPE_INITIATOR &&
 			pd->current_state != PE_SRC_STARTUP_WAIT_FOR_VDM_RESP)
@@ -2984,6 +3007,7 @@ static bool handle_ext_snk_ready(struct usbpd *pd, struct rx_msg *rx_msg)
 		complete(&pd->is_ready);
 		break;
 	case MSG_STATUS:
+<<<<<<< HEAD
 		if (rx_msg->data_len != PD_STATUS_DB_LEN) {
 			usbpd_err(&pd->dev, "Invalid status db\n");
 			break;
@@ -2991,6 +3015,17 @@ static bool handle_ext_snk_ready(struct usbpd *pd, struct rx_msg *rx_msg)
 		memcpy(&pd->status_db, rx_msg->payload,
 			sizeof(pd->status_db));
 		kobject_uevent(&pd->dev.kobj, KOBJ_CHANGE);
+=======
+		if (rx_msg->data_len > PD_STATUS_DB_LEN)
+			usbpd_err(&pd->dev, "Invalid status db length:%d\n",
+					rx_msg->data_len);
+
+		memset(&pd->status_db, 0, sizeof(pd->status_db));
+		memcpy(&pd->status_db, rx_msg->payload,
+			min((size_t)rx_msg->data_len, sizeof(pd->status_db)));
+		kobject_uevent(&pd->dev.kobj, KOBJ_CHANGE);
+		complete(&pd->is_ready);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 	case MSG_BATTERY_CAPABILITIES:
 		if (rx_msg->data_len != PD_BATTERY_CAP_DB_LEN) {
@@ -3985,9 +4020,15 @@ static int usbpd_uevent(struct device *dev, struct kobj_uevent_env *env)
 				"explicit" : "implicit");
 	add_uevent_var(env, "ALT_MODE=%d", pd->vdm_state == MODE_ENTERED);
 
+<<<<<<< HEAD
 	add_uevent_var(env, "SDB=%02x %02x %02x %02x %02x", pd->status_db[0],
 			pd->status_db[1], pd->status_db[2], pd->status_db[3],
 			pd->status_db[4]);
+=======
+	add_uevent_var(env, "SDB=%02x %02x %02x %02x %02x %02x",
+			pd->status_db[0], pd->status_db[1], pd->status_db[2],
+			pd->status_db[3], pd->status_db[4], pd->status_db[5]);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return 0;
 }
@@ -4145,6 +4186,7 @@ static ssize_t pdo_h_show(struct device *dev, struct device_attribute *attr,
 }
 static DEVICE_ATTR_RO(pdo_h);
 
+<<<<<<< HEAD
 #ifdef CONFIG_PRODUCT_MOBA
 static int charger1_5v_obj_current = 0;
 static int charger1_9v_obj_current = 0;
@@ -4185,6 +4227,8 @@ static ssize_t charger2_max_power_show(struct device *dev, struct device_attribu
 static DEVICE_ATTR_RO(charger2_max_power);
 #endif
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static ssize_t pdo_n_show(struct device *dev, struct device_attribute *attr,
 		char *buf);
 
@@ -4225,7 +4269,11 @@ static ssize_t select_pdo_store(struct device *dev,
 	int src_cap_id;
 	int pdo, uv = 0, ua = 0;
 	int ret;
+<<<<<<< HEAD
 	return 0;
+=======
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mutex_lock(&pd->swap_lock);
 
 	/* Only allowed if we are already in explicit sink contract */
@@ -4546,10 +4594,13 @@ static struct attribute *usbpd_attrs[] = {
 	&dev_attr_current_dr.attr,
 	&dev_attr_src_cap_id.attr,
 	&dev_attr_pdo_h.attr,
+<<<<<<< HEAD
 #ifdef CONFIG_PRODUCT_MOBA
 	&dev_attr_charger_max_power.attr,
 	&dev_attr_charger2_max_power.attr,
 #endif
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	&dev_attr_pdos[0].attr,
 	&dev_attr_pdos[1].attr,
 	&dev_attr_pdos[2].attr,
@@ -4643,6 +4694,7 @@ static void usbpd_release(struct device *dev)
 	kfree(pd);
 }
 
+<<<<<<< HEAD
 #ifdef CONFIG_PRODUCT_MOBA
 int usbpd_get_pps_status(struct usbpd *pd, u32 *pps_status)
 {
@@ -4784,6 +4836,8 @@ out:
 }
 EXPORT_SYMBOL(usbpd_select_pdo);
 #endif
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int num_pd_instances;
 
 /**

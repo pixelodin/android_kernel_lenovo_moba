@@ -342,10 +342,16 @@ static int sprd_wdt_probe(struct platform_device *pdev)
 
 static int __maybe_unused sprd_wdt_pm_suspend(struct device *dev)
 {
+<<<<<<< HEAD
 	struct watchdog_device *wdd = dev_get_drvdata(dev);
 	struct sprd_wdt *wdt = dev_get_drvdata(dev);
 
 	if (watchdog_active(wdd))
+=======
+	struct sprd_wdt *wdt = dev_get_drvdata(dev);
+
+	if (watchdog_active(&wdt->wdd))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		sprd_wdt_stop(&wdt->wdd);
 	sprd_wdt_disable(wdt);
 
@@ -354,7 +360,10 @@ static int __maybe_unused sprd_wdt_pm_suspend(struct device *dev)
 
 static int __maybe_unused sprd_wdt_pm_resume(struct device *dev)
 {
+<<<<<<< HEAD
 	struct watchdog_device *wdd = dev_get_drvdata(dev);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct sprd_wdt *wdt = dev_get_drvdata(dev);
 	int ret;
 
@@ -362,7 +371,11 @@ static int __maybe_unused sprd_wdt_pm_resume(struct device *dev)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
 	if (watchdog_active(wdd)) {
+=======
+	if (watchdog_active(&wdt->wdd)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ret = sprd_wdt_start(&wdt->wdd);
 		if (ret) {
 			sprd_wdt_disable(wdt);

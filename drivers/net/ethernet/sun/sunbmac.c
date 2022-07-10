@@ -950,7 +950,12 @@ static void bigmac_tx_timeout(struct net_device *dev)
 }
 
 /* Put a packet on the wire. */
+<<<<<<< HEAD
 static int bigmac_start_xmit(struct sk_buff *skb, struct net_device *dev)
+=======
+static netdev_tx_t
+bigmac_start_xmit(struct sk_buff *skb, struct net_device *dev)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct bigmac *bp = netdev_priv(dev);
 	int len, entry;

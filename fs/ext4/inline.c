@@ -1421,7 +1421,11 @@ int htree_inlinedir_to_tree(struct file *dir_file,
 			}
 		}
 
+<<<<<<< HEAD
 		ext4fs_dirhash(de->name, de->name_len, hinfo);
+=======
+		ext4fs_dirhash(dir, de->name, de->name_len, hinfo);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if ((hinfo->hash < start_hash) ||
 		    ((hinfo->hash == start_hash) &&
 		     (hinfo->minor_hash < start_minor_hash)))
@@ -1433,7 +1437,11 @@ int htree_inlinedir_to_tree(struct file *dir_file,
 		err = ext4_htree_store_dirent(dir_file, hinfo->hash,
 					      hinfo->minor_hash, de, &tmp_str);
 		if (err) {
+<<<<<<< HEAD
 			count = err;
+=======
+			ret = err;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			goto out;
 		}
 		count++;

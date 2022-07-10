@@ -215,7 +215,11 @@ mlxsw_sp_dpipe_table_erif_entries_dump(void *priv, bool counters_enabled,
 start_again:
 	err = devlink_dpipe_entry_ctx_prepare(dump_ctx);
 	if (err)
+<<<<<<< HEAD
 		return err;
+=======
+		goto err_ctx_prepare;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	j = 0;
 	for (; i < rif_count; i++) {
 		struct mlxsw_sp_rif *rif = mlxsw_sp_rif_by_index(mlxsw_sp, i);
@@ -247,6 +251,10 @@ start_again:
 	return 0;
 err_entry_append:
 err_entry_get:
+<<<<<<< HEAD
+=======
+err_ctx_prepare:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rtnl_unlock();
 	devlink_dpipe_entry_clear(&entry);
 	return err;

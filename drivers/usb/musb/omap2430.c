@@ -361,8 +361,11 @@ static const struct musb_platform_ops omap2430_ops = {
 	.init		= omap2430_musb_init,
 	.exit		= omap2430_musb_exit,
 
+<<<<<<< HEAD
 	.set_vbus	= omap2430_musb_set_vbus,
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.enable		= omap2430_musb_enable,
 	.disable	= omap2430_musb_disable,
 

@@ -217,6 +217,11 @@ static int hgcm_call_preprocess_linaddr(
 	if (!bounce_buf)
 		return -ENOMEM;
 
+<<<<<<< HEAD
+=======
+	*bounce_buf_ret = bounce_buf;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (copy_in) {
 		ret = copy_from_user(bounce_buf, (void __user *)buf, len);
 		if (ret)
@@ -225,7 +230,10 @@ static int hgcm_call_preprocess_linaddr(
 		memset(bounce_buf, 0, len);
 	}
 
+<<<<<<< HEAD
 	*bounce_buf_ret = bounce_buf;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	hgcm_call_add_pagelist_size(bounce_buf, len, extra);
 	return 0;
 }

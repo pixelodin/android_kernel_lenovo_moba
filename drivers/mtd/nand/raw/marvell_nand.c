@@ -2710,11 +2710,15 @@ static int marvell_nfc_init(struct marvell_nfc *nfc)
 		struct regmap *sysctrl_base =
 			syscon_regmap_lookup_by_phandle(np,
 							"marvell,system-controller");
+<<<<<<< HEAD
 		u32 reg;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		if (IS_ERR(sysctrl_base))
 			return PTR_ERR(sysctrl_base);
 
+<<<<<<< HEAD
 		reg = GENCONF_SOC_DEVICE_MUX_NFC_EN |
 		      GENCONF_SOC_DEVICE_MUX_ECC_CLK_RST |
 		      GENCONF_SOC_DEVICE_MUX_ECC_CORE_RST |
@@ -2728,6 +2732,21 @@ static int marvell_nfc_init(struct marvell_nfc *nfc)
 		regmap_read(sysctrl_base, GENCONF_ND_CLK_CTRL, &reg);
 		reg |= GENCONF_ND_CLK_CTRL_EN;
 		regmap_write(sysctrl_base, GENCONF_ND_CLK_CTRL, reg);
+=======
+		regmap_write(sysctrl_base, GENCONF_SOC_DEVICE_MUX,
+			     GENCONF_SOC_DEVICE_MUX_NFC_EN |
+			     GENCONF_SOC_DEVICE_MUX_ECC_CLK_RST |
+			     GENCONF_SOC_DEVICE_MUX_ECC_CORE_RST |
+			     GENCONF_SOC_DEVICE_MUX_NFC_INT_EN);
+
+		regmap_update_bits(sysctrl_base, GENCONF_CLK_GATING_CTRL,
+				   GENCONF_CLK_GATING_CTRL_ND_GATE,
+				   GENCONF_CLK_GATING_CTRL_ND_GATE);
+
+		regmap_update_bits(sysctrl_base, GENCONF_ND_CLK_CTRL,
+				   GENCONF_ND_CLK_CTRL_EN,
+				   GENCONF_ND_CLK_CTRL_EN);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	/* Configure the DMA if appropriate */

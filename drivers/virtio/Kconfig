@@ -42,6 +42,20 @@ config VIRTIO_PCI_LEGACY
 
 	  If unsure, say Y.
 
+<<<<<<< HEAD
+=======
+config VIRTIO_PMEM
+	tristate "Support for virtio pmem driver"
+	depends on VIRTIO
+	depends on LIBNVDIMM
+	help
+	  This driver provides access to virtio-pmem devices, storage devices
+	  that are mapped into the physical address space - similar to NVDIMMs
+	   - with a virtio-based flushing interface.
+
+	  If unsure, say Y.
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 config VIRTIO_BALLOON
 	tristate "Virtio balloon driver"
 	depends on VIRTIO

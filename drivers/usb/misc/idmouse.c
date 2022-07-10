@@ -337,7 +337,11 @@ static int idmouse_probe(struct usb_interface *interface,
 	int result;
 
 	/* check if we have gotten the data or the hid interface */
+<<<<<<< HEAD
 	iface_desc = &interface->altsetting[0];
+=======
+	iface_desc = interface->cur_altsetting;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (iface_desc->desc.bInterfaceClass != 0x0A)
 		return -ENODEV;
 

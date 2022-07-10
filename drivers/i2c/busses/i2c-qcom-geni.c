@@ -360,6 +360,10 @@ static void gi2c_ev_cb(struct dma_chan *ch, struct msm_gpi_cb const *cb_str,
 	case MSM_GPI_QUP_MAX_EVENT:
 		/* fall through to stall impacted channel */
 	case MSM_GPI_QUP_CH_ERROR:
+<<<<<<< HEAD
+=======
+	case MSM_GPI_QUP_FW_ERROR:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	case MSM_GPI_QUP_PENDING_EVENT:
 	case MSM_GPI_QUP_EOT_DESC_MISMATCH:
 		break;
@@ -377,9 +381,15 @@ static void gi2c_ev_cb(struct dma_chan *ch, struct msm_gpi_cb const *cb_str,
 	}
 	if (cb_str->cb_event != MSM_GPI_QUP_NOTIFY)
 		GENI_SE_ERR(gi2c->ipcl, true, gi2c->dev,
+<<<<<<< HEAD
 			"GSI QN err:0x%x, status:0x%x, err:%d slv_addr: 0x%x R/W: %d\n",
 			cb_str->error_log.error_code, m_stat,
 			cb_str->cb_event, gi2c->cur->addr, gi2c->cur->flags);
+=======
+			"GSI QN err:0x%x, status:0x%x, err:%d\n",
+			cb_str->error_log.error_code, m_stat,
+			cb_str->cb_event);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void gi2c_gsi_cb_err(struct msm_gpi_dma_async_tx_cb_param *cb,
@@ -512,6 +522,10 @@ static int geni_i2c_gsi_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[],
 		struct msm_gpi_tre *go_t = &gi2c->go_t;
 		struct device *rx_dev = gi2c->wrapper_dev;
 		struct device *tx_dev = gi2c->wrapper_dev;
+<<<<<<< HEAD
+=======
+		reinit_completion(&gi2c->xfer);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		gi2c->cur = &msgs[i];
 
@@ -731,7 +745,10 @@ static int geni_i2c_xfer(struct i2c_adapter *adap,
 	int i, ret = 0, timeout = 0;
 
 	gi2c->err = 0;
+<<<<<<< HEAD
 	reinit_completion(&gi2c->xfer);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Client to respect system suspend */
 	if (!pm_runtime_enabled(gi2c->dev)) {
@@ -869,10 +886,25 @@ static int geni_i2c_xfer(struct i2c_adapter *adap,
 			timeout = wait_for_completion_timeout(&gi2c->xfer, HZ);
 			if (!timeout) {
 				GENI_SE_ERR(gi2c->ipcl, true, gi2c->dev,
+<<<<<<< HEAD
 					"Abort\n");
 				geni_abort_m_cmd(gi2c->base);
 			}
 		}
+=======
+					"Cancel failed\n");
+				reinit_completion(&gi2c->xfer);
+				geni_abort_m_cmd(gi2c->base);
+				timeout =
+				wait_for_completion_timeout(&gi2c->xfer, HZ);
+				if (!timeout)
+					GENI_SE_ERR(gi2c->ipcl, true, gi2c->dev,
+						"Abort failed\n");
+			}
+		}
+		gi2c->cur_wr = 0;
+		gi2c->cur_rd = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		if (mode == SE_DMA) {
 			if (gi2c->err) {
@@ -905,8 +937,11 @@ geni_i2c_txn_ret:
 
 	pm_runtime_mark_last_busy(gi2c->dev);
 	pm_runtime_put_autosuspend(gi2c->dev);
+<<<<<<< HEAD
 	gi2c->cur_wr = 0;
 	gi2c->cur_rd = 0;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	gi2c->cur = NULL;
 	gi2c->err = 0;
 	GENI_SE_DBG(gi2c->ipcl, false, gi2c->dev,
@@ -1023,10 +1058,17 @@ static int geni_i2c_probe(struct platform_device *pdev)
 
 	if (of_property_read_u32(pdev->dev.of_node, "qcom,clk-freq-out",
 				&gi2c->i2c_rsc.clk_freq_out)) {
+<<<<<<< HEAD
 		dev_info(&pdev->dev,
 			"Bus frequency not specified, default to 400KHz.\n");
 		gi2c->i2c_rsc.clk_freq_out = KHz(400);
 	}
+=======
+		gi2c->i2c_rsc.clk_freq_out = KHz(400);
+	}
+	dev_info(&pdev->dev, "Bus frequency is set to %dHz\n",
+					gi2c->i2c_rsc.clk_freq_out);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	gi2c->irq = platform_get_irq(pdev, 0);
 	if (gi2c->irq < 0) {

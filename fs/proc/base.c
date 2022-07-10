@@ -1654,6 +1654,61 @@ static const struct file_operations proc_pid_sched_group_id_operations = {
 	.release	= single_release,
 };
 
+<<<<<<< HEAD
+=======
+static int sched_low_latency_show(struct seq_file *m, void *v)
+{
+	struct inode *inode = m->private;
+	struct task_struct *p;
+	bool low_latency;
+
+	p = get_proc_task(inode);
+	if (!p)
+		return -ESRCH;
+
+	low_latency = p->low_latency;
+	seq_printf(m, "%d\n", low_latency);
+
+	put_task_struct(p);
+
+	return 0;
+}
+
+static ssize_t
+sched_low_latency_write(struct file *file, const char __user *buf,
+	    size_t count, loff_t *offset)
+{
+	struct task_struct *p = get_proc_task(file_inode(file));
+	bool low_latency;
+	int err;
+
+	if (!p)
+		return -ESRCH;
+
+	err =  kstrtobool_from_user(buf, count, &low_latency);
+	if (err)
+		goto out;
+
+	p->low_latency = low_latency;
+out:
+	put_task_struct(p);
+	return err < 0 ? err : count;
+}
+
+static int sched_low_latency_open(struct inode *inode, struct file *filp)
+{
+	return single_open(filp, sched_low_latency_show, inode);
+}
+
+static const struct file_operations proc_pid_sched_low_latency_operations = {
+	.open		= sched_low_latency_open,
+	.read		= seq_read,
+	.write		= sched_low_latency_write,
+	.llseek		= seq_lseek,
+	.release	= single_release,
+};
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif	/* CONFIG_SCHED_WALT */
 
 #ifdef CONFIG_SCHED_AUTOGROUP
@@ -3326,6 +3381,10 @@ static const struct pid_entry tgid_base_stuff[] = {
 	REG("sched_group_id", 00666, proc_pid_sched_group_id_operations),
 	REG("sched_boost", 0666,  proc_task_boost_enabled_operations),
 	REG("sched_boost_period_ms", 0666, proc_task_boost_period_operations),
+<<<<<<< HEAD
+=======
+	REG("sched_low_latency", 00666, proc_pid_sched_low_latency_operations),
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif
 #ifdef CONFIG_SCHED_DEBUG
 	REG("sched",      S_IRUGO|S_IWUSR, proc_pid_sched_operations),
@@ -3352,7 +3411,11 @@ static const struct pid_entry tgid_base_stuff[] = {
 	REG("mountinfo",  S_IRUGO, proc_mountinfo_operations),
 	REG("mountstats", S_IRUSR, proc_mountstats_operations),
 #ifdef CONFIG_PROCESS_RECLAIM
+<<<<<<< HEAD
 	REG("reclaim", 0200, proc_reclaim_operations),
+=======
+	REG("reclaim", 0222, proc_reclaim_operations),
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif
 #ifdef CONFIG_PROC_PAGE_MONITOR
 	REG("clear_refs", S_IWUSR, proc_clear_refs_operations),
@@ -3432,6 +3495,18 @@ static const struct file_operations proc_tgid_base_operations = {
 	.llseek		= generic_file_llseek,
 };
 
+<<<<<<< HEAD
+=======
+struct pid *tgid_pidfd_to_pid(const struct file *file)
+{
+	if (!d_is_dir(file->f_path.dentry) ||
+	    (file->f_op != &proc_tgid_base_operations))
+		return ERR_PTR(-EBADF);
+
+	return proc_pid(file_inode(file));
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static struct dentry *proc_tgid_base_lookup(struct inode *dir, struct dentry *dentry, unsigned int flags)
 {
 	return proc_pident_lookup(dir, dentry,

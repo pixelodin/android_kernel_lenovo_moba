@@ -1728,7 +1728,11 @@ _string_nl:
 
 /*
  * .data section should be page aligned
+<<<<<<< HEAD
  *	(look into arch/or32/kernel/vmlinux.lds)
+=======
+ *	(look into arch/openrisc/kernel/vmlinux.lds.S)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 	.section .data,"aw"
 	.align	8192

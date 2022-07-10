@@ -618,11 +618,16 @@ static int sd_change_phase(struct realtek_pci_sdmmc *host,
 		u8 sample_point, bool rx)
 {
 	struct rtsx_pcr *pcr = host->pcr;
+<<<<<<< HEAD
 
+=======
+	u16 SD_VP_CTL = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	dev_dbg(sdmmc_dev(host), "%s(%s): sample_point = %d\n",
 			__func__, rx ? "RX" : "TX", sample_point);
 
 	rtsx_pci_write_register(pcr, CLK_CTL, CHANGE_CLK, CHANGE_CLK);
+<<<<<<< HEAD
 	if (rx)
 		rtsx_pci_write_register(pcr, SD_VPRX_CTL,
 			PHASE_SELECT_MASK, sample_point);
@@ -631,6 +636,19 @@ static int sd_change_phase(struct realtek_pci_sdmmc *host,
 			PHASE_SELECT_MASK, sample_point);
 	rtsx_pci_write_register(pcr, SD_VPCLK0_CTL, PHASE_NOT_RESET, 0);
 	rtsx_pci_write_register(pcr, SD_VPCLK0_CTL, PHASE_NOT_RESET,
+=======
+	if (rx) {
+		SD_VP_CTL = SD_VPRX_CTL;
+		rtsx_pci_write_register(pcr, SD_VPRX_CTL,
+			PHASE_SELECT_MASK, sample_point);
+	} else {
+		SD_VP_CTL = SD_VPTX_CTL;
+		rtsx_pci_write_register(pcr, SD_VPTX_CTL,
+			PHASE_SELECT_MASK, sample_point);
+	}
+	rtsx_pci_write_register(pcr, SD_VP_CTL, PHASE_NOT_RESET, 0);
+	rtsx_pci_write_register(pcr, SD_VP_CTL, PHASE_NOT_RESET,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				PHASE_NOT_RESET);
 	rtsx_pci_write_register(pcr, CLK_CTL, CHANGE_CLK, 0);
 	rtsx_pci_write_register(pcr, SD_CFG1, SD_ASYNC_FIFO_NOT_RST, 0);

@@ -2122,6 +2122,11 @@ static int do_grow(struct inode *inode, u64 size)
 	}
 
 	error = gfs2_trans_begin(sdp, RES_DINODE + RES_STATFS + RES_RG_BIT +
+<<<<<<< HEAD
+=======
+				 (unstuff &&
+				  gfs2_is_jdata(ip) ? RES_JDATA : 0) +
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				 (sdp->sd_args.ar_quota == GFS2_QUOTA_OFF ?
 				  0 : RES_QUOTA), 0);
 	if (error)

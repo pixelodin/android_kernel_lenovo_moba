@@ -448,7 +448,11 @@ static int ltc294x_i2c_remove(struct i2c_client *client)
 {
 	struct ltc294x_info *info = i2c_get_clientdata(client);
 
+<<<<<<< HEAD
 	cancel_delayed_work(&info->work);
+=======
+	cancel_delayed_work_sync(&info->work);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	power_supply_unregister(info->supply);
 	return 0;
 }

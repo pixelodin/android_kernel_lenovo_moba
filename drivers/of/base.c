@@ -2066,7 +2066,11 @@ struct device_node *of_find_next_cache_node(const struct device_node *np)
 	/* OF on pmac has nodes instead of properties named "l2-cache"
 	 * beneath CPU nodes.
 	 */
+<<<<<<< HEAD
 	if (!strcmp(np->type, "cpu"))
+=======
+	if (IS_ENABLED(CONFIG_PPC_PMAC) && !strcmp(np->type, "cpu"))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		for_each_child_of_node(np, child)
 			if (!strcmp(child->type, "cache"))
 				return child;

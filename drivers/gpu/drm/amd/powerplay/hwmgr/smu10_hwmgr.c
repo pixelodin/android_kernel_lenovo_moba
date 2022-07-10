@@ -994,12 +994,24 @@ static int smu10_get_clock_by_type_with_latency(struct pp_hwmgr *hwmgr,
 
 	clocks->num_levels = 0;
 	for (i = 0; i < pclk_vol_table->count; i++) {
+<<<<<<< HEAD
 		clocks->data[i].clocks_in_khz = pclk_vol_table->entries[i].clk * 10;
 		clocks->data[i].latency_in_us = latency_required ?
 						smu10_get_mem_latency(hwmgr,
 						pclk_vol_table->entries[i].clk) :
 						0;
 		clocks->num_levels++;
+=======
+		if (pclk_vol_table->entries[i].clk) {
+			clocks->data[clocks->num_levels].clocks_in_khz =
+				pclk_vol_table->entries[i].clk * 10;
+			clocks->data[clocks->num_levels].latency_in_us = latency_required ?
+				smu10_get_mem_latency(hwmgr,
+						      pclk_vol_table->entries[i].clk) :
+				0;
+			clocks->num_levels++;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	return 0;
@@ -1045,9 +1057,17 @@ static int smu10_get_clock_by_type_with_voltage(struct pp_hwmgr *hwmgr,
 
 	clocks->num_levels = 0;
 	for (i = 0; i < pclk_vol_table->count; i++) {
+<<<<<<< HEAD
 		clocks->data[i].clocks_in_khz = pclk_vol_table->entries[i].clk  * 10;
 		clocks->data[i].voltage_in_mv = pclk_vol_table->entries[i].vol;
 		clocks->num_levels++;
+=======
+		if (pclk_vol_table->entries[i].clk) {
+			clocks->data[clocks->num_levels].clocks_in_khz = pclk_vol_table->entries[i].clk  * 10;
+			clocks->data[clocks->num_levels].voltage_in_mv = pclk_vol_table->entries[i].vol;
+			clocks->num_levels++;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	return 0;

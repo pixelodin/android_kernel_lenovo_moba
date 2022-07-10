@@ -637,9 +637,17 @@ static inline void ocfs2_update_inode_fsync_trans(handle_t *handle,
 {
 	struct ocfs2_inode_info *oi = OCFS2_I(inode);
 
+<<<<<<< HEAD
 	oi->i_sync_tid = handle->h_transaction->t_tid;
 	if (datasync)
 		oi->i_datasync_tid = handle->h_transaction->t_tid;
+=======
+	if (!is_handle_aborted(handle)) {
+		oi->i_sync_tid = handle->h_transaction->t_tid;
+		if (datasync)
+			oi->i_datasync_tid = handle->h_transaction->t_tid;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 #endif /* OCFS2_JOURNAL_H */

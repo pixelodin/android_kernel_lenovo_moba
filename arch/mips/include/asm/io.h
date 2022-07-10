@@ -62,6 +62,7 @@
  * instruction, so the lower 16 bits must be zero.  Should be true on
  * on any sane architecture; generic code does not use this assumption.
  */
+<<<<<<< HEAD
 extern const unsigned long mips_io_port_base;
 
 /*
@@ -77,6 +78,13 @@ static inline void set_io_port_base(unsigned long base)
 {
 	* (unsigned long *) &mips_io_port_base = base;
 	barrier();
+=======
+extern unsigned long mips_io_port_base;
+
+static inline void set_io_port_base(unsigned long base)
+{
+	mips_io_port_base = base;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /*

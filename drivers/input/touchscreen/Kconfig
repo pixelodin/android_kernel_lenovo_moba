@@ -11,7 +11,10 @@ menuconfig INPUT_TOUCHSCREEN
 
 if INPUT_TOUCHSCREEN
 
+<<<<<<< HEAD
 source "drivers/input/touchscreen/goodix_gtx8/Kconfig"
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 config TOUCHSCREEN_PROPERTIES
 	def_tristate INPUT
 	depends on INPUT
@@ -1341,7 +1344,11 @@ source "drivers/input/touchscreen/synaptics_dsx/Kconfig"
 config TOUCHSCREEN_SYNAPTICS_TCM
 	bool "Synaptics TCM Touchscreen Driver"
 	depends on I2C
+<<<<<<< HEAD
 	default n
+=======
+	default y
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	help
 	  Say Y here if you have a Synaptics Touchscreen.
 
@@ -1354,4 +1361,9 @@ source "drivers/input/touchscreen/synaptics_tcm/Kconfig"
 
 source "drivers/input/touchscreen/focaltech_touch/Kconfig"
 
+<<<<<<< HEAD
+=======
+source "drivers/input/touchscreen/nt36xxx/Kconfig"
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 endif

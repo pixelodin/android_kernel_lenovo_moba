@@ -22,8 +22,11 @@
 #include <net/sock.h>
 #include <net/genetlink.h>
 
+<<<<<<< HEAD
 #define GENL_ID_TLV 0x71 /* ZUIO-25522, yangwj12, add static id for tlv family */
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static DEFINE_MUTEX(genl_mutex); /* serialization of message processing */
 static DECLARE_RWSEM(cb_lock);
 
@@ -351,11 +354,15 @@ int genl_register_family(struct genl_family *family)
 		start = end = GENL_ID_PMCRAID;
 	} else if (strcmp(family->name, "VFS_DQUOT") == 0) {
 		start = end = GENL_ID_VFS_DQUOT;
+<<<<<<< HEAD
 	/* BEGIN ZUIO-25522, yangwj12, add static id for tlv family */
 	} else if (strcmp(family->name, "tlv") == 0) {
 		start = end = GENL_ID_TLV;
 	}
 	/* END ZUIO-25522 */
+=======
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (family->maxattr && !family->parallel_ops) {
 		family->attrbuf = kmalloc_array(family->maxattr + 1,
@@ -967,6 +974,7 @@ static struct genl_family genl_ctrl __ro_after_init = {
 	.netnsok = true,
 };
 
+<<<<<<< HEAD
 static int genl_bind(struct net *net, int group)
 {
 	struct genl_family *f;
@@ -1014,13 +1022,18 @@ static void genl_unbind(struct net *net, int group)
 	up_read(&cb_lock);
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int __net_init genl_pernet_init(struct net *net)
 {
 	struct netlink_kernel_cfg cfg = {
 		.input		= genl_rcv,
 		.flags		= NL_CFG_F_NONROOT_RECV,
+<<<<<<< HEAD
 		.bind		= genl_bind,
 		.unbind		= genl_unbind,
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	};
 
 	/* we'll bump the group number right afterwards */

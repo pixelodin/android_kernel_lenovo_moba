@@ -100,11 +100,20 @@ static bool _omap4_is_timeout(union omap4_timeout *time, u32 timeout)
 	 * can be from a timer that requires pm_runtime access, which
 	 * will eventually bring us here with timekeeping_suspended,
 	 * during both suspend entry and resume paths. This happens
+<<<<<<< HEAD
 	 * at least on am43xx platform.
 	 */
 	if (unlikely(_early_timeout || timekeeping_suspended)) {
 		if (time->cycles++ < timeout) {
 			udelay(1);
+=======
+	 * at least on am43xx platform. Account for flakeyness
+	 * with udelay() by multiplying the timeout value by 2.
+	 */
+	if (unlikely(_early_timeout || timekeeping_suspended)) {
+		if (time->cycles++ < timeout) {
+			udelay(1 * 2);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			return false;
 		}
 	} else {

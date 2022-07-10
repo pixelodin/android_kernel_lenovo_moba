@@ -15,10 +15,15 @@
 	 * The decompressor and also some bootloaders rely on a
 	 * pre-existing /chosen node to be available to insert the
 	 * command line and merge other ATAGS info.
+<<<<<<< HEAD
 	 * Also for U-Boot there must be a pre-existing /memory node.
 	 */
 	chosen {};
 	memory { device_type = "memory"; };
+=======
+	 */
+	chosen {};
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	aliases {
 		ethernet0 = &fec1;
@@ -89,6 +94,11 @@
 				      "pll1_sys";
 			arm-supply = <&reg_arm>;
 			soc-supply = <&reg_soc>;
+<<<<<<< HEAD
+=======
+			nvmem-cells = <&cpu_speed_grade>;
+			nvmem-cell-names = "speed_grade";
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		};
 	};
 
@@ -932,6 +942,13 @@
 				tempmon_temp_grade: temp-grade@20 {
 					reg = <0x20 4>;
 				};
+<<<<<<< HEAD
+=======
+
+				cpu_speed_grade: speed-grade@10 {
+					reg = <0x10 4>;
+				};
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			};
 
 			lcdif: lcdif@21c8000 {

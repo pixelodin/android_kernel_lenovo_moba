@@ -531,6 +531,11 @@ extern int trace_event_raw_init(struct trace_event_call *call);
 extern int trace_define_field(struct trace_event_call *call, const char *type,
 			      const char *name, int offset, int size,
 			      int is_signed, int filter_type);
+<<<<<<< HEAD
+=======
+extern int trace_add_event_call_nolock(struct trace_event_call *call);
+extern int trace_remove_event_call_nolock(struct trace_event_call *call);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 extern int trace_add_event_call(struct trace_event_call *call);
 extern int trace_remove_event_call(struct trace_event_call *call);
 extern int trace_event_get_offsets(struct trace_event_call *call);

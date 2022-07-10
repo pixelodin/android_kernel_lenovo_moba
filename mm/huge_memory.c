@@ -63,6 +63,19 @@ static struct shrinker deferred_split_shrinker;
 static atomic_t huge_zero_refcount;
 struct page *huge_zero_page __read_mostly;
 
+<<<<<<< HEAD
+=======
+bool transparent_hugepage_enabled(struct vm_area_struct *vma)
+{
+	if (vma_is_anonymous(vma))
+		return __transparent_hugepage_enabled(vma);
+	if (vma_is_shmem(vma) && shmem_huge_enabled(vma))
+		return __transparent_hugepage_enabled(vma);
+
+	return false;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static struct page *get_huge_zero_page(void)
 {
 	struct page *zero_page;
@@ -163,6 +176,7 @@ static ssize_t enabled_store(struct kobject *kobj,
 {
 	ssize_t ret = count;
 
+<<<<<<< HEAD
 	if (!memcmp("always", buf,
 		    min(sizeof("always")-1, count))) {
 		clear_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG, &transparent_hugepage_flags);
@@ -173,6 +187,15 @@ static ssize_t enabled_store(struct kobject *kobj,
 		set_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG, &transparent_hugepage_flags);
 	} else if (!memcmp("never", buf,
 			   min(sizeof("never")-1, count))) {
+=======
+	if (sysfs_streq(buf, "always")) {
+		clear_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG, &transparent_hugepage_flags);
+		set_bit(TRANSPARENT_HUGEPAGE_FLAG, &transparent_hugepage_flags);
+	} else if (sysfs_streq(buf, "madvise")) {
+		clear_bit(TRANSPARENT_HUGEPAGE_FLAG, &transparent_hugepage_flags);
+		set_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG, &transparent_hugepage_flags);
+	} else if (sysfs_streq(buf, "never")) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		clear_bit(TRANSPARENT_HUGEPAGE_FLAG, &transparent_hugepage_flags);
 		clear_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG, &transparent_hugepage_flags);
 	} else
@@ -236,32 +259,52 @@ static ssize_t defrag_store(struct kobject *kobj,
 			    struct kobj_attribute *attr,
 			    const char *buf, size_t count)
 {
+<<<<<<< HEAD
 	if (!memcmp("always", buf,
 		    min(sizeof("always")-1, count))) {
+=======
+	if (sysfs_streq(buf, "always")) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
+<<<<<<< HEAD
 	} else if (!memcmp("defer+madvise", buf,
 		    min(sizeof("defer+madvise")-1, count))) {
+=======
+	} else if (sysfs_streq(buf, "defer+madvise")) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
+<<<<<<< HEAD
 	} else if (!memcmp("defer", buf,
 		    min(sizeof("defer")-1, count))) {
+=======
+	} else if (sysfs_streq(buf, "defer")) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
+<<<<<<< HEAD
 	} else if (!memcmp("madvise", buf,
 			   min(sizeof("madvise")-1, count))) {
+=======
+	} else if (sysfs_streq(buf, "madvise")) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
+<<<<<<< HEAD
 	} else if (!memcmp("never", buf,
 			   min(sizeof("never")-1, count))) {
+=======
+	} else if (sysfs_streq(buf, "never")) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
@@ -499,6 +542,7 @@ void prep_transhuge_page(struct page *page)
 	set_compound_page_dtor(page, TRANSHUGE_PAGE_DTOR);
 }
 
+<<<<<<< HEAD
 unsigned long __thp_get_unmapped_area(struct file *filp, unsigned long len,
 		loff_t off, unsigned long flags, unsigned long size)
 {
@@ -506,6 +550,15 @@ unsigned long __thp_get_unmapped_area(struct file *filp, unsigned long len,
 	loff_t off_end = off + len;
 	loff_t off_align = round_up(off, size);
 	unsigned long len_pad;
+=======
+static unsigned long __thp_get_unmapped_area(struct file *filp,
+		unsigned long addr, unsigned long len,
+		loff_t off, unsigned long flags, unsigned long size)
+{
+	loff_t off_end = off + len;
+	loff_t off_align = round_up(off, size);
+	unsigned long len_pad, ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (off_end <= off_align || (off_end - off_align) < size)
 		return 0;
@@ -514,6 +567,7 @@ unsigned long __thp_get_unmapped_area(struct file *filp, unsigned long len,
 	if (len_pad < len || (off + len_pad) < off)
 		return 0;
 
+<<<<<<< HEAD
 	addr = current->mm->get_unmapped_area(filp, 0, len_pad,
 					      off >> PAGE_SHIFT, flags);
 	if (IS_ERR_VALUE(addr))
@@ -521,11 +575,33 @@ unsigned long __thp_get_unmapped_area(struct file *filp, unsigned long len,
 
 	addr += (off - addr) & (size - 1);
 	return addr;
+=======
+	ret = current->mm->get_unmapped_area(filp, addr, len_pad,
+					      off >> PAGE_SHIFT, flags);
+
+	/*
+	 * The failure might be due to length padding. The caller will retry
+	 * without the padding.
+	 */
+	if (IS_ERR_VALUE(ret))
+		return 0;
+
+	/*
+	 * Do not try to align to THP boundary if allocation at the address
+	 * hint succeeds.
+	 */
+	if (ret == addr)
+		return addr;
+
+	ret += (off - ret) & (size - 1);
+	return ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 unsigned long thp_get_unmapped_area(struct file *filp, unsigned long addr,
 		unsigned long len, unsigned long pgoff, unsigned long flags)
 {
+<<<<<<< HEAD
 	loff_t off = (loff_t)pgoff << PAGE_SHIFT;
 
 	if (addr)
@@ -538,6 +614,18 @@ unsigned long thp_get_unmapped_area(struct file *filp, unsigned long addr,
 		return addr;
 
  out:
+=======
+	unsigned long ret;
+	loff_t off = (loff_t)pgoff << PAGE_SHIFT;
+
+	if (!IS_DAX(filp->f_mapping->host) || !IS_ENABLED(CONFIG_FS_DAX_PMD))
+		goto out;
+
+	ret = __thp_get_unmapped_area(filp, addr, len, off, flags, PMD_SIZE);
+	if (ret)
+		return ret;
+out:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return current->mm->get_unmapped_area(filp, addr, len, pgoff, flags);
 }
 EXPORT_SYMBOL_GPL(thp_get_unmapped_area);
@@ -1329,7 +1417,11 @@ vm_fault_t do_huge_pmd_wp_page(struct vm_fault *vmf, pmd_t orig_pmd)
 	get_page(page);
 	spin_unlock(vmf->ptl);
 alloc:
+<<<<<<< HEAD
 	if (transparent_hugepage_enabled(vma) &&
+=======
+	if (__transparent_hugepage_enabled(vma) &&
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	    !transparent_hugepage_debug_cow()) {
 		huge_gfp = alloc_hugepage_direct_gfpmask(vma);
 		new_page = alloc_hugepage_vma(huge_gfp, vma, haddr, HPAGE_PMD_ORDER);
@@ -1526,8 +1618,12 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf, pmd_t pmd)
 		if (!get_page_unless_zero(page))
 			goto out_unlock;
 		spin_unlock(vmf->ptl);
+<<<<<<< HEAD
 		wait_on_page_locked(page);
 		put_page(page);
+=======
+		put_and_wait_on_page_locked(page);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto out;
 	}
 
@@ -1563,8 +1659,12 @@ vm_fault_t do_huge_pmd_numa_page(struct vm_fault *vmf, pmd_t pmd)
 		if (!get_page_unless_zero(page))
 			goto out_unlock;
 		spin_unlock(vmf->ptl);
+<<<<<<< HEAD
 		wait_on_page_locked(page);
 		put_page(page);
+=======
+		put_and_wait_on_page_locked(page);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto out;
 	}
 
@@ -2642,7 +2742,11 @@ int split_huge_page_to_list(struct page *page, struct list_head *list)
 	unsigned long flags;
 	pgoff_t end;
 
+<<<<<<< HEAD
 	VM_BUG_ON_PAGE(is_huge_zero_page(page), page);
+=======
+	VM_BUG_ON_PAGE(is_huge_zero_page(head), head);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	VM_BUG_ON_PAGE(!PageLocked(page), page);
 	VM_BUG_ON_PAGE(!PageCompound(page), page);
 
@@ -2938,8 +3042,12 @@ void set_pmd_migration_entry(struct page_vma_mapped_walk *pvmw,
 		return;
 
 	flush_cache_range(vma, address, address + HPAGE_PMD_SIZE);
+<<<<<<< HEAD
 	pmdval = *pvmw->pmd;
 	pmdp_invalidate(vma, address, pvmw->pmd);
+=======
+	pmdval = pmdp_invalidate(vma, address, pvmw->pmd);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (pmd_dirty(pmdval))
 		set_page_dirty(page);
 	entry = make_migration_entry(page, pmd_write(pmdval));

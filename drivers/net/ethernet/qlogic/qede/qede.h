@@ -162,6 +162,11 @@ struct qede_rdma_dev {
 	struct list_head entry;
 	struct list_head rdma_event_list;
 	struct workqueue_struct *rdma_wq;
+<<<<<<< HEAD
+=======
+	struct kref refcnt;
+	struct completion event_comp;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct qede_ptp;

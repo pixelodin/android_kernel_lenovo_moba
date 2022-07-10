@@ -309,6 +309,10 @@ static int set_hw_ioctxt(struct hinic_hwdev *hwdev, unsigned int rq_depth,
 	}
 
 	hw_ioctxt.func_idx = HINIC_HWIF_FUNC_IDX(hwif);
+<<<<<<< HEAD
+=======
+	hw_ioctxt.ppf_idx = HINIC_HWIF_PPF_IDX(hwif);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	hw_ioctxt.set_cmdq_depth = HW_IOCTXT_SET_CMDQ_DEPTH_DEFAULT;
 	hw_ioctxt.cmdq_depth = 0;

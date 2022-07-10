@@ -523,6 +523,7 @@ void cpufreq_task_times_remove_uids(uid_t uid_start, uid_t uid_end)
 	struct uid_entry *uid_entry;
 	struct hlist_node *tmp;
 	unsigned long flags;
+<<<<<<< HEAD
 
 	spin_lock_irqsave(&uid_lock, flags);
 
@@ -530,6 +531,16 @@ void cpufreq_task_times_remove_uids(uid_t uid_start, uid_t uid_end)
 		hash_for_each_possible_safe(uid_hash_table, uid_entry, tmp,
 			hash, uid_start) {
 			if (uid_start == uid_entry->uid) {
+=======
+	u64 uid;
+
+	spin_lock_irqsave(&uid_lock, flags);
+
+	for (uid = uid_start; uid <= uid_end; uid++) {
+		hash_for_each_possible_safe(uid_hash_table, uid_entry, tmp,
+			hash, uid) {
+			if (uid == uid_entry->uid) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				hash_del_rcu(&uid_entry->hash);
 				call_rcu(&uid_entry->rcu, uid_entry_reclaim);
 			}

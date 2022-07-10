@@ -520,10 +520,13 @@ static void msm_restart_prepare(const char *cmd)
 			qpnp_pon_set_restart_reason(
 				PON_RESTART_REASON_KEYS_CLEAR);
 			__raw_writel(0x7766550a, restart_reason);
+<<<<<<< HEAD
 		} else if (!strcmp(cmd, "prod_fuse")) {
 			qpnp_pon_set_restart_reason(
 				PON_RESTART_REASON_PROD_FUSE);
 			__raw_writel(0x7766550b, restart_reason);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		} else if (!strncmp(cmd, "oem-", 4)) {
 			unsigned long code;
 			int ret;

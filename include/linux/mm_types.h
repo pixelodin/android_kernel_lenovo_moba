@@ -226,6 +226,14 @@ struct page_frag_cache {
 
 typedef unsigned long vm_flags_t;
 
+<<<<<<< HEAD
+=======
+static inline atomic_t *compound_mapcount_ptr(struct page *page)
+{
+	return &page[1].compound_mapcount;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * A region containing a mapping of a non-memory backed file under NOMMU
  * conditions.  These are held in a global tree and are pinned by the VMAs that
@@ -331,7 +339,11 @@ struct vm_area_struct {
 #endif
 	struct vm_userfaultfd_ctx vm_userfaultfd_ctx;
 #ifdef CONFIG_SPECULATIVE_PAGE_FAULT
+<<<<<<< HEAD
 	seqcount_t vm_sequence;
+=======
+	seqcount_t vm_sequence;		/* Speculative page fault field */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	atomic_t vm_ref_count;		/* see vma_get(), vma_put() */
 #endif
 } __randomize_layout;
@@ -354,7 +366,11 @@ struct mm_struct {
 		struct rb_root mm_rb;
 		u64 vmacache_seqnum;                   /* per-thread vmacache */
 #ifdef CONFIG_SPECULATIVE_PAGE_FAULT
+<<<<<<< HEAD
 		rwlock_t mm_rb_lock;
+=======
+		rwlock_t mm_rb_lock;	/* Speculative page fault field */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif
 #ifdef CONFIG_MMU
 		unsigned long (*get_unmapped_area) (struct file *filp,

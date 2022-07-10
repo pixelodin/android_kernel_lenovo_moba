@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include <linux/debugfs.h>
@@ -1422,12 +1426,25 @@ static int ipahal_cp_proc_ctx_to_hw_buff_v3(enum ipa_hdr_proc_type type,
 			(base + offset);
 
 		ctx->hdr_add.tlv.type = IPA_PROC_CTX_TLV_TYPE_HDR_ADD;
+<<<<<<< HEAD
 		ctx->hdr_add.tlv.length = 1;
 		ctx->hdr_add.tlv.value = hdr_len;
 		ctx->hdr_add.hdr_addr = is_hdr_proc_ctx ? phys_base :
 			hdr_base_addr + offset_entry->offset;
 		IPAHAL_DBG("header address 0x%x\n",
 			ctx->hdr_add.hdr_addr);
+=======
+		ctx->hdr_add.tlv.length = 2;
+		ctx->hdr_add.tlv.value = hdr_len;
+		hdr_addr = is_hdr_proc_ctx ? phys_base :
+			hdr_base_addr + offset_entry->offset;
+		IPAHAL_DBG("header address 0x%x\n",
+			ctx->hdr_add.hdr_addr);
+		IPAHAL_CP_PROC_CTX_HEADER_UPDATE(ctx->hdr_add.hdr_addr,
+			ctx->hdr_add.hdr_addr_hi, hdr_addr);
+		if (!is_64)
+			ctx->hdr_add.hdr_addr_hi = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		ctx->hdr_add_ex.tlv.type = IPA_PROC_CTX_TLV_TYPE_PROC_CMD;
 		ctx->hdr_add_ex.tlv.length = 1;

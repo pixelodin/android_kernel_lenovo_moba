@@ -76,7 +76,11 @@ static struct ucc_tdm_info utdm_primary_info = {
 	},
 };
 
+<<<<<<< HEAD
 static struct ucc_tdm_info utdm_info[MAX_HDLC_NUM];
+=======
+static struct ucc_tdm_info utdm_info[UCC_MAX_NUM];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 static int uhdlc_init(struct ucc_hdlc_private *priv)
 {
@@ -242,6 +246,14 @@ static int uhdlc_init(struct ucc_hdlc_private *priv)
 		ret = -ENOMEM;
 		goto free_riptr;
 	}
+<<<<<<< HEAD
+=======
+	if (riptr != (u16)riptr || tiptr != (u16)tiptr) {
+		dev_err(priv->dev, "MURAM allocation out of addressable range\n");
+		ret = -ENOMEM;
+		goto free_tiptr;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Set RIPTR, TIPTR */
 	iowrite16be(riptr, &priv->ucc_pram->riptr);
@@ -1113,7 +1125,10 @@ static int ucc_hdlc_probe(struct platform_device *pdev)
 	if (register_hdlc_device(dev)) {
 		ret = -ENOBUFS;
 		pr_err("ucc_hdlc: unable to register hdlc device\n");
+<<<<<<< HEAD
 		free_netdev(dev);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto free_dev;
 	}
 

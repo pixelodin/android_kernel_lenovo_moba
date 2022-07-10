@@ -221,7 +221,11 @@ static size_t ceph_vxattrcb_dir_rbytes(struct ceph_inode_info *ci, char *val,
 static size_t ceph_vxattrcb_dir_rctime(struct ceph_inode_info *ci, char *val,
 				       size_t size)
 {
+<<<<<<< HEAD
 	return snprintf(val, size, "%lld.09%ld", ci->i_rctime.tv_sec,
+=======
+	return snprintf(val, size, "%lld.%09ld", ci->i_rctime.tv_sec,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			ci->i_rctime.tv_nsec);
 }
 

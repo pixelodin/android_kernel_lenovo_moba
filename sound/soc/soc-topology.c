@@ -1890,6 +1890,10 @@ static int soc_tplg_pcm_elems_load(struct soc_tplg *tplg,
 	int count = hdr->count;
 	int i;
 	bool abi_match;
+<<<<<<< HEAD
+=======
+	int ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (tplg->pass != SOC_TPLG_PASS_PCM_DAI)
 		return 0;
@@ -1926,7 +1930,16 @@ static int soc_tplg_pcm_elems_load(struct soc_tplg *tplg,
 		}
 
 		/* create the FE DAIs and DAI links */
+<<<<<<< HEAD
 		soc_tplg_pcm_create(tplg, _pcm);
+=======
+		ret = soc_tplg_pcm_create(tplg, _pcm);
+		if (ret < 0) {
+			if (!abi_match)
+				kfree(_pcm);
+			return ret;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		/* offset by version-specific struct size and
 		 * real priv data size
@@ -2148,8 +2161,16 @@ static int soc_tplg_link_elems_load(struct soc_tplg *tplg,
 		}
 
 		ret = soc_tplg_link_config(tplg, _link);
+<<<<<<< HEAD
 		if (ret < 0)
 			return ret;
+=======
+		if (ret < 0) {
+			if (!abi_match)
+				kfree(_link);
+			return ret;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		/* offset by version-specific struct size and
 		 * real priv data size
@@ -2304,7 +2325,11 @@ static int soc_tplg_manifest_load(struct soc_tplg *tplg,
 {
 	struct snd_soc_tplg_manifest *manifest, *_manifest;
 	bool abi_match;
+<<<<<<< HEAD
 	int err;
+=======
+	int ret = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (tplg->pass != SOC_TPLG_PASS_MANIFEST)
 		return 0;
@@ -2317,19 +2342,33 @@ static int soc_tplg_manifest_load(struct soc_tplg *tplg,
 		_manifest = manifest;
 	} else {
 		abi_match = false;
+<<<<<<< HEAD
 		err = manifest_new_ver(tplg, manifest, &_manifest);
 		if (err < 0)
 			return err;
+=======
+		ret = manifest_new_ver(tplg, manifest, &_manifest);
+		if (ret < 0)
+			return ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	/* pass control to component driver for optional further init */
 	if (tplg->comp && tplg->ops && tplg->ops->manifest)
+<<<<<<< HEAD
 		return tplg->ops->manifest(tplg->comp, tplg->index, _manifest);
+=======
+		ret = tplg->ops->manifest(tplg->comp, tplg->index, _manifest);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!abi_match)	/* free the duplicated one */
 		kfree(_manifest);
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /* validate header magic, size and type */

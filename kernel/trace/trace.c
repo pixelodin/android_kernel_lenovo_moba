@@ -1550,6 +1550,10 @@ static __init int init_trace_selftests(void)
 
 	pr_info("Running postponed tracer tests:\n");
 
+<<<<<<< HEAD
+=======
+	tracing_selftest_running = true;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	list_for_each_entry_safe(p, n, &postponed_selftests, list) {
 		ret = run_tracer_selftest(p->type);
 		/* If the test fails, then warn and remove from available_tracers */
@@ -1568,6 +1572,10 @@ static __init int init_trace_selftests(void)
 		list_del(&p->list);
 		kfree(p);
 	}
+<<<<<<< HEAD
+=======
+	tracing_selftest_running = false;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
  out:
 	mutex_unlock(&trace_types_lock);
@@ -4399,7 +4407,11 @@ int set_tracer_flag(struct trace_array *tr, unsigned int mask, int enabled)
 
 	if (mask == TRACE_ITER_RECORD_TGID) {
 		if (!tgid_map)
+<<<<<<< HEAD
 			tgid_map = kcalloc(PID_MAX_DEFAULT + 1,
+=======
+			tgid_map = kvcalloc(PID_MAX_DEFAULT + 1,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 					   sizeof(*tgid_map),
 					   GFP_KERNEL);
 		if (!tgid_map) {
@@ -5778,6 +5790,10 @@ waitagain:
 	       sizeof(struct trace_iterator) -
 	       offsetof(struct trace_iterator, seq));
 	cpumask_clear(iter->started);
+<<<<<<< HEAD
+=======
+	trace_seq_init(&iter->seq);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	iter->pos = -1;
 
 	trace_event_read_lock();

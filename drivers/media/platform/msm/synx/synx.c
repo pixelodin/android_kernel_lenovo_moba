@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2019-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 #define pr_fmt(fmt) "synx: " fmt
 
@@ -1327,7 +1331,11 @@ static void synx_object_cleanup(struct synx_client *client)
 		struct synx_table_row *row =
 			synx_dev->synx_table + i;
 
+<<<<<<< HEAD
 		mutex_lock(&synx_dev->row_locks[row->index]);
+=======
+		mutex_lock(&synx_dev->row_locks[i]);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (row->index) {
 			list_for_each_entry_safe(payload_info,
 				temp_payload_info,
@@ -1339,7 +1347,11 @@ static void synx_object_cleanup(struct synx_client *client)
 				}
 			}
 		}
+<<<<<<< HEAD
 		mutex_unlock(&synx_dev->row_locks[row->index]);
+=======
+		mutex_unlock(&synx_dev->row_locks[i]);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 }
 

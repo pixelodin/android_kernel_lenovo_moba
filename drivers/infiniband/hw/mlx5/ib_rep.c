@@ -69,8 +69,15 @@ mlx5_ib_vport_rep_load(struct mlx5_core_dev *dev, struct mlx5_eswitch_rep *rep)
 	ibdev->mdev = dev;
 	ibdev->num_ports = max(MLX5_CAP_GEN(dev, num_ports),
 			       MLX5_CAP_GEN(dev, num_vhca_ports));
+<<<<<<< HEAD
 	if (!__mlx5_ib_add(ibdev, &rep_profile))
 		return -EINVAL;
+=======
+	if (!__mlx5_ib_add(ibdev, &rep_profile)) {
+		ib_dealloc_device(&ibdev->ib_dev);
+		return -EINVAL;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	rep->rep_if[REP_IB].priv = ibdev;
 

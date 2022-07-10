@@ -114,12 +114,19 @@ static int opp_parse_supplies(struct dev_pm_opp *opp, struct device *dev,
 			      struct opp_table *opp_table)
 {
 	u32 *microvolt, *microamp = NULL;
+<<<<<<< HEAD
 	int supplies, vcount, icount, ret, i, j;
 	struct property *prop = NULL;
 	char name[NAME_MAX];
 
 	supplies = opp_table->regulator_count ? opp_table->regulator_count : 1;
 
+=======
+	int supplies = opp_table->regulator_count, vcount, icount, ret, i, j;
+	struct property *prop = NULL;
+	char name[NAME_MAX];
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Search for "opp-microvolt-<name>" */
 	if (opp_table->prop_name) {
 		snprintf(name, sizeof(name), "opp-microvolt-%s",
@@ -134,7 +141,17 @@ static int opp_parse_supplies(struct dev_pm_opp *opp, struct device *dev,
 
 		/* Missing property isn't a problem, but an invalid entry is */
 		if (!prop) {
+<<<<<<< HEAD
 			if (!opp_table->regulator_count)
+=======
+			if (unlikely(supplies == -1)) {
+				/* Initialize regulator_count */
+				opp_table->regulator_count = 0;
+				return 0;
+			}
+
+			if (!supplies)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				return 0;
 
 			dev_err(dev, "%s: opp-microvolt missing although OPP managing regulators\n",
@@ -143,6 +160,17 @@ static int opp_parse_supplies(struct dev_pm_opp *opp, struct device *dev,
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	if (unlikely(supplies == -1)) {
+		/* Initialize regulator_count */
+		supplies = opp_table->regulator_count = 1;
+	} else if (unlikely(!supplies)) {
+		dev_err(dev, "%s: opp-microvolt wasn't expected\n", __func__);
+		return -EINVAL;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	vcount = of_property_count_u32_elems(opp->np, name);
 	if (vcount < 0) {
 		dev_err(dev, "%s: Invalid %s property (%d)\n",

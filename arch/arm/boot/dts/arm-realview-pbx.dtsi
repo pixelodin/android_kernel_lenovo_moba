@@ -44,7 +44,11 @@
 	};
 
 	/* The voltage to the MMC card is hardwired at 3.3V */
+<<<<<<< HEAD
 	vmmc: fixedregulator@0 {
+=======
+	vmmc: regulator-vmmc {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		compatible = "regulator-fixed";
 		regulator-name = "vmmc";
 		regulator-min-microvolt = <3300000>;
@@ -52,7 +56,11 @@
 		regulator-boot-on;
         };
 
+<<<<<<< HEAD
 	veth: fixedregulator@0 {
+=======
+	veth: regulator-veth {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		compatible = "regulator-fixed";
 		regulator-name = "veth";
 		regulator-min-microvolt = <3300000>;
@@ -362,7 +370,11 @@
 			clock-names = "uartclk", "apb_pclk";
 		};
 
+<<<<<<< HEAD
 		ssp: ssp@1000d000 {
+=======
+		ssp: spi@1000d000 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			compatible = "arm,pl022", "arm,primecell";
 			reg = <0x1000d000 0x1000>;
 			clocks = <&sspclk>, <&pclk>;
@@ -567,4 +579,7 @@
 		};
 	};
 };
+<<<<<<< HEAD
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

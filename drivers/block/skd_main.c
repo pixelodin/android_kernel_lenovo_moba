@@ -1416,7 +1416,11 @@ static void skd_resolve_req_exception(struct skd_device *skdev,
 
 	case SKD_CHECK_STATUS_BUSY_IMMINENT:
 		skd_log_skreq(skdev, skreq, "retry(busy)");
+<<<<<<< HEAD
 		blk_requeue_request(skdev->queue, req);
+=======
+		blk_mq_requeue_request(req, true);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		dev_info(&skdev->pdev->dev, "drive BUSY imminent\n");
 		skdev->state = SKD_DRVR_STATE_BUSY_IMMINENT;
 		skdev->timer_countdown = SKD_TIMER_MINUTES(20);
@@ -1426,7 +1430,11 @@ static void skd_resolve_req_exception(struct skd_device *skdev,
 	case SKD_CHECK_STATUS_REQUEUE_REQUEST:
 		if ((unsigned long) ++req->special < SKD_MAX_RETRIES) {
 			skd_log_skreq(skdev, skreq, "retry");
+<<<<<<< HEAD
 			blk_requeue_request(skdev->queue, req);
+=======
+			blk_mq_requeue_request(req, true);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			break;
 		}
 		/* fall through */

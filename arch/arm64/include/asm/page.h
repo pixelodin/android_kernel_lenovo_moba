@@ -32,6 +32,13 @@ extern void __cpu_copy_user_page(void *to, const void *from,
 extern void copy_page(void *to, const void *from);
 extern void clear_page(void *to);
 
+<<<<<<< HEAD
+=======
+#define __alloc_zeroed_user_highpage(movableflags, vma, vaddr) \
+	alloc_page_vma(GFP_HIGHUSER | __GFP_ZERO | movableflags, vma, vaddr)
+#define __HAVE_ARCH_ALLOC_ZEROED_USER_HIGHPAGE
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define clear_user_page(addr,vaddr,pg)  __cpu_clear_user_page(addr, vaddr)
 #define copy_user_page(to,from,vaddr,pg) __cpu_copy_user_page(to, from, vaddr)
 

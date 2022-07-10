@@ -398,3 +398,8 @@
 384	i386	arch_prctl		sys_arch_prctl			__ia32_compat_sys_arch_prctl
 385	i386	io_pgetevents		sys_io_pgetevents		__ia32_compat_sys_io_pgetevents
 386	i386	rseq			sys_rseq			__ia32_sys_rseq
+<<<<<<< HEAD
+=======
+424	i386	pidfd_send_signal	sys_pidfd_send_signal		__ia32_sys_pidfd_send_signal
+434	i386	pidfd_open		sys_pidfd_open			__ia32_sys_pidfd_open
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

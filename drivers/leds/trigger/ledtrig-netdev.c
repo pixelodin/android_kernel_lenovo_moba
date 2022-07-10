@@ -302,10 +302,19 @@ static int netdev_trig_notify(struct notifier_block *nb,
 		container_of(nb, struct led_netdev_data, notifier);
 
 	if (evt != NETDEV_UP && evt != NETDEV_DOWN && evt != NETDEV_CHANGE
+<<<<<<< HEAD
 	    && evt != NETDEV_REGISTER && evt != NETDEV_UNREGISTER)
 		return NOTIFY_DONE;
 
 	if (!(dev == trigger_data->net_dev ||
+=======
+	    && evt != NETDEV_REGISTER && evt != NETDEV_UNREGISTER
+	    && evt != NETDEV_CHANGENAME)
+		return NOTIFY_DONE;
+
+	if (!(dev == trigger_data->net_dev ||
+	      (evt == NETDEV_CHANGENAME && !strcmp(dev->name, trigger_data->device_name)) ||
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	      (evt == NETDEV_REGISTER && !strcmp(dev->name, trigger_data->device_name))))
 		return NOTIFY_DONE;
 
@@ -315,6 +324,10 @@ static int netdev_trig_notify(struct notifier_block *nb,
 
 	clear_bit(NETDEV_LED_MODE_LINKUP, &trigger_data->mode);
 	switch (evt) {
+<<<<<<< HEAD
+=======
+	case NETDEV_CHANGENAME:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	case NETDEV_REGISTER:
 		if (trigger_data->net_dev)
 			dev_put(trigger_data->net_dev);

@@ -358,9 +358,18 @@ static int uid_cputime_show(struct seq_file *m, void *v)
 				__func__, uid);
 			return -ENOMEM;
 		}
+<<<<<<< HEAD
 		task_cputime_adjusted(task, &utime, &stime);
 		uid_entry->active_utime += utime;
 		uid_entry->active_stime += stime;
+=======
+		/* avoid double accounting of dying threads */
+		if (!(task->flags & PF_EXITING)) {
+			task_cputime_adjusted(task, &utime, &stime);
+			uid_entry->active_utime += utime;
+			uid_entry->active_stime += stime;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	} while_each_thread(temp, task);
 	rcu_read_unlock();
 
@@ -401,7 +410,12 @@ static ssize_t uid_remove_write(struct file *file,
 	struct hlist_node *tmp;
 	char uids[128];
 	char *start_uid, *end_uid = NULL;
+<<<<<<< HEAD
 	long int uid_start = 0, uid_end = 0;
+=======
+	uid_t uid_start = 0, uid_end = 0;
+	u64 uid;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (count >= sizeof(uids))
 		count = sizeof(uids) - 1;
@@ -416,8 +430,13 @@ static ssize_t uid_remove_write(struct file *file,
 	if (!start_uid || !end_uid)
 		return -EINVAL;
 
+<<<<<<< HEAD
 	if (kstrtol(start_uid, 10, &uid_start) != 0 ||
 		kstrtol(end_uid, 10, &uid_end) != 0) {
+=======
+	if (kstrtouint(start_uid, 10, &uid_start) != 0 ||
+		kstrtouint(end_uid, 10, &uid_end) != 0) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EINVAL;
 	}
 
@@ -426,10 +445,17 @@ static ssize_t uid_remove_write(struct file *file,
 
 	rt_mutex_lock(&uid_lock);
 
+<<<<<<< HEAD
 	for (; uid_start <= uid_end; uid_start++) {
 		hash_for_each_possible_safe(hash_table, uid_entry, tmp,
 							hash, (uid_t)uid_start) {
 			if (uid_start == uid_entry->uid) {
+=======
+	for (uid = uid_start; uid <= uid_end; uid++) {
+		hash_for_each_possible_safe(hash_table, uid_entry, tmp,
+							hash, uid) {
+			if (uid == uid_entry->uid) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				remove_uid_tasks(uid_entry);
 				hash_del(&uid_entry->hash);
 				kfree(uid_entry);
@@ -453,6 +479,13 @@ static void add_uid_io_stats(struct uid_entry *uid_entry,
 {
 	struct io_stats *io_slot = &uid_entry->io[slot];
 
+<<<<<<< HEAD
+=======
+	/* avoid double accounting of dying threads */
+	if (slot != UID_STATE_DEAD_TASKS && (task->flags & PF_EXITING))
+		return;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	io_slot->read_bytes += task->ioac.read_bytes;
 	io_slot->write_bytes += compute_write_bytes(task);
 	io_slot->rchar += task->ioac.rchar;

@@ -198,21 +198,43 @@ struct ip_vs_app *register_ip_vs_app(struct netns_ipvs *ipvs, struct ip_vs_app *
 
 	mutex_lock(&__ip_vs_app_mutex);
 
+<<<<<<< HEAD
 	list_for_each_entry(a, &ipvs->app_list, a_list) {
 		if (!strcmp(app->name, a->name)) {
 			err = -EEXIST;
+=======
+	/* increase the module use count */
+	if (!ip_vs_use_count_inc()) {
+		err = -ENOENT;
+		goto out_unlock;
+	}
+
+	list_for_each_entry(a, &ipvs->app_list, a_list) {
+		if (!strcmp(app->name, a->name)) {
+			err = -EEXIST;
+			/* decrease the module use count */
+			ip_vs_use_count_dec();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			goto out_unlock;
 		}
 	}
 	a = kmemdup(app, sizeof(*app), GFP_KERNEL);
 	if (!a) {
 		err = -ENOMEM;
+<<<<<<< HEAD
+=======
+		/* decrease the module use count */
+		ip_vs_use_count_dec();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto out_unlock;
 	}
 	INIT_LIST_HEAD(&a->incs_list);
 	list_add(&a->a_list, &ipvs->app_list);
+<<<<<<< HEAD
 	/* increase the module use count */
 	ip_vs_use_count_inc();
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 out_unlock:
 	mutex_unlock(&__ip_vs_app_mutex);

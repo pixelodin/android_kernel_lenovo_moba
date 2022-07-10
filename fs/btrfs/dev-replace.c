@@ -810,6 +810,7 @@ int btrfs_dev_replace_cancel(struct btrfs_fs_info *fs_info)
 		btrfs_dev_replace_write_unlock(dev_replace);
 		break;
 	case BTRFS_IOCTL_DEV_REPLACE_STATE_STARTED:
+<<<<<<< HEAD
 		result = BTRFS_IOCTL_DEV_REPLACE_RESULT_NO_ERROR;
 		tgt_device = dev_replace->tgtdev;
 		src_device = dev_replace->srcdev;
@@ -820,6 +821,25 @@ int btrfs_dev_replace_cancel(struct btrfs_fs_info *fs_info)
 			"dev_replace from %s (devid %llu) to %s canceled",
 			btrfs_dev_name(src_device), src_device->devid,
 			btrfs_dev_name(tgt_device));
+=======
+		tgt_device = dev_replace->tgtdev;
+		src_device = dev_replace->srcdev;
+		btrfs_dev_replace_write_unlock(dev_replace);
+		ret = btrfs_scrub_cancel(fs_info);
+		if (ret < 0) {
+			result = BTRFS_IOCTL_DEV_REPLACE_RESULT_NOT_STARTED;
+		} else {
+			result = BTRFS_IOCTL_DEV_REPLACE_RESULT_NO_ERROR;
+			/*
+			 * btrfs_dev_replace_finishing() will handle the
+			 * cleanup part
+			 */
+			btrfs_info_in_rcu(fs_info,
+				"dev_replace from %s (devid %llu) to %s canceled",
+				btrfs_dev_name(src_device), src_device->devid,
+				btrfs_dev_name(tgt_device));
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 	case BTRFS_IOCTL_DEV_REPLACE_STATE_SUSPENDED:
 		/*

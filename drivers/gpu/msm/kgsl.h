@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 /*
+<<<<<<< HEAD
  * Copyright (c) 2008-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2008-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 #ifndef __KGSL_H
 #define __KGSL_H
@@ -57,13 +61,20 @@
 /*
  * SCRATCH MEMORY: The scratch memory is one page worth of data that
  * is mapped into the GPU. This allows for some 'shared' data between
+<<<<<<< HEAD
  * the GPU and CPU. For example, it will be used by the GPU to write
  * each updated RPTR for each RB.
+=======
+ * the GPU and CPU.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  *
  * Used Data:
  * Offset: Length(bytes): What
  * 0x0: 4 * KGSL_PRIORITY_MAX_RB_LEVELS: RB0 RPTR
+<<<<<<< HEAD
  * 0x10: 8 * KGSL_PRIORITY_MAX_RB_LEVELS: RB0 CTXT RESTORE ADDR
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 /* Shadow global helpers */
@@ -71,6 +82,7 @@
 #define SCRATCH_RPTR_GPU_ADDR(dev, id) \
 	((dev)->scratch.gpuaddr + SCRATCH_RPTR_OFFSET(id))
 
+<<<<<<< HEAD
 #define SCRATCH_PREEMPTION_CTXT_RESTORE_ADDR_OFFSET(id) \
 	(SCRATCH_RPTR_OFFSET(KGSL_PRIORITY_MAX_RB_LEVELS) + \
 	((id) * sizeof(uint64_t)))
@@ -78,6 +90,8 @@
 	((dev)->scratch.gpuaddr + \
 	SCRATCH_PREEMPTION_CTXT_RESTORE_ADDR_OFFSET(id))
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* Timestamp window used to detect rollovers (half of integer range) */
 #define KGSL_TIMESTAMP_WINDOW 0x80000000
 
@@ -191,6 +205,17 @@ struct kgsl_memdesc_ops {
 #define KGSL_MEMDESC_UCODE BIT(9)
 /* For global buffers, randomly assign an address from the region */
 #define KGSL_MEMDESC_RANDOM BIT(10)
+<<<<<<< HEAD
+=======
+/* The memdesc pages can be reclaimed */
+#define KGSL_MEMDESC_CAN_RECLAIM BIT(11)
+/* The memdesc pages were reclaimed */
+#define KGSL_MEMDESC_RECLAIMED BIT(12)
+/* Skip reclaim of the memdesc pages */
+#define KGSL_MEMDESC_SKIP_RECLAIM BIT(13)
+/* Use SHMEM for allocation */
+#define KGSL_MEMDESC_USE_SHMEM BIT(14)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /**
  * struct kgsl_memdesc - GPU memory object descriptor
@@ -211,6 +236,10 @@ struct kgsl_memdesc_ops {
  * @pages: An array of pointers to allocated pages
  * @page_count: Total number of pages allocated
  * @cur_bindings: Number of sparse pages actively bound
+<<<<<<< HEAD
+=======
+ * @shmem_filp: Pointer to the shmem file backing this memdesc
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 struct kgsl_memdesc {
 	struct kgsl_pagetable *pagetable;
@@ -230,6 +259,22 @@ struct kgsl_memdesc {
 	struct page **pages;
 	unsigned int page_count;
 	unsigned int cur_bindings;
+<<<<<<< HEAD
+=======
+	struct file *shmem_filp;
+	/**
+	 * @vma: Pointer to the vm_area_struct this memdesc is mapped to
+	 */
+	struct vm_area_struct *vma;
+	/**
+	 * @lock: Spinlock to protect the pages array
+	 */
+	spinlock_t lock;
+	/**
+	 * @reclaimed_page_count: Total number of pages reclaimed
+	 */
+	int reclaimed_page_count;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 /*

@@ -181,12 +181,19 @@ static int hclge_map_unmap_ring_to_vf_vector(struct hclge_vport *vport, bool en,
 		return ret;
 
 	ret = hclge_bind_ring_with_vector(vport, vector_id, en, &ring_chain);
+<<<<<<< HEAD
 	if (ret)
 		return ret;
 
 	hclge_free_vector_ring_chain(&ring_chain);
 
 	return 0;
+=======
+
+	hclge_free_vector_ring_chain(&ring_chain);
+
+	return ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int hclge_set_vf_promisc_mode(struct hclge_vport *vport,

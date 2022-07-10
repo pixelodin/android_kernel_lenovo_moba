@@ -23,7 +23,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/ioctl.h>
+<<<<<<< HEAD
 #include <time.h>
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <unistd.h>
 
 #include <linux/pcitest.h>
@@ -50,15 +53,24 @@ struct pci_test {
 
 static int run_test(struct pci_test *test)
 {
+<<<<<<< HEAD
 	long ret;
 	int fd;
 	struct timespec start, end;
 	double time;
+=======
+	int ret = -EINVAL;
+	int fd;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	fd = open(test->device, O_RDWR);
 	if (fd < 0) {
 		perror("can't open PCI Endpoint Test device");
+<<<<<<< HEAD
 		return fd;
+=======
+		return -ENODEV;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	if (test->barnum >= 0 && test->barnum <= 5) {

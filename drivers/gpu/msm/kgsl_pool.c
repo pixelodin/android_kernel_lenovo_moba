@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include <asm/cacheflush.h>
@@ -57,6 +61,7 @@ _kgsl_get_pool_from_order(unsigned int order)
 	return NULL;
 }
 
+<<<<<<< HEAD
 /* Map the page into kernel and zero it out */
 static void
 _kgsl_pool_zero_page(struct page *p, unsigned int pool_order)
@@ -73,18 +78,29 @@ _kgsl_pool_zero_page(struct page *p, unsigned int pool_order)
 	}
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* Add a page to specified pool */
 static void
 _kgsl_pool_add_page(struct kgsl_page_pool *pool, struct page *p)
 {
+<<<<<<< HEAD
 	_kgsl_pool_zero_page(p, pool->pool_order);
+=======
+	kgsl_zero_page(p, pool->pool_order);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	spin_lock(&pool->list_lock);
 	list_add_tail(&p->lru, &pool->page_list);
 	pool->page_count++;
 	spin_unlock(&pool->list_lock);
+<<<<<<< HEAD
 	mod_node_page_state(page_pgdat(p), NR_INDIRECTLY_RECLAIMABLE_BYTES,
 				(PAGE_SIZE << pool->pool_order));
+=======
+	mod_node_page_state(page_pgdat(p), NR_KERNEL_MISC_RECLAIMABLE,
+			    (1 << pool->pool_order));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /* Returns a page from specified pool */
@@ -100,8 +116,17 @@ _kgsl_pool_get_page(struct kgsl_page_pool *pool)
 		list_del(&p->lru);
 	}
 	spin_unlock(&pool->list_lock);
+<<<<<<< HEAD
 	mod_node_page_state(page_pgdat(p), NR_INDIRECTLY_RECLAIMABLE_BYTES,
 				-(PAGE_SIZE << pool->pool_order));
+=======
+
+	if (p != NULL)
+		mod_node_page_state(page_pgdat(p),
+				    NR_KERNEL_MISC_RECLAIMABLE,
+				    -(1 << pool->pool_order));
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return p;
 }
 
@@ -205,6 +230,7 @@ kgsl_pool_reduce(unsigned int target_pages, bool exit)
 }
 
 /**
+<<<<<<< HEAD
  * kgsl_pool_free_sgt() - Free scatter-gather list
  * @sgt: pointer of the sg list
  *
@@ -242,6 +268,8 @@ void kgsl_pool_free_sgt(struct sg_table *sgt)
 }
 
 /**
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * kgsl_pool_free_pages() - Free pages in the pages array
  * @pages: pointer of the pages array
  *
@@ -296,6 +324,7 @@ static int kgsl_pool_get_retry_order(unsigned int order)
 	return 0;
 }
 
+<<<<<<< HEAD
 static unsigned int kgsl_gfp_mask(unsigned int page_order)
 {
 	unsigned int gfp_mask = __GFP_HIGHMEM;
@@ -312,6 +341,8 @@ static unsigned int kgsl_gfp_mask(unsigned int page_order)
 	return gfp_mask;
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /**
  * kgsl_pool_alloc_page() - Allocate a page of requested size
  * @page_size: Size of the page to be allocated
@@ -322,7 +353,12 @@ static unsigned int kgsl_gfp_mask(unsigned int page_order)
  * Return total page count on success and negative value on failure
  */
 int kgsl_pool_alloc_page(int *page_size, struct page **pages,
+<<<<<<< HEAD
 			unsigned int pages_len, unsigned int *align)
+=======
+			unsigned int pages_len, unsigned int *align,
+			struct kgsl_memdesc *memdesc)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	int j;
 	int pcount = 0;
@@ -350,7 +386,11 @@ int kgsl_pool_alloc_page(int *page_size, struct page **pages,
 			} else
 				return -ENOMEM;
 		}
+<<<<<<< HEAD
 		_kgsl_pool_zero_page(page, order);
+=======
+		kgsl_zero_page(page, order);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto done;
 	}
 
@@ -370,7 +410,11 @@ int kgsl_pool_alloc_page(int *page_size, struct page **pages,
 			page = alloc_pages(gfp_mask, order);
 			if (page == NULL)
 				return -ENOMEM;
+<<<<<<< HEAD
 			_kgsl_pool_zero_page(page, order);
+=======
+			kgsl_zero_page(page, order);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			goto done;
 		}
 	}
@@ -401,7 +445,11 @@ int kgsl_pool_alloc_page(int *page_size, struct page **pages,
 				return -ENOMEM;
 		}
 
+<<<<<<< HEAD
 		_kgsl_pool_zero_page(page, order);
+=======
+		kgsl_zero_page(page, order);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 done:
@@ -417,7 +465,11 @@ done:
 
 eagain:
 	*page_size = kgsl_get_page_size(size,
+<<<<<<< HEAD
 			ilog2(size));
+=======
+			ilog2(size), memdesc);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	*align = ilog2(*page_size);
 	return -EAGAIN;
 }
@@ -604,11 +656,21 @@ static void kgsl_of_get_mempools(struct device_node *parent)
 	}
 }
 
+<<<<<<< HEAD
 void kgsl_init_page_pools(struct platform_device *pdev)
 {
 
 	/* Get GPU mempools data and configure pools */
 	kgsl_of_get_mempools(pdev->dev.of_node);
+=======
+void kgsl_init_page_pools(struct kgsl_device *device)
+{
+	if (device->flags & KGSL_FLAG_USE_SHMEM)
+		return;
+
+	/* Get GPU mempools data and configure pools */
+	kgsl_of_get_mempools(device->pdev->dev.of_node);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Reserve the appropriate number of pages for each pool */
 	kgsl_pool_reserve_pages();

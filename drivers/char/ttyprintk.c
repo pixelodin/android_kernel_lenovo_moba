@@ -18,10 +18,18 @@
 #include <linux/serial.h>
 #include <linux/tty.h>
 #include <linux/module.h>
+<<<<<<< HEAD
 
 struct ttyprintk_port {
 	struct tty_port port;
 	struct mutex port_write_mutex;
+=======
+#include <linux/spinlock.h>
+
+struct ttyprintk_port {
+	struct tty_port port;
+	spinlock_t spinlock;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 static struct ttyprintk_port tpk_port;
@@ -100,11 +108,20 @@ static int tpk_open(struct tty_struct *tty, struct file *filp)
 static void tpk_close(struct tty_struct *tty, struct file *filp)
 {
 	struct ttyprintk_port *tpkp = tty->driver_data;
+<<<<<<< HEAD
 
 	mutex_lock(&tpkp->port_write_mutex);
 	/* flush tpk_printk buffer */
 	tpk_printk(NULL, 0);
 	mutex_unlock(&tpkp->port_write_mutex);
+=======
+	unsigned long flags;
+
+	spin_lock_irqsave(&tpkp->spinlock, flags);
+	/* flush tpk_printk buffer */
+	tpk_printk(NULL, 0);
+	spin_unlock_irqrestore(&tpkp->spinlock, flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	tty_port_close(&tpkp->port, tty, filp);
 }
@@ -116,13 +133,23 @@ static int tpk_write(struct tty_struct *tty,
 		const unsigned char *buf, int count)
 {
 	struct ttyprintk_port *tpkp = tty->driver_data;
+<<<<<<< HEAD
+=======
+	unsigned long flags;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int ret;
 
 
 	/* exclusive use of tpk_printk within this tty */
+<<<<<<< HEAD
 	mutex_lock(&tpkp->port_write_mutex);
 	ret = tpk_printk(buf, count);
 	mutex_unlock(&tpkp->port_write_mutex);
+=======
+	spin_lock_irqsave(&tpkp->spinlock, flags);
+	ret = tpk_printk(buf, count);
+	spin_unlock_irqrestore(&tpkp->spinlock, flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return ret;
 }
@@ -172,7 +199,11 @@ static int __init ttyprintk_init(void)
 {
 	int ret = -ENOMEM;
 
+<<<<<<< HEAD
 	mutex_init(&tpk_port.port_write_mutex);
+=======
+	spin_lock_init(&tpk_port.spinlock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	ttyprintk_driver = tty_alloc_driver(1,
 			TTY_DRIVER_RESET_TERMIOS |

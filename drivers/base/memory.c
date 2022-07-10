@@ -39,6 +39,14 @@ static inline int base_memory_block_id(int section_nr)
 	return section_nr / sections_per_block;
 }
 
+<<<<<<< HEAD
+=======
+static inline int pfn_to_block_id(unsigned long pfn)
+{
+	return base_memory_block_id(pfn_to_section_nr(pfn));
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int memory_subsys_online(struct device *dev);
 static int memory_subsys_offline(struct device *dev);
 
@@ -228,16 +236,27 @@ static bool pages_correctly_probed(unsigned long start_pfn)
 /*
  * MEMORY_HOTPLUG depends on SPARSEMEM in mm/Kconfig, so it is
  * OK to have direct references to sparsemem variables in here.
+<<<<<<< HEAD
  * Must already be protected by mem_hotplug_begin().
  */
 static int
 memory_block_action(unsigned long phys_index, unsigned long action, int online_type)
+=======
+ */
+static int
+memory_block_action(unsigned long start_section_nr, unsigned long action,
+		    int online_type)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	unsigned long start_pfn;
 	unsigned long nr_pages = PAGES_PER_SECTION * sections_per_block;
 	int ret;
 
+<<<<<<< HEAD
 	start_pfn = section_nr_to_pfn(phys_index);
+=======
+	start_pfn = section_nr_to_pfn(start_section_nr);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	switch (action) {
 	case MEM_ONLINE:
@@ -251,7 +270,11 @@ memory_block_action(unsigned long phys_index, unsigned long action, int online_t
 		break;
 	default:
 		WARN(1, KERN_WARNING "%s(%ld, %ld) unknown action: "
+<<<<<<< HEAD
 		     "%ld\n", __func__, phys_index, action, action);
+=======
+		     "%ld\n", __func__, start_section_nr, action, action);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ret = -EINVAL;
 	}
 
@@ -294,7 +317,10 @@ static int memory_subsys_online(struct device *dev)
 	if (mem->online_type < 0)
 		mem->online_type = MMOP_ONLINE_KEEP;
 
+<<<<<<< HEAD
 	/* Already under protection of mem_hotplug_begin() */
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = memory_block_change_state(mem, MEM_ONLINE, MEM_OFFLINE);
 
 	/* clear online_type */
@@ -341,6 +367,7 @@ store_mem_state(struct device *dev,
 		goto err;
 	}
 
+<<<<<<< HEAD
 	/*
 	 * Memory hotplug needs to hold mem_hotplug_begin() for probe to find
 	 * the correct memory block to online before doing device_online(dev),
@@ -350,10 +377,16 @@ store_mem_state(struct device *dev,
 	 */
 	mem_hotplug_begin();
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	switch (online_type) {
 	case MMOP_ONLINE_KERNEL:
 	case MMOP_ONLINE_MOVABLE:
 	case MMOP_ONLINE_KEEP:
+<<<<<<< HEAD
+=======
+		/* mem->online_type is protected by device_hotplug_lock */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		mem->online_type = online_type;
 		ret = device_online(&mem->dev);
 		break;
@@ -364,7 +397,10 @@ store_mem_state(struct device *dev,
 		ret = -EINVAL; /* should never happen */
 	}
 
+<<<<<<< HEAD
 	mem_hotplug_done();
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 err:
 	unlock_device_hotplug();
 
@@ -571,15 +607,29 @@ memory_probe_store(struct device *dev, struct device_attribute *attr,
 	if (phys_addr & ((pages_per_block << PAGE_SHIFT) - 1))
 		return -EINVAL;
 
+<<<<<<< HEAD
 	nid = memory_add_physaddr_to_nid(phys_addr);
 	ret = add_memory(nid, phys_addr,
 			 MIN_MEMORY_BLOCK_SIZE * sections_per_block);
+=======
+	ret = lock_device_hotplug_sysfs();
+	if (ret)
+		return ret;
+
+	nid = memory_add_physaddr_to_nid(phys_addr);
+	ret = __add_memory(nid, phys_addr,
+			   MIN_MEMORY_BLOCK_SIZE * sections_per_block);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (ret)
 		goto out;
 
 	ret = count;
 out:
+<<<<<<< HEAD
+=======
+	unlock_device_hotplug();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return ret;
 }
 
@@ -677,10 +727,16 @@ int __weak arch_get_memory_phys_device(unsigned long start_pfn)
  * A reference for the returned object is held and the reference for the
  * hinted object is released.
  */
+<<<<<<< HEAD
 struct memory_block *find_memory_block_hinted(struct mem_section *section,
 					      struct memory_block *hint)
 {
 	int block_id = base_memory_block_id(__section_nr(section));
+=======
+static struct memory_block *find_memory_block_by_id(int block_id,
+						    struct memory_block *hint)
+{
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct device *hintdev = hint ? &hint->dev : NULL;
 	struct device *dev;
 
@@ -692,6 +748,17 @@ struct memory_block *find_memory_block_hinted(struct mem_section *section,
 	return to_memory_block(dev);
 }
 
+<<<<<<< HEAD
+=======
+struct memory_block *find_memory_block_hinted(struct mem_section *section,
+					      struct memory_block *hint)
+{
+	int block_id = base_memory_block_id(__section_nr(section));
+
+	return find_memory_block_by_id(block_id, hint);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * For now, we have a linear search to go find the appropriate
  * memory_block corresponding to a particular phys_index. If
@@ -749,6 +816,7 @@ int register_memory(struct memory_block *memory)
 	return ret;
 }
 
+<<<<<<< HEAD
 static int init_memory_block(struct memory_block **memory,
 			     struct mem_section *section, unsigned long state)
 {
@@ -757,17 +825,39 @@ static int init_memory_block(struct memory_block **memory,
 	int scn_nr;
 	int ret = 0;
 
+=======
+static int init_memory_block(struct memory_block **memory, int block_id,
+			     unsigned long state)
+{
+	struct memory_block *mem;
+	unsigned long start_pfn;
+	int ret = 0;
+
+	mem = find_memory_block_by_id(block_id, NULL);
+	if (mem) {
+		put_device(&mem->dev);
+		return -EEXIST;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mem = kzalloc(sizeof(*mem), GFP_KERNEL);
 	if (!mem)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	scn_nr = __section_nr(section);
 	mem->start_section_nr =
 			base_memory_block_id(scn_nr) * sections_per_block;
+=======
+	mem->start_section_nr = block_id * sections_per_block;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mem->end_section_nr = mem->start_section_nr + sections_per_block - 1;
 	mem->state = state;
 	start_pfn = section_nr_to_pfn(mem->start_section_nr);
 	mem->phys_device = arch_get_memory_phys_device(start_pfn);
+<<<<<<< HEAD
+=======
+	mem->nid = NUMA_NO_NODE;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	ret = register_memory(mem);
 
@@ -778,6 +868,7 @@ static int init_memory_block(struct memory_block **memory,
 static int add_memory_block(int base_section_nr)
 {
 	struct memory_block *mem;
+<<<<<<< HEAD
 	int i, ret, section_count = 0, section_nr;
 
 	for (i = base_section_nr;
@@ -793,12 +884,27 @@ static int add_memory_block(int base_section_nr)
 	if (section_count == 0)
 		return 0;
 	ret = init_memory_block(&mem, __nr_to_section(section_nr), MEM_ONLINE);
+=======
+	int i, ret, section_count = 0;
+
+	for (i = base_section_nr;
+	     i < base_section_nr + sections_per_block;
+	     i++)
+		if (present_section_nr(i))
+			section_count++;
+
+	if (section_count == 0)
+		return 0;
+	ret = init_memory_block(&mem, base_memory_block_id(base_section_nr),
+				MEM_ONLINE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (ret)
 		return ret;
 	mem->section_count = section_count;
 	return 0;
 }
 
+<<<<<<< HEAD
 /*
  * need an interface for the VM to add new memory regions,
  * but without onlining it.
@@ -833,10 +939,19 @@ unregister_memory(struct memory_block *memory)
 	BUG_ON(memory->dev.bus != &memory_subsys);
 
 	/* drop the ref. we got in remove_memory_block() */
+=======
+static void unregister_memory(struct memory_block *memory)
+{
+	if (WARN_ON_ONCE(memory->dev.bus != &memory_subsys))
+		return;
+
+	/* drop the ref. we got via find_memory_block() */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	put_device(&memory->dev);
 	device_unregister(&memory->dev);
 }
 
+<<<<<<< HEAD
 static int remove_memory_section(unsigned long node_id,
 			       struct mem_section *section, int phys_device)
 {
@@ -873,6 +988,74 @@ int unregister_memory_section(struct mem_section *section)
 	return remove_memory_section(0, section, 0);
 }
 #endif /* CONFIG_MEMORY_HOTREMOVE */
+=======
+/*
+ * Create memory block devices for the given memory area. Start and size
+ * have to be aligned to memory block granularity. Memory block devices
+ * will be initialized as offline.
+ */
+int create_memory_block_devices(unsigned long start, unsigned long size)
+{
+	const int start_block_id = pfn_to_block_id(PFN_DOWN(start));
+	int end_block_id = pfn_to_block_id(PFN_DOWN(start + size));
+	struct memory_block *mem;
+	unsigned long block_id;
+	int ret = 0;
+
+	if (WARN_ON_ONCE(!IS_ALIGNED(start, memory_block_size_bytes()) ||
+			 !IS_ALIGNED(size, memory_block_size_bytes())))
+		return -EINVAL;
+
+	mutex_lock(&mem_sysfs_mutex);
+	for (block_id = start_block_id; block_id != end_block_id; block_id++) {
+		ret = init_memory_block(&mem, block_id, MEM_OFFLINE);
+		if (ret)
+			break;
+		mem->section_count = sections_per_block;
+	}
+	if (ret) {
+		end_block_id = block_id;
+		for (block_id = start_block_id; block_id != end_block_id;
+		     block_id++) {
+			mem = find_memory_block_by_id(block_id, NULL);
+			if (WARN_ON_ONCE(!mem))
+				continue;
+			mem->section_count = 0;
+			unregister_memory(mem);
+		}
+	}
+	mutex_unlock(&mem_sysfs_mutex);
+	return ret;
+}
+
+/*
+ * Remove memory block devices for the given memory area. Start and size
+ * have to be aligned to memory block granularity. Memory block devices
+ * have to be offline.
+ */
+void remove_memory_block_devices(unsigned long start, unsigned long size)
+{
+	const int start_block_id = pfn_to_block_id(PFN_DOWN(start));
+	const int end_block_id = pfn_to_block_id(PFN_DOWN(start + size));
+	struct memory_block *mem;
+	int block_id;
+
+	if (WARN_ON_ONCE(!IS_ALIGNED(start, memory_block_size_bytes()) ||
+			 !IS_ALIGNED(size, memory_block_size_bytes())))
+		return;
+
+	mutex_lock(&mem_sysfs_mutex);
+	for (block_id = start_block_id; block_id != end_block_id; block_id++) {
+		mem = find_memory_block_by_id(block_id, NULL);
+		if (WARN_ON_ONCE(!mem))
+			continue;
+		mem->section_count = 0;
+		unregister_memory_block_under_nodes(mem);
+		unregister_memory(mem);
+	}
+	mutex_unlock(&mem_sysfs_mutex);
+}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /* return true if the memory block is offlined, otherwise, return false */
 bool is_memblock_offlined(struct memory_block *mem)
@@ -942,3 +1125,42 @@ out:
 		printk(KERN_ERR "%s() failed: %d\n", __func__, ret);
 	return ret;
 }
+<<<<<<< HEAD
+=======
+
+struct for_each_memory_block_cb_data {
+	walk_memory_blocks_func_t func;
+	void *arg;
+};
+
+static int for_each_memory_block_cb(struct device *dev, void *data)
+{
+	struct memory_block *mem = to_memory_block(dev);
+	struct for_each_memory_block_cb_data *cb_data = data;
+
+	return cb_data->func(mem, cb_data->arg);
+}
+
+/**
+ * for_each_memory_block - walk through all present memory blocks
+ *
+ * @arg: argument passed to func
+ * @func: callback for each memory block walked
+ *
+ * This function walks through all present memory blocks, calling func on
+ * each memory block.
+ *
+ * In case func() returns an error, walking is aborted and the error is
+ * returned.
+ */
+int for_each_memory_block(void *arg, walk_memory_blocks_func_t func)
+{
+	struct for_each_memory_block_cb_data cb_data = {
+		.func = func,
+		.arg = arg,
+	};
+
+	return bus_for_each_dev(&memory_subsys, NULL, &cb_data,
+				for_each_memory_block_cb);
+}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

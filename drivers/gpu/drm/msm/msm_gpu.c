@@ -25,6 +25,10 @@
 #include <linux/pm_opp.h>
 #include <linux/devfreq.h>
 #include <linux/devcoredump.h>
+<<<<<<< HEAD
+=======
+#include <linux/sched/task.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /*
  * Power Management:

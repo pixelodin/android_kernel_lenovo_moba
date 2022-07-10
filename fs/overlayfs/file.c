@@ -149,7 +149,11 @@ static loff_t ovl_llseek(struct file *file, loff_t offset, int whence)
 	struct inode *inode = file_inode(file);
 	struct fd real;
 	const struct cred *old_cred;
+<<<<<<< HEAD
 	ssize_t ret;
+=======
+	loff_t ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/*
 	 * The two special cases below do not need to involve real fs,

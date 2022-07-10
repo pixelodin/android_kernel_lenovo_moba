@@ -130,7 +130,11 @@ int vnt_rx_data(struct vnt_private *priv, struct vnt_rcb *ptr_rcb,
 
 	vnt_rf_rssi_to_dbm(priv, *rssi, &rx_dbm);
 
+<<<<<<< HEAD
 	priv->bb_pre_ed_rssi = (u8)rx_dbm + 1;
+=======
+	priv->bb_pre_ed_rssi = (u8)-rx_dbm + 1;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	priv->current_rssi = priv->bb_pre_ed_rssi;
 
 	skb_pull(skb, 8);

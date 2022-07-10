@@ -98,7 +98,11 @@ ib_uverbs_init_udata_buf_or_null(struct ib_udata *udata,
 
 struct ib_uverbs_device {
 	atomic_t				refcount;
+<<<<<<< HEAD
 	int					num_comp_vectors;
+=======
+	u32					num_comp_vectors;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct completion			comp;
 	struct device			       *dev;
 	struct ib_device	__rcu	       *ib_dev;

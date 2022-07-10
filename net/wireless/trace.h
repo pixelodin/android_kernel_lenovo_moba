@@ -471,6 +471,26 @@ TRACE_EVENT(rdev_set_default_mgmt_key,
 		  WIPHY_PR_ARG, NETDEV_PR_ARG, __entry->key_index)
 );
 
+<<<<<<< HEAD
+=======
+TRACE_EVENT(rdev_set_default_beacon_key,
+	TP_PROTO(struct wiphy *wiphy, struct net_device *netdev, u8 key_index),
+	TP_ARGS(wiphy, netdev, key_index),
+	TP_STRUCT__entry(
+		WIPHY_ENTRY
+		NETDEV_ENTRY
+		__field(u8, key_index)
+	),
+	TP_fast_assign(
+		WIPHY_ASSIGN;
+		NETDEV_ASSIGN;
+		__entry->key_index = key_index;
+	),
+	TP_printk(WIPHY_PR_FMT ", " NETDEV_PR_FMT ", key index: %u",
+		  WIPHY_PR_ARG, NETDEV_PR_ARG, __entry->key_index)
+);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 TRACE_EVENT(rdev_start_ap,
 	TP_PROTO(struct wiphy *wiphy, struct net_device *netdev,
 		 struct cfg80211_ap_settings *settings),
@@ -607,6 +627,14 @@ DEFINE_EVENT(wiphy_netdev_evt, rdev_flush_pmksa,
 	TP_ARGS(wiphy, netdev)
 );
 
+<<<<<<< HEAD
+=======
+DEFINE_EVENT(wiphy_netdev_evt, rdev_end_cac,
+	     TP_PROTO(struct wiphy *wiphy, struct net_device *netdev),
+	     TP_ARGS(wiphy, netdev)
+);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 DECLARE_EVENT_CLASS(station_add_change,
 	TP_PROTO(struct wiphy *wiphy, struct net_device *netdev, u8 *mac,
 		 struct station_parameters *params),
@@ -3200,11 +3228,18 @@ TRACE_EVENT(rdev_set_mcast_rate,
 		       sizeof(int) * NUM_NL80211_BANDS);
 	),
 	TP_printk(WIPHY_PR_FMT ", " NETDEV_PR_FMT ", "
+<<<<<<< HEAD
 		  "mcast_rates [2.4GHz=0x%x, 5.2GHz=0x%x, 6GHz=0x%x, 60GHz=0x%x]",
 		  WIPHY_PR_ARG, NETDEV_PR_ARG,
 		  __entry->mcast_rate[NL80211_BAND_2GHZ],
 		  __entry->mcast_rate[NL80211_BAND_5GHZ],
 		  __entry->mcast_rate[NL80211_BAND_6GHZ],
+=======
+		  "mcast_rates [2.4GHz=0x%x, 5.2GHz=0x%x, 60GHz=0x%x]",
+		  WIPHY_PR_ARG, NETDEV_PR_ARG,
+		  __entry->mcast_rate[NL80211_BAND_2GHZ],
+		  __entry->mcast_rate[NL80211_BAND_5GHZ],
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		  __entry->mcast_rate[NL80211_BAND_60GHZ])
 );
 

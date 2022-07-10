@@ -63,6 +63,10 @@ struct pil_desc {
 	bool shutdown_fail;
 	bool modem_ssr;
 	bool clear_fw_region;
+<<<<<<< HEAD
+=======
+	bool sequential_loading;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u32 subsys_vmid;
 	bool signal_aop;
 	struct mbox_client cl;

@@ -568,10 +568,13 @@ static int ov2680_power_on(struct ov2680_dev *sensor)
 	if (ret < 0)
 		return ret;
 
+<<<<<<< HEAD
 	ret = ov2680_mode_restore(sensor);
 	if (ret < 0)
 		goto disable;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	sensor->is_enabled = true;
 
 	/* Set clock lane into LP-11 state */
@@ -580,12 +583,15 @@ static int ov2680_power_on(struct ov2680_dev *sensor)
 	ov2680_stream_disable(sensor);
 
 	return 0;
+<<<<<<< HEAD
 
 disable:
 	dev_err(dev, "failed to enable sensor: %d\n", ret);
 	ov2680_power_off(sensor);
 
 	return ret;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int ov2680_s_power(struct v4l2_subdev *sd, int on)
@@ -606,6 +612,11 @@ static int ov2680_s_power(struct v4l2_subdev *sd, int on)
 		ret = v4l2_ctrl_handler_setup(&sensor->ctrls.handler);
 		if (ret < 0)
 			return ret;
+<<<<<<< HEAD
+=======
+
+		ret = ov2680_mode_restore(sensor);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	return ret;
@@ -1088,6 +1099,7 @@ static int ov2680_probe(struct i2c_client *client)
 
 	mutex_init(&sensor->lock);
 
+<<<<<<< HEAD
 	ret = ov2680_v4l2_init(sensor);
 	if (ret < 0)
 		goto lock_destroy;
@@ -1095,11 +1107,21 @@ static int ov2680_probe(struct i2c_client *client)
 	ret = ov2680_check_id(sensor);
 	if (ret < 0)
 		goto error_cleanup;
+=======
+	ret = ov2680_check_id(sensor);
+	if (ret < 0)
+		goto lock_destroy;
+
+	ret = ov2680_v4l2_init(sensor);
+	if (ret < 0)
+		goto lock_destroy;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	dev_info(dev, "ov2680 init correctly\n");
 
 	return 0;
 
+<<<<<<< HEAD
 error_cleanup:
 	dev_err(dev, "ov2680 init fail: %d\n", ret);
 
@@ -1108,6 +1130,10 @@ error_cleanup:
 	v4l2_ctrl_handler_free(&sensor->ctrls.handler);
 
 lock_destroy:
+=======
+lock_destroy:
+	dev_err(dev, "ov2680 init fail: %d\n", ret);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mutex_destroy(&sensor->lock);
 
 	return ret;

@@ -1608,7 +1608,11 @@ static void at_xdmac_tasklet(unsigned long data)
 		dev_vdbg(chan2dev(&atchan->chan), "%s: desc 0x%p\n", __func__, desc);
 		if (!desc->active_xfer) {
 			dev_err(chan2dev(&atchan->chan), "Xfer not active: exiting");
+<<<<<<< HEAD
 			spin_unlock_bh(&atchan->lock);
+=======
+			spin_unlock(&atchan->lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			return;
 		}
 

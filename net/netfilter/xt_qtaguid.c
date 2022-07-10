@@ -38,6 +38,7 @@
 #include "xt_qtaguid_internal.h"
 #include "xt_qtaguid_print.h"
 #include "../../fs/proc/internal.h"
+<<<<<<< HEAD
 #if defined(CONFIG_NETFILTER_XT_MATCH_QTAGUID_EXT)
 #include "xt_qtaguid_ext.h"
 /* Setting debug_os_data to Y, when need do debug.
@@ -46,6 +47,8 @@
 static int debug_os_data = DEFAULT_MASK;
 module_param_named(debug_os_data, debug_os_data, uint, S_IRUGO | S_IWUSR);
 #endif
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /*
  * We only use the xt_socket funcs within a similar context to avoid unexpected
@@ -1650,9 +1653,12 @@ static bool qtaguid_mt(const struct sk_buff *skb, struct xt_action_param *par)
 	kuid_t sock_uid;
 	bool res;
 	bool set_sk_callback_lock = false;
+<<<<<<< HEAD
 #ifdef CONFIG_NETFILTER_XT_MATCH_QTAGUID_EXT
 	uid_t uid = 0;
 #endif
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/*
 	 * TODO: unhack how to force just accounting.
 	 * For now we only do tag stats when the uid-owner is not requested
@@ -1736,6 +1742,7 @@ static bool qtaguid_mt(const struct sk_buff *skb, struct xt_action_param *par)
 		 * couldn't find the owner, so for now we just count them
 		 * against the system.
 		 */
+<<<<<<< HEAD
 		if (do_tag_stat) {
 #ifdef CONFIG_NETFILTER_XT_MATCH_QTAGUID_EXT
 			uid = recent_owner_lookup(skb, par);
@@ -1744,6 +1751,10 @@ static bool qtaguid_mt(const struct sk_buff *skb, struct xt_action_param *par)
 			account_for_uid(skb, sk, 0, par);
 #endif
 		}
+=======
+		if (do_tag_stat)
+			account_for_uid(skb, sk, 0, par);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		MT_DEBUG("qtaguid[%d]: leaving (sk=NULL)\n", parst->hook);
 		res = (info->match ^ info->invert) == 0;
 		atomic64_inc(&qtu_events.match_no_sk);
@@ -1753,6 +1764,7 @@ static bool qtaguid_mt(const struct sk_buff *skb, struct xt_action_param *par)
 		goto put_sock_ret_res;
 	}
 	sock_uid = sk->sk_uid;
+<<<<<<< HEAD
 	if (do_tag_stat) {
 #ifdef CONFIG_NETFILTER_XT_MATCH_QTAGUID_EXT
 		uid = from_kuid(&init_user_ns, sock_uid);
@@ -1763,6 +1775,11 @@ static bool qtaguid_mt(const struct sk_buff *skb, struct xt_action_param *par)
 				par);
 #endif
 	}
+=======
+	if (do_tag_stat)
+		account_for_uid(skb, sk, from_kuid(&init_user_ns, sock_uid),
+				par);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/*
 	 * The following two tests fail the match when:
@@ -3032,11 +3049,15 @@ static int __init qtaguid_mt_init(void)
 	    || xt_register_match(&qtaguid_mt_reg)
 	    || misc_register(&qtu_device))
 		return -1;
+<<<<<<< HEAD
 #ifdef CONFIG_NETFILTER_XT_MATCH_QTAGUID_EXT
 	return recent_owner_init();
 #else
 	return 0;
 #endif
+=======
+	return 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /*

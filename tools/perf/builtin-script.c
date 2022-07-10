@@ -428,7 +428,11 @@ static int perf_evsel__check_attr(struct perf_evsel *evsel,
 		       "selected. Hence, no address to lookup the source line number.\n");
 		return -EINVAL;
 	}
+<<<<<<< HEAD
 	if (PRINT_FIELD(BRSTACKINSN) &&
+=======
+	if (PRINT_FIELD(BRSTACKINSN) && !allow_user_set &&
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	    !(perf_evlist__combined_branch_type(session->evlist) &
 	      PERF_SAMPLE_BRANCH_ANY)) {
 		pr_err("Display of branch stack assembler requested, but non all-branch filter set\n"
@@ -1021,7 +1025,11 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
 			continue;
 
 		insn = 0;
+<<<<<<< HEAD
 		for (off = 0;; off += ilen) {
+=======
+		for (off = 0; off < (unsigned)len; off += ilen) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			uint64_t ip = start + off;
 
 			printed += ip__fprintf_sym(ip, thread, x.cpumode, x.cpu, &lastsym, attr, fp);
@@ -1029,6 +1037,10 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
 				printed += ip__fprintf_jump(ip, &br->entries[i], &x, buffer + off, len - off, insn, fp);
 				break;
 			} else {
+<<<<<<< HEAD
+=======
+				ilen = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", ip,
 						   dump_insn(&x, ip, buffer + off, len - off, &ilen));
 				if (ilen == 0)
@@ -1036,6 +1048,11 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
 				insn++;
 			}
 		}
+<<<<<<< HEAD
+=======
+		if (off != end - start)
+			printed += fprintf(fp, "\tmismatch of LBR data and executable\n");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	/*
@@ -1066,6 +1083,10 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
 		goto out;
 	}
 	for (off = 0; off <= end - start; off += ilen) {
+<<<<<<< HEAD
+=======
+		ilen = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		printed += fprintf(fp, "\t%016" PRIx64 "\t%s\n", start + off,
 				   dump_insn(&x, start + off, buffer + off, len - off, &ilen));
 		if (ilen == 0)

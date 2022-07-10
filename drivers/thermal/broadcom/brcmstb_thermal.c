@@ -58,7 +58,11 @@
 #define AVS_TMON_TP_TEST_ENABLE		0x20
 
 /* Default coefficients */
+<<<<<<< HEAD
 #define AVS_TMON_TEMP_SLOPE		-487
+=======
+#define AVS_TMON_TEMP_SLOPE		487
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define AVS_TMON_TEMP_OFFSET		410040
 
 /* HW related temperature constants */
@@ -117,6 +121,7 @@ struct brcmstb_thermal_priv {
 	struct thermal_zone_device *thermal;
 };
 
+<<<<<<< HEAD
 static void avs_tmon_get_coeffs(struct thermal_zone_device *tz, int *slope,
 				int *offset)
 {
@@ -124,16 +129,23 @@ static void avs_tmon_get_coeffs(struct thermal_zone_device *tz, int *slope,
 	*offset = thermal_zone_get_offset(tz);
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* Convert a HW code to a temperature reading (millidegree celsius) */
 static inline int avs_tmon_code_to_temp(struct thermal_zone_device *tz,
 					u32 code)
 {
+<<<<<<< HEAD
 	const int val = code & AVS_TMON_TEMP_MASK;
 	int slope, offset;
 
 	avs_tmon_get_coeffs(tz, &slope, &offset);
 
 	return slope * val + offset;
+=======
+	return (AVS_TMON_TEMP_OFFSET -
+		(int)((code & AVS_TMON_TEMP_MAX) * AVS_TMON_TEMP_SLOPE));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /*
@@ -145,6 +157,7 @@ static inline int avs_tmon_code_to_temp(struct thermal_zone_device *tz,
 static inline u32 avs_tmon_temp_to_code(struct thermal_zone_device *tz,
 					int temp, bool low)
 {
+<<<<<<< HEAD
 	int slope, offset;
 
 	if (temp < AVS_TMON_TEMP_MIN)
@@ -159,6 +172,20 @@ static inline u32 avs_tmon_temp_to_code(struct thermal_zone_device *tz,
 		return (u32)(DIV_ROUND_UP(offset - temp, abs(slope)));
 	else
 		return (u32)((offset - temp) / abs(slope));
+=======
+	if (temp < AVS_TMON_TEMP_MIN)
+		return AVS_TMON_TEMP_MAX;	/* Maximum code value */
+
+	if (temp >= AVS_TMON_TEMP_OFFSET)
+		return 0;	/* Minimum code value */
+
+	if (low)
+		return (u32)(DIV_ROUND_UP(AVS_TMON_TEMP_OFFSET - temp,
+					  AVS_TMON_TEMP_SLOPE));
+	else
+		return (u32)((AVS_TMON_TEMP_OFFSET - temp) /
+			      AVS_TMON_TEMP_SLOPE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int brcmstb_get_temp(void *data, int *temp)

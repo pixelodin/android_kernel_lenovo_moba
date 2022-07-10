@@ -387,7 +387,10 @@ int mmc_add_card(struct mmc_card *card)
 		return ret;
 
 	mmc_card_set_present(card);
+<<<<<<< HEAD
 	device_enable_async_suspend(&card->dev);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return 0;
 }

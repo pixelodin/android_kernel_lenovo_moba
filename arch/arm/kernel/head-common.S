@@ -72,7 +72,11 @@ ENDPROC(__vet_atags)
  * The following fragment of code is executed with the MMU on in MMU mode,
  * and uses absolute addresses; this is not position independent.
  *
+<<<<<<< HEAD
  *  r0  = cp#15 control register
+=======
+ *  r0  = cp#15 control register (exc_ret for M-class)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  *  r1  = machine ID
  *  r2  = atags/dtb pointer
  *  r9  = processor ID
@@ -141,7 +145,12 @@ __mmap_switched_data:
 #ifdef CONFIG_CPU_CP15
 	.long	cr_alignment			@ r3
 #else
+<<<<<<< HEAD
 	.long	0				@ r3
+=======
+M_CLASS(.long	exc_ret)			@ r3
+AR_CLASS(.long	0)				@ r3
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif
 	.size	__mmap_switched_data, . - __mmap_switched_data
 

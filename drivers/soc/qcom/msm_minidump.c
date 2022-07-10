@@ -34,7 +34,11 @@ struct md_table {
 	struct md_ss_toc	*md_ss_toc;
 	struct md_global_toc	*md_gbl_toc;
 	struct md_ss_region	*md_regions;
+<<<<<<< HEAD
 	struct md_region        entry[MAX_NUM_ENTRIES];
+=======
+	struct md_region	entry[MAX_NUM_ENTRIES];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 /**
@@ -55,8 +59,15 @@ struct md_elfhdr {
 
 /* Protect elfheader and smem table from deferred calls contention */
 static DEFINE_SPINLOCK(mdt_lock);
+<<<<<<< HEAD
 static struct md_table		minidump_table;
 static struct md_elfhdr		minidump_elfheader;
+=======
+static DEFINE_RWLOCK(mdt_remove_lock);
+static struct md_table		minidump_table;
+static struct md_elfhdr		minidump_elfheader;
+static int first_removed_entry = INT_MAX;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /* Number of pending entries to be added in ToC regions */
 static unsigned int pendings;
@@ -166,11 +177,16 @@ bool msm_minidump_enabled(void)
 }
 EXPORT_SYMBOL(msm_minidump_enabled);
 
+<<<<<<< HEAD
 int msm_minidump_add_region(const struct md_region *entry)
 {
 	u32 entries;
 	struct md_region *mdr;
 
+=======
+static inline int validate_region(const struct md_region *entry)
+{
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!entry)
 		return -EINVAL;
 
@@ -180,6 +196,67 @@ int msm_minidump_add_region(const struct md_region *entry)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	return 0;
+}
+
+int msm_minidump_update_region(int regno, const struct md_region *entry)
+{
+	int ret = 0;
+	struct md_region *mdr;
+	struct md_ss_region *mdssr;
+	struct elfhdr *hdr = minidump_elfheader.ehdr;
+	struct elf_shdr *shdr;
+	struct elf_phdr *phdr;
+
+	if (validate_region(entry) || (regno >= MAX_NUM_ENTRIES))
+		return -EINVAL;
+
+	read_lock(&mdt_remove_lock);
+
+	if (regno >= first_removed_entry) {
+		pr_err("Region:[%s] was moved\n", entry->name);
+		ret = -EINVAL;
+		goto err_unlock;
+	}
+
+	if (md_entry_num(entry) < 0) {
+		pr_err("Region:[%s] does not exist to update.\n", entry->name);
+		ret = -ENOMEM;
+		goto err_unlock;
+	}
+
+	mdr = &minidump_table.entry[regno];
+	mdr->virt_addr = entry->virt_addr;
+	mdr->phys_addr = entry->phys_addr;
+
+	mdssr = &minidump_table.md_regions[regno + 1];
+	mdssr->region_base_address = entry->phys_addr;
+
+	shdr = elf_section(hdr, regno + 4);
+	phdr = elf_program(hdr, regno + 1);
+
+	shdr->sh_addr = (elf_addr_t)entry->virt_addr;
+	phdr->p_vaddr = entry->virt_addr;
+	phdr->p_paddr = entry->phys_addr;
+
+err_unlock:
+	read_unlock(&mdt_remove_lock);
+
+	return ret;
+}
+EXPORT_SYMBOL(msm_minidump_update_region);
+
+int msm_minidump_add_region(const struct md_region *entry)
+{
+	u32 entries;
+	struct md_region *mdr;
+
+	if (validate_region(entry))
+		return -EINVAL;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	spin_lock(&mdt_lock);
 	if (md_entry_num(entry) >= 0) {
 		pr_err("Entry name already exist.\n");
@@ -212,7 +289,11 @@ int msm_minidump_add_region(const struct md_region *entry)
 
 	spin_unlock(&mdt_lock);
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return entries;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 EXPORT_SYMBOL(msm_minidump_add_region);
 
@@ -301,6 +382,10 @@ int msm_minidump_remove_region(const struct md_region *entry)
 		return -EINVAL;
 
 	spin_lock(&mdt_lock);
+<<<<<<< HEAD
+=======
+	write_lock(&mdt_remove_lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ecount = minidump_table.num_regions;
 	rcount = minidump_table.md_ss_toc->ss_region_count;
 	rgno = md_entry_num(entry);
@@ -309,6 +394,11 @@ int msm_minidump_remove_region(const struct md_region *entry)
 		goto out;
 	}
 
+<<<<<<< HEAD
+=======
+	if (first_removed_entry > rgno)
+		first_removed_entry = rgno;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	minidump_table.md_ss_toc->md_ss_toc_init = 0;
 
 	/* Remove entry from: entry list, ss region list and elf header */
@@ -338,9 +428,17 @@ int msm_minidump_remove_region(const struct md_region *entry)
 	minidump_table.md_ss_toc->md_ss_toc_init = 1;
 
 	minidump_table.num_regions--;
+<<<<<<< HEAD
 	spin_unlock(&mdt_lock);
 	return 0;
 out:
+=======
+	write_unlock(&mdt_remove_lock);
+	spin_unlock(&mdt_lock);
+	return 0;
+out:
+	write_unlock(&mdt_remove_lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	spin_unlock(&mdt_lock);
 	pr_err("Minidump is broken..disable Minidump collection\n");
 	return -EINVAL;

@@ -617,15 +617,24 @@ int brcmf_sdiod_send_buf(struct brcmf_sdio_dev *sdiodev, u8 *buf, uint nbytes)
 
 	err = brcmf_sdiod_set_backplane_window(sdiodev, addr);
 	if (err)
+<<<<<<< HEAD
 		return err;
+=======
+		goto out;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	addr &= SBSDIO_SB_OFT_ADDR_MASK;
 	addr |= SBSDIO_SB_ACCESS_2_4B_FLAG;
 
+<<<<<<< HEAD
 	if (!err)
 		err = brcmf_sdiod_skbuff_write(sdiodev, sdiodev->func2, addr,
 					       mypkt);
 
+=======
+	err = brcmf_sdiod_skbuff_write(sdiodev, sdiodev->func2, addr, mypkt);
+out:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	brcmu_pkt_buf_free_skb(mypkt);
 
 	return err;

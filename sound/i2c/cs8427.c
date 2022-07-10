@@ -118,7 +118,11 @@ static int snd_cs8427_send_corudata(struct snd_i2c_device *device,
 	struct cs8427 *chip = device->private_data;
 	char *hw_data = udata ?
 		chip->playback.hw_udata : chip->playback.hw_status;
+<<<<<<< HEAD
 	char data[32];
+=======
+	unsigned char data[32];
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int err, idx;
 
 	if (!memcmp(hw_data, ndata, count))

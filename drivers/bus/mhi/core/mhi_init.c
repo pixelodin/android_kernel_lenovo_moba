@@ -346,6 +346,12 @@ void mhi_destroy_sysfs(struct mhi_controller *mhi_cntrl)
 		}
 		spin_unlock(&mhi_tsync->lock);
 
+<<<<<<< HEAD
+=======
+		if (mhi_tsync->db_response_pending)
+			complete(&mhi_tsync->db_completion);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		kfree(mhi_cntrl->mhi_tsync);
 		mhi_cntrl->mhi_tsync = NULL;
 		mutex_unlock(&mhi_cntrl->tsync_mutex);
@@ -520,6 +526,15 @@ static int mhi_init_debugfs_mhi_vote_open(struct inode *inode, struct file *fp)
 	return single_open(fp, mhi_debugfs_mhi_vote_show, inode->i_private);
 }
 
+<<<<<<< HEAD
+=======
+static int mhi_init_debugfs_mhi_regdump_open(struct inode *inode,
+					     struct file *fp)
+{
+	return single_open(fp, mhi_debugfs_mhi_regdump_show, inode->i_private);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static const struct file_operations debugfs_state_ops = {
 	.open = mhi_init_debugfs_mhi_states_open,
 	.release = single_release,
@@ -544,9 +559,24 @@ static const struct file_operations debugfs_vote_ops = {
 	.read = seq_read,
 };
 
+<<<<<<< HEAD
 DEFINE_DEBUGFS_ATTRIBUTE(debugfs_trigger_reset_fops, NULL,
 			 mhi_debugfs_trigger_reset, "%llu\n");
 
+=======
+static const struct file_operations debugfs_regdump_ops = {
+	.open = mhi_init_debugfs_mhi_regdump_open,
+	.release = single_release,
+	.read = seq_read,
+};
+
+DEFINE_DEBUGFS_ATTRIBUTE(debugfs_trigger_reset_fops, NULL,
+			 mhi_debugfs_trigger_reset, "%llu\n");
+
+DEFINE_DEBUGFS_ATTRIBUTE(debugfs_trigger_soc_reset_fops, NULL,
+			 mhi_debugfs_trigger_soc_reset, "%llu\n");
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 void mhi_init_debugfs(struct mhi_controller *mhi_cntrl)
 {
 	struct dentry *dentry;
@@ -573,6 +603,14 @@ void mhi_init_debugfs(struct mhi_controller *mhi_cntrl)
 				   &debugfs_vote_ops);
 	debugfs_create_file_unsafe("reset", 0444, dentry, mhi_cntrl,
 				   &debugfs_trigger_reset_fops);
+<<<<<<< HEAD
+=======
+	debugfs_create_file_unsafe("regdump", 0444, dentry, mhi_cntrl,
+				   &debugfs_regdump_ops);
+	debugfs_create_file_unsafe("soc_reset", 0444, dentry, mhi_cntrl,
+				   &debugfs_trigger_soc_reset_fops);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mhi_cntrl->dentry = dentry;
 }
 
@@ -1537,9 +1575,15 @@ int of_register_mhi_controller(struct mhi_controller *mhi_cntrl)
 	INIT_WORK(&mhi_cntrl->st_worker, mhi_pm_st_worker);
 	init_waitqueue_head(&mhi_cntrl->state_event);
 
+<<<<<<< HEAD
 	mhi_cntrl->special_wq = alloc_ordered_workqueue("mhi_special_w",
 						WQ_MEM_RECLAIM | WQ_HIGHPRI);
 	if (!mhi_cntrl->special_wq)
+=======
+	mhi_cntrl->wq = alloc_ordered_workqueue("mhi_w",
+						WQ_MEM_RECLAIM | WQ_HIGHPRI);
+	if (!mhi_cntrl->wq)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto error_alloc_cmd;
 
 	INIT_WORK(&mhi_cntrl->special_work, mhi_special_purpose_work);
@@ -1665,7 +1709,11 @@ error_add_dev:
 
 error_alloc_dev:
 	kfree(mhi_cntrl->mhi_cmd);
+<<<<<<< HEAD
 	destroy_workqueue(mhi_cntrl->special_wq);
+=======
+	destroy_workqueue(mhi_cntrl->wq);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 error_alloc_cmd:
 	vfree(mhi_cntrl->mhi_chan);
@@ -1737,7 +1785,11 @@ int mhi_prepare_for_power_up(struct mhi_controller *mhi_cntrl)
 	 * allocate rddm table if specified, this table is for debug purpose
 	 * so we'll ignore erros
 	 */
+<<<<<<< HEAD
 	if (mhi_cntrl->rddm_size) {
+=======
+	if (mhi_cntrl->rddm_supported && mhi_cntrl->rddm_size) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		mhi_alloc_bhie_table(mhi_cntrl, &mhi_cntrl->rddm_image,
 				     mhi_cntrl->rddm_size);
 
@@ -1770,10 +1822,15 @@ int mhi_prepare_for_power_up(struct mhi_controller *mhi_cntrl)
 	return 0;
 
 bhie_error:
+<<<<<<< HEAD
 	if (mhi_cntrl->rddm_image) {
 		mhi_free_bhie_table(mhi_cntrl, mhi_cntrl->rddm_image);
 		mhi_cntrl->rddm_image = NULL;
 	}
+=======
+	if (mhi_cntrl->rddm_image)
+		mhi_free_bhie_table(mhi_cntrl, &mhi_cntrl->rddm_image);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 error_dev_ctxt:
 	mutex_unlock(&mhi_cntrl->pm_mutex);
@@ -1784,6 +1841,7 @@ EXPORT_SYMBOL(mhi_prepare_for_power_up);
 
 void mhi_unprepare_after_power_down(struct mhi_controller *mhi_cntrl)
 {
+<<<<<<< HEAD
 	if (mhi_cntrl->fbc_image) {
 		mhi_free_bhie_table(mhi_cntrl, mhi_cntrl->fbc_image);
 		mhi_cntrl->fbc_image = NULL;
@@ -1793,6 +1851,13 @@ void mhi_unprepare_after_power_down(struct mhi_controller *mhi_cntrl)
 		mhi_free_bhie_table(mhi_cntrl, mhi_cntrl->rddm_image);
 		mhi_cntrl->rddm_image = NULL;
 	}
+=======
+	if (mhi_cntrl->fbc_image)
+		mhi_free_bhie_table(mhi_cntrl, &mhi_cntrl->fbc_image);
+
+	if (mhi_cntrl->rddm_image)
+		mhi_free_bhie_table(mhi_cntrl, &mhi_cntrl->rddm_image);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	mhi_deinit_dev_ctxt(mhi_cntrl);
 	mhi_cntrl->pre_init = false;
@@ -1923,7 +1988,12 @@ static int mhi_driver_remove(struct device *dev)
 		MHI_CH_STATE_DISABLED,
 		MHI_CH_STATE_DISABLED
 	};
+<<<<<<< HEAD
 	int dir;
+=======
+	int dir, ret;
+	bool interrupted = false;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* control device has no work to do */
 	if (mhi_dev->dev_type == MHI_CONTROLLER_TYPE)
@@ -1931,11 +2001,19 @@ static int mhi_driver_remove(struct device *dev)
 
 	MHI_LOG("Removing device for chan:%s\n", mhi_dev->chan_name);
 
+<<<<<<< HEAD
 	/* reset both channels */
 	for (dir = 0; dir < 2; dir++) {
 		mhi_chan = dir ? mhi_dev->ul_chan : mhi_dev->dl_chan;
 
 		if (!mhi_chan)
+=======
+	/* move both channels to suspended state and disallow processing */
+	for (dir = 0; dir < 2; dir++) {
+		mhi_chan = dir ? mhi_dev->ul_chan : mhi_dev->dl_chan;
+
+		if (!mhi_chan || mhi_chan->offload_ch)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			continue;
 
 		/* wake all threads waiting for completion */
@@ -1944,6 +2022,7 @@ static int mhi_driver_remove(struct device *dev)
 		complete_all(&mhi_chan->completion);
 		write_unlock_irq(&mhi_chan->lock);
 
+<<<<<<< HEAD
 		/* move channel state to disable, no more processing */
 		mutex_lock(&mhi_chan->mutex);
 		write_lock_irq(&mhi_chan->lock);
@@ -1953,6 +2032,47 @@ static int mhi_driver_remove(struct device *dev)
 
 		/* reset the channel */
 		if (!mhi_chan->offload_ch)
+=======
+		mutex_lock(&mhi_chan->mutex);
+		write_lock_irq(&mhi_chan->lock);
+		if (mhi_chan->ch_state != MHI_CH_STATE_DISABLED) {
+			ch_state[dir] = mhi_chan->ch_state;
+			mhi_chan->ch_state = MHI_CH_STATE_SUSPENDED;
+		}
+		write_unlock_irq(&mhi_chan->lock);
+		mutex_unlock(&mhi_chan->mutex);
+	}
+
+	/* wait for each channel to close and reset both channels */
+	for (dir = 0; dir < 2; dir++) {
+		mhi_chan = dir ? mhi_dev->ul_chan : mhi_dev->dl_chan;
+
+		if (!mhi_chan || mhi_chan->offload_ch)
+			continue;
+
+		/* unbind request from userspace, wait for channel reset */
+		if (!(mhi_cntrl->power_down ||
+		    MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state)) &&
+		    ch_state[dir] != MHI_CH_STATE_DISABLED && !interrupted) {
+			MHI_ERR("Channel %s busy, wait for it to be reset\n",
+				mhi_dev->chan_name);
+			ret = wait_event_interruptible(mhi_cntrl->state_event,
+				mhi_chan->ch_state == MHI_CH_STATE_DISABLED ||
+				MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state));
+			if (unlikely(ret))
+				interrupted = true;
+		}
+
+		/* update channel state as an error can exit above wait */
+		mutex_lock(&mhi_chan->mutex);
+
+		write_lock_irq(&mhi_chan->lock);
+		ch_state[dir] = mhi_chan->ch_state;
+		write_unlock_irq(&mhi_chan->lock);
+
+		/* reset channel if it was left enabled */
+		if (ch_state[dir] != MHI_CH_STATE_DISABLED)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			mhi_reset_chan(mhi_cntrl, mhi_chan);
 
 		mutex_unlock(&mhi_chan->mutex);
@@ -1970,7 +2090,11 @@ static int mhi_driver_remove(struct device *dev)
 
 		mutex_lock(&mhi_chan->mutex);
 
+<<<<<<< HEAD
 		if (ch_state[dir] == MHI_CH_STATE_ENABLED &&
+=======
+		if (ch_state[dir] != MHI_CH_STATE_DISABLED &&
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		    !mhi_chan->offload_ch)
 			mhi_deinit_chan_ctxt(mhi_cntrl, mhi_chan);
 

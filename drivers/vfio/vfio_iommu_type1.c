@@ -382,6 +382,11 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
 
 	down_read(&mm->mmap_sem);
 
+<<<<<<< HEAD
+=======
+	vaddr = untagged_addr(vaddr);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	vma = find_vma_intersection(mm, vaddr, vaddr + 1);
 
 	if (vma && vma->vm_flags & VM_PFNMAP) {

@@ -1231,6 +1231,10 @@ struct ib_cm_id *ib_cm_insert_listen(struct ib_device *device,
 			/* Sharing an ib_cm_id with different handlers is not
 			 * supported */
 			spin_unlock_irqrestore(&cm.lock, flags);
+<<<<<<< HEAD
+=======
+			ib_destroy_cm_id(cm_id);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			return ERR_PTR(-EINVAL);
 		}
 		atomic_inc(&cm_id_priv->refcount);

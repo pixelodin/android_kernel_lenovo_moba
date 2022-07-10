@@ -51,6 +51,11 @@
 #define PREFIX "ACPI: "
 
 #define ACPI_BATTERY_VALUE_UNKNOWN 0xFFFFFFFF
+<<<<<<< HEAD
+=======
+#define ACPI_BATTERY_CAPACITY_VALID(capacity) \
+	((capacity) != 0 && (capacity) != ACPI_BATTERY_VALUE_UNKNOWN)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define ACPI_BATTERY_DEVICE_NAME	"Battery"
 
@@ -205,7 +210,12 @@ static int acpi_battery_is_charged(struct acpi_battery *battery)
 
 static bool acpi_battery_is_degraded(struct acpi_battery *battery)
 {
+<<<<<<< HEAD
 	return battery->full_charge_capacity && battery->design_capacity &&
+=======
+	return ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity) &&
+		ACPI_BATTERY_CAPACITY_VALID(battery->design_capacity) &&
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		battery->full_charge_capacity < battery->design_capacity;
 }
 
@@ -227,7 +237,11 @@ static int acpi_battery_get_property(struct power_supply *psy,
 				     enum power_supply_property psp,
 				     union power_supply_propval *val)
 {
+<<<<<<< HEAD
 	int ret = 0;
+=======
+	int full_capacity = ACPI_BATTERY_VALUE_UNKNOWN, ret = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct acpi_battery *battery = to_acpi_battery(psy);
 
 	if (acpi_battery_present(battery)) {
@@ -276,14 +290,22 @@ static int acpi_battery_get_property(struct power_supply *psy,
 		break;
 	case POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN:
 	case POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN:
+<<<<<<< HEAD
 		if (battery->design_capacity == ACPI_BATTERY_VALUE_UNKNOWN)
+=======
+		if (!ACPI_BATTERY_CAPACITY_VALID(battery->design_capacity))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			ret = -ENODEV;
 		else
 			val->intval = battery->design_capacity * 1000;
 		break;
 	case POWER_SUPPLY_PROP_CHARGE_FULL:
 	case POWER_SUPPLY_PROP_ENERGY_FULL:
+<<<<<<< HEAD
 		if (battery->full_charge_capacity == ACPI_BATTERY_VALUE_UNKNOWN)
+=======
+		if (!ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			ret = -ENODEV;
 		else
 			val->intval = battery->full_charge_capacity * 1000;
@@ -296,11 +318,25 @@ static int acpi_battery_get_property(struct power_supply *psy,
 			val->intval = battery->capacity_now * 1000;
 		break;
 	case POWER_SUPPLY_PROP_CAPACITY:
+<<<<<<< HEAD
 		if (battery->capacity_now && battery->full_charge_capacity)
 			val->intval = battery->capacity_now * 100/
 					battery->full_charge_capacity;
 		else
 			val->intval = 0;
+=======
+		if (ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity))
+			full_capacity = battery->full_charge_capacity;
+		else if (ACPI_BATTERY_CAPACITY_VALID(battery->design_capacity))
+			full_capacity = battery->design_capacity;
+
+		if (battery->capacity_now == ACPI_BATTERY_VALUE_UNKNOWN ||
+		    full_capacity == ACPI_BATTERY_VALUE_UNKNOWN)
+			ret = -ENODEV;
+		else
+			val->intval = battery->capacity_now * 100/
+					full_capacity;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 	case POWER_SUPPLY_PROP_CAPACITY_LEVEL:
 		if (battery->state & ACPI_BATTERY_STATE_CRITICAL)
@@ -346,6 +382,23 @@ static enum power_supply_property charge_battery_props[] = {
 	POWER_SUPPLY_PROP_SERIAL_NUMBER,
 };
 
+<<<<<<< HEAD
+=======
+static enum power_supply_property charge_battery_full_cap_broken_props[] = {
+	POWER_SUPPLY_PROP_STATUS,
+	POWER_SUPPLY_PROP_PRESENT,
+	POWER_SUPPLY_PROP_TECHNOLOGY,
+	POWER_SUPPLY_PROP_CYCLE_COUNT,
+	POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN,
+	POWER_SUPPLY_PROP_VOLTAGE_NOW,
+	POWER_SUPPLY_PROP_CURRENT_NOW,
+	POWER_SUPPLY_PROP_CHARGE_NOW,
+	POWER_SUPPLY_PROP_MODEL_NAME,
+	POWER_SUPPLY_PROP_MANUFACTURER,
+	POWER_SUPPLY_PROP_SERIAL_NUMBER,
+};
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static enum power_supply_property energy_battery_props[] = {
 	POWER_SUPPLY_PROP_STATUS,
 	POWER_SUPPLY_PROP_PRESENT,
@@ -807,6 +860,7 @@ static void __exit battery_hook_exit(void)
 static int sysfs_add_battery(struct acpi_battery *battery)
 {
 	struct power_supply_config psy_cfg = { .drv_data = battery, };
+<<<<<<< HEAD
 
 	if (battery->power_unit == ACPI_BATTERY_POWER_UNIT_MA) {
 		battery->bat_desc.properties = charge_battery_props;
@@ -821,6 +875,36 @@ static int sysfs_add_battery(struct acpi_battery *battery)
 		battery->bat_desc.properties = energy_battery_props;
 		battery->bat_desc.num_properties =
 			ARRAY_SIZE(energy_battery_props);
+=======
+	bool full_cap_broken = false;
+
+	if (!ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity) &&
+	    !ACPI_BATTERY_CAPACITY_VALID(battery->design_capacity))
+		full_cap_broken = true;
+
+	if (battery->power_unit == ACPI_BATTERY_POWER_UNIT_MA) {
+		if (full_cap_broken) {
+			battery->bat_desc.properties =
+			    charge_battery_full_cap_broken_props;
+			battery->bat_desc.num_properties =
+			    ARRAY_SIZE(charge_battery_full_cap_broken_props);
+		} else {
+			battery->bat_desc.properties = charge_battery_props;
+			battery->bat_desc.num_properties =
+			    ARRAY_SIZE(charge_battery_props);
+		}
+	} else {
+		if (full_cap_broken) {
+			battery->bat_desc.properties =
+			    energy_battery_full_cap_broken_props;
+			battery->bat_desc.num_properties =
+			    ARRAY_SIZE(energy_battery_full_cap_broken_props);
+		} else {
+			battery->bat_desc.properties = energy_battery_props;
+			battery->bat_desc.num_properties =
+			    ARRAY_SIZE(energy_battery_props);
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	battery->bat_desc.name = acpi_device_bid(battery->device);

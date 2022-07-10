@@ -39,7 +39,11 @@ struct hclge_cmq_ring {
 enum hclge_cmd_return_status {
 	HCLGE_CMD_EXEC_SUCCESS	= 0,
 	HCLGE_CMD_NO_AUTH	= 1,
+<<<<<<< HEAD
 	HCLGE_CMD_NOT_EXEC	= 2,
+=======
+	HCLGE_CMD_NOT_SUPPORTED	= 2,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	HCLGE_CMD_QUEUE_FULL	= 3,
 };
 

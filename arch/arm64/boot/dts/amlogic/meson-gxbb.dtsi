@@ -390,7 +390,11 @@
 			};
 		};
 
+<<<<<<< HEAD
 		spi_pins: spi {
+=======
+		spi_pins: spi-pins {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			mux {
 				groups = "spi_miso",
 					"spi_mosi",

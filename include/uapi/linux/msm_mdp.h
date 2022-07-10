@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
 /*
+<<<<<<< HEAD
  * Copyright (c) 2017-2018, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2017-2018, 2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #ifndef _UAPI_MSM_MDP_H_
@@ -124,6 +128,11 @@
 #define MDSS_MDP_HW_REV_117	MDSS_MDP_REV(1, 17, 0) /* qcs405 */
 #define MDSS_MDP_HW_REV_300	MDSS_MDP_REV(3, 0, 0)  /* msmcobalt */
 #define MDSS_MDP_HW_REV_301	MDSS_MDP_REV(3, 0, 1)  /* msmcobalt v1.0 */
+<<<<<<< HEAD
+=======
+#define MDSS_MDP_HW_REV_320	MDSS_MDP_REV(3, 2, 0)  /* sdm660 */
+#define MDSS_MDP_HW_REV_330	MDSS_MDP_REV(3, 3, 0)  /* sdm630 */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 enum {
 	NOTIFY_UPDATE_INIT,

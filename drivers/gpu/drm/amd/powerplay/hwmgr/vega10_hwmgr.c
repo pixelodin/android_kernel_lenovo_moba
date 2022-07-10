@@ -4751,9 +4751,13 @@ static void vega10_odn_update_soc_table(struct pp_hwmgr *hwmgr,
 
 	if (type == PP_OD_EDIT_SCLK_VDDC_TABLE) {
 		podn_vdd_dep = &data->odn_dpm_table.vdd_dep_on_sclk;
+<<<<<<< HEAD
 		for (i = 0; i < podn_vdd_dep->count - 1; i++)
 			od_vddc_lookup_table->entries[i].us_vdd = podn_vdd_dep->entries[i].vddc;
 		if (od_vddc_lookup_table->entries[i].us_vdd < podn_vdd_dep->entries[i].vddc)
+=======
+		for (i = 0; i < podn_vdd_dep->count; i++)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			od_vddc_lookup_table->entries[i].us_vdd = podn_vdd_dep->entries[i].vddc;
 	} else if (type == PP_OD_EDIT_MCLK_VDDC_TABLE) {
 		podn_vdd_dep = &data->odn_dpm_table.vdd_dep_on_mclk;

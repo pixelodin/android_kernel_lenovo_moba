@@ -8,10 +8,28 @@
 #define KASAN_SHADOW_SCALE_SIZE (1UL << KASAN_SHADOW_SCALE_SHIFT)
 #define KASAN_SHADOW_MASK       (KASAN_SHADOW_SCALE_SIZE - 1)
 
+<<<<<<< HEAD
+=======
+#define KASAN_TAG_KERNEL	0xFF /* native kernel pointers tag */
+#define KASAN_TAG_INVALID	0xFE /* inaccessible memory tag */
+#define KASAN_TAG_MAX		0xFD /* maximum value for random tags */
+
+#ifdef CONFIG_KASAN_GENERIC
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define KASAN_FREE_PAGE         0xFF  /* page was freed */
 #define KASAN_PAGE_REDZONE      0xFE  /* redzone for kmalloc_large allocations */
 #define KASAN_KMALLOC_REDZONE   0xFC  /* redzone inside slub object */
 #define KASAN_KMALLOC_FREE      0xFB  /* object was freed (kmem_cache_free/kfree) */
+<<<<<<< HEAD
+=======
+#else
+#define KASAN_FREE_PAGE         KASAN_TAG_INVALID
+#define KASAN_PAGE_REDZONE      KASAN_TAG_INVALID
+#define KASAN_KMALLOC_REDZONE   KASAN_TAG_INVALID
+#define KASAN_KMALLOC_FREE      KASAN_TAG_INVALID
+#endif
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define KASAN_GLOBAL_REDZONE    0xFA  /* redzone for global variable */
 
 /*
@@ -22,7 +40,10 @@
 #define KASAN_STACK_MID         0xF2
 #define KASAN_STACK_RIGHT       0xF3
 #define KASAN_STACK_PARTIAL     0xF4
+<<<<<<< HEAD
 #define KASAN_USE_AFTER_SCOPE   0xF8
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /*
  * alloca redzone shadow values
@@ -105,11 +126,32 @@ static inline const void *kasan_shadow_to_mem(const void *shadow_addr)
 		<< KASAN_SHADOW_SCALE_SHIFT);
 }
 
+<<<<<<< HEAD
+=======
+static inline bool addr_has_shadow(const void *addr)
+{
+	return (addr >= kasan_shadow_to_mem((void *)KASAN_SHADOW_START));
+}
+
+void kasan_poison_shadow(const void *address, size_t size, u8 value);
+
+void check_memory_region(unsigned long addr, size_t size, bool write,
+				unsigned long ret_ip);
+
+void *find_first_bad_addr(void *addr, size_t size);
+const char *get_bug_type(struct kasan_access_info *info);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 void kasan_report(unsigned long addr, size_t size,
 		bool is_write, unsigned long ip);
 void kasan_report_invalid_free(void *object, unsigned long ip);
 
+<<<<<<< HEAD
 #if defined(CONFIG_SLAB) || defined(CONFIG_SLUB)
+=======
+#if defined(CONFIG_KASAN_GENERIC) && \
+	(defined(CONFIG_SLAB) || defined(CONFIG_SLUB))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 void quarantine_put(struct kasan_free_meta *info, struct kmem_cache *cache);
 void quarantine_reduce(void);
 void quarantine_remove_cache(struct kmem_cache *cache);
@@ -120,6 +162,43 @@ static inline void quarantine_reduce(void) { }
 static inline void quarantine_remove_cache(struct kmem_cache *cache) { }
 #endif
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_KASAN_SW_TAGS
+
+void print_tags(u8 addr_tag, const void *addr);
+
+u8 random_tag(void);
+
+#else
+
+static inline void print_tags(u8 addr_tag, const void *addr) { }
+
+static inline u8 random_tag(void)
+{
+	return 0;
+}
+
+#endif
+
+#ifndef arch_kasan_set_tag
+static inline const void *arch_kasan_set_tag(const void *addr, u8 tag)
+{
+	return addr;
+}
+#endif
+#ifndef arch_kasan_reset_tag
+#define arch_kasan_reset_tag(addr)	((void *)(addr))
+#endif
+#ifndef arch_kasan_get_tag
+#define arch_kasan_get_tag(addr)	0
+#endif
+
+#define set_tag(addr, tag)	((void *)arch_kasan_set_tag((addr), (tag)))
+#define reset_tag(addr)		((void *)arch_kasan_reset_tag(addr))
+#define get_tag(addr)		arch_kasan_get_tag(addr)
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * Exported functions for interfaces called from assembly or from generated
  * code. Declarations here to avoid warning about missing declarations.
@@ -130,8 +209,11 @@ void __asan_unregister_globals(struct kasan_global *globals, size_t size);
 void __asan_loadN(unsigned long addr, size_t size);
 void __asan_storeN(unsigned long addr, size_t size);
 void __asan_handle_no_return(void);
+<<<<<<< HEAD
 void __asan_poison_stack_memory(const void *addr, size_t size);
 void __asan_unpoison_stack_memory(const void *addr, size_t size);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 void __asan_alloca_poison(unsigned long addr, size_t size);
 void __asan_allocas_unpoison(const void *stack_top, const void *stack_bottom);
 

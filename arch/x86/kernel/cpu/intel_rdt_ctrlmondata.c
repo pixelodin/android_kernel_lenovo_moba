@@ -408,8 +408,21 @@ int rdtgroup_schemata_show(struct kernfs_open_file *of,
 			for_each_alloc_enabled_rdt_resource(r)
 				seq_printf(s, "%s:uninitialized\n", r->name);
 		} else if (rdtgrp->mode == RDT_MODE_PSEUDO_LOCKED) {
+<<<<<<< HEAD
 			seq_printf(s, "%s:%d=%x\n", rdtgrp->plr->r->name,
 				   rdtgrp->plr->d->id, rdtgrp->plr->cbm);
+=======
+			if (!rdtgrp->plr->d) {
+				rdt_last_cmd_clear();
+				rdt_last_cmd_puts("Cache domain offline\n");
+				ret = -ENODEV;
+			} else {
+				seq_printf(s, "%s:%d=%x\n",
+					   rdtgrp->plr->r->name,
+					   rdtgrp->plr->d->id,
+					   rdtgrp->plr->cbm);
+			}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		} else {
 			closid = rdtgrp->closid;
 			for_each_alloc_enabled_rdt_resource(r) {
@@ -451,6 +464,13 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
 	int ret = 0;
 
 	rdtgrp = rdtgroup_kn_lock_live(of->kn);
+<<<<<<< HEAD
+=======
+	if (!rdtgrp) {
+		ret = -ENOENT;
+		goto out;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	md.priv = of->kn->priv;
 	resid = md.u.rid;
@@ -459,7 +479,11 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
 
 	r = &rdt_resources_all[resid];
 	d = rdt_find_domain(r, domid, NULL);
+<<<<<<< HEAD
 	if (!d) {
+=======
+	if (IS_ERR_OR_NULL(d)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ret = -ENOENT;
 		goto out;
 	}

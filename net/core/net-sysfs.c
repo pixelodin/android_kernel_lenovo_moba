@@ -928,10 +928,19 @@ static int rx_queue_add_kobject(struct net_device *dev, int index)
 	struct kobject *kobj = &queue->kobj;
 	int error = 0;
 
+<<<<<<< HEAD
+=======
+	/* Kobject_put later will trigger rx_queue_release call which
+	 * decreases dev refcount: Take that reference here
+	 */
+	dev_hold(queue->dev);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	kobj->kset = dev->queues_kset;
 	error = kobject_init_and_add(kobj, &rx_queue_ktype, NULL,
 				     "rx-%u", index);
 	if (error)
+<<<<<<< HEAD
 		return error;
 
 	dev_hold(queue->dev);
@@ -942,11 +951,26 @@ static int rx_queue_add_kobject(struct net_device *dev, int index)
 			kobject_put(kobj);
 			return error;
 		}
+=======
+		goto err;
+
+	if (dev->sysfs_rx_queue_group) {
+		error = sysfs_create_group(kobj, dev->sysfs_rx_queue_group);
+		if (error)
+			goto err;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	kobject_uevent(kobj, KOBJ_ADD);
 
 	return error;
+<<<<<<< HEAD
+=======
+
+err:
+	kobject_put(kobj);
+	return error;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 #endif /* CONFIG_SYSFS */
 
@@ -1467,10 +1491,19 @@ static int netdev_queue_add_kobject(struct net_device *dev, int index)
 	struct kobject *kobj = &queue->kobj;
 	int error = 0;
 
+<<<<<<< HEAD
+=======
+	/* Kobject_put later will trigger netdev_queue_release call
+	 * which decreases dev refcount: Take that reference here
+	 */
+	dev_hold(queue->dev);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	kobj->kset = dev->queues_kset;
 	error = kobject_init_and_add(kobj, &netdev_queue_ktype, NULL,
 				     "tx-%u", index);
 	if (error)
+<<<<<<< HEAD
 		return error;
 
 	dev_hold(queue->dev);
@@ -1486,6 +1519,22 @@ static int netdev_queue_add_kobject(struct net_device *dev, int index)
 	kobject_uevent(kobj, KOBJ_ADD);
 
 	return 0;
+=======
+		goto err;
+
+#ifdef CONFIG_BQL
+	error = sysfs_create_group(kobj, &dql_group);
+	if (error)
+		goto err;
+#endif
+
+	kobject_uevent(kobj, KOBJ_ADD);
+	return 0;
+
+err:
+	kobject_put(kobj);
+	return error;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 #endif /* CONFIG_SYSFS */
 

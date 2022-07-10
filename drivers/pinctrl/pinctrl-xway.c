@@ -1746,6 +1746,7 @@ static int pinmux_xway_probe(struct platform_device *pdev)
 	}
 	xway_pctrl_desc.pins = xway_info.pads;
 
+<<<<<<< HEAD
 	/* register the gpio chip */
 	xway_chip.parent = &pdev->dev;
 	ret = devm_gpiochip_add_data(&pdev->dev, &xway_chip, NULL);
@@ -1754,6 +1755,8 @@ static int pinmux_xway_probe(struct platform_device *pdev)
 		return ret;
 	}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* setup the data needed by pinctrl */
 	xway_pctrl_desc.name	= dev_name(&pdev->dev);
 	xway_pctrl_desc.npins	= xway_chip.ngpio;
@@ -1775,10 +1778,40 @@ static int pinmux_xway_probe(struct platform_device *pdev)
 		return ret;
 	}
 
+<<<<<<< HEAD
 	/* finish with registering the gpio range in pinctrl */
 	xway_gpio_range.npins = xway_chip.ngpio;
 	xway_gpio_range.base = xway_chip.base;
 	pinctrl_add_gpio_range(xway_info.pctrl, &xway_gpio_range);
+=======
+	/* register the gpio chip */
+	xway_chip.parent = &pdev->dev;
+	xway_chip.owner = THIS_MODULE;
+	xway_chip.of_node = pdev->dev.of_node;
+	ret = devm_gpiochip_add_data(&pdev->dev, &xway_chip, NULL);
+	if (ret) {
+		dev_err(&pdev->dev, "Failed to register gpio chip\n");
+		return ret;
+	}
+
+	/*
+	 * For DeviceTree-supported systems, the gpio core checks the
+	 * pinctrl's device node for the "gpio-ranges" property.
+	 * If it is present, it takes care of adding the pin ranges
+	 * for the driver. In this case the driver can skip ahead.
+	 *
+	 * In order to remain compatible with older, existing DeviceTree
+	 * files which don't set the "gpio-ranges" property or systems that
+	 * utilize ACPI the driver has to call gpiochip_add_pin_range().
+	 */
+	if (!of_property_read_bool(pdev->dev.of_node, "gpio-ranges")) {
+		/* finish with registering the gpio range in pinctrl */
+		xway_gpio_range.npins = xway_chip.ngpio;
+		xway_gpio_range.base = xway_chip.base;
+		pinctrl_add_gpio_range(xway_info.pctrl, &xway_gpio_range);
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	dev_info(&pdev->dev, "Init done\n");
 	return 0;
 }

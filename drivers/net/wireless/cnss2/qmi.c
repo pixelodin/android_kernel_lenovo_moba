@@ -150,6 +150,21 @@ qmi_registered:
 	return ret;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_CNSS2_DEBUG
+static inline u32 cnss_get_host_build_type(void)
+{
+	return QMI_HOST_BUILD_TYPE_PRIMARY_V01;
+}
+#else
+static inline u32 cnss_get_host_build_type(void)
+{
+	return QMI_HOST_BUILD_TYPE_SECONDARY_V01;
+}
+#endif
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int cnss_wlfw_host_cap_send_sync(struct cnss_plat_data *plat_priv)
 {
 	struct wlfw_host_cap_req_msg_v01 *req;
@@ -209,6 +224,12 @@ static int cnss_wlfw_host_cap_send_sync(struct cnss_plat_data *plat_priv)
 			    req->ddr_range[0].start, req->ddr_range[0].size);
 	}
 
+<<<<<<< HEAD
+=======
+	req->host_build_type_valid = 1;
+	req->host_build_type = cnss_get_host_build_type();
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = qmi_txn_init(&plat_priv->qmi_wlfw, &txn,
 			   wlfw_host_cap_resp_msg_v01_ei, resp);
 	if (ret < 0) {
@@ -538,7 +559,11 @@ int cnss_wlfw_bdf_dnld_send_sync(struct cnss_plat_data *plat_priv,
 				     filename, sizeof(filename));
 	if (ret > 0) {
 		temp = DUMMY_BDF_FILE_NAME;
+<<<<<<< HEAD
 		remaining = MAX_FIRMWARE_NAME_LEN;
+=======
+		remaining = strlen(DUMMY_BDF_FILE_NAME) + 1;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto bypass_bdf;
 	} else if (ret < 0) {
 		goto err_req_fw;
@@ -1045,7 +1070,11 @@ int cnss_wlfw_athdiag_read_send_sync(struct cnss_plat_data *plat_priv,
 		return -ENODEV;
 
 	if (!data || data_len == 0 || data_len > QMI_WLFW_MAX_DATA_SIZE_V01) {
+<<<<<<< HEAD
 		cnss_pr_err("Invalid parameters for athdiag read: data %p, data_len %u\n",
+=======
+		cnss_pr_err("Invalid parameters for athdiag read: data %pK, data_len %u\n",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			    data, data_len);
 		return -EINVAL;
 	}
@@ -1132,12 +1161,20 @@ int cnss_wlfw_athdiag_write_send_sync(struct cnss_plat_data *plat_priv,
 		return -ENODEV;
 
 	if (!data || data_len == 0 || data_len > QMI_WLFW_MAX_DATA_SIZE_V01) {
+<<<<<<< HEAD
 		cnss_pr_err("Invalid parameters for athdiag write: data %p, data_len %u\n",
+=======
+		cnss_pr_err("Invalid parameters for athdiag write: data %pK, data_len %u\n",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			    data, data_len);
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	cnss_pr_dbg("athdiag write: state 0x%lx, offset %x, mem_type %x, data_len %u, data %p\n",
+=======
+	cnss_pr_dbg("athdiag write: state 0x%lx, offset %x, mem_type %x, data_len %u, data %pK\n",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		    plat_priv->driver_state, offset, mem_type, data_len, data);
 
 	req = kzalloc(sizeof(*req), GFP_KERNEL);
@@ -1485,8 +1522,13 @@ out:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int cnss_wlfw_wfc_call_status_send_sync(struct cnss_plat_data *plat_priv,
 					       u32 data_len, const void *data)
+=======
+int cnss_wlfw_wfc_call_status_send_sync(struct cnss_plat_data *plat_priv,
+					u32 data_len, const void *data)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct wlfw_wfc_call_status_req_msg_v01 *req;
 	struct wlfw_wfc_call_status_resp_msg_v01 *resp;
@@ -2098,7 +2140,10 @@ int cnss_wlfw_server_arrive(struct cnss_plat_data *plat_priv, void *data)
 
 	if (test_bit(CNSS_QMI_WLFW_CONNECTED, &plat_priv->driver_state)) {
 		cnss_pr_err("Unexpected WLFW server arrive\n");
+<<<<<<< HEAD
 		CNSS_ASSERT(0);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EINVAL;
 	}
 

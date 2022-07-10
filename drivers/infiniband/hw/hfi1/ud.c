@@ -51,6 +51,10 @@
 #include "hfi.h"
 #include "mad.h"
 #include "verbs_txreq.h"
+<<<<<<< HEAD
+=======
+#include "trace_ibhdrs.h"
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include "qp.h"
 
 /* We support only two types - 9B and 16B for now */
@@ -656,18 +660,30 @@ void return_cnp_16B(struct hfi1_ibport *ibp, struct rvt_qp *qp,
 	u32 bth0, plen, vl, hwords = 7;
 	u16 len;
 	u8 l4;
+<<<<<<< HEAD
 	struct hfi1_16b_header hdr;
+=======
+	struct hfi1_opa_header hdr;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct ib_other_headers *ohdr;
 	struct pio_buf *pbuf;
 	struct send_context *ctxt = qp_to_send_context(qp, sc5);
 	struct hfi1_pportdata *ppd = ppd_from_ibp(ibp);
 	u32 nwords;
 
+<<<<<<< HEAD
+=======
+	hdr.hdr_type = HFI1_PKT_TYPE_16B;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Populate length */
 	nwords = ((hfi1_get_16b_padding(hwords << 2, 0) +
 		   SIZE_OF_LT) >> 2) + SIZE_OF_CRC;
 	if (old_grh) {
+<<<<<<< HEAD
 		struct ib_grh *grh = &hdr.u.l.grh;
+=======
+		struct ib_grh *grh = &hdr.opah.u.l.grh;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		grh->version_tclass_flow = old_grh->version_tclass_flow;
 		grh->paylen = cpu_to_be16(
@@ -675,11 +691,19 @@ void return_cnp_16B(struct hfi1_ibport *ibp, struct rvt_qp *qp,
 		grh->hop_limit = 0xff;
 		grh->sgid = old_grh->dgid;
 		grh->dgid = old_grh->sgid;
+<<<<<<< HEAD
 		ohdr = &hdr.u.l.oth;
 		l4 = OPA_16B_L4_IB_GLOBAL;
 		hwords += sizeof(struct ib_grh) / sizeof(u32);
 	} else {
 		ohdr = &hdr.u.oth;
+=======
+		ohdr = &hdr.opah.u.l.oth;
+		l4 = OPA_16B_L4_IB_GLOBAL;
+		hwords += sizeof(struct ib_grh) / sizeof(u32);
+	} else {
+		ohdr = &hdr.opah.u.oth;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		l4 = OPA_16B_L4_IB_LOCAL;
 	}
 
@@ -693,7 +717,11 @@ void return_cnp_16B(struct hfi1_ibport *ibp, struct rvt_qp *qp,
 
 	/* Convert dwords to flits */
 	len = (hwords + nwords) >> 1;
+<<<<<<< HEAD
 	hfi1_make_16b_hdr(&hdr, slid, dlid, len, pkey, 1, 0, l4, sc5);
+=======
+	hfi1_make_16b_hdr(&hdr.opah, slid, dlid, len, pkey, 1, 0, l4, sc5);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	plen = 2 /* PBC */ + hwords + nwords;
 	pbc_flags |= PBC_PACKET_BYPASS | PBC_INSERT_BYPASS_ICRC;
@@ -701,9 +729,17 @@ void return_cnp_16B(struct hfi1_ibport *ibp, struct rvt_qp *qp,
 	pbc = create_pbc(ppd, pbc_flags, qp->srate_mbps, vl, plen);
 	if (ctxt) {
 		pbuf = sc_buffer_alloc(ctxt, plen, NULL, NULL);
+<<<<<<< HEAD
 		if (pbuf)
 			ppd->dd->pio_inline_send(ppd->dd, pbuf, pbc,
 						 &hdr, hwords);
+=======
+		if (!IS_ERR_OR_NULL(pbuf)) {
+			trace_pio_output_ibhdr(ppd->dd, &hdr, sc5);
+			ppd->dd->pio_inline_send(ppd->dd, pbuf, pbc,
+						 &hdr, hwords);
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 }
 
@@ -715,14 +751,24 @@ void return_cnp(struct hfi1_ibport *ibp, struct rvt_qp *qp, u32 remote_qpn,
 	u32 bth0, plen, vl, hwords = 5;
 	u16 lrh0;
 	u8 sl = ibp->sc_to_sl[sc5];
+<<<<<<< HEAD
 	struct ib_header hdr;
+=======
+	struct hfi1_opa_header hdr;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct ib_other_headers *ohdr;
 	struct pio_buf *pbuf;
 	struct send_context *ctxt = qp_to_send_context(qp, sc5);
 	struct hfi1_pportdata *ppd = ppd_from_ibp(ibp);
 
+<<<<<<< HEAD
 	if (old_grh) {
 		struct ib_grh *grh = &hdr.u.l.grh;
+=======
+	hdr.hdr_type = HFI1_PKT_TYPE_9B;
+	if (old_grh) {
+		struct ib_grh *grh = &hdr.ibh.u.l.grh;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		grh->version_tclass_flow = old_grh->version_tclass_flow;
 		grh->paylen = cpu_to_be16(
@@ -730,11 +776,19 @@ void return_cnp(struct hfi1_ibport *ibp, struct rvt_qp *qp, u32 remote_qpn,
 		grh->hop_limit = 0xff;
 		grh->sgid = old_grh->dgid;
 		grh->dgid = old_grh->sgid;
+<<<<<<< HEAD
 		ohdr = &hdr.u.l.oth;
 		lrh0 = HFI1_LRH_GRH;
 		hwords += sizeof(struct ib_grh) / sizeof(u32);
 	} else {
 		ohdr = &hdr.u.oth;
+=======
+		ohdr = &hdr.ibh.u.l.oth;
+		lrh0 = HFI1_LRH_GRH;
+		hwords += sizeof(struct ib_grh) / sizeof(u32);
+	} else {
+		ohdr = &hdr.ibh.u.oth;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		lrh0 = HFI1_LRH_BTH;
 	}
 
@@ -746,16 +800,28 @@ void return_cnp(struct hfi1_ibport *ibp, struct rvt_qp *qp, u32 remote_qpn,
 	ohdr->bth[1] = cpu_to_be32(remote_qpn | (1 << IB_BECN_SHIFT));
 	ohdr->bth[2] = 0; /* PSN 0 */
 
+<<<<<<< HEAD
 	hfi1_make_ib_hdr(&hdr, lrh0, hwords + SIZE_OF_CRC, dlid, slid);
+=======
+	hfi1_make_ib_hdr(&hdr.ibh, lrh0, hwords + SIZE_OF_CRC, dlid, slid);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	plen = 2 /* PBC */ + hwords;
 	pbc_flags |= (ib_is_sc5(sc5) << PBC_DC_INFO_SHIFT);
 	vl = sc_to_vlt(ppd->dd, sc5);
 	pbc = create_pbc(ppd, pbc_flags, qp->srate_mbps, vl, plen);
 	if (ctxt) {
 		pbuf = sc_buffer_alloc(ctxt, plen, NULL, NULL);
+<<<<<<< HEAD
 		if (pbuf)
 			ppd->dd->pio_inline_send(ppd->dd, pbuf, pbc,
 						 &hdr, hwords);
+=======
+		if (!IS_ERR_OR_NULL(pbuf)) {
+			trace_pio_output_ibhdr(ppd->dd, &hdr, sc5);
+			ppd->dd->pio_inline_send(ppd->dd, pbuf, pbc,
+						 &hdr, hwords);
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 }
 
@@ -912,7 +978,11 @@ void hfi1_ud_rcv(struct hfi1_packet *packet)
 		src_qp = hfi1_16B_get_src_qpn(packet->mgmt);
 	}
 
+<<<<<<< HEAD
 	process_ecn(qp, packet, (opcode != IB_OPCODE_CNP));
+=======
+	process_ecn(qp, packet);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/*
 	 * Get the number of bytes the message was padded by
 	 * and drop incomplete packets.

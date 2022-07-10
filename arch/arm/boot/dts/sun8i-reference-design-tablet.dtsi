@@ -69,7 +69,12 @@
 	 */
 	clock-frequency = <400000>;
 
+<<<<<<< HEAD
 	touchscreen: touchscreen@0 {
+=======
+	touchscreen: touchscreen@40 {
+		reg = <0x40>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		interrupt-parent = <&pio>;
 		interrupts = <1 5 IRQ_TYPE_EDGE_FALLING>; /* PB5 */
 		pinctrl-names = "default";

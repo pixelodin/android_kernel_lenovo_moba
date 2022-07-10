@@ -2380,6 +2380,10 @@ static int nfs3_xdr_dec_commit3res(struct rpc_rqst *req,
 				   void *data)
 {
 	struct nfs_commitres *result = data;
+<<<<<<< HEAD
+=======
+	struct nfs_writeverf *verf = result->verf;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	enum nfs_stat status;
 	int error;
 
@@ -2392,7 +2396,13 @@ static int nfs3_xdr_dec_commit3res(struct rpc_rqst *req,
 	result->op_status = status;
 	if (status != NFS3_OK)
 		goto out_status;
+<<<<<<< HEAD
 	error = decode_writeverf3(xdr, &result->verf->verifier);
+=======
+	error = decode_writeverf3(xdr, &verf->verifier);
+	if (!error)
+		verf->committed = NFS_FILE_SYNC;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 out:
 	return error;
 out_status:

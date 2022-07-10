@@ -953,7 +953,11 @@ static __poll_t caif_poll(struct file *file,
 		mask |= EPOLLRDHUP;
 
 	/* readable? */
+<<<<<<< HEAD
 	if (!skb_queue_empty(&sk->sk_receive_queue) ||
+=======
+	if (!skb_queue_empty_lockless(&sk->sk_receive_queue) ||
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		(sk->sk_shutdown & RCV_SHUTDOWN))
 		mask |= EPOLLIN | EPOLLRDNORM;
 

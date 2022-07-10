@@ -227,9 +227,15 @@ out_unlock:
 out_free:
 	kfree(desc);
 out_put_ubi:
+<<<<<<< HEAD
 	ubi_put_device(ubi);
 	ubi_err(ubi, "cannot open device %d, volume %d, error %d",
 		ubi_num, vol_id, err);
+=======
+	ubi_err(ubi, "cannot open device %d, volume %d, error %d",
+		ubi_num, vol_id, err);
+	ubi_put_device(ubi);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return ERR_PTR(err);
 }
 EXPORT_SYMBOL_GPL(ubi_open_volume);

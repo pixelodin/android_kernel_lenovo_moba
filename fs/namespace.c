@@ -21,7 +21,10 @@
 #include <linux/fs_struct.h>	/* get_fs_root et.al. */
 #include <linux/fsnotify.h>	/* fsnotify_vfsmount_delete */
 #include <linux/uaccess.h>
+<<<<<<< HEAD
 #include <linux/file.h>
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/proc_ns.h>
 #include <linux/magic.h>
 #include <linux/bootmem.h>
@@ -1135,12 +1138,15 @@ static void delayed_mntput(struct work_struct *unused)
 }
 static DECLARE_DELAYED_WORK(delayed_mntput_work, delayed_mntput);
 
+<<<<<<< HEAD
 void flush_delayed_mntput_wait(void)
 {
 	delayed_mntput(NULL);
 	flush_delayed_work(&delayed_mntput_work);
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static void mntput_no_expire(struct mount *mnt)
 {
 	rcu_read_lock();
@@ -1657,7 +1663,10 @@ int ksys_umount(char __user *name, int flags)
 	struct mount *mnt;
 	int retval;
 	int lookup_flags = 0;
+<<<<<<< HEAD
 	bool user_request = !(current->flags & PF_KTHREAD);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (flags & ~(MNT_FORCE | MNT_DETACH | MNT_EXPIRE | UMOUNT_NOFOLLOW))
 		return -EINVAL;
@@ -1683,14 +1692,18 @@ int ksys_umount(char __user *name, int flags)
 	if (flags & MNT_FORCE && !capable(CAP_SYS_ADMIN))
 		goto dput_and_out;
 
+<<<<<<< HEAD
 	/* flush delayed_fput to put mnt_count */
 	if (user_request)
 		flush_delayed_fput_wait();
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	retval = do_umount(mnt, flags);
 dput_and_out:
 	/* we mustn't call path_put() as that would clear mnt_expiry_mark */
 	dput(path.dentry);
+<<<<<<< HEAD
 	if (user_request && (!retval || (flags & MNT_FORCE))) {
 		/* filesystem needs to handle unclosed namespaces */
 		if (mnt->mnt.mnt_sb->s_op->umount_end)
@@ -1713,6 +1726,10 @@ dput_and_out:
 		/* flush delayed_mntput_work to put sb->s_active */
 		flush_delayed_mntput_wait();
 	}
+=======
+	mntput_no_expire(mnt);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 out:
 	return retval;
 }
@@ -2741,7 +2758,11 @@ void *copy_mount_options(const void __user * data)
 	 * the remainder of the page.
 	 */
 	/* copy_from_user cannot cross TASK_SIZE ! */
+<<<<<<< HEAD
 	size = TASK_SIZE - (unsigned long)data;
+=======
+	size = TASK_SIZE - (unsigned long)untagged_addr(data);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (size > PAGE_SIZE)
 		size = PAGE_SIZE;
 

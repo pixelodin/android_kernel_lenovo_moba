@@ -31,6 +31,11 @@
 #define LPFC_NVMET_MRQ_AUTO		0
 #define LPFC_NVMET_MRQ_MAX		16
 
+<<<<<<< HEAD
+=======
+#define LPFC_NVMET_WAIT_TMO		(5 * MSEC_PER_SEC)
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* Used for NVME Target */
 struct lpfc_nvmet_tgtport {
 	struct lpfc_hba *phba;

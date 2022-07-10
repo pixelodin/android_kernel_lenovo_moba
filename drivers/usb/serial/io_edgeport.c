@@ -716,7 +716,11 @@ static void edge_interrupt_callback(struct urb *urb)
 			if (txCredits) {
 				port = edge_serial->serial->port[portNumber];
 				edge_port = usb_get_serial_port_data(port);
+<<<<<<< HEAD
 				if (edge_port->open) {
+=======
+				if (edge_port && edge_port->open) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 					spin_lock_irqsave(&edge_port->ep_lock,
 							  flags);
 					edge_port->txCredits += txCredits;
@@ -1734,7 +1738,12 @@ static void edge_break(struct tty_struct *tty, int break_state)
 static void process_rcvd_data(struct edgeport_serial *edge_serial,
 				unsigned char *buffer, __u16 bufferLength)
 {
+<<<<<<< HEAD
 	struct device *dev = &edge_serial->serial->dev->dev;
+=======
+	struct usb_serial *serial = edge_serial->serial;
+	struct device *dev = &serial->dev->dev;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct usb_serial_port *port;
 	struct edgeport_port *edge_port;
 	__u16 lastBufferLength;
@@ -1839,11 +1848,18 @@ static void process_rcvd_data(struct edgeport_serial *edge_serial,
 
 			/* spit this data back into the tty driver if this
 			   port is open */
+<<<<<<< HEAD
 			if (rxLen) {
 				port = edge_serial->serial->port[
 							edge_serial->rxPort];
 				edge_port = usb_get_serial_port_data(port);
 				if (edge_port->open) {
+=======
+			if (rxLen && edge_serial->rxPort < serial->num_ports) {
+				port = serial->port[edge_serial->rxPort];
+				edge_port = usb_get_serial_port_data(port);
+				if (edge_port && edge_port->open) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 					dev_dbg(dev, "%s - Sending %d bytes to TTY for port %d\n",
 						__func__, rxLen,
 						edge_serial->rxPort);
@@ -1851,8 +1867,13 @@ static void process_rcvd_data(struct edgeport_serial *edge_serial,
 							rxLen);
 					edge_port->port->icount.rx += rxLen;
 				}
+<<<<<<< HEAD
 				buffer += rxLen;
 			}
+=======
+			}
+			buffer += rxLen;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			break;
 
 		case EXPECT_HDR3:	/* Expect 3rd byte of status header */
@@ -1887,6 +1908,11 @@ static void process_rcvd_status(struct edgeport_serial *edge_serial,
 	__u8 code = edge_serial->rxStatusCode;
 
 	/* switch the port pointer to the one being currently talked about */
+<<<<<<< HEAD
+=======
+	if (edge_serial->rxPort >= edge_serial->serial->num_ports)
+		return;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	port = edge_serial->serial->port[edge_serial->rxPort];
 	edge_port = usb_get_serial_port_data(port);
 	if (edge_port == NULL) {
@@ -2919,6 +2945,7 @@ static int edge_startup(struct usb_serial *serial)
 	response = 0;
 
 	if (edge_serial->is_epic) {
+<<<<<<< HEAD
 		/* EPIC thing, set up our interrupt polling now and our read
 		 * urb, so that the device knows it really is connected. */
 		interrupt_in_found = bulk_in_found = bulk_out_found = false;
@@ -2929,6 +2956,20 @@ static int edge_startup(struct usb_serial *serial)
 
 			endpoint = &serial->interface->altsetting[0].
 							endpoint[i].desc;
+=======
+		struct usb_host_interface *alt;
+
+		alt = serial->interface->cur_altsetting;
+
+		/* EPIC thing, set up our interrupt polling now and our read
+		 * urb, so that the device knows it really is connected. */
+		interrupt_in_found = bulk_in_found = bulk_out_found = false;
+		for (i = 0; i < alt->desc.bNumEndpoints; ++i) {
+			struct usb_endpoint_descriptor *endpoint;
+			int buffer_size;
+
+			endpoint = &alt->endpoint[i].desc;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			buffer_size = usb_endpoint_maxp(endpoint);
 			if (!interrupt_in_found &&
 			    (usb_endpoint_is_int_in(endpoint))) {

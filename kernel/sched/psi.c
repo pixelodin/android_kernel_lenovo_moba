@@ -189,7 +189,12 @@ static void group_init(struct psi_group *group)
 
 	for_each_possible_cpu(cpu)
 		seqcount_init(&per_cpu_ptr(group->pcpu, cpu)->seq);
+<<<<<<< HEAD
 	group->avg_next_update = sched_clock() + psi_period;
+=======
+	group->avg_last_update = sched_clock();
+	group->avg_next_update = group->avg_last_update + psi_period;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	INIT_DEFERRABLE_WORK(&group->avgs_work, psi_avgs_work);
 	mutex_init(&group->avgs_lock);
 	/* Init trigger-related members */
@@ -520,7 +525,11 @@ static u64 window_update(struct psi_window *win, u64 now, u64 value)
 		u32 remaining;
 
 		remaining = win->size - elapsed;
+<<<<<<< HEAD
 		growth += div_u64(win->prev_growth * remaining, win->size);
+=======
+		growth += div64_u64(win->prev_growth * remaining, win->size);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	return growth;
@@ -1167,7 +1176,11 @@ struct psi_trigger *psi_trigger_create(struct psi_group *group,
 
 	if (!rcu_access_pointer(group->poll_kworker)) {
 		struct sched_param param = {
+<<<<<<< HEAD
 			.sched_priority = MAX_RT_PRIO - 1,
+=======
+			.sched_priority = 1,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		};
 		struct kthread_worker *kworker;
 
@@ -1177,7 +1190,11 @@ struct psi_trigger *psi_trigger_create(struct psi_group *group,
 			mutex_unlock(&group->trigger_lock);
 			return ERR_CAST(kworker);
 		}
+<<<<<<< HEAD
 		sched_setscheduler(kworker->task, SCHED_FIFO, &param);
+=======
+		sched_setscheduler_nocheck(kworker->task, SCHED_FIFO, &param);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		kthread_init_delayed_work(&group->poll_work,
 				psi_poll_work);
 		rcu_assign_pointer(group->poll_kworker, kworker);
@@ -1248,7 +1265,19 @@ static void psi_trigger_destroy(struct kref *ref)
 	 * deadlock while waiting for psi_poll_work to acquire trigger_lock
 	 */
 	if (kworker_to_destroy) {
+<<<<<<< HEAD
 		kthread_cancel_delayed_work_sync(&group->poll_work);
+=======
+		/*
+		 * After the RCU grace period has expired, the worker
+		 * can no longer be found through group->poll_kworker.
+		 * But it might have been already scheduled before
+		 * that - deschedule it cleanly before destroying it.
+		 */
+		kthread_cancel_delayed_work_sync(&group->poll_work);
+		atomic_set(&group->poll_scheduled, 0);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		kthread_destroy_worker(kworker_to_destroy);
 	}
 	kfree(t);
@@ -1310,7 +1339,14 @@ static ssize_t psi_write(struct file *file, const char __user *user_buf,
 	if (static_branch_likely(&psi_disabled))
 		return -EOPNOTSUPP;
 
+<<<<<<< HEAD
 	buf_size = min(nbytes, (sizeof(buf) - 1));
+=======
+	if (!nbytes)
+		return -EINVAL;
+
+	buf_size = min(nbytes, sizeof(buf));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (copy_from_user(buf, user_buf, buf_size))
 		return -EFAULT;
 

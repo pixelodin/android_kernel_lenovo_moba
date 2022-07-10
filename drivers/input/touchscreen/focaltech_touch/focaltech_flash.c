@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // SPDX-License-Identifier: GPL-2.0-only
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  *
  * FocalTech fts TouchScreen driver.
@@ -175,13 +178,21 @@ static int fts_fwupg_reset_to_romboot(struct fts_upgrade *upg)
 		FTS_ERROR("pram/rom/bootloader reset cmd write fail");
 		return ret;
 	}
+<<<<<<< HEAD
 	msleep(10);
+=======
+	mdelay(10);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	for (i = 0; i < FTS_UPGRADE_LOOP; i++) {
 		ret = fts_fwupg_get_boot_state(upg, &state);
 		if (FTS_RUN_IN_ROM == state)
 			break;
+<<<<<<< HEAD
 		msleep(5);
+=======
+		mdelay(5);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	if (i >= FTS_UPGRADE_LOOP) {
 		FTS_ERROR("reset to romboot fail");
@@ -478,7 +489,11 @@ static int fts_pram_init(void)
 static int fts_pram_write_init(struct fts_upgrade *upg)
 {
 	int ret = 0;
+<<<<<<< HEAD
 	bool state = false;
+=======
+	bool state = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	enum FW_STATUS status = FTS_RUN_IN_ERROR;
 
 	FTS_INFO("**********pram write and init**********");
@@ -897,7 +912,11 @@ int fts_flash_write_buf(
 			FTS_ERROR("app write fail");
 			return ret;
 		}
+<<<<<<< HEAD
 		msleep(delay);
+=======
+		mdelay(delay);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		/* read status */
 		wr_ok = FTS_CMD_FLASH_STATUS_WRITE_OK + addr / packet_len;
@@ -909,7 +928,11 @@ int fts_flash_write_buf(
 			if (wr_ok == read_status) {
 				break;
 			}
+<<<<<<< HEAD
 			msleep(FTS_RETRIES_DELAY_WRITE);
+=======
+			mdelay(FTS_RETRIES_DELAY_WRITE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 	}
 
@@ -954,8 +977,12 @@ static int fts_flash_read_buf(u32 saddr, u8 *buf, u32 len)
 		packet_number++;
 	}
 	packet_len = FTS_FLASH_PACKET_LENGTH;
+<<<<<<< HEAD
 	FTS_INFO("read packet_number:%d, remainder:%d", packet_number,
 		remainder);
+=======
+	FTS_INFO("read packet_number:%d, remainder:%d", packet_number, remainder);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	wbuf[0] = FTS_CMD_READ;
 	for (i = 0; i < packet_number; i++) {
@@ -1025,17 +1052,30 @@ read_flash_err:
 	return ret;
 }
 
+<<<<<<< HEAD
 static int fts_read_file(char *file_name, u8 **file_buf,
 		struct fts_upgrade *upg)
 {
 	int ret = 0;
 	const struct firmware *fw = NULL;
+=======
+static int fts_read_file(char *file_name, u8 **file_buf)
+{
+	int ret = 0;
+	char file_path[FILE_NAME_LENGTH] = { 0 };
+	struct file *filp = NULL;
+	struct inode *inode;
+	mm_segment_t old_fs;
+	loff_t pos;
+	loff_t file_len = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if ((NULL == file_name) || (NULL == file_buf)) {
 		FTS_ERROR("filename/filebuf is NULL");
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	ret = firmware_request_nowarn(&fw, file_name, upg->ts_data->dev);
 	if (ret) {
 		FTS_INFO("firmware(%s) request fail,ret=%d", file_name, ret);
@@ -1055,6 +1095,38 @@ static int fts_read_file(char *file_name, u8 **file_buf,
 		release_firmware(fw);
 		fw = NULL;
 	}
+=======
+	snprintf(file_path, FILE_NAME_LENGTH, "%s%s", FTS_FW_BIN_FILEPATH, file_name);
+	filp = filp_open(file_path, O_RDONLY, 0);
+	if (IS_ERR(filp)) {
+		FTS_ERROR("open %s file fail", file_path);
+		return -ENOENT;
+	}
+
+#if 1
+	inode = filp->f_inode;
+#else
+	/* reserved for linux earlier verion */
+	inode = filp->f_dentry->d_inode;
+#endif
+
+	file_len = inode->i_size;
+	*file_buf = (u8 *)vmalloc(file_len);
+	if (NULL == *file_buf) {
+		FTS_ERROR("file buf malloc fail");
+		filp_close(filp, NULL);
+		return -ENOMEM;
+	}
+	old_fs = get_fs();
+	set_fs(KERNEL_DS);
+	pos = 0;
+	ret = vfs_read(filp, *file_buf, file_len , &pos);
+	if (ret < 0)
+		FTS_ERROR("read file fail");
+	FTS_INFO("file len:%d read len:%d pos:%d", (u32)file_len, ret, (u32)pos);
+	filp_close(filp, NULL);
+	set_fs(old_fs);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return ret;
 }
@@ -1072,13 +1144,21 @@ int fts_upgrade_bin(char *fw_name, bool force)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
 	upg->ts_data->fw_loading = true;
+=======
+	upg->ts_data->fw_loading = 1;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	fts_irq_disable();
 #if FTS_ESDCHECK_EN
 	fts_esdcheck_switch(DISABLE);
 #endif
 
+<<<<<<< HEAD
 	ret = fts_read_file(fw_name, &fw_file_buf, upg);
+=======
+	ret = fts_read_file(fw_name, &fw_file_buf);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if ((ret < 0) || (ret < FTS_MIN_LEN) || (ret > FTS_MAX_LEN_FILE)) {
 		FTS_ERROR("read fw bin file(sdcard) fail, len:%d", fw_file_len);
 		goto err_bin;
@@ -1122,7 +1202,11 @@ err_bin:
 	fts_esdcheck_switch(ENABLE);
 #endif
 	fts_irq_enable();
+<<<<<<< HEAD
 	upg->ts_data->fw_loading = false;
+=======
+	upg->ts_data->fw_loading = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (fw_file_buf) {
 		vfree(fw_file_buf);
@@ -1382,8 +1466,12 @@ static int fts_param_ide_in_host(struct fts_upgrade *upg)
 
 	if (upg->fw_length < upg->func->paramcfgoff + FTS_FW_IDE_SIG_LEN) {
 		FTS_INFO("fw len(%x) < paramcfg offset(%x), no IDE",
+<<<<<<< HEAD
 			upg->fw_length,
 			upg->func->paramcfgoff + FTS_FW_IDE_SIG_LEN);
+=======
+			upg->fw_length, upg->func->paramcfgoff + FTS_FW_IDE_SIG_LEN);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return 0;
 	}
 
@@ -1659,16 +1747,26 @@ static void fts_fwupg_auto_upgrade(struct fts_upgrade *upg)
 
 	ret = fts_fwupg_upgrade(upg);
 	if (ret < 0)
+<<<<<<< HEAD
 		FTS_ERROR("*****tp fw(app/param) upgrade failed******");
 	else
 		FTS_INFO("****tp fw(app/param) no upgrade/upgrade success****");
+=======
+		FTS_ERROR("**********tp fw(app/param) upgrade failed**********");
+	else
+		FTS_INFO("**********tp fw(app/param) no upgrade/upgrade success**********");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #if FTS_AUTO_LIC_UPGRADE_EN
 	ret = fts_lic_upgrade(upg);
 	if (ret < 0)
 		FTS_ERROR("**********lcd init code upgrade failed**********");
 	else
+<<<<<<< HEAD
 		FTS_INFO("****lcd init code no upgrade/upgrade success****");
+=======
+		FTS_INFO("**********lcd init code no upgrade/upgrade success**********");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif
 
 	FTS_INFO("********************FTS exit upgrade********************");
@@ -1726,7 +1824,11 @@ static int fts_fwupg_get_module_info(struct fts_upgrade *upg)
 	}
 
 	if (FTS_GET_MODULE_NUM > 1) {
+<<<<<<< HEAD
 		/* support multi modules, must read correct module id */
+=======
+		/* support multi modules, must read correct module id(vendor id) */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ret = fts_fwupg_get_vendorid(upg, &upg->module_id);
 		if (ret < 0) {
 			FTS_ERROR("get vendor id failed");
@@ -1736,7 +1838,11 @@ static int fts_fwupg_get_module_info(struct fts_upgrade *upg)
 		for (i = 0; i < FTS_GET_MODULE_NUM; i++) {
 			info = &module_list[i];
 			if (upg->module_id == info->id) {
+<<<<<<< HEAD
 				FTS_INFO("module id match");
+=======
+				FTS_INFO("module id match, get module info pass");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				break;
 			}
 		}
@@ -1777,7 +1883,11 @@ static int fts_get_fw_file_via_request_firmware(struct fts_upgrade *upg)
 			memcpy(tmpbuf, fw->data, fw->size);
 			upg->fw = tmpbuf;
 			upg->fw_length = fw->size;
+<<<<<<< HEAD
 			upg->fw_from_request = true;
+=======
+			upg->fw_from_request = 1;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 	} else {
 		FTS_INFO("firmware(%s) request fail,ret=%d", fwname, ret);
@@ -1795,7 +1905,11 @@ static int fts_get_fw_file_via_i(struct fts_upgrade *upg)
 {
 	upg->fw = upg->module_info->fw_file;
 	upg->fw_length = upg->module_info->fw_len;
+<<<<<<< HEAD
 	upg->fw_from_request = false;
+=======
+	upg->fw_from_request = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return 0;
 }
@@ -1892,7 +2006,11 @@ static void fts_fwupg_work(struct work_struct *work)
 		return ;
 	}
 
+<<<<<<< HEAD
 	upg->ts_data->fw_loading = true;
+=======
+	upg->ts_data->fw_loading = 1;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	fts_irq_disable();
 #if FTS_ESDCHECK_EN
 	fts_esdcheck_switch(DISABLE);
@@ -1913,7 +2031,11 @@ static void fts_fwupg_work(struct work_struct *work)
 	fts_esdcheck_switch(ENABLE);
 #endif
 	fts_irq_enable();
+<<<<<<< HEAD
 	upg->ts_data->fw_loading = false;
+=======
+	upg->ts_data->fw_loading = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 int fts_fwupg_init(struct fts_ts_data *ts_data)
@@ -1922,12 +2044,20 @@ int fts_fwupg_init(struct fts_ts_data *ts_data)
 	int j = 0;
 	int ic_stype = 0;
 	struct upgrade_func *func = upgrade_func_list[0];
+<<<<<<< HEAD
 	int func_count = ARRAY_SIZE(upgrade_func_list);
+=======
+	int func_count = sizeof(upgrade_func_list) / sizeof(upgrade_func_list[0]);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	FTS_INFO("fw upgrade init function");
 
 	if (!ts_data || !ts_data->ts_workqueue) {
+<<<<<<< HEAD
 		FTS_ERROR("ts_data/workqueue is NULL, can't run upgrade func");
+=======
+		FTS_ERROR("ts_data/workqueue is NULL, can't run upgrade function");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EINVAL;
 	}
 
@@ -1936,7 +2066,11 @@ int fts_fwupg_init(struct fts_ts_data *ts_data)
 		return -ENODATA;
 	}
 
+<<<<<<< HEAD
 	fwupgrade = kzalloc(sizeof(*fwupgrade), GFP_KERNEL);
+=======
+	fwupgrade = (struct fts_upgrade *)kzalloc(sizeof(*fwupgrade), GFP_KERNEL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (NULL == fwupgrade) {
 		FTS_ERROR("malloc memory for upgrade fail");
 		return -ENOMEM;

@@ -1283,7 +1283,11 @@ static void sata_fsl_host_intr(struct ata_port *ap)
 				     i, ioread32(hcr_base + CC),
 				     ioread32(hcr_base + CA));
 		}
+<<<<<<< HEAD
 		ata_qc_complete_multiple(ap, ap->qc_active ^ done_mask);
+=======
+		ata_qc_complete_multiple(ap, ata_qc_get_active(ap) ^ done_mask);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return;
 
 	} else if ((ap->qc_active & (1ULL << ATA_TAG_INTERNAL))) {

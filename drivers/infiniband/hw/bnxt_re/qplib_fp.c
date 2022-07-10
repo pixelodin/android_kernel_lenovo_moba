@@ -1970,6 +1970,10 @@ int bnxt_qplib_create_cq(struct bnxt_qplib_res *res, struct bnxt_qplib_cq *cq)
 	INIT_LIST_HEAD(&cq->sqf_head);
 	INIT_LIST_HEAD(&cq->rqf_head);
 	spin_lock_init(&cq->compl_lock);
+<<<<<<< HEAD
+=======
+	spin_lock_init(&cq->flush_lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	bnxt_qplib_arm_cq_enable(cq);
 	return 0;
@@ -2273,6 +2277,7 @@ static int bnxt_qplib_cq_process_req(struct bnxt_qplib_cq *cq,
 			/* Add qp to flush list of the CQ */
 			bnxt_qplib_add_flush_qp(qp);
 		} else {
+<<<<<<< HEAD
 			if (swq->flags & SQ_SEND_FLAGS_SIGNAL_COMP) {
 				/* Before we complete, do WA 9060 */
 				if (do_wa9060(qp, cq, cq_cons, sw_sq_cons,
@@ -2280,6 +2285,15 @@ static int bnxt_qplib_cq_process_req(struct bnxt_qplib_cq *cq,
 					*lib_qp = qp;
 					goto out;
 				}
+=======
+			/* Before we complete, do WA 9060 */
+			if (do_wa9060(qp, cq, cq_cons, sw_sq_cons,
+				      cqe_sq_cons)) {
+				*lib_qp = qp;
+				goto out;
+			}
+			if (swq->flags & SQ_SEND_FLAGS_SIGNAL_COMP) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				cqe->status = CQ_REQ_STATUS_OK;
 				cqe++;
 				(*budget)--;

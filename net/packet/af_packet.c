@@ -552,7 +552,12 @@ static int prb_calc_retire_blk_tmo(struct packet_sock *po,
 			msec = 1;
 			div = ecmd.base.speed / 1000;
 		}
+<<<<<<< HEAD
 	}
+=======
+	} else
+		return DEFAULT_PRB_RETIRE_TOV;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	mbits = (blk_size_in_bytes * 8) / (1024 * 1024);
 
@@ -1296,15 +1301,32 @@ static void packet_sock_destruct(struct sock *sk)
 
 static bool fanout_flow_is_huge(struct packet_sock *po, struct sk_buff *skb)
 {
+<<<<<<< HEAD
 	u32 rxhash;
+=======
+	u32 *history = po->rollover->history;
+	u32 victim, rxhash;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int i, count = 0;
 
 	rxhash = skb_get_hash(skb);
 	for (i = 0; i < ROLLOVER_HLEN; i++)
+<<<<<<< HEAD
 		if (po->rollover->history[i] == rxhash)
 			count++;
 
 	po->rollover->history[prandom_u32() % ROLLOVER_HLEN] = rxhash;
+=======
+		if (READ_ONCE(history[i]) == rxhash)
+			count++;
+
+	victim = prandom_u32() % ROLLOVER_HLEN;
+
+	/* Avoid dirtying the cache line if possible */
+	if (READ_ONCE(history[victim]) != rxhash)
+		WRITE_ONCE(history[victim], rxhash);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return count > (ROLLOVER_HLEN >> 1);
 }
 
@@ -2253,6 +2275,16 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
 					TP_STATUS_KERNEL, (macoff+snaplen));
 	if (!h.raw)
 		goto drop_n_account;
+<<<<<<< HEAD
+=======
+
+	if (do_vnet &&
+	    virtio_net_hdr_from_skb(skb, h.raw + macoff -
+				    sizeof(struct virtio_net_hdr),
+				    vio_le(), true, 0))
+		goto drop_n_account;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (po->tp_version <= TPACKET_V2) {
 		packet_increment_rx_head(po, &po->rx_ring);
 	/*
@@ -2265,12 +2297,15 @@ static int tpacket_rcv(struct sk_buff *skb, struct net_device *dev,
 			status |= TP_STATUS_LOSING;
 	}
 
+<<<<<<< HEAD
 	if (do_vnet &&
 	    virtio_net_hdr_from_skb(skb, h.raw + macoff -
 				    sizeof(struct virtio_net_hdr),
 				    vio_le(), true, 0))
 		goto drop_n_account;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	po->stats.stats1.tp_packets++;
 	if (copy_skb) {
 		status |= TP_STATUS_COPY;
@@ -3370,20 +3405,41 @@ static int packet_recvmsg(struct socket *sock, struct msghdr *msg, size_t len,
 	sock_recv_ts_and_drops(msg, sk, skb);
 
 	if (msg->msg_name) {
+<<<<<<< HEAD
+=======
+		int copy_len;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/* If the address length field is there to be filled
 		 * in, we fill it in now.
 		 */
 		if (sock->type == SOCK_PACKET) {
 			__sockaddr_check_size(sizeof(struct sockaddr_pkt));
 			msg->msg_namelen = sizeof(struct sockaddr_pkt);
+<<<<<<< HEAD
+=======
+			copy_len = msg->msg_namelen;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		} else {
 			struct sockaddr_ll *sll = &PACKET_SKB_CB(skb)->sa.ll;
 
 			msg->msg_namelen = sll->sll_halen +
 				offsetof(struct sockaddr_ll, sll_addr);
+<<<<<<< HEAD
 		}
 		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa,
 		       msg->msg_namelen);
+=======
+			copy_len = msg->msg_namelen;
+			if (msg->msg_namelen < sizeof(struct sockaddr_ll)) {
+				memset(msg->msg_name +
+				       offsetof(struct sockaddr_ll, sll_addr),
+				       0, sizeof(sll->sll_addr));
+				msg->msg_namelen = sizeof(struct sockaddr_ll);
+			}
+		}
+		memcpy(msg->msg_name, &PACKET_SKB_CB(skb)->sa, copy_len);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	if (pkt_sk(sk)->auxdata) {

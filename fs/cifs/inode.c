@@ -1579,7 +1579,11 @@ int cifs_mkdir(struct inode *inode, struct dentry *direntry, umode_t mode)
 	struct TCP_Server_Info *server;
 	char *full_path;
 
+<<<<<<< HEAD
 	cifs_dbg(FYI, "In cifs_mkdir, mode = 0x%hx inode = 0x%p\n",
+=======
+	cifs_dbg(FYI, "In cifs_mkdir, mode = %04ho inode = 0x%p\n",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		 mode, inode);
 
 	cifs_sb = CIFS_SB(inode->i_sb);
@@ -2003,6 +2007,10 @@ int cifs_revalidate_dentry_attr(struct dentry *dentry)
 	struct inode *inode = d_inode(dentry);
 	struct super_block *sb = dentry->d_sb;
 	char *full_path = NULL;
+<<<<<<< HEAD
+=======
+	int count = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (inode == NULL)
 		return -ENOENT;
@@ -2024,15 +2032,28 @@ int cifs_revalidate_dentry_attr(struct dentry *dentry)
 		 full_path, inode, inode->i_count.counter,
 		 dentry, cifs_get_time(dentry), jiffies);
 
+<<<<<<< HEAD
+=======
+again:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (cifs_sb_master_tcon(CIFS_SB(sb))->unix_ext)
 		rc = cifs_get_inode_info_unix(&inode, full_path, sb, xid);
 	else
 		rc = cifs_get_inode_info(&inode, full_path, NULL, sb,
 					 xid, NULL);
+<<<<<<< HEAD
 
 out:
 	kfree(full_path);
 	free_xid(xid);
+=======
+	if (rc == -EAGAIN && count++ < 10)
+		goto again;
+out:
+	kfree(full_path);
+	free_xid(xid);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return rc;
 }
 

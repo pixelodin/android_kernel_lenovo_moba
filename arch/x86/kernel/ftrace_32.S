@@ -9,6 +9,10 @@
 #include <asm/export.h>
 #include <asm/ftrace.h>
 #include <asm/nospec-branch.h>
+<<<<<<< HEAD
+=======
+#include <asm/frame.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #ifdef CC_USING_FENTRY
 # define function_hook	__fentry__
@@ -131,6 +135,11 @@ ENTRY(ftrace_regs_caller)
 	pushl	%ecx
 	pushl	%ebx
 
+<<<<<<< HEAD
+=======
+	ENCODE_FRAME_POINTER
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	movl	12*4(%esp), %eax		/* Load ip (1st parameter) */
 	subl	$MCOUNT_INSN_SIZE, %eax		/* Adjust ip */
 #ifdef CC_USING_FENTRY

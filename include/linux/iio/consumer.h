@@ -289,6 +289,18 @@ int iio_read_max_channel_raw(struct iio_channel *chan, int *val);
  */
 int iio_read_avail_channel_raw(struct iio_channel *chan,
 			       const int **vals, int *length);
+<<<<<<< HEAD
+=======
+/**
+ * iio_write_channel_processed() - write to a given channel
+ * @chan:		The channel being queried.
+ * @val:		Value being written.
+ *
+ * Note processed writes to iio channels are converted to raw
+ * values before being written.
+ */
+int iio_write_channel_processed(struct iio_channel *chan, int val);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /**
  * iio_get_channel_type() - get the type of a channel

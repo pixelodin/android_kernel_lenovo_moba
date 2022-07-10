@@ -71,8 +71,14 @@ static const char *hwcap_str[] = {
 	"div",
 	"mac",
 	"l2c",
+<<<<<<< HEAD
 	"dx_regs",
 	"v2",
+=======
+	"fpu_dp",
+	"v2",
+	"dx_regs",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	NULL,
 };
 

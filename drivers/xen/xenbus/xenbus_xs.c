@@ -191,8 +191,16 @@ static bool xenbus_ok(void)
 
 static bool test_reply(struct xb_req_data *req)
 {
+<<<<<<< HEAD
 	if (req->state == xb_req_state_got_reply || !xenbus_ok())
 		return true;
+=======
+	if (req->state == xb_req_state_got_reply || !xenbus_ok()) {
+		/* read req->state before all other fields */
+		virt_rmb();
+		return true;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Make sure to reread req->state each time. */
 	barrier();
@@ -202,7 +210,11 @@ static bool test_reply(struct xb_req_data *req)
 
 static void *read_reply(struct xb_req_data *req)
 {
+<<<<<<< HEAD
 	while (req->state != xb_req_state_got_reply) {
+=======
+	do {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		wait_event(req->wq, test_reply(req));
 
 		if (!xenbus_ok())
@@ -216,7 +228,11 @@ static void *read_reply(struct xb_req_data *req)
 		if (req->err)
 			return ERR_PTR(req->err);
 
+<<<<<<< HEAD
 	}
+=======
+	} while (req->state != xb_req_state_got_reply);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return req->body;
 }

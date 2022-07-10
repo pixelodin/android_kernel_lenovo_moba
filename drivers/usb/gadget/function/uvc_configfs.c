@@ -9,6 +9,12 @@
  *
  * Author: Andrzej Pietrasiewicz <andrzej.p@samsung.com>
  */
+<<<<<<< HEAD
+=======
+
+#include <linux/sort.h>
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include "u_uvc.h"
 #include "uvc_configfs.h"
 
@@ -31,6 +37,17 @@ static struct configfs_attribute prefix##attr_##cname = { \
 	.show		= prefix##cname##_show,				\
 }
 
+<<<<<<< HEAD
+=======
+static int uvcg_config_compare_u32(const void *l, const void *r)
+{
+	u32 li = *(const u32 *)l;
+	u32 ri = *(const u32 *)r;
+
+	return li < ri ? -1 : li == ri ? 0 : 1;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static inline struct f_uvc_opts *to_f_uvc_opts(struct config_item *item)
 {
 	return container_of(to_config_group(item), struct f_uvc_opts,
@@ -544,6 +561,10 @@ static int uvcg_control_class_allow_link(struct config_item *src,
 unlock:
 	mutex_unlock(&opts->lock);
 out:
+<<<<<<< HEAD
+=======
+	config_item_put(header);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mutex_unlock(su_mutex);
 	return ret;
 }
@@ -579,6 +600,10 @@ static void uvcg_control_class_drop_link(struct config_item *src,
 unlock:
 	mutex_unlock(&opts->lock);
 out:
+<<<<<<< HEAD
+=======
+	config_item_put(header);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mutex_unlock(su_mutex);
 }
 
@@ -764,6 +789,10 @@ static int uvcg_streaming_header_allow_link(struct config_item *src,
 	format_ptr->fmt = target_fmt;
 	list_add_tail(&format_ptr->entry, &src_hdr->formats);
 	++src_hdr->num_fmt;
+<<<<<<< HEAD
+=======
+	++target_fmt->linked;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 out:
 	mutex_unlock(&opts->lock);
@@ -801,6 +830,11 @@ static void uvcg_streaming_header_drop_link(struct config_item *src,
 			break;
 		}
 
+<<<<<<< HEAD
+=======
+	--target_fmt->linked;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 out:
 	mutex_unlock(&opts->lock);
 	mutex_unlock(su_mutex);
@@ -1129,6 +1163,11 @@ static ssize_t uvcg_frame_dw_frame_interval_store(struct config_item *item,
 	kfree(ch->dw_frame_interval);
 	ch->dw_frame_interval = frm_intrv;
 	ch->frame.b_frame_interval_type = n;
+<<<<<<< HEAD
+=======
+	sort(ch->dw_frame_interval, n, sizeof(*ch->dw_frame_interval),
+	     uvcg_config_compare_u32, NULL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = len;
 
 end:
@@ -2038,6 +2077,10 @@ static int uvcg_streaming_class_allow_link(struct config_item *src,
 unlock:
 	mutex_unlock(&opts->lock);
 out:
+<<<<<<< HEAD
+=======
+	config_item_put(header);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mutex_unlock(su_mutex);
 	return ret;
 }
@@ -2078,6 +2121,10 @@ static void uvcg_streaming_class_drop_link(struct config_item *src,
 unlock:
 	mutex_unlock(&opts->lock);
 out:
+<<<<<<< HEAD
+=======
+	config_item_put(header);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mutex_unlock(su_mutex);
 }
 

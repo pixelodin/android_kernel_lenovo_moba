@@ -153,6 +153,14 @@ struct chtls_dev {
 	unsigned int cdev_state;
 };
 
+<<<<<<< HEAD
+=======
+struct chtls_listen {
+	struct chtls_dev *cdev;
+	struct sock *sk;
+};
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct chtls_hws {
 	struct sk_buff_head sk_recv_queue;
 	u8 txqid;

@@ -638,6 +638,11 @@ ssize_t erofs_listxattr(struct dentry *dentry,
 	struct listxattr_iter it;
 
 	ret = init_inode_xattrs(d_inode(dentry));
+<<<<<<< HEAD
+=======
+	if (ret == -ENOATTR)
+		return 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (ret)
 		return ret;
 

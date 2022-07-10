@@ -1,7 +1,11 @@
 /*
  * Copyright (c) 2005-2011 Atheros Communications Inc.
  * Copyright (c) 2011-2017 Qualcomm Atheros, Inc.
+<<<<<<< HEAD
  * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2018-2019, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -2340,7 +2344,11 @@ static int wmi_process_mgmt_tx_comp(struct ath10k *ar, u32 desc_id,
 
 	msdu = pkt_addr->vaddr;
 	dma_unmap_single(ar->dev, pkt_addr->paddr,
+<<<<<<< HEAD
 			 msdu->len, DMA_FROM_DEVICE);
+=======
+			 msdu->len, DMA_TO_DEVICE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	info = IEEE80211_SKB_CB(msdu);
 
 	if (status)
@@ -2487,7 +2495,12 @@ int ath10k_wmi_event_mgmt_rx(struct ath10k *ar, struct sk_buff *skb)
 		   status->freq, status->band, status->signal,
 		   status->rate_idx);
 
+<<<<<<< HEAD
 	ieee80211_rx(ar->hw, skb);
+=======
+	ieee80211_rx_ni(ar->hw, skb);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 }
 
@@ -3247,6 +3260,7 @@ void ath10k_wmi_event_vdev_start_resp(struct ath10k *ar, struct sk_buff *skb)
 {
 	struct wmi_vdev_start_ev_arg arg = {};
 	int ret;
+<<<<<<< HEAD
 
 	ath10k_dbg(ar, ATH10K_DBG_WMI, "WMI_VDEV_START_RESP_EVENTID\n");
 
@@ -3259,6 +3273,33 @@ void ath10k_wmi_event_vdev_start_resp(struct ath10k *ar, struct sk_buff *skb)
 	if (WARN_ON(__le32_to_cpu(arg.status)))
 		return;
 
+=======
+	u32 status;
+
+	ath10k_dbg(ar, ATH10K_DBG_WMI, "WMI_VDEV_START_RESP_EVENTID\n");
+
+	ar->last_wmi_vdev_start_status = 0;
+
+	ret = ath10k_wmi_pull_vdev_start(ar, skb, &arg);
+	if (ret) {
+		ath10k_warn(ar, "failed to parse vdev start event: %d\n", ret);
+		ar->last_wmi_vdev_start_status = ret;
+		goto out;
+	}
+
+	status = __le32_to_cpu(arg.status);
+	if (WARN_ON_ONCE(status)) {
+		ath10k_warn(ar, "vdev-start-response reports status error: %d (%s)\n",
+			    status, (status == WMI_VDEV_START_CHAN_INVALID) ?
+			    "chan-invalid" : "unknown");
+		/* Setup is done one way or another though, so we should still
+		 * do the completion, so don't return here.
+		 */
+		ar->last_wmi_vdev_start_status = -EINVAL;
+	}
+
+out:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	complete(&ar->vdev_setup_done);
 }
 
@@ -4785,6 +4826,16 @@ ath10k_wmi_tpc_final_get_rate(struct ath10k *ar,
 		}
 	}
 
+<<<<<<< HEAD
+=======
+	if (pream == -1) {
+		ath10k_warn(ar, "unknown wmi tpc final index and frequency: %u, %u\n",
+			    pream_idx, __le32_to_cpu(ev->chan_freq));
+		tpc = 0;
+		goto out;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (pream == 4)
 		tpc = min_t(u8, ev->rates_array[rate_idx],
 			    ev->max_reg_allow_pow[ch]);
@@ -9172,7 +9223,11 @@ static int ath10k_wmi_mgmt_tx_clean_up_pending(int msdu_id, void *ptr,
 
 	msdu = pkt_addr->vaddr;
 	dma_unmap_single(ar->dev, pkt_addr->paddr,
+<<<<<<< HEAD
 			 msdu->len, DMA_FROM_DEVICE);
+=======
+			 msdu->len, DMA_TO_DEVICE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ieee80211_free_txskb(ar->hw, msdu);
 
 	return 0;

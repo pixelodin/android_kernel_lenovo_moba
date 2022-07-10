@@ -170,6 +170,7 @@ static void pca9685_pwm_gpio_set(struct gpio_chip *gpio, unsigned int offset,
 static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
 {
 	struct pca9685 *pca = gpiochip_get_data(gpio);
+<<<<<<< HEAD
 	struct pwm_device *pwm;
 
 	pca9685_pwm_gpio_set(gpio, offset, 0);
@@ -178,6 +179,11 @@ static void pca9685_pwm_gpio_free(struct gpio_chip *gpio, unsigned int offset)
 	pwm = &pca->chip.pwms[offset];
 	pwm_set_chip_data(pwm, NULL);
 	mutex_unlock(&pca->lock);
+=======
+
+	pca9685_pwm_gpio_set(gpio, offset, 0);
+	pm_runtime_put(pca->chip.dev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int pca9685_pwm_gpio_get_direction(struct gpio_chip *chip,

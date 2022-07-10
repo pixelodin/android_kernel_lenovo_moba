@@ -3441,14 +3441,22 @@ static void i40e_vsi_configure_msix(struct i40e_vsi *vsi)
 		q_vector->rx.target_itr =
 			ITR_TO_REG(vsi->rx_rings[i]->itr_setting);
 		wr32(hw, I40E_PFINT_ITRN(I40E_RX_ITR, vector - 1),
+<<<<<<< HEAD
 		     q_vector->rx.target_itr);
+=======
+		     q_vector->rx.target_itr >> 1);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		q_vector->rx.current_itr = q_vector->rx.target_itr;
 
 		q_vector->tx.next_update = jiffies + 1;
 		q_vector->tx.target_itr =
 			ITR_TO_REG(vsi->tx_rings[i]->itr_setting);
 		wr32(hw, I40E_PFINT_ITRN(I40E_TX_ITR, vector - 1),
+<<<<<<< HEAD
 		     q_vector->tx.target_itr);
+=======
+		     q_vector->tx.target_itr >> 1);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		q_vector->tx.current_itr = q_vector->tx.target_itr;
 
 		wr32(hw, I40E_PFINT_RATEN(vector - 1),
@@ -3553,11 +3561,19 @@ static void i40e_configure_msi_and_legacy(struct i40e_vsi *vsi)
 	/* set the ITR configuration */
 	q_vector->rx.next_update = jiffies + 1;
 	q_vector->rx.target_itr = ITR_TO_REG(vsi->rx_rings[0]->itr_setting);
+<<<<<<< HEAD
 	wr32(hw, I40E_PFINT_ITR0(I40E_RX_ITR), q_vector->rx.target_itr);
 	q_vector->rx.current_itr = q_vector->rx.target_itr;
 	q_vector->tx.next_update = jiffies + 1;
 	q_vector->tx.target_itr = ITR_TO_REG(vsi->tx_rings[0]->itr_setting);
 	wr32(hw, I40E_PFINT_ITR0(I40E_TX_ITR), q_vector->tx.target_itr);
+=======
+	wr32(hw, I40E_PFINT_ITR0(I40E_RX_ITR), q_vector->rx.target_itr >> 1);
+	q_vector->rx.current_itr = q_vector->rx.target_itr;
+	q_vector->tx.next_update = jiffies + 1;
+	q_vector->tx.target_itr = ITR_TO_REG(vsi->tx_rings[0]->itr_setting);
+	wr32(hw, I40E_PFINT_ITR0(I40E_TX_ITR), q_vector->tx.target_itr >> 1);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	q_vector->tx.current_itr = q_vector->tx.target_itr;
 
 	i40e_enable_misc_int_causes(pf);
@@ -6587,6 +6603,27 @@ static i40e_status i40e_force_link_state(struct i40e_pf *pf, bool is_up)
 	struct i40e_hw *hw = &pf->hw;
 	i40e_status err;
 	u64 mask;
+<<<<<<< HEAD
+=======
+	u8 speed;
+
+	/* Card might've been put in an unstable state by other drivers
+	 * and applications, which causes incorrect speed values being
+	 * set on startup. In order to clear speed registers, we call
+	 * get_phy_capabilities twice, once to get initial state of
+	 * available speeds, and once to get current PHY config.
+	 */
+	err = i40e_aq_get_phy_capabilities(hw, false, true, &abilities,
+					   NULL);
+	if (err) {
+		dev_err(&pf->pdev->dev,
+			"failed to get phy cap., ret =  %s last_status =  %s\n",
+			i40e_stat_str(hw, err),
+			i40e_aq_str(hw, hw->aq.asq_last_status));
+		return err;
+	}
+	speed = abilities.link_speed;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Get the current phy config */
 	err = i40e_aq_get_phy_capabilities(hw, false, false, &abilities,
@@ -6600,9 +6637,15 @@ static i40e_status i40e_force_link_state(struct i40e_pf *pf, bool is_up)
 	}
 
 	/* If link needs to go up, but was not forced to go down,
+<<<<<<< HEAD
 	 * no need for a flap
 	 */
 	if (is_up && abilities.phy_type != 0)
+=======
+	 * and its speed values are OK, no need for a flap
+	 */
+	if (is_up && abilities.phy_type != 0 && abilities.link_speed != 0)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return I40E_SUCCESS;
 
 	/* To force link we need to set bits for all supported PHY types,
@@ -6614,7 +6657,14 @@ static i40e_status i40e_force_link_state(struct i40e_pf *pf, bool is_up)
 	config.phy_type_ext = is_up ? (u8)((mask >> 32) & 0xff) : 0;
 	/* Copy the old settings, except of phy_type */
 	config.abilities = abilities.abilities;
+<<<<<<< HEAD
 	config.link_speed = abilities.link_speed;
+=======
+	if (abilities.link_speed != 0)
+		config.link_speed = abilities.link_speed;
+	else
+		config.link_speed = speed;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	config.eee_capability = abilities.eee_capability;
 	config.eeer = abilities.eeer_val;
 	config.low_power_ctrl = abilities.d3_lpan;
@@ -10714,7 +10764,11 @@ static int i40e_setup_misc_vector(struct i40e_pf *pf)
 
 	/* associate no queues to the misc vector */
 	wr32(hw, I40E_PFINT_LNKLST0, I40E_QUEUE_END_OF_LIST);
+<<<<<<< HEAD
 	wr32(hw, I40E_PFINT_ITR0(I40E_RX_ITR), I40E_ITR_8K);
+=======
+	wr32(hw, I40E_PFINT_ITR0(I40E_RX_ITR), I40E_ITR_8K >> 1);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	i40e_flush(hw);
 
@@ -14187,6 +14241,10 @@ static void i40e_remove(struct pci_dev *pdev)
 	mutex_destroy(&hw->aq.asq_mutex);
 
 	/* Clear all dynamic memory lists of rings, q_vectors, and VSIs */
+<<<<<<< HEAD
+=======
+	rtnl_lock();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	i40e_clear_interrupt_scheme(pf);
 	for (i = 0; i < pf->num_alloc_vsi; i++) {
 		if (pf->vsi[i]) {
@@ -14195,6 +14253,10 @@ static void i40e_remove(struct pci_dev *pdev)
 			pf->vsi[i] = NULL;
 		}
 	}
+<<<<<<< HEAD
+=======
+	rtnl_unlock();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	for (i = 0; i < I40E_MAX_VEB; i++) {
 		kfree(pf->veb[i]);
@@ -14406,7 +14468,17 @@ static void i40e_shutdown(struct pci_dev *pdev)
 	wr32(hw, I40E_PFPM_WUFC,
 	     (pf->wol_en ? I40E_PFPM_WUFC_MAG_MASK : 0));
 
+<<<<<<< HEAD
 	i40e_clear_interrupt_scheme(pf);
+=======
+	/* Since we're going to destroy queues during the
+	 * i40e_clear_interrupt_scheme() we should hold the RTNL lock for this
+	 * whole section
+	 */
+	rtnl_lock();
+	i40e_clear_interrupt_scheme(pf);
+	rtnl_unlock();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (system_state == SYSTEM_POWER_OFF) {
 		pci_wake_from_d3(pdev, pf->wol_en);

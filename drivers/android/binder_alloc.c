@@ -285,8 +285,12 @@ static int binder_update_page_range(struct binder_alloc *alloc, int allocate,
 	return 0;
 
 free_range:
+<<<<<<< HEAD
 	for (page_addr = end - PAGE_SIZE; page_addr >= start;
 	     page_addr -= PAGE_SIZE) {
+=======
+	for (page_addr = end - PAGE_SIZE; 1; page_addr -= PAGE_SIZE) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		bool ret;
 		size_t index;
 
@@ -299,6 +303,11 @@ free_range:
 		WARN_ON(!ret);
 
 		trace_binder_free_lru_end(alloc, index);
+<<<<<<< HEAD
+=======
+		if (page_addr == start)
+			break;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		continue;
 
 err_vm_insert_page_failed:
@@ -306,7 +315,12 @@ err_vm_insert_page_failed:
 		page->page_ptr = NULL;
 err_alloc_page_failed:
 err_page_ptr_cleared:
+<<<<<<< HEAD
 		;
+=======
+		if (page_addr == start)
+			break;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 err_no_vma:
 	if (mm) {
@@ -848,6 +862,7 @@ void binder_alloc_print_pages(struct seq_file *m,
 	int free = 0;
 
 	mutex_lock(&alloc->mutex);
+<<<<<<< HEAD
 	for (i = 0; i < alloc->buffer_size / PAGE_SIZE; i++) {
 		page = &alloc->pages[i];
 		if (!page->page_ptr)
@@ -856,6 +871,22 @@ void binder_alloc_print_pages(struct seq_file *m,
 			active++;
 		else
 			lru++;
+=======
+	/*
+	 * Make sure the binder_alloc is fully initialized, otherwise we might
+	 * read inconsistent state.
+	 */
+	if (binder_alloc_get_vma(alloc) != NULL) {
+		for (i = 0; i < alloc->buffer_size / PAGE_SIZE; i++) {
+			page = &alloc->pages[i];
+			if (!page->page_ptr)
+				free++;
+			else if (list_empty(&page->lru))
+				active++;
+			else
+				lru++;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	mutex_unlock(&alloc->mutex);
 	seq_printf(m, "  pages: %d:%d:%d\n", active, lru, free);

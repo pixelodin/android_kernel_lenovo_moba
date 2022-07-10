@@ -110,13 +110,22 @@ static int audit_caps(struct common_audit_data *sa, struct aa_profile *profile,
  * profile_capable - test if profile allows use of capability @cap
  * @profile: profile being enforced    (NOT NULL, NOT unconfined)
  * @cap: capability to test if allowed
+<<<<<<< HEAD
  * @audit: whether an audit record should be generated
+=======
+ * @opts: CAP_OPT_NOAUDIT bit determines whether audit record is generated
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * @sa: audit data (MAY BE NULL indicating no auditing)
  *
  * Returns: 0 if allowed else -EPERM
  */
+<<<<<<< HEAD
 static int profile_capable(struct aa_profile *profile, int cap, int audit,
 			   struct common_audit_data *sa)
+=======
+static int profile_capable(struct aa_profile *profile, int cap,
+			   unsigned int opts, struct common_audit_data *sa)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	int error;
 
@@ -126,7 +135,11 @@ static int profile_capable(struct aa_profile *profile, int cap, int audit,
 	else
 		error = -EPERM;
 
+<<<<<<< HEAD
 	if (audit == SECURITY_CAP_NOAUDIT) {
+=======
+	if (opts & CAP_OPT_NOAUDIT) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (!COMPLAIN_MODE(profile))
 			return error;
 		/* audit the cap request in complain mode but note that it
@@ -142,13 +155,21 @@ static int profile_capable(struct aa_profile *profile, int cap, int audit,
  * aa_capable - test permission to use capability
  * @label: label being tested for capability (NOT NULL)
  * @cap: capability to be tested
+<<<<<<< HEAD
  * @audit: whether an audit record should be generated
+=======
+ * @opts: CAP_OPT_NOAUDIT bit determines whether audit record is generated
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  *
  * Look up capability in profile capability set.
  *
  * Returns: 0 on success, or else an error code.
  */
+<<<<<<< HEAD
 int aa_capable(struct aa_label *label, int cap, int audit)
+=======
+int aa_capable(struct aa_label *label, int cap, unsigned int opts)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct aa_profile *profile;
 	int error = 0;
@@ -156,7 +177,11 @@ int aa_capable(struct aa_label *label, int cap, int audit)
 
 	sa.u.cap = cap;
 	error = fn_for_each_confined(label, profile,
+<<<<<<< HEAD
 			profile_capable(profile, cap, audit, &sa));
+=======
+			profile_capable(profile, cap, opts, &sa));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return error;
 }

@@ -54,6 +54,10 @@ struct f_ncm {
 	struct usb_ep			*notify;
 	struct usb_request		*notify_req;
 	u8				notify_state;
+<<<<<<< HEAD
+=======
+	atomic_t			notify_count;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	bool				is_open;
 
 	const struct ndp_parser_opts	*parser_opts;
@@ -547,7 +551,11 @@ static void ncm_do_notify(struct f_ncm *ncm)
 	int				status;
 
 	/* notification already in flight? */
+<<<<<<< HEAD
 	if (!req)
+=======
+	if (atomic_read(&ncm->notify_count))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return;
 
 	event = req->buf;
@@ -587,7 +595,12 @@ static void ncm_do_notify(struct f_ncm *ncm)
 	event->bmRequestType = 0xA1;
 	event->wIndex = cpu_to_le16(ncm->ctrl_id);
 
+<<<<<<< HEAD
 	ncm->notify_req = NULL;
+=======
+	atomic_inc(&ncm->notify_count);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/*
 	 * In double buffering if there is a space in FIFO,
 	 * completion callback can be called right after the call,
@@ -597,7 +610,11 @@ static void ncm_do_notify(struct f_ncm *ncm)
 	status = usb_ep_queue(ncm->notify, req, GFP_ATOMIC);
 	spin_lock(&ncm->lock);
 	if (status < 0) {
+<<<<<<< HEAD
 		ncm->notify_req = req;
+=======
+		atomic_dec(&ncm->notify_count);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		DBG(cdev, "notify --> %d\n", status);
 	}
 }
@@ -632,17 +649,31 @@ static void ncm_notify_complete(struct usb_ep *ep, struct usb_request *req)
 	case 0:
 		VDBG(cdev, "Notification %02x sent\n",
 		     event->bNotificationType);
+<<<<<<< HEAD
 		break;
 	case -ECONNRESET:
 	case -ESHUTDOWN:
+=======
+		atomic_dec(&ncm->notify_count);
+		break;
+	case -ECONNRESET:
+	case -ESHUTDOWN:
+		atomic_set(&ncm->notify_count, 0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ncm->notify_state = NCM_NOTIFY_NONE;
 		break;
 	default:
 		DBG(cdev, "event %02x --> %d\n",
 			event->bNotificationType, req->status);
+<<<<<<< HEAD
 		break;
 	}
 	ncm->notify_req = req;
+=======
+		atomic_dec(&ncm->notify_count);
+		break;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ncm_do_notify(ncm);
 	spin_unlock(&ncm->lock);
 }
@@ -1689,6 +1720,14 @@ static void ncm_unbind(struct usb_configuration *c, struct usb_function *f)
 	ncm_string_defs[0].id = 0;
 	usb_free_all_descriptors(f);
 
+<<<<<<< HEAD
+=======
+	if (atomic_read(&ncm->notify_count)) {
+		usb_ep_dequeue(ncm->notify, ncm->notify_req);
+		atomic_set(&ncm->notify_count, 0);
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	kfree(ncm->notify_req->buf);
 	usb_ep_free_request(ncm->notify, ncm->notify_req);
 

@@ -7,12 +7,15 @@
 #include <linux/sched/idle.h>
 
 /*
+<<<<<<< HEAD
  * Increase resolution of cpu_capacity calculations
  */
 #define SCHED_CAPACITY_SHIFT	SCHED_FIXEDPOINT_SHIFT
 #define SCHED_CAPACITY_SCALE	(1L << SCHED_CAPACITY_SHIFT)
 
 /*
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * sched-domains (multiprocessor balancing) declarations:
  */
 #ifdef CONFIG_SMP

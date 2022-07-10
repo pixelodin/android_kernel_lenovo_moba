@@ -39,7 +39,12 @@ static inline int gup_pte_range(pmd_t *pmdp, pmd_t pmd, unsigned long addr,
 		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
 		page = pte_page(pte);
 		head = compound_head(page);
+<<<<<<< HEAD
 		if (!page_cache_get_speculative(head))
+=======
+		if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
+		    || !page_cache_get_speculative(head)))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			return 0;
 		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
 			put_page(head);
@@ -77,7 +82,12 @@ static inline int gup_huge_pmd(pmd_t *pmdp, pmd_t pmd, unsigned long addr,
 		refs++;
 	} while (addr += PAGE_SIZE, addr != end);
 
+<<<<<<< HEAD
 	if (!page_cache_add_speculative(head, refs)) {
+=======
+	if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
+	    || !page_cache_add_speculative(head, refs))) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		*nr -= refs;
 		return 0;
 	}
@@ -151,7 +161,12 @@ static int gup_huge_pud(pud_t *pudp, pud_t pud, unsigned long addr,
 		refs++;
 	} while (addr += PAGE_SIZE, addr != end);
 
+<<<<<<< HEAD
 	if (!page_cache_add_speculative(head, refs)) {
+=======
+	if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
+	    || !page_cache_add_speculative(head, refs))) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		*nr -= refs;
 		return 0;
 	}

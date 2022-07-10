@@ -1050,8 +1050,12 @@ static bool cfg80211_ir_permissive_chan(struct wiphy *wiphy,
 		if (chan == other_chan)
 			return true;
 
+<<<<<<< HEAD
 		if (chan->band != NL80211_BAND_5GHZ &&
 		    chan->band != NL80211_BAND_6GHZ)
+=======
+		if (chan->band != NL80211_BAND_5GHZ)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			continue;
 
 		r1 = cfg80211_get_unii(chan->center_freq);

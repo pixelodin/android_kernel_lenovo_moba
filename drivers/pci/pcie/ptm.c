@@ -21,7 +21,11 @@ static void pci_ptm_info(struct pci_dev *dev)
 		snprintf(clock_desc, sizeof(clock_desc), ">254ns");
 		break;
 	default:
+<<<<<<< HEAD
 		snprintf(clock_desc, sizeof(clock_desc), "%udns",
+=======
+		snprintf(clock_desc, sizeof(clock_desc), "%uns",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			 dev->ptm_granularity);
 		break;
 	}

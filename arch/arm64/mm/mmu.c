@@ -399,13 +399,35 @@ static phys_addr_t pgd_pgtable_alloc(void)
 	return __pa(ptr);
 }
 
+<<<<<<< HEAD
+=======
+/**
+ * create_pgtable_mapping - create a pagetable mapping for given
+ * physical start and end addresses.
+ * @start: physical start address.
+ * @end: physical end address.
+ */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 void create_pgtable_mapping(phys_addr_t start, phys_addr_t end)
 {
 	unsigned long virt = (unsigned long)phys_to_virt(start);
 
+<<<<<<< HEAD
 	__create_pgd_mapping(init_mm.pgd, start, virt, end - start,
 				PAGE_KERNEL, NULL, 0);
 }
+=======
+	if (virt < VMALLOC_START) {
+		pr_warn("BUG: not creating mapping for %pa at 0x%016lx - outside kernel range\n",
+			&start, virt);
+		return;
+	}
+
+	__create_pgd_mapping(init_mm.pgd, start, virt, end - start,
+				PAGE_KERNEL, NULL, 0);
+}
+EXPORT_SYMBOL_GPL(create_pgtable_mapping);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /*
  * This function can only be used to modify existing table entries,
@@ -1303,7 +1325,11 @@ void __set_fixmap(enum fixed_addresses idx,
 	}
 }
 
+<<<<<<< HEAD
 void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
+=======
+void *__init fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	const u64 dt_virt_base = __fix_to_virt(FIX_FDT);
 	int offset;
@@ -1356,6 +1382,7 @@ void *__init __fixmap_remap_fdt(phys_addr_t dt_phys, int *size, pgprot_t prot)
 	return dt_virt;
 }
 
+<<<<<<< HEAD
 void *__init fixmap_remap_fdt(phys_addr_t dt_phys)
 {
 	void *dt_virt;
@@ -1367,6 +1394,11 @@ void *__init fixmap_remap_fdt(phys_addr_t dt_phys)
 
 	memblock_reserve(dt_phys, size);
 	return dt_virt;
+=======
+int __init arch_ioremap_p4d_supported(void)
+{
+	return 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 int __init arch_ioremap_pud_supported(void)

@@ -21,6 +21,10 @@
 #define WATCHDOG_TIMEOUT (30 * HZ)
 #define IPC_LOG_PAGES (100)
 #define MAX_NETBUF_SIZE (128)
+<<<<<<< HEAD
+=======
+#define MHI_NETDEV_NAPI_POLL_WEIGHT (128)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #ifdef CONFIG_MHI_DEBUG
 
@@ -721,7 +725,11 @@ static int mhi_netdev_enable_iface(struct mhi_netdev *mhi_netdev)
 	}
 
 	netif_napi_add(mhi_netdev->ndev, mhi_netdev->napi,
+<<<<<<< HEAD
 		       mhi_netdev_poll, NAPI_POLL_WEIGHT);
+=======
+		       mhi_netdev_poll, MHI_NETDEV_NAPI_POLL_WEIGHT);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = register_netdev(mhi_netdev->ndev);
 	if (ret) {
 		MSG_ERR("Network device registration failed\n");
@@ -917,7 +925,11 @@ static void mhi_netdev_create_debugfs_dir(void)
 
 #else
 
+<<<<<<< HEAD
 static void mhi_netdev_create_debugfs(struct mhi_netdev_private *mhi_netdev)
+=======
+static void mhi_netdev_create_debugfs(struct mhi_netdev *mhi_netdev)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 }
 

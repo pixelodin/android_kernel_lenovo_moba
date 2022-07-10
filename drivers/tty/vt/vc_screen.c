@@ -437,6 +437,12 @@ vcs_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
 	size_t ret;
 	char *con_buf;
 
+<<<<<<< HEAD
+=======
+	if (use_unicode(inode))
+		return -EOPNOTSUPP;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	con_buf = (char *) __get_free_page(GFP_KERNEL);
 	if (!con_buf)
 		return -ENOMEM;

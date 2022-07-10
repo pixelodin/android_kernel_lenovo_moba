@@ -128,6 +128,10 @@ static int msm_ext_disp_remove_intf_data(struct msm_ext_disp *ext_disp,
 		if (node->data == data) {
 			list_del(pos);
 			pr_debug("Deleted the intf data\n");
+<<<<<<< HEAD
+=======
+			kfree(node);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			return 0;
 		}
 	}

@@ -19,7 +19,10 @@
 #include <linux/io.h>
 #include <linux/module.h>
 #include <linux/of_address.h>
+<<<<<<< HEAD
 #include <linux/of_platform.h>
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/platform_device.h>
 
 #include "coreboot_table.h"
@@ -30,7 +33,10 @@ static int coreboot_table_of_probe(struct platform_device *pdev)
 	void __iomem *ptr;
 
 	ptr = of_iomap(fw_dn, 0);
+<<<<<<< HEAD
 	of_node_put(fw_dn);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!ptr)
 		return -ENOMEM;
 
@@ -44,8 +50,14 @@ static int coreboot_table_of_remove(struct platform_device *pdev)
 
 static const struct of_device_id coreboot_of_match[] = {
 	{ .compatible = "coreboot" },
+<<<<<<< HEAD
 	{},
 };
+=======
+	{}
+};
+MODULE_DEVICE_TABLE(of, coreboot_of_match);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 static struct platform_driver coreboot_table_of_driver = {
 	.probe = coreboot_table_of_probe,
@@ -55,6 +67,7 @@ static struct platform_driver coreboot_table_of_driver = {
 		.of_match_table = coreboot_of_match,
 	},
 };
+<<<<<<< HEAD
 
 static int __init platform_coreboot_table_of_init(void)
 {
@@ -77,6 +90,9 @@ static int __init platform_coreboot_table_of_init(void)
 }
 
 module_init(platform_coreboot_table_of_init);
+=======
+module_platform_driver(coreboot_table_of_driver);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 MODULE_AUTHOR("Google, Inc.");
 MODULE_LICENSE("GPL");

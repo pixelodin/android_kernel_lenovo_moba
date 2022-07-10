@@ -44,7 +44,11 @@ struct snd_usb_audio {
 	wait_queue_head_t shutdown_wait;
 	unsigned int txfr_quirk:1; /* Subframe boundaries on transfers */
 	unsigned int tx_length_quirk:1; /* Put length specifier in transfers */
+<<<<<<< HEAD
 	
+=======
+	unsigned int setup_fmt_after_resume_quirk:1; /* setup the format to interface after resume */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int num_interfaces;
 	int num_suspended_intf;
 	int sample_rate_read_error;
@@ -110,6 +114,10 @@ enum quirk_type {
 	QUIRK_AUDIO_EDIROL_UAXX,
 	QUIRK_AUDIO_ALIGN_TRANSFER,
 	QUIRK_AUDIO_STANDARD_MIXER,
+<<<<<<< HEAD
+=======
+	QUIRK_SETUP_FMT_AFTER_RESUME,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	QUIRK_TYPE_COUNT
 };

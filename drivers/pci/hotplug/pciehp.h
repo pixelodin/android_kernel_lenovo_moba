@@ -106,6 +106,10 @@ struct slot {
  *	that has not yet been cleared by the user
  * @pending_events: used by the IRQ handler to save events retrieved from the
  *	Slot Status register for later consumption by the IRQ thread
+<<<<<<< HEAD
+=======
+ * @ist_running: flag to keep user request waiting while IRQ thread is running
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * @request_result: result of last user request submitted to the IRQ thread
  * @requester: wait queue to wake up on completion of user request,
  *	used for synchronous slot enable/disable request via sysfs
@@ -125,6 +129,10 @@ struct controller {
 	unsigned int notification_enabled:1;
 	unsigned int power_fault_detected;
 	atomic_t pending_events;
+<<<<<<< HEAD
+=======
+	unsigned int ist_running;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int request_result;
 	wait_queue_head_t requester;
 };

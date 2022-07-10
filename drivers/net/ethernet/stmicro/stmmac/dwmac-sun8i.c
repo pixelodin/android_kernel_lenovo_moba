@@ -946,6 +946,12 @@ static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
 		/* default */
 		break;
 	case PHY_INTERFACE_MODE_RGMII:
+<<<<<<< HEAD
+=======
+	case PHY_INTERFACE_MODE_RGMII_ID:
+	case PHY_INTERFACE_MODE_RGMII_RXID:
+	case PHY_INTERFACE_MODE_RGMII_TXID:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		reg |= SYSCON_EPIT | SYSCON_ETCS_INT_GMII;
 		break;
 	case PHY_INTERFACE_MODE_RMII:
@@ -1199,7 +1205,11 @@ static int sun8i_dwmac_probe(struct platform_device *pdev)
 dwmac_mux:
 	sun8i_dwmac_unset_syscon(gmac);
 dwmac_exit:
+<<<<<<< HEAD
 	sun8i_dwmac_exit(pdev, plat_dat->bsp_priv);
+=======
+	stmmac_pltfr_remove(pdev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 return ret;
 }
 

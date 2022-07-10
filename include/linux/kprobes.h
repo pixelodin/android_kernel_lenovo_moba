@@ -243,10 +243,19 @@ extern int arch_init_kprobes(void);
 extern void show_registers(struct pt_regs *regs);
 extern void kprobes_inc_nmissed_count(struct kprobe *p);
 extern bool arch_within_kprobe_blacklist(unsigned long addr);
+<<<<<<< HEAD
+=======
+extern int arch_populate_kprobe_blacklist(void);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 extern bool arch_kprobe_on_func_entry(unsigned long offset);
 extern bool kprobe_on_func_entry(kprobe_opcode_t *addr, const char *sym, unsigned long offset);
 
 extern bool within_kprobe_blacklist(unsigned long addr);
+<<<<<<< HEAD
+=======
+extern int kprobe_add_ksym_blacklist(unsigned long entry);
+extern int kprobe_add_area_blacklist(unsigned long start, unsigned long end);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 struct kprobe_insn_cache {
 	struct mutex mutex;

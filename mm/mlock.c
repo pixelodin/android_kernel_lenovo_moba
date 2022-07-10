@@ -677,6 +677,11 @@ static __must_check int do_mlock(unsigned long start, size_t len, vm_flags_t fla
 	unsigned long lock_limit;
 	int error = -ENOMEM;
 
+<<<<<<< HEAD
+=======
+	start = untagged_addr(start);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!can_do_mlock())
 		return -EPERM;
 
@@ -738,6 +743,11 @@ SYSCALL_DEFINE2(munlock, unsigned long, start, size_t, len)
 {
 	int ret;
 
+<<<<<<< HEAD
+=======
+	start = untagged_addr(start);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	len = PAGE_ALIGN(len + (offset_in_page(start)));
 	start &= PAGE_MASK;
 

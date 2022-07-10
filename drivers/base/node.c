@@ -67,8 +67,16 @@ static ssize_t node_read_meminfo(struct device *dev,
 	int nid = dev->id;
 	struct pglist_data *pgdat = NODE_DATA(nid);
 	struct sysinfo i;
+<<<<<<< HEAD
 
 	si_meminfo_node(&i, nid);
+=======
+	unsigned long sreclaimable, sunreclaimable;
+
+	si_meminfo_node(&i, nid);
+	sreclaimable = node_page_state(pgdat, NR_SLAB_RECLAIMABLE);
+	sunreclaimable = node_page_state(pgdat, NR_SLAB_UNRECLAIMABLE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	n = sprintf(buf,
 		       "Node %d MemTotal:       %8lu kB\n"
 		       "Node %d MemFree:        %8lu kB\n"
@@ -114,10 +122,20 @@ static ssize_t node_read_meminfo(struct device *dev,
 		       "Node %d AnonPages:      %8lu kB\n"
 		       "Node %d Shmem:          %8lu kB\n"
 		       "Node %d KernelStack:    %8lu kB\n"
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_SHADOW_CALL_STACK
+		       "Node %d ShadowCallStack:%8lu kB\n"
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		       "Node %d PageTables:     %8lu kB\n"
 		       "Node %d NFS_Unstable:   %8lu kB\n"
 		       "Node %d Bounce:         %8lu kB\n"
 		       "Node %d WritebackTmp:   %8lu kB\n"
+<<<<<<< HEAD
+=======
+		       "Node %d KReclaimable:   %8lu kB\n"
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		       "Node %d Slab:           %8lu kB\n"
 		       "Node %d SReclaimable:   %8lu kB\n"
 		       "Node %d SUnreclaim:     %8lu kB\n"
@@ -134,24 +152,46 @@ static ssize_t node_read_meminfo(struct device *dev,
 		       nid, K(node_page_state(pgdat, NR_ANON_MAPPED)),
 		       nid, K(i.sharedram),
 		       nid, sum_zone_node_page_state(nid, NR_KERNEL_STACK_KB),
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_SHADOW_CALL_STACK
+		       nid, sum_zone_node_page_state(nid, NR_KERNEL_SCS_BYTES) / 1024,
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		       nid, K(sum_zone_node_page_state(nid, NR_PAGETABLE)),
 		       nid, K(node_page_state(pgdat, NR_UNSTABLE_NFS)),
 		       nid, K(sum_zone_node_page_state(nid, NR_BOUNCE)),
 		       nid, K(node_page_state(pgdat, NR_WRITEBACK_TEMP)),
+<<<<<<< HEAD
 		       nid, K(node_page_state(pgdat, NR_SLAB_RECLAIMABLE) +
 			      node_page_state(pgdat, NR_SLAB_UNRECLAIMABLE)),
 		       nid, K(node_page_state(pgdat, NR_SLAB_RECLAIMABLE)),
 #ifdef CONFIG_TRANSPARENT_HUGEPAGE
 		       nid, K(node_page_state(pgdat, NR_SLAB_UNRECLAIMABLE)),
+=======
+		       nid, K(sreclaimable +
+			      node_page_state(pgdat, NR_KERNEL_MISC_RECLAIMABLE)),
+		       nid, K(sreclaimable + sunreclaimable),
+		       nid, K(sreclaimable),
+		       nid, K(sunreclaimable)
+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+		       ,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		       nid, K(node_page_state(pgdat, NR_ANON_THPS) *
 				       HPAGE_PMD_NR),
 		       nid, K(node_page_state(pgdat, NR_SHMEM_THPS) *
 				       HPAGE_PMD_NR),
 		       nid, K(node_page_state(pgdat, NR_SHMEM_PMDMAPPED) *
+<<<<<<< HEAD
 				       HPAGE_PMD_NR));
 #else
 		       nid, K(node_page_state(pgdat, NR_SLAB_UNRECLAIMABLE)));
 #endif
+=======
+				       HPAGE_PMD_NR)
+#endif
+		       );
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	n += hugetlb_report_node_meminfo(nid, buf + n);
 	return n;
 }
@@ -409,8 +449,11 @@ int register_mem_sect_under_node(struct memory_block *mem_blk, void *arg)
 	int ret, nid = *(int *)arg;
 	unsigned long pfn, sect_start_pfn, sect_end_pfn;
 
+<<<<<<< HEAD
 	mem_blk->nid = nid;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	sect_start_pfn = section_nr_to_pfn(mem_blk->start_section_nr);
 	sect_end_pfn = section_nr_to_pfn(mem_blk->end_section_nr);
 	sect_end_pfn += PAGES_PER_SECTION - 1;
@@ -439,6 +482,16 @@ int register_mem_sect_under_node(struct memory_block *mem_blk, void *arg)
 			if (page_nid != nid)
 				continue;
 		}
+<<<<<<< HEAD
+=======
+
+		/*
+		 * If this memory block spans multiple nodes, we only indicate
+		 * the last processed node.
+		 */
+		mem_blk->nid = nid;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ret = sysfs_create_link_nowarn(&node_devices[nid]->dev.kobj,
 					&mem_blk->dev.kobj,
 					kobject_name(&mem_blk->dev.kobj));
@@ -453,6 +506,7 @@ int register_mem_sect_under_node(struct memory_block *mem_blk, void *arg)
 	return 0;
 }
 
+<<<<<<< HEAD
 /* unregister memory section under all nodes that it spans */
 int unregister_mem_sect_under_nodes(struct memory_block *mem_blk,
 				    unsigned long phys_index)
@@ -487,6 +541,21 @@ int unregister_mem_sect_under_nodes(struct memory_block *mem_blk,
 	}
 	NODEMASK_FREE(unlinked_nodes);
 	return 0;
+=======
+/*
+ * Unregister a memory block device under the node it spans. Memory blocks
+ * with multiple nodes cannot be offlined and therefore also never be removed.
+ */
+void unregister_memory_block_under_nodes(struct memory_block *mem_blk)
+{
+	if (mem_blk->nid == NUMA_NO_NODE)
+		return;
+
+	sysfs_remove_link(&node_devices[mem_blk->nid]->dev.kobj,
+			  kobject_name(&mem_blk->dev.kobj));
+	sysfs_remove_link(&mem_blk->dev.kobj,
+			  kobject_name(&node_devices[mem_blk->nid]->dev.kobj));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 int link_mem_sections(int nid, unsigned long start_pfn, unsigned long end_pfn)

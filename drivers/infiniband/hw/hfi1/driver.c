@@ -430,13 +430,32 @@ static const hfi1_handle_cnp hfi1_handle_cnp_tbl[2] = {
 	[HFI1_PKT_TYPE_16B] = &return_cnp_16B
 };
 
+<<<<<<< HEAD
 void hfi1_process_ecn_slowpath(struct rvt_qp *qp, struct hfi1_packet *pkt,
 			       bool do_cnp)
+=======
+/**
+ * hfi1_process_ecn_slowpath - Process FECN or BECN bits
+ * @qp: The packet's destination QP
+ * @pkt: The packet itself.
+ * @prescan: Is the caller the RXQ prescan
+ *
+ * Process the packet's FECN or BECN bits. By now, the packet
+ * has already been evaluated whether processing of those bit should
+ * be done.
+ * The significance of the @prescan argument is that if the caller
+ * is the RXQ prescan, a CNP will be send out instead of waiting for the
+ * normal packet processing to send an ACK with BECN set (or a CNP).
+ */
+bool hfi1_process_ecn_slowpath(struct rvt_qp *qp, struct hfi1_packet *pkt,
+			       bool prescan)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct hfi1_ibport *ibp = to_iport(qp->ibqp.device, qp->port_num);
 	struct hfi1_pportdata *ppd = ppd_from_ibp(ibp);
 	struct ib_other_headers *ohdr = pkt->ohdr;
 	struct ib_grh *grh = pkt->grh;
+<<<<<<< HEAD
 	u32 rqpn = 0, bth1;
 	u16 pkey;
 	u32 rlid, slid, dlid = 0;
@@ -446,10 +465,22 @@ void hfi1_process_ecn_slowpath(struct rvt_qp *qp, struct hfi1_packet *pkt,
 	/* can be called from prescan */
 	if (pkt->etype == RHF_RCV_TYPE_BYPASS) {
 		is_mcast = hfi1_is_16B_mcast(dlid);
+=======
+	u32 rqpn = 0;
+	u16 pkey;
+	u32 rlid, slid, dlid = 0;
+	u8 hdr_type, sc, svc_type, opcode;
+	bool is_mcast = false, ignore_fecn = false, do_cnp = false,
+		fecn, becn;
+
+	/* can be called from prescan */
+	if (pkt->etype == RHF_RCV_TYPE_BYPASS) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		pkey = hfi1_16B_get_pkey(pkt->hdr);
 		sc = hfi1_16B_get_sc(pkt->hdr);
 		dlid = hfi1_16B_get_dlid(pkt->hdr);
 		slid = hfi1_16B_get_slid(pkt->hdr);
+<<<<<<< HEAD
 		hdr_type = HFI1_PKT_TYPE_16B;
 	} else {
 		is_mcast = (dlid > be16_to_cpu(IB_MULTICAST_LID_BASE)) &&
@@ -459,11 +490,33 @@ void hfi1_process_ecn_slowpath(struct rvt_qp *qp, struct hfi1_packet *pkt,
 		dlid = ib_get_dlid(pkt->hdr);
 		slid = ib_get_slid(pkt->hdr);
 		hdr_type = HFI1_PKT_TYPE_9B;
+=======
+		is_mcast = hfi1_is_16B_mcast(dlid);
+		opcode = ib_bth_get_opcode(ohdr);
+		hdr_type = HFI1_PKT_TYPE_16B;
+		fecn = hfi1_16B_get_fecn(pkt->hdr);
+		becn = hfi1_16B_get_becn(pkt->hdr);
+	} else {
+		pkey = ib_bth_get_pkey(ohdr);
+		sc = hfi1_9B_get_sc5(pkt->hdr, pkt->rhf);
+		dlid = qp->ibqp.qp_type != IB_QPT_UD ? ib_get_dlid(pkt->hdr) :
+			ppd->lid;
+		slid = ib_get_slid(pkt->hdr);
+		is_mcast = (dlid > be16_to_cpu(IB_MULTICAST_LID_BASE)) &&
+			   (dlid != be16_to_cpu(IB_LID_PERMISSIVE));
+		opcode = ib_bth_get_opcode(ohdr);
+		hdr_type = HFI1_PKT_TYPE_9B;
+		fecn = ib_bth_get_fecn(ohdr);
+		becn = ib_bth_get_becn(ohdr);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	switch (qp->ibqp.qp_type) {
 	case IB_QPT_UD:
+<<<<<<< HEAD
 		dlid = ppd->lid;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		rlid = slid;
 		rqpn = ib_get_sqpn(pkt->ohdr);
 		svc_type = IB_CC_SVCTYPE_UD;
@@ -485,6 +538,7 @@ void hfi1_process_ecn_slowpath(struct rvt_qp *qp, struct hfi1_packet *pkt,
 		svc_type = IB_CC_SVCTYPE_RC;
 		break;
 	default:
+<<<<<<< HEAD
 		return;
 	}
 
@@ -496,11 +550,37 @@ void hfi1_process_ecn_slowpath(struct rvt_qp *qp, struct hfi1_packet *pkt,
 
 	if (!is_mcast && (bth1 & IB_BECN_SMASK)) {
 		u32 lqpn = bth1 & RVT_QPN_MASK;
+=======
+		return false;
+	}
+
+	ignore_fecn = is_mcast || (opcode == IB_OPCODE_CNP) ||
+		(opcode == IB_OPCODE_RC_ACKNOWLEDGE);
+	/*
+	 * ACKNOWLEDGE packets do not get a CNP but this will be
+	 * guarded by ignore_fecn above.
+	 */
+	do_cnp = prescan ||
+		(opcode >= IB_OPCODE_RC_RDMA_READ_RESPONSE_FIRST &&
+		 opcode <= IB_OPCODE_RC_ATOMIC_ACKNOWLEDGE);
+
+	/* Call appropriate CNP handler */
+	if (!ignore_fecn && do_cnp && fecn)
+		hfi1_handle_cnp_tbl[hdr_type](ibp, qp, rqpn, pkey,
+					      dlid, rlid, sc, grh);
+
+	if (becn) {
+		u32 lqpn = be32_to_cpu(ohdr->bth[1]) & RVT_QPN_MASK;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		u8 sl = ibp->sc_to_sl[sc];
 
 		process_becn(ppd, sl, rlid, lqpn, rqpn, svc_type);
 	}
+<<<<<<< HEAD
 
+=======
+	return !ignore_fecn && fecn;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 struct ps_mdata {
@@ -599,7 +679,10 @@ static void __prescan_rxq(struct hfi1_packet *packet)
 		struct rvt_dev_info *rdi = &rcd->dd->verbs_dev.rdi;
 		u64 rhf = rhf_to_cpu(rhf_addr);
 		u32 etype = rhf_rcv_type(rhf), qpn, bth1;
+<<<<<<< HEAD
 		int is_ecn = 0;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		u8 lnh;
 
 		if (ps_done(&mdata, rhf, rcd))
@@ -625,12 +708,19 @@ static void __prescan_rxq(struct hfi1_packet *packet)
 			goto next; /* just in case */
 		}
 
+<<<<<<< HEAD
 		bth1 = be32_to_cpu(packet->ohdr->bth[1]);
 		is_ecn = !!(bth1 & (IB_FECN_SMASK | IB_BECN_SMASK));
 
 		if (!is_ecn)
 			goto next;
 
+=======
+		if (!hfi1_may_ecn(packet))
+			goto next;
+
+		bth1 = be32_to_cpu(packet->ohdr->bth[1]);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		qpn = bth1 & RVT_QPN_MASK;
 		rcu_read_lock();
 		qp = rvt_lookup_qpn(rdi, &ibp->rvp, qpn);
@@ -640,7 +730,11 @@ static void __prescan_rxq(struct hfi1_packet *packet)
 			goto next;
 		}
 
+<<<<<<< HEAD
 		process_ecn(qp, packet, true);
+=======
+		hfi1_process_ecn_slowpath(qp, packet, true);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		rcu_read_unlock();
 
 		/* turn off BECN, FECN */
@@ -708,6 +802,10 @@ static noinline int skip_rcv_packet(struct hfi1_packet *packet, int thread)
 {
 	int ret;
 
+<<<<<<< HEAD
+=======
+	packet->rcd->dd->ctx0_seq_drop++;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Set up for the next packet */
 	packet->rhqoff += packet->rsize;
 	if (packet->rhqoff >= packet->maxcnt)

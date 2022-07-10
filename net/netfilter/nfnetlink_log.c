@@ -18,7 +18,10 @@
 #include <linux/module.h>
 #include <linux/skbuff.h>
 #include <linux/if_arp.h>
+<<<<<<< HEAD
 #include <linux/in.h>
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/init.h>
 #include <linux/ip.h>
 #include <linux/ipv6.h>
@@ -38,7 +41,10 @@
 #include <net/sock.h>
 #include <net/netfilter/nf_log.h>
 #include <net/netns/generic.h>
+<<<<<<< HEAD
 #include <net/netfilter/nfnetlink_log.h>
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #include <linux/atomic.h>
 #include <linux/refcount.h>
@@ -397,7 +403,10 @@ __build_packet_message(struct nfnl_log_net *log,
 			struct nfulnl_instance *inst,
 			const struct sk_buff *skb,
 			unsigned int data_len,
+<<<<<<< HEAD
 			unsigned int data_offset,
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			u_int8_t pf,
 			unsigned int hooknum,
 			const struct net_device *indev,
@@ -597,7 +606,11 @@ __build_packet_message(struct nfnl_log_net *log,
 		nla->nla_type = NFULA_PAYLOAD;
 		nla->nla_len = size;
 
+<<<<<<< HEAD
 		if (skb_copy_bits(skb, data_offset, nla_data(nla), data_len))
+=======
+		if (skb_copy_bits(skb, 0, nla_data(nla), data_len))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			BUG();
 	}
 
@@ -620,6 +633,7 @@ static const struct nf_loginfo default_loginfo = {
 	},
 };
 
+<<<<<<< HEAD
 static void
 get_data_len_and_offset(const struct sk_buff *skb,
 			const unsigned int layer,
@@ -664,6 +678,10 @@ get_data_len_and_offset(const struct sk_buff *skb,
 
 /* log handler for internal netfilter logging api */
 void
+=======
+/* log handler for internal netfilter logging api */
+static void
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 nfulnl_log_packet(struct net *net,
 		  u_int8_t pf,
 		  unsigned int hooknum,
@@ -673,6 +691,7 @@ nfulnl_log_packet(struct net *net,
 		  const struct nf_loginfo *li_user,
 		  const char *prefix)
 {
+<<<<<<< HEAD
 	__nfulnl_log_packet(net, pf, hooknum, skb, in, out,
 			    li_user, prefix, NF_LOG_ALL);
 }
@@ -689,13 +708,18 @@ __nfulnl_log_packet(struct net *net,
 		    const char *prefix,
 		    unsigned int layer)
 {
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	size_t size;
 	unsigned int data_len;
 	struct nfulnl_instance *inst;
 	const struct nf_loginfo *li;
 	unsigned int qthreshold;
 	unsigned int plen = 0;
+<<<<<<< HEAD
 	unsigned int data_offset = 0;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct nfnl_log_net *log = nfnl_log_pernet(net);
 	const struct nfnl_ct_hook *nfnl_ct = NULL;
 	struct nf_conn *ct = NULL;
@@ -767,16 +791,26 @@ __nfulnl_log_packet(struct net *net,
 		break;
 
 	case NFULNL_COPY_PACKET:
+<<<<<<< HEAD
 		data_len = skb->len;
 		get_data_len_and_offset(skb, layer, &data_len, &data_offset);
 
 		if (inst->copy_range < data_len)
 			data_len = inst->copy_range;
 
+=======
+		data_len = inst->copy_range;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if ((li->u.ulog.flags & NF_LOG_F_COPY_LEN) &&
 		    (li->u.ulog.copy_len < data_len))
 			data_len = li->u.ulog.copy_len;
 
+<<<<<<< HEAD
+=======
+		if (data_len > skb->len)
+			data_len = skb->len;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		size += nla_total_size(data_len);
 		break;
 
@@ -800,9 +834,15 @@ __nfulnl_log_packet(struct net *net,
 
 	inst->qlen++;
 
+<<<<<<< HEAD
 	__build_packet_message(log, inst, skb, data_len, data_offset, pf,
 			       hooknum, in, out, prefix, plen,
 			       nfnl_ct, ct, ctinfo);
+=======
+	__build_packet_message(log, inst, skb, data_len, pf,
+				hooknum, in, out, prefix, plen,
+				nfnl_ct, ct, ctinfo);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (inst->qlen >= qthreshold)
 		__nfulnl_flush(inst);
@@ -823,7 +863,10 @@ alloc_failure:
 	/* FIXME: statistics */
 	goto unlock_and_release;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(__nfulnl_log_packet);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 static int
 nfulnl_rcv_nl_event(struct notifier_block *this,

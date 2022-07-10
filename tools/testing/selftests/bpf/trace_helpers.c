@@ -41,6 +41,10 @@ int load_kallsyms(void)
 		syms[i].name = strdup(func);
 		i++;
 	}
+<<<<<<< HEAD
+=======
+	fclose(f);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	sym_cnt = i;
 	qsort(syms, sym_cnt, sizeof(struct ksym), ksym_cmp);
 	return 0;

@@ -99,6 +99,10 @@ void vnt_run_command(struct work_struct *work)
 		if (vnt_init(priv)) {
 			/* If fail all ends TODO retry */
 			dev_err(&priv->usb->dev, "failed to start\n");
+<<<<<<< HEAD
+=======
+			usb_set_intfdata(priv->intf, NULL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			ieee80211_free_hw(priv->hw);
 			return;
 		}

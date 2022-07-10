@@ -1,5 +1,11 @@
+<<<<<<< HEAD
 /*
  * This file contains error reporting code.
+=======
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * This file contains common generic and tag-based KASAN error reporting code.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  *
  * Copyright (c) 2014 Samsung Electronics Co., Ltd.
  * Author: Andrey Ryabinin <ryabinin.a.a@gmail.com>
@@ -39,6 +45,7 @@
 #define SHADOW_BYTES_PER_ROW (SHADOW_BLOCKS_PER_ROW * SHADOW_BYTES_PER_BLOCK)
 #define SHADOW_ROWS_AROUND_ADDR 2
 
+<<<<<<< HEAD
 static const void *find_first_bad_addr(const void *addr, size_t size)
 {
 	u8 shadow_val = *(u8 *)kasan_mem_to_shadow(addr);
@@ -138,11 +145,43 @@ static void print_error_description(struct kasan_access_info *info)
 
 	pr_err("BUG: KASAN: %s in %pS\n",
 		bug_type, (void *)info->ip);
+=======
+static unsigned long kasan_flags;
+
+#define KASAN_BIT_REPORTED	0
+#define KASAN_BIT_MULTI_SHOT	1
+
+bool kasan_save_enable_multi_shot(void)
+{
+	return test_and_set_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags);
+}
+EXPORT_SYMBOL_GPL(kasan_save_enable_multi_shot);
+
+void kasan_restore_multi_shot(bool enabled)
+{
+	if (!enabled)
+		clear_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags);
+}
+EXPORT_SYMBOL_GPL(kasan_restore_multi_shot);
+
+static int __init kasan_set_multi_shot(char *str)
+{
+	set_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags);
+	return 1;
+}
+__setup("kasan_multi_shot", kasan_set_multi_shot);
+
+static void print_error_description(struct kasan_access_info *info)
+{
+	pr_err("BUG: KASAN: %s in %pS\n",
+		get_bug_type(info), (void *)info->ip);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pr_err("%s of size %zu at addr %px by task %s/%d\n",
 		info->is_write ? "Write" : "Read", info->access_size,
 		info->access_addr, current->comm, task_pid_nr(current));
 }
 
+<<<<<<< HEAD
 static inline bool kernel_or_module_addr(const void *addr)
 {
 	if (addr >= (void *)_stext && addr < (void *)_end)
@@ -162,6 +201,11 @@ static inline bool init_task_stack_addr(const void *addr)
 static DEFINE_SPINLOCK(report_lock);
 
 static void kasan_start_report(unsigned long *flags)
+=======
+static DEFINE_SPINLOCK(report_lock);
+
+static void start_report(unsigned long *flags)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	/*
 	 * Make sure we don't end up in loop.
@@ -171,7 +215,11 @@ static void kasan_start_report(unsigned long *flags)
 	pr_err("==================================================================\n");
 }
 
+<<<<<<< HEAD
 static void kasan_end_report(unsigned long *flags)
+=======
+static void end_report(unsigned long *flags)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	pr_err("==================================================================\n");
 	add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
@@ -249,6 +297,25 @@ static void describe_object(struct kmem_cache *cache, void *object,
 	describe_object_addr(cache, object, addr);
 }
 
+<<<<<<< HEAD
+=======
+static inline bool kernel_or_module_addr(const void *addr)
+{
+	if (addr >= (void *)_stext && addr < (void *)_end)
+		return true;
+	if (is_module_address((unsigned long)addr))
+		return true;
+	return false;
+}
+
+static inline bool init_task_stack_addr(const void *addr)
+{
+	return addr >= (void *)&init_thread_union.stack &&
+		(addr <= (void *)&init_thread_union.stack +
+			sizeof(init_thread_union.stack));
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static void print_address_description(void *addr)
 {
 	struct page *page = addr_to_page(addr);
@@ -326,6 +393,7 @@ static void print_shadow_for_address(const void *addr)
 	}
 }
 
+<<<<<<< HEAD
 void kasan_report_invalid_free(void *object, unsigned long ip)
 {
 	unsigned long flags;
@@ -385,6 +453,9 @@ static int __init kasan_set_multi_shot(char *str)
 __setup("kasan_multi_shot", kasan_set_multi_shot);
 
 static inline bool kasan_report_enabled(void)
+=======
+static bool report_enabled(void)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	if (current->kasan_depth)
 		return false;
@@ -393,22 +464,60 @@ static inline bool kasan_report_enabled(void)
 	return !test_and_set_bit(KASAN_BIT_REPORTED, &kasan_flags);
 }
 
+<<<<<<< HEAD
 void kasan_report(unsigned long addr, size_t size,
 		bool is_write, unsigned long ip)
 {
 	struct kasan_access_info info;
 
 	if (likely(!kasan_report_enabled()))
+=======
+void kasan_report_invalid_free(void *object, unsigned long ip)
+{
+	unsigned long flags;
+
+	start_report(&flags);
+	pr_err("BUG: KASAN: double-free or invalid-free in %pS\n", (void *)ip);
+	print_tags(get_tag(object), reset_tag(object));
+	object = reset_tag(object);
+	pr_err("\n");
+	print_address_description(object);
+	pr_err("\n");
+	print_shadow_for_address(object);
+	end_report(&flags);
+}
+
+void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned long ip)
+{
+	struct kasan_access_info info;
+	void *tagged_addr;
+	void *untagged_addr;
+	unsigned long flags;
+
+	if (likely(!report_enabled()))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return;
 
 	disable_trace_on_warning();
 
+<<<<<<< HEAD
 	info.access_addr = (void *)addr;
 	info.first_bad_addr = (void *)addr;
+=======
+	tagged_addr = (void *)addr;
+	untagged_addr = reset_tag(tagged_addr);
+
+	info.access_addr = tagged_addr;
+	if (addr_has_shadow(untagged_addr))
+		info.first_bad_addr = find_first_bad_addr(tagged_addr, size);
+	else
+		info.first_bad_addr = untagged_addr;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	info.access_size = size;
 	info.is_write = is_write;
 	info.ip = ip;
 
+<<<<<<< HEAD
 	kasan_report_error(&info);
 }
 
@@ -449,3 +558,22 @@ void __asan_report_store_n_noabort(unsigned long addr, size_t size)
 	kasan_report(addr, size, true, _RET_IP_);
 }
 EXPORT_SYMBOL(__asan_report_store_n_noabort);
+=======
+	start_report(&flags);
+
+	print_error_description(&info);
+	if (addr_has_shadow(untagged_addr))
+		print_tags(get_tag(tagged_addr), info.first_bad_addr);
+	pr_err("\n");
+
+	if (addr_has_shadow(untagged_addr)) {
+		print_address_description(untagged_addr);
+		pr_err("\n");
+		print_shadow_for_address(info.first_bad_addr);
+	} else {
+		dump_stack();
+	}
+
+	end_report(&flags);
+}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

@@ -412,7 +412,12 @@ static void stage2_flush_memslot(struct kvm *kvm,
 	pgd = kvm->arch.pgd + stage2_pgd_index(addr);
 	do {
 		next = stage2_pgd_addr_end(addr, end);
+<<<<<<< HEAD
 		stage2_flush_puds(kvm, pgd, addr, next);
+=======
+		if (!stage2_pgd_none(*pgd))
+			stage2_flush_puds(kvm, pgd, addr, next);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	} while (pgd++, addr = next, addr != end);
 }
 
@@ -1924,7 +1929,12 @@ int kvm_test_age_hva(struct kvm *kvm, unsigned long hva)
 	if (!kvm->arch.pgd)
 		return 0;
 	trace_kvm_test_age_hva(hva);
+<<<<<<< HEAD
 	return handle_hva_to_gpa(kvm, hva, hva, kvm_test_age_hva_handler, NULL);
+=======
+	return handle_hva_to_gpa(kvm, hva, hva + PAGE_SIZE,
+				 kvm_test_age_hva_handler, NULL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 void kvm_mmu_free_memory_caches(struct kvm_vcpu *vcpu)

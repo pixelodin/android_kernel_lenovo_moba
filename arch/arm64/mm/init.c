@@ -330,6 +330,10 @@ static void __init update_memory_limit(void)
 	phys_addr_t end_addr, addr_aligned, offset;
 	int len;
 	const __be32 *prop;
+<<<<<<< HEAD
+=======
+	char *status;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	phys_addr_t min_ddr_sz = 0, offline_sz = 0;
 	int t_len = (2 * dt_root_size_cells) * sizeof(__be32);
 
@@ -349,6 +353,15 @@ static void __init update_memory_limit(void)
 		return;
 	}
 
+<<<<<<< HEAD
+=======
+	status = (char *)fdt_getprop(initial_boot_params, node, "status", NULL);
+	if (status && !strcmp(status, "disabled")) {
+		pr_info("mem-offline device is disabled\n");
+		return;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	prop = of_get_flat_dt_prop(node, "offline-sizes", &len);
 	if (prop) {
 		if (len % t_len != 0) {
@@ -889,6 +902,7 @@ static void kernel_physical_mapping_remove(unsigned long start,
 
 }
 
+<<<<<<< HEAD
 int arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
 {
 	unsigned long start_pfn = start >> PAGE_SHIFT;
@@ -904,6 +918,17 @@ int arch_remove_memory(u64 start, u64 size, struct vmem_altmap *altmap)
 	kernel_physical_mapping_remove(start, start + size);
 
 	return ret;
+=======
+void arch_remove_memory(int nid, u64 start, u64 size,
+			struct vmem_altmap *altmap)
+{
+	unsigned long start_pfn = start >> PAGE_SHIFT;
+	unsigned long nr_pages = size >> PAGE_SHIFT;
+
+	__remove_pages(start_pfn, nr_pages, altmap);
+
+	kernel_physical_mapping_remove(start, start + size);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 #endif /* CONFIG_MEMORY_HOTREMOVE */

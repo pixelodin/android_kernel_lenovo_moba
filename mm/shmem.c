@@ -2072,9 +2072,16 @@ unsigned long shmem_get_unmapped_area(struct file *file,
 	/*
 	 * Our priority is to support MAP_SHARED mapped hugely;
 	 * and support MAP_PRIVATE mapped hugely too, until it is COWed.
+<<<<<<< HEAD
 	 * But if caller specified an address hint, respect that as before.
 	 */
 	if (uaddr)
+=======
+	 * But if caller specified an address hint and we allocated area there
+	 * successfully, respect that as before.
+	 */
+	if (uaddr == addr)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return addr;
 
 	if (shmem_huge != SHMEM_HUGE_FORCE) {
@@ -2108,7 +2115,11 @@ unsigned long shmem_get_unmapped_area(struct file *file,
 	if (inflated_len < len)
 		return addr;
 
+<<<<<<< HEAD
 	inflated_addr = get_area(NULL, 0, inflated_len, 0, flags);
+=======
+	inflated_addr = get_area(NULL, uaddr, inflated_len, 0, flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (IS_ERR_VALUE(inflated_addr))
 		return addr;
 	if (inflated_addr & ~PAGE_MASK)
@@ -2711,7 +2722,11 @@ static long shmem_fallocate(struct file *file, int mode, loff_t offset,
 		}
 
 		shmem_falloc.waitq = &shmem_falloc_waitq;
+<<<<<<< HEAD
 		shmem_falloc.start = unmap_start >> PAGE_SHIFT;
+=======
+		shmem_falloc.start = (u64)unmap_start >> PAGE_SHIFT;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		shmem_falloc.next = (unmap_end + 1) >> PAGE_SHIFT;
 		spin_lock(&inode->i_lock);
 		inode->i_private = &shmem_falloc;

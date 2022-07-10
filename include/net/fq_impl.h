@@ -118,7 +118,11 @@ static struct fq_flow *fq_flow_classify(struct fq *fq,
 
 	lockdep_assert_held(&fq->lock);
 
+<<<<<<< HEAD
 	hash = skb_get_hash_perturb(skb, fq->perturbation);
+=======
+	hash = skb_get_hash_perturb(skb, &fq->perturbation);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	idx = reciprocal_scale(hash, fq->flows_cnt);
 	flow = &fq->flows[idx];
 
@@ -307,12 +311,20 @@ static int fq_init(struct fq *fq, int flows_cnt)
 	INIT_LIST_HEAD(&fq->backlogs);
 	spin_lock_init(&fq->lock);
 	fq->flows_cnt = max_t(u32, flows_cnt, 1);
+<<<<<<< HEAD
 	fq->perturbation = prandom_u32();
+=======
+	get_random_bytes(&fq->perturbation, sizeof(fq->perturbation));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	fq->quantum = 300;
 	fq->limit = 8192;
 	fq->memory_limit = 16 << 20; /* 16 MBytes */
 
+<<<<<<< HEAD
 	fq->flows = kcalloc(fq->flows_cnt, sizeof(fq->flows[0]), GFP_KERNEL);
+=======
+	fq->flows = kvcalloc(fq->flows_cnt, sizeof(fq->flows[0]), GFP_KERNEL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!fq->flows)
 		return -ENOMEM;
 
@@ -330,7 +342,11 @@ static void fq_reset(struct fq *fq,
 	for (i = 0; i < fq->flows_cnt; i++)
 		fq_flow_reset(fq, &fq->flows[i], free_func);
 
+<<<<<<< HEAD
 	kfree(fq->flows);
+=======
+	kvfree(fq->flows);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	fq->flows = NULL;
 }
 

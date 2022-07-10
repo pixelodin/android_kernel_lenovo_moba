@@ -118,7 +118,11 @@ extern unsigned char rpc_default_fiq_start, rpc_default_fiq_end;
 
 void __init rpc_init_irq(void)
 {
+<<<<<<< HEAD
 	unsigned int irq, clr, set = 0;
+=======
+	unsigned int irq, clr, set;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	iomd_writeb(0, IOMD_IRQMASKA);
 	iomd_writeb(0, IOMD_IRQMASKB);
@@ -130,6 +134,10 @@ void __init rpc_init_irq(void)
 
 	for (irq = 0; irq < NR_IRQS; irq++) {
 		clr = IRQ_NOREQUEST;
+<<<<<<< HEAD
+=======
+		set = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		if (irq <= 6 || (irq >= 9 && irq <= 15))
 			clr |= IRQ_NOPROBE;

@@ -203,7 +203,10 @@ hnae_init_ring(struct hnae_queue *q, struct hnae_ring *ring, int flags)
 
 	ring->q = q;
 	ring->flags = flags;
+<<<<<<< HEAD
 	spin_lock_init(&ring->lock);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ring->coal_param = q->handle->coal_param;
 	assert(!ring->desc && !ring->desc_cb && !ring->desc_dma_addr);
 

@@ -559,12 +559,20 @@ static int map_create(union bpf_attr *attr)
 	err = bpf_map_new_fd(map, f_flags);
 	if (err < 0) {
 		/* failed to allocate fd.
+<<<<<<< HEAD
 		 * bpf_map_put() is needed because the above
+=======
+		 * bpf_map_put_with_uref() is needed because the above
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		 * bpf_map_alloc_id() has published the map
 		 * to the userspace and the userspace may
 		 * have refcnt-ed it through BPF_MAP_GET_FD_BY_ID.
 		 */
+<<<<<<< HEAD
 		bpf_map_put(map);
+=======
+		bpf_map_put_with_uref(map);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return err;
 	}
 
@@ -1887,7 +1895,11 @@ static int bpf_map_get_fd_by_id(const union bpf_attr *attr)
 
 	fd = bpf_map_new_fd(map, f_flags);
 	if (fd < 0)
+<<<<<<< HEAD
 		bpf_map_put(map);
+=======
+		bpf_map_put_with_uref(map);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return fd;
 }
@@ -1958,7 +1970,11 @@ static int bpf_prog_get_info_by_fd(struct bpf_prog *prog,
 				   union bpf_attr __user *uattr)
 {
 	struct bpf_prog_info __user *uinfo = u64_to_user_ptr(attr->info.info);
+<<<<<<< HEAD
 	struct bpf_prog_info info = {};
+=======
+	struct bpf_prog_info info;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u32 info_len = attr->info.info_len;
 	char __user *uinsns;
 	u32 ulen;
@@ -1969,6 +1985,10 @@ static int bpf_prog_get_info_by_fd(struct bpf_prog *prog,
 		return err;
 	info_len = min_t(u32, sizeof(info), info_len);
 
+<<<<<<< HEAD
+=======
+	memset(&info, 0, sizeof(info));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (copy_from_user(&info, uinfo, info_len))
 		return -EFAULT;
 
@@ -2136,7 +2156,11 @@ static int bpf_map_get_info_by_fd(struct bpf_map *map,
 				  union bpf_attr __user *uattr)
 {
 	struct bpf_map_info __user *uinfo = u64_to_user_ptr(attr->info.info);
+<<<<<<< HEAD
 	struct bpf_map_info info = {};
+=======
+	struct bpf_map_info info;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u32 info_len = attr->info.info_len;
 	int err;
 
@@ -2145,6 +2169,10 @@ static int bpf_map_get_info_by_fd(struct bpf_map *map,
 		return err;
 	info_len = min_t(u32, sizeof(info), info_len);
 
+<<<<<<< HEAD
+=======
+	memset(&info, 0, sizeof(info));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	info.type = map->map_type;
 	info.id = map->id;
 	info.key_size = map->key_size;
@@ -2372,7 +2400,11 @@ out:
 
 SYSCALL_DEFINE3(bpf, int, cmd, union bpf_attr __user *, uattr, unsigned int, size)
 {
+<<<<<<< HEAD
 	union bpf_attr attr = {};
+=======
+	union bpf_attr attr;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int err;
 
 	if (sysctl_unprivileged_bpf_disabled && !capable(CAP_SYS_ADMIN))
@@ -2384,6 +2416,10 @@ SYSCALL_DEFINE3(bpf, int, cmd, union bpf_attr __user *, uattr, unsigned int, siz
 	size = min_t(u32, size, sizeof(attr));
 
 	/* copy attributes from user space, may be less than sizeof(bpf_attr) */
+<<<<<<< HEAD
+=======
+	memset(&attr, 0, sizeof(attr));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (copy_from_user(&attr, uattr, size) != 0)
 		return -EFAULT;
 

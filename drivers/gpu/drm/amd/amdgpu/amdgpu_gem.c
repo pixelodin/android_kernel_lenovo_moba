@@ -299,6 +299,11 @@ int amdgpu_gem_userptr_ioctl(struct drm_device *dev, void *data,
 	uint32_t handle;
 	int r;
 
+<<<<<<< HEAD
+=======
+	args->addr = untagged_addr(args->addr);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (offset_in_page(args->addr | args->size))
 		return -EINVAL;
 

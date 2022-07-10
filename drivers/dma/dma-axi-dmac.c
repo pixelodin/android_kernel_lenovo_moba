@@ -486,7 +486,11 @@ static struct dma_async_tx_descriptor *axi_dmac_prep_interleaved(
 
 	if (chan->hw_2d) {
 		if (!axi_dmac_check_len(chan, xt->sgl[0].size) ||
+<<<<<<< HEAD
 		    !axi_dmac_check_len(chan, xt->numf))
+=======
+		    xt->numf == 0)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			return NULL;
 		if (xt->sgl[0].size + dst_icg > chan->max_length ||
 		    xt->sgl[0].size + src_icg > chan->max_length)

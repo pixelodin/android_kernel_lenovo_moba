@@ -1484,6 +1484,10 @@ static int venus_suspend_3xx(struct venus_core *core)
 {
 	struct venus_hfi_device *hdev = to_hfi_priv(core);
 	struct device *dev = core->dev;
+<<<<<<< HEAD
+=======
+	u32 ctrl_status;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	bool val;
 	int ret;
 
@@ -1499,6 +1503,13 @@ static int venus_suspend_3xx(struct venus_core *core)
 		return -EINVAL;
 	}
 
+<<<<<<< HEAD
+=======
+	ctrl_status = venus_readl(hdev, CPU_CS_SCIACMDARG0);
+	if (ctrl_status & CPU_CS_SCIACMDARG0_PC_READY)
+		goto power_off;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/*
 	 * Power collapse sequence for Venus 3xx and 4xx versions:
 	 * 1. Check for ARM9 and video core to be idle by checking WFI bit
@@ -1523,6 +1534,10 @@ static int venus_suspend_3xx(struct venus_core *core)
 	if (ret)
 		return ret;
 
+<<<<<<< HEAD
+=======
+power_off:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mutex_lock(&hdev->lock);
 
 	ret = venus_power_off(hdev);

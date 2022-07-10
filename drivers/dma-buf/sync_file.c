@@ -230,7 +230,11 @@ static struct sync_file *sync_file_merge(const char *name, struct sync_file *a,
 	a_fences = get_fences(a, &a_num_fences);
 	b_fences = get_fences(b, &b_num_fences);
 	if (a_num_fences > INT_MAX - b_num_fences)
+<<<<<<< HEAD
 		return NULL;
+=======
+		goto err;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	num_fences = a_num_fences + b_num_fences;
 

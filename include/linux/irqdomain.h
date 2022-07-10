@@ -189,7 +189,11 @@ enum {
 	IRQ_DOMAIN_FLAG_HIERARCHY	= (1 << 0),
 
 	/* Irq domain name was allocated in __irq_domain_add() */
+<<<<<<< HEAD
 	IRQ_DOMAIN_NAME_ALLOCATED	= (1 << 6),
+=======
+	IRQ_DOMAIN_NAME_ALLOCATED	= (1 << 1),
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Irq domain is an IPI domain with virq per cpu */
 	IRQ_DOMAIN_FLAG_IPI_PER_CPU	= (1 << 2),
@@ -204,6 +208,16 @@ enum {
 	IRQ_DOMAIN_FLAG_MSI_REMAP	= (1 << 5),
 
 	/*
+<<<<<<< HEAD
+=======
+	 * Quirk to handle MSI implementations which do not provide
+	 * masking. Currently known to affect x86, but partially
+	 * handled in core code.
+	 */
+	IRQ_DOMAIN_MSI_NOMASK_QUIRK	= (1 << 6),
+
+	/*
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	 * Flags starting from IRQ_DOMAIN_FLAG_NONCORE are reserved
 	 * for implementation specific purposes and ignored by the
 	 * core code.

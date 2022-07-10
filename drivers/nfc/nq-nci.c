@@ -23,7 +23,10 @@
 #endif
 #include <linux/jiffies.h>
 #include <linux/regulator/consumer.h>
+<<<<<<< HEAD
 #include <linux/proc_fs.h>
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 struct nqx_platform_data {
 	unsigned int irq_gpio;
@@ -90,6 +93,7 @@ struct nqx_dev {
 	struct regulator *reg;
 };
 
+<<<<<<< HEAD
 /*
  * nfc check for factory
  */
@@ -111,6 +115,8 @@ static const struct file_operations nfc_check_fops = {
         .read = nfc_check_read,
 };
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int nfcc_reboot(struct notifier_block *notifier, unsigned long val,
 			void *v);
 /*clock enable function*/
@@ -487,10 +493,17 @@ static int sn100_ese_pwr(struct nqx_dev *nqx_dev, unsigned long arg)
 		r = 0;
 	} else if (arg == ESE_POWER_OFF) {
 		if (!nqx_dev->nfc_ven_enabled) {
+<<<<<<< HEAD
 			dev_warn(&nqx_dev->client->dev, "NFC not enabled, but remain ven enabled!!!\n");
 			//gpio_set_value(nqx_dev->en_gpio, 0);
 			/* hardware dependent delay */
 			//usleep_range(1000, 1100);
+=======
+			dev_dbg(&nqx_dev->client->dev, "NFC not enabled, disabling en_gpio\n");
+			gpio_set_value(nqx_dev->en_gpio, 0);
+			/* hardware dependent delay */
+			usleep_range(1000, 1100);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		} else {
 			dev_dbg(&nqx_dev->client->dev, "keep en_gpio high as NFC is enabled\n");
 		}
@@ -1415,10 +1428,15 @@ static int nqx_probe(struct i2c_client *client,
 	int irqn = 0;
 	struct nqx_platform_data *platform_data;
 	struct nqx_dev *nqx_dev;
+<<<<<<< HEAD
 	struct proc_dir_entry *nfc_check_entry = NULL;
 
 	dev_dbg(&client->dev, "%s: enter\n", __func__);
 	g_nfc_check_flag = 0;
+=======
+
+	dev_dbg(&client->dev, "%s: enter\n", __func__);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (client->dev.of_node) {
 		platform_data = devm_kzalloc(&client->dev,
 			sizeof(struct nqx_platform_data), GFP_KERNEL);
@@ -1647,10 +1665,19 @@ static int nqx_probe(struct i2c_client *client,
 	 *
 	 */
 	r = nfcc_hw_check(client, nqx_dev);
+<<<<<<< HEAD
 	if (r)
 		g_nfc_check_flag = -1;
 	else
 		g_nfc_check_flag = 1;
+=======
+	if (r) {
+		/* make sure NFCC is not enabled */
+		gpio_set_value(platform_data->en_gpio, 0);
+		/* We don't think there is hardware switch NFC OFF */
+		goto err_request_hw_check_failed;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Register reboot notifier here */
 	r = register_reboot_notifier(&nfcc_notifier);
@@ -1682,6 +1709,7 @@ static int nqx_probe(struct i2c_client *client,
 	nqx_dev->nfc_enabled = false;
 	nqx_dev->is_ese_session_active = false;
 
+<<<<<<< HEAD
 	//set ven to 0 and wait nfc/se service to trigger to turn 1.
 	dev_warn(&client->dev,"probe finish: set ven to 0");
 	gpio_set_value(nqx_dev->en_gpio, 0);
@@ -1689,6 +1717,8 @@ static int nqx_probe(struct i2c_client *client,
 	nfc_check_entry = proc_create("nfc_check", 0444, NULL, &nfc_check_fops);
 	if(!nfc_check_entry)
 		dev_err(&client->dev,"%s:nfc_check proc create fail!",__func__);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	dev_err(&client->dev,
 	"%s: probing NFCC NQxxx exited successfully\n",
 		 __func__);

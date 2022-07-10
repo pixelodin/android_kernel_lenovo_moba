@@ -89,8 +89,15 @@ static void tracing_sched_unregister(void)
 
 static void tracing_start_sched_switch(int ops)
 {
+<<<<<<< HEAD
 	bool sched_register = (!sched_cmdline_ref && !sched_tgid_ref);
 	mutex_lock(&sched_register_mutex);
+=======
+	bool sched_register;
+
+	mutex_lock(&sched_register_mutex);
+	sched_register = (!sched_cmdline_ref && !sched_tgid_ref);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	switch (ops) {
 	case RECORD_CMDLINE:

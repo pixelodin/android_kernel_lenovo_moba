@@ -487,7 +487,11 @@ static ssize_t ld_usb_read(struct file *file, char __user *buffer, size_t count,
 	}
 	bytes_to_read = min(count, *actual_buffer);
 	if (bytes_to_read < *actual_buffer)
+<<<<<<< HEAD
 		dev_warn(&dev->intf->dev, "Read buffer overflow, %zd bytes dropped\n",
+=======
+		dev_warn(&dev->intf->dev, "Read buffer overflow, %zu bytes dropped\n",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			 *actual_buffer-bytes_to_read);
 
 	/* copy one interrupt_in_buffer from ring_buffer into userspace */
@@ -495,11 +499,19 @@ static ssize_t ld_usb_read(struct file *file, char __user *buffer, size_t count,
 		retval = -EFAULT;
 		goto unlock_exit;
 	}
+<<<<<<< HEAD
 	dev->ring_tail = (dev->ring_tail+1) % ring_buffer_size;
 
 	retval = bytes_to_read;
 
 	spin_lock_irq(&dev->rbsl);
+=======
+	retval = bytes_to_read;
+
+	spin_lock_irq(&dev->rbsl);
+	dev->ring_tail = (dev->ring_tail + 1) % ring_buffer_size;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (dev->buffer_overflow) {
 		dev->buffer_overflow = 0;
 		spin_unlock_irq(&dev->rbsl);
@@ -562,8 +574,14 @@ static ssize_t ld_usb_write(struct file *file, const char __user *buffer,
 	/* write the data into interrupt_out_buffer from userspace */
 	bytes_to_write = min(count, write_buffer_size*dev->interrupt_out_endpoint_size);
 	if (bytes_to_write < count)
+<<<<<<< HEAD
 		dev_warn(&dev->intf->dev, "Write buffer overflow, %zd bytes dropped\n", count-bytes_to_write);
 	dev_dbg(&dev->intf->dev, "%s: count = %zd, bytes_to_write = %zd\n",
+=======
+		dev_warn(&dev->intf->dev, "Write buffer overflow, %zu bytes dropped\n",
+			count - bytes_to_write);
+	dev_dbg(&dev->intf->dev, "%s: count = %zu, bytes_to_write = %zu\n",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		__func__, count, bytes_to_write);
 
 	if (copy_from_user(dev->interrupt_out_buffer, buffer, bytes_to_write)) {
@@ -580,7 +598,11 @@ static ssize_t ld_usb_write(struct file *file, const char __user *buffer,
 					 1 << 8, 0,
 					 dev->interrupt_out_buffer,
 					 bytes_to_write,
+<<<<<<< HEAD
 					 USB_CTRL_SET_TIMEOUT * HZ);
+=======
+					 USB_CTRL_SET_TIMEOUT);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (retval < 0)
 			dev_err(&dev->intf->dev,
 				"Couldn't submit HID_REQ_SET_REPORT %d\n",

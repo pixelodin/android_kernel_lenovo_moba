@@ -3,7 +3,11 @@
  *
  * This code is based on drivers/scsi/ufs/ufshcd.h
  * Copyright (C) 2011-2013 Samsung India Software Operations
+<<<<<<< HEAD
  * Copyright (c) 2013-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2013-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  *
  * Authors:
  *	Santosh Yaraganavi <santosh.sy@samsung.com>
@@ -76,10 +80,13 @@
 #include "ufs.h"
 #include "ufshci.h"
 
+<<<<<<< HEAD
 #if defined(CONFIG_UFSFEATURE)
 #include "ufsfeature.h"
 #endif
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define UFSHCD "ufshcd"
 #define UFSHCD_DRIVER_VERSION "0.3"
 
@@ -201,6 +208,12 @@ struct ufs_pm_lvl_states {
  * @intr_cmd: Interrupt command (doesn't participate in interrupt aggregation)
  * @issue_time_stamp: time stamp for debug purposes
  * @compl_time_stamp: time stamp for statistics
+<<<<<<< HEAD
+=======
+ * @crypto_enable: whether or not the request needs inline crypto operations
+ * @crypto_key_slot: the key slot to use for inline crypto
+ * @data_unit_num: the data unit number for the first block for inline crypto
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * @req_abort_skip: skip request abort task flag
  */
 struct ufshcd_lrb {
@@ -225,12 +238,22 @@ struct ufshcd_lrb {
 	bool intr_cmd;
 	ktime_t issue_time_stamp;
 	ktime_t compl_time_stamp;
+<<<<<<< HEAD
 
 	bool req_abort_skip;
 
 #if defined(CONFIG_UFSFEATURE) && defined(CONFIG_UFSHPB)
 	int hpb_ctx_id;
 #endif
+=======
+#if IS_ENABLED(CONFIG_SCSI_UFS_CRYPTO)
+	bool crypto_enable;
+	u8 crypto_key_slot;
+	u64 data_unit_num;
+#endif /* CONFIG_SCSI_UFS_CRYPTO */
+
+	bool req_abort_skip;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 /**
@@ -310,6 +333,11 @@ struct ufs_pwr_mode_info {
 	struct ufs_pa_layer_attr info;
 };
 
+<<<<<<< HEAD
+=======
+union ufs_crypto_cfg_entry;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /**
  * struct ufs_hba_variant_ops - variant specific callbacks
  * @init: called when the driver is initialized
@@ -340,6 +368,10 @@ struct ufs_pwr_mode_info {
  *			 scale down
  * @set_bus_vote: called to vote for the required bus bandwidth
  * @phy_initialization: used to initialize phys
+<<<<<<< HEAD
+=======
+ * @program_key: program an inline encryption key into a keyslot
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 struct ufs_hba_variant_ops {
 	int	(*init)(struct ufs_hba *);
@@ -376,6 +408,7 @@ struct ufs_hba_variant_ops {
 	void	(*add_debugfs)(struct ufs_hba *hba, struct dentry *root);
 	void	(*remove_debugfs)(struct ufs_hba *hba);
 #endif
+<<<<<<< HEAD
 };
 
 /**
@@ -401,6 +434,10 @@ struct ufs_hba_crypto_variant_ops {
 					 struct request *req);
 	int	(*crypto_engine_reset)(struct ufs_hba *hba);
 	int	(*crypto_engine_get_status)(struct ufs_hba *hba, u32 *status);
+=======
+	int	(*program_key)(struct ufs_hba *hba,
+			       const union ufs_crypto_cfg_entry *cfg, int slot);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 /**
@@ -420,10 +457,39 @@ struct ufs_hba_variant {
 	struct device				*dev;
 	const char				*name;
 	struct ufs_hba_variant_ops		*vops;
+<<<<<<< HEAD
 	struct ufs_hba_crypto_variant_ops	*crypto_vops;
 	struct ufs_hba_pm_qos_variant_ops	*pm_qos_vops;
 };
 
+=======
+	struct ufs_hba_pm_qos_variant_ops	*pm_qos_vops;
+};
+
+struct keyslot_mgmt_ll_ops;
+struct ufs_hba_crypto_variant_ops {
+	void (*setup_rq_keyslot_manager)(struct ufs_hba *hba,
+					 struct request_queue *q);
+	void (*destroy_rq_keyslot_manager)(struct ufs_hba *hba,
+					   struct request_queue *q);
+	int (*hba_init_crypto)(struct ufs_hba *hba,
+			       const struct keyslot_mgmt_ll_ops *ksm_ops);
+	void (*enable)(struct ufs_hba *hba);
+	void (*disable)(struct ufs_hba *hba);
+	int (*suspend)(struct ufs_hba *hba, enum ufs_pm_op pm_op);
+	int (*resume)(struct ufs_hba *hba, enum ufs_pm_op pm_op);
+	int (*debug)(struct ufs_hba *hba);
+	int (*prepare_lrbp_crypto)(struct ufs_hba *hba,
+				   struct scsi_cmnd *cmd,
+				   struct ufshcd_lrb *lrbp);
+	int (*map_sg_crypto)(struct ufs_hba *hba, struct ufshcd_lrb *lrbp);
+	int (*complete_lrbp_crypto)(struct ufs_hba *hba,
+				    struct scsi_cmnd *cmd,
+				    struct ufshcd_lrb *lrbp);
+	void *priv;
+};
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* clock gating state  */
 enum clk_gating_state {
 	CLKS_OFF,
@@ -571,8 +637,11 @@ struct debugfs_files {
 	struct dentry *show_hba;
 	struct dentry *host_regs;
 	struct dentry *dump_dev_desc;
+<<<<<<< HEAD
 	struct dentry *dump_string_desc_serial;
 	struct dentry *dump_heatlth_desc;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct dentry *power_mode;
 	struct dentry *dme_local_read;
 	struct dentry *dme_peer_read;
@@ -637,6 +706,23 @@ struct ufshcd_clk_ctx {
 	enum ufshcd_ctx ctx;
 };
 
+<<<<<<< HEAD
+=======
+enum ufshcd_scsi_host_busy_ctxt {
+	SCALING_BUSY,
+	EH_IN_PROGRESS,
+	UFS_RESET_OR_EH_SCHEDULED,
+	LRB_IN_USE,
+	UFSHCD_HOLD,
+	UFSHCD_HIBERN8_HOLD,
+};
+
+struct ufshcd_blk_ctx {
+	ktime_t ts;
+	enum ufshcd_scsi_host_busy_ctxt busy_ctx;
+};
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /**
  * struct ufs_stats - keeps usage/err statistics
  * @enabled: enable tag stats for debugfs
@@ -669,6 +755,10 @@ struct ufs_stats {
 	ktime_t last_intr_ts;
 	struct ufshcd_clk_ctx clk_hold;
 	struct ufshcd_clk_ctx clk_rel;
+<<<<<<< HEAD
+=======
+	struct ufshcd_blk_ctx scsi_blk_reqs;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u32 hibern8_exit_cnt;
 	ktime_t last_hibern8_exit_tstamp;
 	u32 power_mode_change_cnt;
@@ -742,6 +832,10 @@ struct ufshcd_cmd_log {
  * @ufs_version: UFS Version to which controller complies
  * @var: pointer to variant specific data
  * @priv: pointer to variant specific private data
+<<<<<<< HEAD
+=======
+ * @sg_entry_size: size of struct ufshcd_sg_entry (may include variant fields)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * @irq: Irq number of the controller
  * @active_uic_cmd: handle of active UIC command
  * @uic_cmd_mutex: mutex for uic command
@@ -762,6 +856,10 @@ struct ufshcd_cmd_log {
  * @uic_error: UFS interconnect layer error status
  * @saved_err: sticky error mask
  * @saved_uic_err: sticky UIC error mask
+<<<<<<< HEAD
+=======
+ * @silence_err_logs: flag to silence error logs
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * @dev_cmd: ufs device management command information
  * @last_dme_cmd_tstamp: time stamp of the last completed DME command
  * @auto_bkops_enabled: to track whether bkops is enabled in device
@@ -779,6 +877,13 @@ struct ufshcd_cmd_log {
  * @is_urgent_bkops_lvl_checked: keeps track if the urgent bkops level for
  *  device is known or not.
  * @scsi_block_reqs_cnt: reference counting for scsi block requests
+<<<<<<< HEAD
+=======
+ * @crypto_capabilities: Content of crypto capabilities register (0x100)
+ * @crypto_cap_array: Array of crypto capabilities
+ * @crypto_cfg_register: Start of the crypto cfg array
+ * @ksm: the keyslot manager tied to this hba
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 struct ufs_hba {
 	void __iomem *mmio_base;
@@ -826,6 +931,11 @@ struct ufs_hba {
 	u32 ufs_version;
 	struct ufs_hba_variant *var;
 	void *priv;
+<<<<<<< HEAD
+=======
+	const struct ufs_hba_crypto_variant_ops *crypto_vops;
+	size_t sg_entry_size;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	unsigned int irq;
 	bool is_irq_enabled;
 	bool crash_on_err;
@@ -930,6 +1040,14 @@ struct ufs_hba {
 	#define UFSHCD_QUIRK_DME_PEER_GET_FAST_MODE		0x20000
 
 	#define UFSHCD_QUIRK_BROKEN_AUTO_HIBERN8		0x40000
+<<<<<<< HEAD
+=======
+	/*
+	 * This quirk needs to be enabled if the host controller advertises
+	 * inline encryption support but it doesn't work correctly.
+	 */
+	#define UFSHCD_QUIRK_BROKEN_CRYPTO			0x800
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	unsigned int quirks;	/* Deviations from standard UFSHCI spec. */
 
@@ -964,10 +1082,17 @@ struct ufs_hba {
 	u32 saved_err;
 	u32 saved_uic_err;
 	u32 saved_ce_err;
+<<<<<<< HEAD
 	bool silence_err_logs;
 	bool force_host_reset;
 	bool auto_h8_err;
 	struct ufs_stats ufs_stats;
+=======
+	bool force_host_reset;
+	bool auto_h8_err;
+	struct ufs_stats ufs_stats;
+	bool silence_err_logs;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Device management request data */
 	struct ufs_dev_cmd dev_cmd;
@@ -1043,6 +1168,14 @@ struct ufs_hba {
 	 * in hibern8 then enable this cap.
 	 */
 #define UFSHCD_CAP_POWER_COLLAPSE_DURING_HIBERN8 (1 << 7)
+<<<<<<< HEAD
+=======
+	/*
+	 * This capability allows the host controller driver to use the
+	 * inline crypto engine, if it is present
+	 */
+#define UFSHCD_CAP_CRYPTO (1 << 7)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	struct devfreq *devfreq;
 	struct ufs_clk_scaling clk_scaling;
@@ -1071,9 +1204,19 @@ struct ufs_hba {
 	bool force_g4;
 	bool wb_enabled;
 
+<<<<<<< HEAD
 #if defined(CONFIG_UFSFEATURE)
 	struct ufsf_feature ufsf;
 #endif
+=======
+#ifdef CONFIG_SCSI_UFS_CRYPTO
+	/* crypto */
+	union ufs_crypto_capabilities crypto_capabilities;
+	union ufs_crypto_cap_entry *crypto_cap_array;
+	u32 crypto_cfg_register;
+	struct keyslot_manager *ksm;
+#endif /* CONFIG_SCSI_UFS_CRYPTO */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 static inline void ufshcd_mark_shutdown_ongoing(struct ufs_hba *hba)
@@ -1296,10 +1439,13 @@ out:
 }
 
 int ufshcd_read_device_desc(struct ufs_hba *hba, u8 *buf, u32 size);
+<<<<<<< HEAD
 int ufshcd_read_health_desc(struct ufs_hba *hba, u8 *buf, u32 size);
 char *ufs_get_serial(void);
 int ufshcd_read_string_desc(struct ufs_hba *hba, int desc_index,
 				   u8 *buf, u32 size, bool ascii);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 static inline bool ufshcd_is_hs_mode(struct ufs_pa_layer_attr *pwr_info)
 {
@@ -1344,6 +1490,7 @@ int ufshcd_query_flag(struct ufs_hba *hba, enum query_opcode opcode,
 	enum flag_idn idn, bool *flag_res);
 int ufshcd_read_string_desc(struct ufs_hba *hba, int desc_index,
 			    u8 *buf, u32 size, bool ascii);
+<<<<<<< HEAD
 #if defined(CONFIG_UFSFEATURE)
 int ufshcd_exec_dev_cmd(struct ufs_hba *hba,
 			enum dev_cmd_type cmd_type, int timeout);
@@ -1353,6 +1500,8 @@ void ufshcd_release_all(struct ufs_hba *hba);
 int ufshcd_comp_scsi_upiu(struct ufs_hba *hba, struct ufshcd_lrb *lrbp);
 int ufshcd_map_sg(struct ufs_hba *hba, struct ufshcd_lrb *lrbp);
 #endif
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 int ufshcd_hold(struct ufs_hba *hba, bool async);
 void ufshcd_release(struct ufs_hba *hba, bool no_sched);
@@ -1541,7 +1690,12 @@ static inline void ufshcd_vops_remove_debugfs(struct ufs_hba *hba)
 		hba->var->vops->remove_debugfs(hba);
 }
 #else
+<<<<<<< HEAD
 static inline void ufshcd_vops_add_debugfs(struct ufs_hba *hba, struct dentry *)
+=======
+static inline void ufshcd_vops_add_debugfs(struct ufs_hba *hba,
+					   struct dentry *root)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 }
 
@@ -1550,6 +1704,7 @@ static inline void ufshcd_vops_remove_debugfs(struct ufs_hba *hba)
 }
 #endif
 
+<<<<<<< HEAD
 static inline int ufshcd_vops_crypto_req_setup(struct ufs_hba *hba,
 	struct ufshcd_lrb *lrbp, u8 *cc_index, bool *enable, u64 *dun)
 {
@@ -1599,6 +1754,8 @@ static inline int ufshcd_vops_crypto_engine_get_status(struct ufs_hba *hba,
 	return 0;
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static inline void ufshcd_vops_pm_qos_req_start(struct ufs_hba *hba,
 		struct request *req)
 {

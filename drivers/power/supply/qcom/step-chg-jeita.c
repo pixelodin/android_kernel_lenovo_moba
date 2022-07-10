@@ -229,7 +229,11 @@ static int get_step_chg_jeita_setting_from_profile(struct step_chg_info *chip)
 	u32 max_fv_uv, max_fcc_ma;
 	const char *batt_type_str;
 	const __be32 *handle;
+<<<<<<< HEAD
 	int batt_id_ohms, rc;
+=======
+	int batt_id_ohms, rc, hysteresis[2] = {0};
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	union power_supply_propval prop = {0, };
 
 	handle = of_get_property(chip->dev->of_node,
@@ -297,7 +301,12 @@ static int get_step_chg_jeita_setting_from_profile(struct step_chg_info *chip)
 		chip->step_chg_config->param.psy_prop =
 				POWER_SUPPLY_PROP_CAPACITY;
 		chip->step_chg_config->param.prop_name = "SOC";
+<<<<<<< HEAD
 		chip->step_chg_config->param.hysteresis = 0;
+=======
+		chip->step_chg_config->param.rise_hys = 0;
+		chip->step_chg_config->param.fall_hys = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	chip->ocv_based_step_chg =
@@ -306,7 +315,12 @@ static int get_step_chg_jeita_setting_from_profile(struct step_chg_info *chip)
 		chip->step_chg_config->param.psy_prop =
 				POWER_SUPPLY_PROP_VOLTAGE_OCV;
 		chip->step_chg_config->param.prop_name = "OCV";
+<<<<<<< HEAD
 		chip->step_chg_config->param.hysteresis = 0;
+=======
+		chip->step_chg_config->param.rise_hys = 0;
+		chip->step_chg_config->param.fall_hys = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		chip->step_chg_config->param.use_bms = true;
 	}
 
@@ -317,7 +331,12 @@ static int get_step_chg_jeita_setting_from_profile(struct step_chg_info *chip)
 		chip->step_chg_config->param.psy_prop =
 				POWER_SUPPLY_PROP_VOLTAGE_AVG;
 		chip->step_chg_config->param.prop_name = "VBAT_AVG";
+<<<<<<< HEAD
 		chip->step_chg_config->param.hysteresis = 0;
+=======
+		chip->step_chg_config->param.rise_hys = 0;
+		chip->step_chg_config->param.fall_hys = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		chip->step_chg_config->param.use_bms = true;
 	}
 
@@ -344,6 +363,18 @@ static int get_step_chg_jeita_setting_from_profile(struct step_chg_info *chip)
 		chip->sw_jeita_cfg_valid = false;
 	}
 
+<<<<<<< HEAD
+=======
+	rc = of_property_read_u32_array(profile_node,
+			"qcom,step-jeita-hysteresis", hysteresis, 2);
+	if (!rc) {
+		chip->jeita_fcc_config->param.rise_hys = hysteresis[0];
+		chip->jeita_fcc_config->param.fall_hys = hysteresis[1];
+		pr_debug("jeita-fcc-hys: rise_hys=%u, fall_hys=%u\n",
+			hysteresis[0], hysteresis[1]);
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rc = read_range_data_from_node(profile_node,
 			"qcom,jeita-fv-ranges",
 			chip->jeita_fv_config->fv_cfg,
@@ -403,9 +434,14 @@ reschedule:
 
 }
 
+<<<<<<< HEAD
 static int get_val(struct range_data *range, int hysteresis, int current_index,
 		int threshold,
 		int *new_index, int *val)
+=======
+static int get_val(struct range_data *range, int rise_hys, int fall_hys,
+		int current_index, int threshold, int *new_index, int *val)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	int i;
 
@@ -463,7 +499,12 @@ static int get_val(struct range_data *range, int hysteresis, int current_index,
 	 * of our current index.
 	 */
 	if (*new_index == current_index + 1) {
+<<<<<<< HEAD
 		if (threshold < range[*new_index].low_threshold + hysteresis) {
+=======
+		if (threshold <
+			(range[*new_index].low_threshold + rise_hys)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			/*
 			 * Stay in the current index, threshold is not higher
 			 * by hysteresis amount
@@ -472,7 +513,12 @@ static int get_val(struct range_data *range, int hysteresis, int current_index,
 			*val = range[current_index].value;
 		}
 	} else if (*new_index == current_index - 1) {
+<<<<<<< HEAD
 		if (threshold > range[*new_index].high_threshold - hysteresis) {
+=======
+		if (threshold >
+			range[*new_index].high_threshold - fall_hys) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			/*
 			 * stay in the current index, threshold is not lower
 			 * by hysteresis amount
@@ -502,7 +548,11 @@ static void taper_fcc_step_chg(struct step_chg_info *chip, int index,
 		vote(chip->fcc_votable, STEP_CHG_VOTER, true, target_fcc);
 	} else if (current_voltage >
 		(chip->step_chg_config->fcc_cfg[index - 1].high_threshold +
+<<<<<<< HEAD
 		chip->step_chg_config->param.hysteresis)) {
+=======
+		chip->step_chg_config->param.rise_hys)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/*
 		 * Ramp down FCC in pre-configured steps till the current index
 		 * FCC configuration is reached, whenever the step charging
@@ -515,7 +565,11 @@ static void taper_fcc_step_chg(struct step_chg_info *chip, int index,
 		chip->step_chg_config->fcc_cfg[index - 1].value) &&
 		(current_voltage >
 		chip->step_chg_config->fcc_cfg[index - 1].low_threshold +
+<<<<<<< HEAD
 		chip->step_chg_config->param.hysteresis)) {
+=======
+		chip->step_chg_config->param.fall_hys)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/*
 		 * In case the step charging index switch to the next higher
 		 * index without FCCs saturation for the previous index, ramp
@@ -566,7 +620,12 @@ static int handle_step_chg_config(struct step_chg_info *chip)
 
 	current_index = chip->step_index;
 	rc = get_val(chip->step_chg_config->fcc_cfg,
+<<<<<<< HEAD
 			chip->step_chg_config->param.hysteresis,
+=======
+			chip->step_chg_config->param.rise_hys,
+			chip->step_chg_config->param.fall_hys,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			chip->step_index,
 			pval.intval,
 			&chip->step_index,
@@ -651,7 +710,12 @@ static int handle_jeita(struct step_chg_info *chip)
 	}
 
 	rc = get_val(chip->jeita_fcc_config->fcc_cfg,
+<<<<<<< HEAD
 			chip->jeita_fcc_config->param.hysteresis,
+=======
+			chip->jeita_fcc_config->param.rise_hys,
+			chip->jeita_fcc_config->param.fall_hys,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			chip->jeita_fcc_index,
 			pval.intval,
 			&chip->jeita_fcc_index,
@@ -668,7 +732,12 @@ static int handle_jeita(struct step_chg_info *chip)
 	vote(chip->fcc_votable, JEITA_VOTER, fcc_ua ? true : false, fcc_ua);
 
 	rc = get_val(chip->jeita_fv_config->fv_cfg,
+<<<<<<< HEAD
 			chip->jeita_fv_config->param.hysteresis,
+=======
+			chip->jeita_fv_config->param.rise_hys,
+			chip->jeita_fv_config->param.fall_hys,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			chip->jeita_fv_index,
 			pval.intval,
 			&chip->jeita_fv_index,
@@ -843,7 +912,11 @@ int qcom_step_chg_init(struct device *dev,
 	if (!chip)
 		return -ENOMEM;
 
+<<<<<<< HEAD
 	chip->step_chg_ws = wakeup_source_register("qcom-step-chg");
+=======
+	chip->step_chg_ws = wakeup_source_register(dev, "qcom-step-chg");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!chip->step_chg_ws)
 		return -EINVAL;
 
@@ -862,7 +935,12 @@ int qcom_step_chg_init(struct device *dev,
 
 	chip->step_chg_config->param.psy_prop = POWER_SUPPLY_PROP_VOLTAGE_NOW;
 	chip->step_chg_config->param.prop_name = "VBATT";
+<<<<<<< HEAD
 	chip->step_chg_config->param.hysteresis = 100000;
+=======
+	chip->step_chg_config->param.rise_hys = 100000;
+	chip->step_chg_config->param.fall_hys = 100000;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	chip->jeita_fcc_config = devm_kzalloc(dev,
 			sizeof(struct jeita_fcc_cfg), GFP_KERNEL);
@@ -873,10 +951,19 @@ int qcom_step_chg_init(struct device *dev,
 
 	chip->jeita_fcc_config->param.psy_prop = POWER_SUPPLY_PROP_TEMP;
 	chip->jeita_fcc_config->param.prop_name = "BATT_TEMP";
+<<<<<<< HEAD
 	chip->jeita_fcc_config->param.hysteresis = 10;
 	chip->jeita_fv_config->param.psy_prop = POWER_SUPPLY_PROP_TEMP;
 	chip->jeita_fv_config->param.prop_name = "BATT_TEMP";
 	chip->jeita_fv_config->param.hysteresis = 10;
+=======
+	chip->jeita_fcc_config->param.rise_hys = 10;
+	chip->jeita_fcc_config->param.fall_hys = 10;
+	chip->jeita_fv_config->param.psy_prop = POWER_SUPPLY_PROP_TEMP;
+	chip->jeita_fv_config->param.prop_name = "BATT_TEMP";
+	chip->jeita_fv_config->param.rise_hys = 10;
+	chip->jeita_fv_config->param.fall_hys = 10;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	INIT_DELAYED_WORK(&chip->status_change_work, status_change_work);
 	INIT_DELAYED_WORK(&chip->get_config_work, get_config_work);

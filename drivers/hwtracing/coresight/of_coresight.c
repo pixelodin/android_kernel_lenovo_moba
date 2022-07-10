@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
+<<<<<<< HEAD
  * Copyright (c) 2012,2017-2018 The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2012,2017-2018,2020 The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include <linux/types.h>
@@ -50,16 +54,32 @@ static void of_coresight_get_ports(const struct device_node *node,
 {
 	struct device_node *ep = NULL;
 	int in = 0, out = 0;
+<<<<<<< HEAD
+=======
+	struct of_endpoint endpoint;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	do {
 		ep = of_graph_get_next_endpoint(node, ep);
 		if (!ep)
 			break;
 
+<<<<<<< HEAD
 		if (of_property_read_bool(ep, "slave-mode"))
 			in++;
 		else
 			out++;
+=======
+		if (of_graph_parse_endpoint(ep, &endpoint))
+			continue;
+
+		if (of_property_read_bool(ep, "slave-mode"))
+			in = (endpoint.port + 1 > in) ?
+				endpoint.port + 1 : in;
+		else
+			out = (endpoint.port + 1) > out ?
+				endpoint.port + 1 : out;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	} while (ep);
 
@@ -131,7 +151,12 @@ of_coresight_get_reg_clk(struct device *dev, const struct device_node *node)
 
 	nr_reg = of_property_count_strings(node, "qcom,proxy-regs");
 	nr_clk = of_property_count_strings(node, "qcom,proxy-clks");
+<<<<<<< HEAD
 	if (!nr_reg && !nr_clk)
+=======
+
+	if (nr_reg <= 0 && nr_clk <= 0)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return NULL;
 
 	reg_clk = devm_kzalloc(dev, sizeof(*reg_clk), GFP_KERNEL);
@@ -175,18 +200,103 @@ of_coresight_get_reg_clk(struct device *dev, const struct device_node *node)
 	return reg_clk;
 }
 
+<<<<<<< HEAD
+=======
+/*
+ * of_coresight_parse_endpoint : Parse the given output endpoint @ep
+ * and fill the connection information in @pdata[@i].
+ *
+ * Parses the local port, remote device name and the remote port.
+ *
+ * Returns :
+ *	 1	- If the parsing is successful and a connection record
+ *		  was created for an output connection.
+ *	 0	- If the parsing completed without any fatal errors.
+ *	-Errno	- Fatal error, abort the scanning.
+ */
+static int of_coresight_parse_endpoint(struct device *dev,
+				       struct device_node *ep,
+				       struct coresight_platform_data *pdata,
+				       int i)
+{
+	int ret = 0;
+	struct of_endpoint endpoint, rendpoint;
+	struct device_node *rparent = NULL;
+	struct device_node *rep = NULL;
+	struct device *rdev = NULL;
+	struct device_node *sn = NULL;
+
+	do {
+		/* Parse the local port details */
+		if (of_graph_parse_endpoint(ep, &endpoint))
+			break;
+		/*
+		 * Get a handle on the remote endpoint and the device it is
+		 * attached to.
+		 */
+		rep = of_graph_get_remote_endpoint(ep);
+		if (!rep)
+			break;
+		rparent = of_graph_get_port_parent(rep);
+		if (!rparent)
+			break;
+		if (of_graph_parse_endpoint(rep, &rendpoint))
+			break;
+
+		/* If the remote device is not available, defer probing */
+		rdev = of_coresight_get_endpoint_device(rparent);
+		if (!rdev) {
+			ret = -EPROBE_DEFER;
+			break;
+		}
+
+		pdata->outports[i] = endpoint.port;
+		ret = of_property_read_string(rparent, "coresight-name",
+						&pdata->child_names[i]);
+		if (ret)
+			pdata->child_names[i] = devm_kstrdup(dev,
+						     dev_name(rdev),
+						     GFP_KERNEL);
+		pdata->child_ports[i] = rendpoint.port;
+
+		pdata->source_names[i] = NULL;
+		sn = of_parse_phandle(ep, "source", 0);
+		if (sn) {
+			ret = of_property_read_string(sn,
+				"coresight-name", &pdata->source_names[i]);
+			of_node_put(sn);
+		}
+		/* Connection record updated */
+		ret = 1;
+	} while (0);
+
+	if (rparent)
+		of_node_put(rparent);
+	if (rep)
+		of_node_put(rep);
+	if (rdev)
+		put_device(rdev);
+
+	return ret;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct coresight_platform_data *
 of_get_coresight_platform_data(struct device *dev,
 			       const struct device_node *node)
 {
 	int i = 0, ret = 0;
 	struct coresight_platform_data *pdata;
+<<<<<<< HEAD
 	struct of_endpoint endpoint, rendpoint;
 	struct device *rdev;
 	struct device_node *ep = NULL;
 	struct device_node *rparent = NULL;
 	struct device_node *rport = NULL;
 	struct device_node *sn = NULL;
+=======
+	struct device_node *ep = NULL;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
 	if (!pdata)
@@ -197,6 +307,7 @@ of_get_coresight_platform_data(struct device *dev,
 		/* Use device name as sysfs handle */
 		pdata->name = dev_name(dev);
 	}
+<<<<<<< HEAD
 	/* Get the number of input and output port for this component */
 	of_coresight_get_ports(node, &pdata->nr_inport, &pdata->nr_outport);
 
@@ -265,6 +376,41 @@ of_get_coresight_platform_data(struct device *dev,
 
 	pdata->cpu = of_coresight_get_cpu(node);
 
+=======
+	pdata->cpu = of_coresight_get_cpu(node);
+
+	/* Get the number of input and output port for this component */
+	of_coresight_get_ports(node, &pdata->nr_inport, &pdata->nr_outport);
+
+	/* If there are no output connections, we are done */
+	if (!pdata->nr_outport)
+		return pdata;
+
+	ret = of_coresight_alloc_memory(dev, pdata);
+	if (ret)
+		return ERR_PTR(ret);
+
+	/* Iterate through each port to discover topology */
+	while ((ep = of_graph_get_next_endpoint(node, ep))) {
+		/*
+		 * No need to deal with input ports, as processing the
+		 * output ports connected to them will process the details.
+		 */
+		if (of_find_property(ep, "slave-mode", NULL))
+			continue;
+
+		ret = of_coresight_parse_endpoint(dev, ep, pdata, i);
+		switch (ret) {
+		case 1:
+			i++;		/* Fall through */
+		case 0:
+			break;
+		default:
+			return ERR_PTR(ret);
+		}
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pdata->reg_clk = of_coresight_get_reg_clk(dev, node);
 	if (IS_ERR(pdata->reg_clk))
 		return (void *)(pdata->reg_clk);

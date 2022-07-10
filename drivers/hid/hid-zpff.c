@@ -66,11 +66,25 @@ static int zpff_init(struct hid_device *hid)
 {
 	struct zpff_device *zpff;
 	struct hid_report *report;
+<<<<<<< HEAD
 	struct hid_input *hidinput = list_entry(hid->inputs.next,
 						struct hid_input, list);
 	struct input_dev *dev = hidinput->input;
 	int i, error;
 
+=======
+	struct hid_input *hidinput;
+	struct input_dev *dev;
+	int i, error;
+
+	if (list_empty(&hid->inputs)) {
+		hid_err(hid, "no inputs found\n");
+		return -ENODEV;
+	}
+	hidinput = list_entry(hid->inputs.next, struct hid_input, list);
+	dev = hidinput->input;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	for (i = 0; i < 4; i++) {
 		report = hid_validate_values(hid, HID_OUTPUT_REPORT, 0, i, 1);
 		if (!report)

@@ -258,17 +258,27 @@ static int grgpio_irq_map(struct irq_domain *d, unsigned int irq,
 	lirq->irq = irq;
 	uirq = &priv->uirqs[lirq->index];
 	if (uirq->refcnt == 0) {
+<<<<<<< HEAD
+=======
+		spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ret = request_irq(uirq->uirq, grgpio_irq_handler, 0,
 				  dev_name(priv->dev), priv);
 		if (ret) {
 			dev_err(priv->dev,
 				"Could not request underlying irq %d\n",
 				uirq->uirq);
+<<<<<<< HEAD
 
 			spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
 
 			return ret;
 		}
+=======
+			return ret;
+		}
+		spin_lock_irqsave(&priv->gc.bgpio_lock, flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	uirq->refcnt++;
 
@@ -314,8 +324,16 @@ static void grgpio_irq_unmap(struct irq_domain *d, unsigned int irq)
 	if (index >= 0) {
 		uirq = &priv->uirqs[lirq->index];
 		uirq->refcnt--;
+<<<<<<< HEAD
 		if (uirq->refcnt == 0)
 			free_irq(uirq->uirq, priv);
+=======
+		if (uirq->refcnt == 0) {
+			spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);
+			free_irq(uirq->uirq, priv);
+			return;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	spin_unlock_irqrestore(&priv->gc.bgpio_lock, flags);

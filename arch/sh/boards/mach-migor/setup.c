@@ -5,6 +5,10 @@
  * Copyright (C) 2008 Magnus Damm
  */
 #include <linux/clkdev.h>
+<<<<<<< HEAD
+=======
+#include <linux/dma-mapping.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/init.h>
 #include <linux/platform_device.h>
 #include <linux/interrupt.h>

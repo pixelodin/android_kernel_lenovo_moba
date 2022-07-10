@@ -592,6 +592,18 @@
 			      <0x0 0x2d10030 0x0 0x4>;
 		};
 
+<<<<<<< HEAD
+=======
+		mdio1: mdio@2d64000 {
+			compatible = "gianfar";
+			device_type = "mdio";
+			#address-cells = <1>;
+			#size-cells = <0>;
+			reg = <0x0 0x2d64000 0x0 0x4000>,
+			      <0x0 0x2d50030 0x0 0x4>;
+		};
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ptp_clock@2d10e00 {
 			compatible = "fsl,etsec-ptp";
 			reg = <0x0 0x2d10e00 0x0 0xb0>;

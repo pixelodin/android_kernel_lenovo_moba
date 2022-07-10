@@ -22,12 +22,15 @@ int fsa4480_reg_notifier(struct notifier_block *nb,
 			 struct device_node *node);
 int fsa4480_unreg_notifier(struct notifier_block *nb,
 			   struct device_node *node);
+<<<<<<< HEAD
 int fsa4480_switch_event_2(struct device_node *node,
 			 enum fsa_function event);
 int fsa4480_reg_notifier_2(struct notifier_block *nb,
 			 struct device_node *node);
 int fsa4480_unreg_notifier_2(struct notifier_block *nb,
 			   struct device_node *node);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #else
 static inline int fsa4480_switch_event(struct device_node *node,
 				       enum fsa_function event)
@@ -46,6 +49,7 @@ static inline int fsa4480_unreg_notifier(struct notifier_block *nb,
 {
 	return 0;
 }
+<<<<<<< HEAD
 static inline int fsa4480_switch_event_2(struct device_node *node,
 				       enum fsa_function event)
 {
@@ -63,6 +67,8 @@ static inline int fsa4480_unreg_notifier_2(struct notifier_block *nb,
 {
 	return 0;
 }
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif /* CONFIG_QCOM_FSA4480_I2C */
 
 #endif /* FSA4480_I2C_H */

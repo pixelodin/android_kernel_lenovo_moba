@@ -909,6 +909,10 @@ enum {
 	C_DC_PG_STS_TX_MBE_CNT,
 	C_SW_CPU_INTR,
 	C_SW_CPU_RCV_LIM,
+<<<<<<< HEAD
+=======
+	C_SW_CTX0_SEQ_DROP,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	C_SW_VTX_WAIT,
 	C_SW_PIO_WAIT,
 	C_SW_PIO_DRAIN,

@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0-only */
 /*
+<<<<<<< HEAD
  * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2017, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #ifndef __LINUX_IO_PGTABLE_FAST_H
@@ -79,7 +83,12 @@ av8l_fast_iova_to_phys_public(struct io_pgtable_ops *ops,
  */
 #define AV8L_FAST_PTE_UNMAPPED_NEED_TLBI 0xa
 
+<<<<<<< HEAD
 void av8l_fast_clear_stale_ptes(struct io_pgtable_ops *ops, bool skip_sync);
+=======
+void av8l_fast_clear_stale_ptes(struct io_pgtable_ops *ops, u64 base,
+				u64 start, u64 end, bool skip_sync);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 void av8l_register_notify(struct notifier_block *nb);
 
 #else  /* !CONFIG_IOMMU_IO_PGTABLE_FAST_PROVE_TLB */
@@ -87,6 +96,12 @@ void av8l_register_notify(struct notifier_block *nb);
 #define AV8L_FAST_PTE_UNMAPPED_NEED_TLBI 0
 
 static inline void av8l_fast_clear_stale_ptes(struct io_pgtable_ops *ops,
+<<<<<<< HEAD
+=======
+					      u64 base,
+					      u64 start,
+					      u64 end,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 					      bool skip_sync)
 {
 }

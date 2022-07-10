@@ -311,6 +311,10 @@ static inline unsigned short hfsplus_min_io_size(struct super_block *sb)
 #define hfs_btree_open hfsplus_btree_open
 #define hfs_btree_close hfsplus_btree_close
 #define hfs_btree_write hfsplus_btree_write
+<<<<<<< HEAD
+=======
+#define hfs_bmap_reserve hfsplus_bmap_reserve
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define hfs_bmap_alloc hfsplus_bmap_alloc
 #define hfs_bmap_free hfsplus_bmap_free
 #define hfs_bnode_read hfsplus_bnode_read
@@ -395,6 +399,10 @@ u32 hfsplus_calc_btree_clump_size(u32 block_size, u32 node_size, u64 sectors,
 struct hfs_btree *hfs_btree_open(struct super_block *sb, u32 id);
 void hfs_btree_close(struct hfs_btree *tree);
 int hfs_btree_write(struct hfs_btree *tree);
+<<<<<<< HEAD
+=======
+int hfs_bmap_reserve(struct hfs_btree *tree, int rsvd_nodes);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct hfs_bnode *hfs_bmap_alloc(struct hfs_btree *tree);
 void hfs_bmap_free(struct hfs_bnode *node);
 

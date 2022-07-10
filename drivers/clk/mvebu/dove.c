@@ -190,10 +190,22 @@ static void __init dove_clk_init(struct device_node *np)
 
 	mvebu_coreclk_setup(np, &dove_coreclks);
 
+<<<<<<< HEAD
 	if (ddnp)
 		dove_divider_clk_init(ddnp);
 
 	if (cgnp)
 		mvebu_clk_gating_setup(cgnp, dove_gating_desc);
+=======
+	if (ddnp) {
+		dove_divider_clk_init(ddnp);
+		of_node_put(ddnp);
+	}
+
+	if (cgnp) {
+		mvebu_clk_gating_setup(cgnp, dove_gating_desc);
+		of_node_put(cgnp);
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 CLK_OF_DECLARE(dove_clk, "marvell,dove-core-clock", dove_clk_init);

@@ -187,6 +187,10 @@ struct kernfs_root {
 
 	/* private fields, do not use outside kernfs proper */
 	struct idr		ino_idr;
+<<<<<<< HEAD
+=======
+	u32			last_ino;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u32			next_generation;
 	struct kernfs_syscall_ops *syscall_ops;
 

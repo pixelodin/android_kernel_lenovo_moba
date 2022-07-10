@@ -124,6 +124,11 @@
 &i2c1 {
 	status = "okay";
 	clock-frequency = <100000>;
+<<<<<<< HEAD
+=======
+	i2c-sda-falling-time-ns = <890>;  /* hcnt */
+	i2c-sdl-falling-time-ns = <890>;  /* lcnt */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	adc@14 {
 		compatible = "lltc,ltc2497";

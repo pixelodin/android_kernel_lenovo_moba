@@ -696,8 +696,15 @@ static int __init optee_driver_init(void)
 		return -ENODEV;
 
 	np = of_find_matching_node(fw_np, optee_match);
+<<<<<<< HEAD
 	if (!np)
 		return -ENODEV;
+=======
+	if (!np || !of_device_is_available(np)) {
+		of_node_put(np);
+		return -ENODEV;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	optee = optee_probe(np);
 	of_node_put(np);

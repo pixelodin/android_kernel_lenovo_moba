@@ -305,7 +305,11 @@ int tcp_v4_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
 						 inet->inet_daddr);
 	}
 
+<<<<<<< HEAD
 	inet->inet_id = tp->write_seq ^ jiffies;
+=======
+	inet->inet_id = prandom_u32();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (tcp_fastopen_defer_connect(sk, &err))
 		return err;
@@ -1436,7 +1440,11 @@ struct sock *tcp_v4_syn_recv_sock(const struct sock *sk, struct sk_buff *skb,
 	inet_csk(newsk)->icsk_ext_hdr_len = 0;
 	if (inet_opt)
 		inet_csk(newsk)->icsk_ext_hdr_len = inet_opt->opt.optlen;
+<<<<<<< HEAD
 	newinet->inet_id = newtp->write_seq ^ jiffies;
+=======
+	newinet->inet_id = prandom_u32();
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!dst) {
 		dst = inet_csk_route_child_sock(sk, newsk, req);
@@ -2020,13 +2028,21 @@ static void *listening_get_next(struct seq_file *seq, void *cur)
 	struct tcp_iter_state *st = seq->private;
 	struct net *net = seq_file_net(seq);
 	struct inet_listen_hashbucket *ilb;
+<<<<<<< HEAD
+=======
+	struct hlist_nulls_node *node;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct sock *sk = cur;
 
 	if (!sk) {
 get_head:
 		ilb = &tcp_hashinfo.listening_hash[st->bucket];
 		spin_lock(&ilb->lock);
+<<<<<<< HEAD
 		sk = sk_head(&ilb->head);
+=======
+		sk = sk_nulls_head(&ilb->nulls_head);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		st->offset = 0;
 		goto get_sk;
 	}
@@ -2034,9 +2050,15 @@ get_head:
 	++st->num;
 	++st->offset;
 
+<<<<<<< HEAD
 	sk = sk_next(sk);
 get_sk:
 	sk_for_each_from(sk) {
+=======
+	sk = sk_nulls_next(sk);
+get_sk:
+	sk_nulls_for_each_from(sk, node) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (!net_eq(sock_net(sk), net))
 			continue;
 		if (sk->sk_family == afinfo->family)
@@ -2333,7 +2355,12 @@ static void get_tcp4_sock(struct sock *sk, struct seq_file *f, int i)
 		/* Because we don't lock the socket,
 		 * we might find a transient negative value.
 		 */
+<<<<<<< HEAD
 		rx_queue = max_t(int, tp->rcv_nxt - tp->copied_seq, 0);
+=======
+		rx_queue = max_t(int, READ_ONCE(tp->rcv_nxt) -
+				      tp->copied_seq, 0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	seq_printf(f, "%4d: %08X:%04X %08X:%04X %02X %08X:%08X %02X:%08lX "
 			"%08X %5u %8d %lu %d %pK %lu %lu %u %u %d",

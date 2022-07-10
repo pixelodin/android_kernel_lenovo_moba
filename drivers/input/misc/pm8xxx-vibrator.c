@@ -98,7 +98,11 @@ static int pm8xxx_vib_set(struct pm8xxx_vib *vib, bool on)
 
 	if (regs->enable_mask)
 		rc = regmap_update_bits(vib->regmap, regs->enable_addr,
+<<<<<<< HEAD
 					on ? regs->enable_mask : 0, val);
+=======
+					regs->enable_mask, on ? ~0 : 0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return rc;
 }

@@ -640,7 +640,11 @@ device_initcall(register_warn_debugfs);
  */
 __visible void __stack_chk_fail(void)
 {
+<<<<<<< HEAD
 	panic("stack-protector: Kernel stack is corrupted in: %pB\n",
+=======
+	panic("stack-protector: Kernel stack is corrupted in: %pB",
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		__builtin_return_address(0));
 }
 EXPORT_SYMBOL(__stack_chk_fail);

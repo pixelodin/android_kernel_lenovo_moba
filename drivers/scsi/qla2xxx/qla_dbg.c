@@ -2520,12 +2520,15 @@ qla83xx_fw_dump_failed:
 /*                         Driver Debug Functions.                          */
 /****************************************************************************/
 
+<<<<<<< HEAD
 static inline int
 ql_mask_match(uint32_t level)
 {
 	return (level & ql2xextended_error_logging) == level;
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * This function is for formatting and logging debug information.
  * It is to be used when vha is available. It formats the message

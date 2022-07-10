@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2014-2017,2019 The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2014-2017,2019-2020 The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include "adreno.h"
@@ -570,7 +574,11 @@ static void _preemption_close(struct adreno_device *adreno_dev)
 	unsigned int i;
 
 	del_timer(&preempt->timer);
+<<<<<<< HEAD
 	kgsl_free_global(device, &preempt->counters);
+=======
+	kgsl_free_global(device, &preempt->scratch);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	a5xx_preemption_iommu_close(adreno_dev);
 
 	FOR_EACH_RINGBUFFER(adreno_dev, rb, i) {
@@ -604,14 +612,22 @@ int a5xx_preemption_init(struct adreno_device *adreno_dev)
 	timer_setup(&preempt->timer, _a5xx_preemption_timer, 0);
 
 	/* Allocate mem for storing preemption counters */
+<<<<<<< HEAD
 	ret = kgsl_allocate_global(device, &preempt->counters,
+=======
+	ret = kgsl_allocate_global(device, &preempt->scratch,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		adreno_dev->num_ringbuffers *
 		A5XX_CP_CTXRECORD_PREEMPTION_COUNTER_SIZE, 0, 0,
 		"preemption_counters");
 	if (ret)
 		goto err;
 
+<<<<<<< HEAD
 	addr = preempt->counters.gpuaddr;
+=======
+	addr = preempt->scratch.gpuaddr;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Allocate mem for storing preemption switch record */
 	FOR_EACH_RINGBUFFER(adreno_dev, rb, i) {

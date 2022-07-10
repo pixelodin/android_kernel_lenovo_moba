@@ -192,6 +192,10 @@ xfs_symlink(
 	pathlen = strlen(target_path);
 	if (pathlen >= XFS_SYMLINK_MAXLEN)      /* total string too long */
 		return -ENAMETOOLONG;
+<<<<<<< HEAD
+=======
+	ASSERT(pathlen > 0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	udqp = gdqp = NULL;
 	prid = xfs_get_initial_prid(dp);
@@ -378,6 +382,15 @@ out_release_inode:
 
 /*
  * Free a symlink that has blocks associated with it.
+<<<<<<< HEAD
+=======
+ *
+ * Note: zero length symlinks are not allowed to exist. When we set the size to
+ * zero, also change it to a regular file so that it does not get written to
+ * disk as a zero length symlink. The inode is on the unlinked list already, so
+ * userspace cannot find this inode anymore, so this change is not user visible
+ * but allows us to catch corrupt zero-length symlinks in the verifiers.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 STATIC int
 xfs_inactive_symlink_rmt(
@@ -412,13 +425,23 @@ xfs_inactive_symlink_rmt(
 	xfs_trans_ijoin(tp, ip, 0);
 
 	/*
+<<<<<<< HEAD
 	 * Lock the inode, fix the size, and join it to the transaction.
 	 * Hold it so in the normal path, we still have it locked for
 	 * the second transaction.  In the error paths we need it
+=======
+	 * Lock the inode, fix the size, turn it into a regular file and join it
+	 * to the transaction.  Hold it so in the normal path, we still have it
+	 * locked for the second transaction.  In the error paths we need it
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	 * held so the cancel won't rele it, see below.
 	 */
 	size = (int)ip->i_d.di_size;
 	ip->i_d.di_size = 0;
+<<<<<<< HEAD
+=======
+	VFS_I(ip)->i_mode = (VFS_I(ip)->i_mode & ~S_IFMT) | S_IFREG;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
 	/*
 	 * Find the block(s) so we can inval and unmap them.
@@ -494,6 +517,7 @@ xfs_inactive_symlink(
 		return -EIO;
 
 	xfs_ilock(ip, XFS_ILOCK_EXCL);
+<<<<<<< HEAD
 
 	/*
 	 * Zero length symlinks _can_ exist.
@@ -505,6 +529,12 @@ xfs_inactive_symlink(
 	}
 
 	if (pathlen < 0 || pathlen > XFS_SYMLINK_MAXLEN) {
+=======
+	pathlen = (int)ip->i_d.di_size;
+	ASSERT(pathlen);
+
+	if (pathlen <= 0 || pathlen > XFS_SYMLINK_MAXLEN) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		xfs_alert(mp, "%s: inode (0x%llx) bad symlink length (%d)",
 			 __func__, (unsigned long long)ip->i_ino, pathlen);
 		xfs_iunlock(ip, XFS_ILOCK_EXCL);
@@ -512,12 +542,21 @@ xfs_inactive_symlink(
 		return -EFSCORRUPTED;
 	}
 
+<<<<<<< HEAD
 	if (ip->i_df.if_flags & XFS_IFINLINE) {
 		if (ip->i_df.if_bytes > 0) 
 			xfs_idata_realloc(ip, -(ip->i_df.if_bytes),
 					  XFS_DATA_FORK);
 		xfs_iunlock(ip, XFS_ILOCK_EXCL);
 		ASSERT(ip->i_df.if_bytes == 0);
+=======
+	/*
+	 * Inline fork state gets removed by xfs_difree() so we have nothing to
+	 * do here in that case.
+	 */
+	if (ip->i_df.if_flags & XFS_IFINLINE) {
+		xfs_iunlock(ip, XFS_ILOCK_EXCL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return 0;
 	}
 

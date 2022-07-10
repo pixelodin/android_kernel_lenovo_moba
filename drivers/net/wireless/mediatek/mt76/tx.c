@@ -148,7 +148,12 @@ mt76_check_agg_ssn(struct mt76_txq *mtxq, struct sk_buff *skb)
 {
 	struct ieee80211_hdr *hdr = (struct ieee80211_hdr *) skb->data;
 
+<<<<<<< HEAD
 	if (!ieee80211_is_data_qos(hdr->frame_control))
+=======
+	if (!ieee80211_is_data_qos(hdr->frame_control) ||
+	    !ieee80211_is_data_present(hdr->frame_control))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return;
 
 	mtxq->agg_ssn = le16_to_cpu(hdr->seq_ctrl) + 0x10;

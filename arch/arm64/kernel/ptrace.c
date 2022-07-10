@@ -627,6 +627,16 @@ static int gpr_set(struct task_struct *target, const struct user_regset *regset,
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+static int fpr_active(struct task_struct *target, const struct user_regset *regset)
+{
+	if (!system_supports_fpsimd())
+		return -ENODEV;
+	return regset->n;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * TODO: update fp accessors for lazy context switching (sync/flush hwstate)
  */
@@ -649,6 +659,12 @@ static int fpr_get(struct task_struct *target, const struct user_regset *regset,
 		   unsigned int pos, unsigned int count,
 		   void *kbuf, void __user *ubuf)
 {
+<<<<<<< HEAD
+=======
+	if (!system_supports_fpsimd())
+		return -EINVAL;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (target == current)
 		fpsimd_preserve_current_state();
 
@@ -688,6 +704,12 @@ static int fpr_set(struct task_struct *target, const struct user_regset *regset,
 {
 	int ret;
 
+<<<<<<< HEAD
+=======
+	if (!system_supports_fpsimd())
+		return -EINVAL;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = __fpr_set(target, regset, pos, count, kbuf, ubuf, 0);
 	if (ret)
 		return ret;
@@ -990,6 +1012,10 @@ static const struct user_regset aarch64_regsets[] = {
 		 */
 		.size = sizeof(u32),
 		.align = sizeof(u32),
+<<<<<<< HEAD
+=======
+		.active = fpr_active,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.get = fpr_get,
 		.set = fpr_set
 	},
@@ -1176,6 +1202,12 @@ static int compat_vfp_get(struct task_struct *target,
 	compat_ulong_t fpscr;
 	int ret, vregs_end_pos;
 
+<<<<<<< HEAD
+=======
+	if (!system_supports_fpsimd())
+		return -EINVAL;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	uregs = &target->thread.uw.fpsimd_state;
 
 	if (target == current)
@@ -1209,6 +1241,12 @@ static int compat_vfp_set(struct task_struct *target,
 	compat_ulong_t fpscr;
 	int ret, vregs_end_pos;
 
+<<<<<<< HEAD
+=======
+	if (!system_supports_fpsimd())
+		return -EINVAL;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	uregs = &target->thread.uw.fpsimd_state;
 
 	vregs_end_pos = VFP_STATE_SIZE - sizeof(compat_ulong_t);
@@ -1266,6 +1304,10 @@ static const struct user_regset aarch32_regsets[] = {
 		.n = VFP_STATE_SIZE / sizeof(compat_ulong_t),
 		.size = sizeof(compat_ulong_t),
 		.align = sizeof(compat_ulong_t),
+<<<<<<< HEAD
+=======
+		.active = fpr_active,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.get = compat_vfp_get,
 		.set = compat_vfp_set
 	},

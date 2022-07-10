@@ -504,8 +504,15 @@ static int __write_ring(struct pvcalls_data_intf *intf,
 	virt_mb();
 
 	size = pvcalls_queued(prod, cons, array_size);
+<<<<<<< HEAD
 	if (size >= array_size)
 		return -EINVAL;
+=======
+	if (size > array_size)
+		return -EINVAL;
+	if (size == array_size)
+		return 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (len > array_size - size)
 		len = array_size - size;
 

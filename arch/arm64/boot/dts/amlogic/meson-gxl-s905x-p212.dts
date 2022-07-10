@@ -51,6 +51,10 @@
 	status = "okay";
 	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
 	pinctrl-names = "default";
+<<<<<<< HEAD
+=======
+	hdmi-supply = <&hdmi_5v>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 &hdmi_tx_tmds_port {

@@ -563,7 +563,11 @@ static int ak8974_read_raw(struct iio_dev *indio_dev,
 		 * We read all axes and discard all but one, for optimized
 		 * reading, use the triggered buffer.
 		 */
+<<<<<<< HEAD
 		*val = le16_to_cpu(hw_values[chan->address]);
+=======
+		*val = (s16)le16_to_cpu(hw_values[chan->address]);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		ret = IIO_VAL_INT;
 	}

@@ -220,7 +220,11 @@ struct rxrpc_peer *rxrpc_alloc_peer(struct rxrpc_local *local, gfp_t gfp)
 	peer = kzalloc(sizeof(struct rxrpc_peer), gfp);
 	if (peer) {
 		atomic_set(&peer->usage, 1);
+<<<<<<< HEAD
 		peer->local = local;
+=======
+		peer->local = rxrpc_get_local(local);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		INIT_HLIST_HEAD(&peer->error_targets);
 		peer->service_conns = RB_ROOT;
 		seqlock_init(&peer->service_conn_lock);
@@ -311,7 +315,10 @@ void rxrpc_new_incoming_peer(struct rxrpc_sock *rx, struct rxrpc_local *local,
 	unsigned long hash_key;
 
 	hash_key = rxrpc_peer_hash_key(local, &peer->srx);
+<<<<<<< HEAD
 	peer->local = local;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	rxrpc_init_peer(rx, peer, hash_key);
 
 	spin_lock(&rxnet->peer_hash_lock);
@@ -386,7 +393,11 @@ struct rxrpc_peer *rxrpc_get_peer(struct rxrpc_peer *peer)
 	int n;
 
 	n = atomic_inc_return(&peer->usage);
+<<<<<<< HEAD
 	trace_rxrpc_peer(peer, rxrpc_peer_got, n, here);
+=======
+	trace_rxrpc_peer(peer->debug_id, rxrpc_peer_got, n, here);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return peer;
 }
 
@@ -400,7 +411,11 @@ struct rxrpc_peer *rxrpc_get_peer_maybe(struct rxrpc_peer *peer)
 	if (peer) {
 		int n = atomic_fetch_add_unless(&peer->usage, 1, 0);
 		if (n > 0)
+<<<<<<< HEAD
 			trace_rxrpc_peer(peer, rxrpc_peer_got, n + 1, here);
+=======
+			trace_rxrpc_peer(peer->debug_id, rxrpc_peer_got, n + 1, here);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		else
 			peer = NULL;
 	}
@@ -421,6 +436,10 @@ static void __rxrpc_put_peer(struct rxrpc_peer *peer)
 	list_del_init(&peer->keepalive_link);
 	spin_unlock_bh(&rxnet->peer_hash_lock);
 
+<<<<<<< HEAD
+=======
+	rxrpc_put_local(peer->local);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	kfree_rcu(peer, rcu);
 }
 
@@ -430,11 +449,21 @@ static void __rxrpc_put_peer(struct rxrpc_peer *peer)
 void rxrpc_put_peer(struct rxrpc_peer *peer)
 {
 	const void *here = __builtin_return_address(0);
+<<<<<<< HEAD
 	int n;
 
 	if (peer) {
 		n = atomic_dec_return(&peer->usage);
 		trace_rxrpc_peer(peer, rxrpc_peer_put, n, here);
+=======
+	unsigned int debug_id;
+	int n;
+
+	if (peer) {
+		debug_id = peer->debug_id;
+		n = atomic_dec_return(&peer->usage);
+		trace_rxrpc_peer(debug_id, rxrpc_peer_put, n, here);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (n == 0)
 			__rxrpc_put_peer(peer);
 	}
@@ -447,6 +476,7 @@ void rxrpc_put_peer(struct rxrpc_peer *peer)
 void rxrpc_put_peer_locked(struct rxrpc_peer *peer)
 {
 	const void *here = __builtin_return_address(0);
+<<<<<<< HEAD
 	int n;
 
 	n = atomic_dec_return(&peer->usage);
@@ -454,6 +484,17 @@ void rxrpc_put_peer_locked(struct rxrpc_peer *peer)
 	if (n == 0) {
 		hash_del_rcu(&peer->hash_link);
 		list_del_init(&peer->keepalive_link);
+=======
+	unsigned int debug_id = peer->debug_id;
+	int n;
+
+	n = atomic_dec_return(&peer->usage);
+	trace_rxrpc_peer(debug_id, rxrpc_peer_put, n, here);
+	if (n == 0) {
+		hash_del_rcu(&peer->hash_link);
+		list_del_init(&peer->keepalive_link);
+		rxrpc_put_local(peer->local);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		kfree_rcu(peer, rcu);
 	}
 }

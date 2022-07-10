@@ -1508,7 +1508,11 @@ int hists__collapse_resort(struct hists *hists, struct ui_progress *prog)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
+=======
+static int64_t hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct hists *hists = a->hists;
 	struct perf_hpp_fmt *fmt;

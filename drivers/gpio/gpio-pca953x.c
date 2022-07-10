@@ -58,7 +58,11 @@
 #define PCA_GPIO_MASK		0x00FF
 
 #define PCAL_GPIO_MASK		0x1f
+<<<<<<< HEAD
 #define PCAL_PINCTRL_MASK	0xe0
+=======
+#define PCAL_PINCTRL_MASK	0x60
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define PCA_INT			0x0100
 #define PCA_PCAL		0x0200

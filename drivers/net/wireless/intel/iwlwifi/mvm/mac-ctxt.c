@@ -85,6 +85,13 @@ const u8 iwl_mvm_ac_to_gen2_tx_fifo[] = {
 	IWL_GEN2_EDCA_TX_FIFO_VI,
 	IWL_GEN2_EDCA_TX_FIFO_BE,
 	IWL_GEN2_EDCA_TX_FIFO_BK,
+<<<<<<< HEAD
+=======
+	IWL_GEN2_TRIG_TX_FIFO_VO,
+	IWL_GEN2_TRIG_TX_FIFO_VI,
+	IWL_GEN2_TRIG_TX_FIFO_BE,
+	IWL_GEN2_TRIG_TX_FIFO_BK,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct iwl_mvm_mac_iface_iterator_data {

@@ -157,11 +157,19 @@ struct usbhs_priv;
 #define VBSTS	(1 << 7)	/* VBUS_0 and VBUSIN_0 Input Status */
 #define VALID	(1 << 3)	/* USB Request Receive */
 
+<<<<<<< HEAD
 #define DVSQ_MASK		(0x3 << 4)	/* Device State */
+=======
+#define DVSQ_MASK		(0x7 << 4)	/* Device State */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define  POWER_STATE		(0 << 4)
 #define  DEFAULT_STATE		(1 << 4)
 #define  ADDRESS_STATE		(2 << 4)
 #define  CONFIGURATION_STATE	(3 << 4)
+<<<<<<< HEAD
+=======
+#define  SUSPENDED_STATE	(4 << 4)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define CTSQ_MASK		(0x7)	/* Control Transfer Stage */
 #define  IDLE_SETUP_STAGE	0	/* Idle stage or setup stage */

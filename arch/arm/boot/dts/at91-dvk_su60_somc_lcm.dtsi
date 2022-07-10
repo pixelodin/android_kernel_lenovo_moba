@@ -59,9 +59,15 @@
 &i2c1 {
 	status = "okay";
 
+<<<<<<< HEAD
 	ft5426@56 {
 		compatible = "focaltech,ft5426", "edt,edt-ft5406";
 		reg = <56>;
+=======
+	ft5426@38 {
+		compatible = "focaltech,ft5426", "edt,edt-ft5406";
+		reg = <0x38>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		pinctrl-names = "default";
 		pinctrl-0 = <&pinctrl_lcd_ctp_int>;
 

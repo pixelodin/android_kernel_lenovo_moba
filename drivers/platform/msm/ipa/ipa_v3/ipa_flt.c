@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2012-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2012-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include "ipa_i.h"
@@ -1693,10 +1697,15 @@ int ipa3_mdfy_flt_rule(struct ipa_ioc_mdfy_flt_rule *hdls)
 	}
 
 	mutex_lock(&ipa3_ctx->lock);
+<<<<<<< HEAD
+=======
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	for (i = 0; i < hdls->num_rules; i++) {
 		/* if hashing not supported, all tables are non-hash tables*/
 		if (ipa3_ctx->ipa_fltrt_not_hashable)
 			hdls->rules[i].rule.hashable = false;
+<<<<<<< HEAD
 		__ipa_convert_flt_mdfy_in(hdls->rules[i], &rule);
 		if (__ipa_mdfy_flt_rule(&rule, hdls->ip)) {
 			IPAERR_RL("failed to mdfy flt rule %i\n", i);
@@ -1704,6 +1713,20 @@ int ipa3_mdfy_flt_rule(struct ipa_ioc_mdfy_flt_rule *hdls)
 		} else {
 			hdls->rules[i].status = 0;
 			__ipa_convert_flt_mdfy_out(rule, &hdls->rules[i]);
+=======
+
+		__ipa_convert_flt_mdfy_in(hdls->rules[i], &rule);
+
+		result = __ipa_mdfy_flt_rule(&rule, hdls->ip);
+
+		__ipa_convert_flt_mdfy_out(rule, &hdls->rules[i]);
+
+		if (result) {
+			IPAERR_RL("failed to mdfy flt rule %d\n", i);
+			hdls->rules[i].status = IPA_FLT_STATUS_OF_MDFY_FAILED;
+		} else {
+			hdls->rules[i].status = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 	}
 

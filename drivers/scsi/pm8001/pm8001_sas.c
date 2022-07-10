@@ -374,6 +374,16 @@ static int pm8001_task_exec(struct sas_task *task,
 		return 0;
 	}
 	pm8001_ha = pm8001_find_ha_by_dev(task->dev);
+<<<<<<< HEAD
+=======
+	if (pm8001_ha->controller_fatal_error) {
+		struct task_status_struct *ts = &t->task_status;
+
+		ts->resp = SAS_TASK_UNDELIVERED;
+		t->task_done(t);
+		return 0;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	PM8001_IO_DBG(pm8001_ha, pm8001_printk("pm8001_task_exec device \n "));
 	spin_lock_irqsave(&pm8001_ha->lock, flags);
 	do {
@@ -466,7 +476,11 @@ err_out:
 	dev_printk(KERN_ERR, pm8001_ha->dev, "pm8001 exec failed[%d]!\n", rc);
 	if (!sas_protocol_ata(t->task_proto))
 		if (n_elem)
+<<<<<<< HEAD
 			dma_unmap_sg(pm8001_ha->dev, t->scatter, n_elem,
+=======
+			dma_unmap_sg(pm8001_ha->dev, t->scatter, t->num_scatter,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				t->data_dir);
 out_done:
 	spin_unlock_irqrestore(&pm8001_ha->lock, flags);
@@ -859,6 +873,11 @@ static void pm8001_dev_gone_notify(struct domain_device *dev)
 			spin_unlock_irqrestore(&pm8001_ha->lock, flags);
 			pm8001_exec_internal_task_abort(pm8001_ha, pm8001_dev ,
 				dev, 1, 0);
+<<<<<<< HEAD
+=======
+			while (pm8001_dev->running_req)
+				msleep(20);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			spin_lock_irqsave(&pm8001_ha->lock, flags);
 		}
 		PM8001_CHIP_DISP->dereg_dev_req(pm8001_ha, device_id);
@@ -1231,8 +1250,15 @@ int pm8001_abort_task(struct sas_task *task)
 			PM8001_MSG_DBG(pm8001_ha,
 				pm8001_printk("Waiting for Port reset\n"));
 			wait_for_completion(&completion_reset);
+<<<<<<< HEAD
 			if (phy->port_reset_status)
 				goto out;
+=======
+			if (phy->port_reset_status) {
+				pm8001_dev_gone_notify(dev);
+				goto out;
+			}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 			/*
 			 * 4. SATA Abort ALL

@@ -624,7 +624,11 @@ EXPORT_SYMBOL(ccw_device_tm_start_timeout);
  * @mask: mask of paths to use
  *
  * Return the number of 64K-bytes blocks all paths at least support
+<<<<<<< HEAD
  * for a transport command. Return values <= 0 indicate failures.
+=======
+ * for a transport command. Return value 0 indicates failure.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 int ccw_device_get_mdc(struct ccw_device *cdev, u8 mask)
 {

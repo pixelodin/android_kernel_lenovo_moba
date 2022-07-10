@@ -1614,7 +1614,11 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
 
 	build_id_path = strdup(filename);
 	if (!build_id_path)
+<<<<<<< HEAD
 		return -1;
+=======
+		return ENOMEM;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/*
 	 * old style build-id cache has name of XX/XXXXXXX.. while
@@ -1871,11 +1875,19 @@ int symbol__annotate(struct symbol *sym, struct map *map,
 	int err;
 
 	if (!arch_name)
+<<<<<<< HEAD
 		return -1;
 
 	args.arch = arch = arch__find(arch_name);
 	if (arch == NULL)
 		return -ENOTSUP;
+=======
+		return errno;
+
+	args.arch = arch = arch__find(arch_name);
+	if (arch == NULL)
+		return ENOTSUP;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (parch)
 		*parch = arch;
@@ -2732,7 +2744,11 @@ int symbol__annotate2(struct symbol *sym, struct map *map, struct perf_evsel *ev
 
 	notes->offsets = zalloc(size * sizeof(struct annotation_line *));
 	if (notes->offsets == NULL)
+<<<<<<< HEAD
 		return -1;
+=======
+		return ENOMEM;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (perf_evsel__is_group_event(evsel))
 		nr_pcnt = evsel->nr_members;
@@ -2757,7 +2773,11 @@ int symbol__annotate2(struct symbol *sym, struct map *map, struct perf_evsel *ev
 
 out_free_offsets:
 	zfree(&notes->offsets);
+<<<<<<< HEAD
 	return -1;
+=======
+	return err;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 #define ANNOTATION__CFG(n) \

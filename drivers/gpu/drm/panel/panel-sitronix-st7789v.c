@@ -380,6 +380,10 @@ static int st7789v_probe(struct spi_device *spi)
 	spi_set_drvdata(spi, ctx);
 	ctx->spi = spi;
 
+<<<<<<< HEAD
+=======
+	drm_panel_init(&ctx->panel);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ctx->panel.dev = &spi->dev;
 	ctx->panel.funcs = &st7789v_drm_funcs;
 

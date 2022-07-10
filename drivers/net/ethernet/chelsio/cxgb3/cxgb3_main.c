@@ -2449,6 +2449,11 @@ static int cxgb_extension_ioctl(struct net_device *dev, void __user *useraddr)
 
 		if (!is_offload(adapter))
 			return -EOPNOTSUPP;
+<<<<<<< HEAD
+=======
+		if (!capable(CAP_NET_ADMIN))
+			return -EPERM;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (!(adapter->flags & FULL_INIT_DONE))
 			return -EIO;	/* need the memory controllers */
 		if (copy_from_user(&t, useraddr, sizeof(t)))

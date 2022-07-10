@@ -74,6 +74,10 @@ enum typec_orientation {
  * @id_header: ID Header VDO
  * @cert_stat: Cert Stat VDO
  * @product: Product VDO
+<<<<<<< HEAD
+=======
+ * @product_type: Product type VDO
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  *
  * USB power delivery Discover Identity command response data.
  *
@@ -84,6 +88,10 @@ struct usb_pd_identity {
 	u32			id_header;
 	u32			cert_stat;
 	u32			product;
+<<<<<<< HEAD
+=======
+	u32			product_type;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 int typec_partner_set_identity(struct typec_partner *partner);

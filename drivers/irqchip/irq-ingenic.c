@@ -117,6 +117,17 @@ static int __init ingenic_intc_of_init(struct device_node *node,
 		goto out_unmap_irq;
 	}
 
+<<<<<<< HEAD
+=======
+	domain = irq_domain_add_legacy(node, num_chips * 32,
+				       JZ4740_IRQ_BASE, 0,
+				       &irq_domain_simple_ops, NULL);
+	if (!domain) {
+		err = -ENOMEM;
+		goto out_unmap_base;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	for (i = 0; i < num_chips; i++) {
 		/* Mask all irqs */
 		writel(0xffffffff, intc->base + (i * CHIP_SIZE) +
@@ -143,6 +154,7 @@ static int __init ingenic_intc_of_init(struct device_node *node,
 				       IRQ_NOPROBE | IRQ_LEVEL);
 	}
 
+<<<<<<< HEAD
 	domain = irq_domain_add_legacy(node, num_chips * 32, JZ4740_IRQ_BASE, 0,
 				       &irq_domain_simple_ops, NULL);
 	if (!domain)
@@ -151,6 +163,13 @@ static int __init ingenic_intc_of_init(struct device_node *node,
 	setup_irq(parent_irq, &intc_cascade_action);
 	return 0;
 
+=======
+	setup_irq(parent_irq, &intc_cascade_action);
+	return 0;
+
+out_unmap_base:
+	iounmap(intc->base);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 out_unmap_irq:
 	irq_dispose_mapping(parent_irq);
 out_free:

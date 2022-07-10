@@ -201,6 +201,13 @@ int apply_relocate_add(Elf64_Shdr *sechdrs,
 				goto overflow;
 #endif
 			break;
+<<<<<<< HEAD
+=======
+		case R_X86_64_8:
+			if (!strncmp(strtab + sym->st_name, "__typeid__", 10))
+				break;
+			/* fallthrough */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		default:
 			pr_err("%s: Unknown rela relocation: %llu\n",
 			       me->name, ELF64_R_TYPE(rel[i].r_info));

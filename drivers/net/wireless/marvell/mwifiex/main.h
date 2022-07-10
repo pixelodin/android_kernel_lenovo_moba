@@ -1294,6 +1294,7 @@ mwifiex_copy_rates(u8 *dest, u32 pos, u8 *src, int len)
 	return pos;
 }
 
+<<<<<<< HEAD
 /* This function return interface number with the same bss_type.
  */
 static inline u8
@@ -1307,6 +1308,8 @@ mwifiex_get_intf_num(struct mwifiex_adapter *adapter, u8 bss_type)
 	return num;
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * This function returns the correct private structure pointer based
  * upon the BSS type and BSS number.

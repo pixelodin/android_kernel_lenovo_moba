@@ -612,10 +612,15 @@ ack:
 				  false, true,
 				  rxrpc_propose_ack_input_data);
 
+<<<<<<< HEAD
 	if (sp->hdr.seq == READ_ONCE(call->rx_hard_ack) + 1) {
 		trace_rxrpc_notify_socket(call->debug_id, serial);
 		rxrpc_notify_socket(call);
 	}
+=======
+	trace_rxrpc_notify_socket(call->debug_id, serial);
+	rxrpc_notify_socket(call);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 unlock:
 	spin_unlock(&call->input_lock);
@@ -837,7 +842,11 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb,
 		u8 acks[RXRPC_MAXACKS];
 	} buf;
 	rxrpc_serial_t acked_serial;
+<<<<<<< HEAD
 	rxrpc_seq_t first_soft_ack, hard_ack;
+=======
+	rxrpc_seq_t first_soft_ack, hard_ack, prev_pkt;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int nr_acks, offset, ioffset;
 
 	_enter("");
@@ -851,13 +860,21 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb,
 
 	acked_serial = ntohl(buf.ack.serial);
 	first_soft_ack = ntohl(buf.ack.firstPacket);
+<<<<<<< HEAD
+=======
+	prev_pkt = ntohl(buf.ack.previousPacket);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	hard_ack = first_soft_ack - 1;
 	nr_acks = buf.ack.nAcks;
 	summary.ack_reason = (buf.ack.reason < RXRPC_ACK__INVALID ?
 			      buf.ack.reason : RXRPC_ACK__INVALID);
 
 	trace_rxrpc_rx_ack(call, sp->hdr.serial, acked_serial,
+<<<<<<< HEAD
 			   first_soft_ack, ntohl(buf.ack.previousPacket),
+=======
+			   first_soft_ack, prev_pkt,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			   summary.ack_reason, nr_acks);
 
 	if (buf.ack.reason == RXRPC_ACK_PING_RESPONSE)
@@ -878,8 +895,14 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb,
 				  rxrpc_propose_ack_respond_to_ack);
 	}
 
+<<<<<<< HEAD
 	/* Discard any out-of-order or duplicate ACKs. */
 	if (before_eq(sp->hdr.serial, call->acks_latest))
+=======
+	/* Discard any out-of-order or duplicate ACKs (outside lock). */
+	if (before(first_soft_ack, call->ackr_first_seq) ||
+	    before(prev_pkt, call->ackr_prev_seq))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return;
 
 	buf.info.rxMTU = 0;
@@ -890,12 +913,24 @@ static void rxrpc_input_ack(struct rxrpc_call *call, struct sk_buff *skb,
 
 	spin_lock(&call->input_lock);
 
+<<<<<<< HEAD
 	/* Discard any out-of-order or duplicate ACKs. */
 	if (before_eq(sp->hdr.serial, call->acks_latest))
+=======
+	/* Discard any out-of-order or duplicate ACKs (inside lock). */
+	if (before(first_soft_ack, call->ackr_first_seq) ||
+	    before(prev_pkt, call->ackr_prev_seq))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		goto out;
 	call->acks_latest_ts = skb->tstamp;
 	call->acks_latest = sp->hdr.serial;
 
+<<<<<<< HEAD
+=======
+	call->ackr_first_seq = first_soft_ack;
+	call->ackr_prev_seq = prev_pkt;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Parse rwind and mtu sizes if provided. */
 	if (buf.info.rxMTU)
 		rxrpc_input_ackinfo(call, skb, &buf.info);

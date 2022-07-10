@@ -78,7 +78,12 @@ static struct msi_domain_info dw_pcie_msi_domain_info = {
 irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
 {
 	int i, pos, irq;
+<<<<<<< HEAD
 	u32 val, num_ctrls;
+=======
+	unsigned long val;
+	u32 status, num_ctrls;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	irqreturn_t ret = IRQ_NONE;
 
 	num_ctrls = pp->num_vectors / MAX_MSI_IRQS_PER_CTRL;
@@ -86,6 +91,7 @@ irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
 	for (i = 0; i < num_ctrls; i++) {
 		dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_STATUS +
 					(i * MSI_REG_CTRL_BLOCK_SIZE),
+<<<<<<< HEAD
 				    4, &val);
 		if (!val)
 			continue;
@@ -94,6 +100,16 @@ irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
 		pos = 0;
 		while ((pos = find_next_bit((unsigned long *) &val,
 					    MAX_MSI_IRQS_PER_CTRL,
+=======
+				    4, &status);
+		if (!status)
+			continue;
+
+		ret = IRQ_HANDLED;
+		val = status;
+		pos = 0;
+		while ((pos = find_next_bit(&val, MAX_MSI_IRQS_PER_CTRL,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 					    pos)) != MAX_MSI_IRQS_PER_CTRL) {
 			irq = irq_find_mapping(pp->irq_domain,
 					       (i * MAX_MSI_IRQS_PER_CTRL) +

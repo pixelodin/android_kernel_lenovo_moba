@@ -34,6 +34,9 @@ static struct usb_function *ptp_alloc(struct usb_function_instance *fi)
 }
 
 DECLARE_USB_FUNCTION_INIT(ptp, ptp_alloc_inst, ptp_alloc);
+<<<<<<< HEAD
 DECLARE_USB_FUNCTION_INIT(ptp_sec, ptp_alloc_inst, ptp_alloc);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Badhri Jagan Sridharan");

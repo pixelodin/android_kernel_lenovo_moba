@@ -178,10 +178,16 @@ static ssize_t bch_dump_read(struct file *file, char __user *buf,
 	while (size) {
 		struct keybuf_key *w;
 		unsigned int bytes = min(i->bytes, size);
+<<<<<<< HEAD
 		int err = copy_to_user(buf, i->buf, bytes);
 
 		if (err)
 			return err;
+=======
+
+		if (copy_to_user(buf, i->buf, bytes))
+			return -EFAULT;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		ret	 += bytes;
 		buf	 += bytes;
@@ -249,8 +255,12 @@ void bch_debug_init_cache_set(struct cache_set *c)
 
 void bch_debug_exit(void)
 {
+<<<<<<< HEAD
 	if (!IS_ERR_OR_NULL(bcache_debug))
 		debugfs_remove_recursive(bcache_debug);
+=======
+	debugfs_remove_recursive(bcache_debug);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 void __init bch_debug_init(struct kobject *kobj)

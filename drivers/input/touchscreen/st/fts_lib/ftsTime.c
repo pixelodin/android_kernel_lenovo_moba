@@ -57,6 +57,10 @@
 #include <linux/firmware.h>
 #include <linux/regulator/consumer.h>
 #include <linux/of_gpio.h>
+<<<<<<< HEAD
+=======
+#include <linux/timekeeping.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 //#include <linux/sec_sysfs.h>
 
 #include "ftsCrossCompile.h"
@@ -65,12 +69,20 @@
 
 void startStopWatch(struct StopWatch *w)
 {
+<<<<<<< HEAD
 	w->start = current_kernel_time();
+=======
+	ktime_get_ts(&w->start);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 void stopStopWatch(struct StopWatch *w)
 {
+<<<<<<< HEAD
 	w->end = current_kernel_time();
+=======
+	ktime_get_ts(&w->end);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 int elapsedMillisecond(struct StopWatch *w)

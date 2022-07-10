@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-only
+<<<<<<< HEAD
 /* Copyright (c) 2012-2013, 2015, 2017, 2019, The Linux Foundation. All rights reserved. */
+=======
+/* Copyright (c) 2012-2013, 2015, 2017, 2020, The Linux Foundation. All rights reserved. */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #ifndef _LINUX_REGULATOR_RPM_SMD_H
 #define _LINUX_REGULATOR_RPM_SMD_H
@@ -120,6 +124,7 @@ static inline int rpm_regulator_set_mode(struct rpm_regulator *regulator,
 static inline int __init rpm_smd_regulator_driver_init(void) { return 0; }
 
 #endif /* CONFIG_REGULATOR_RPM_SMD */
+<<<<<<< HEAD
 
 #ifdef CONFIG_DEBUG_FS
 
@@ -131,4 +136,6 @@ static inline void rpm_vreg_create_debugfs(struct rpm_regulator *reg)
 {
 }
 #endif
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #endif

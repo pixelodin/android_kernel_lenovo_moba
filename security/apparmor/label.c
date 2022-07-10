@@ -1462,11 +1462,21 @@ static inline bool use_label_hname(struct aa_ns *ns, struct aa_label *label,
 /* helper macro for snprint routines */
 #define update_for_len(total, len, size, str)	\
 do {					\
+<<<<<<< HEAD
 	AA_BUG(len < 0);		\
 	total += len;			\
 	len = min(len, size);		\
 	size -= len;			\
 	str += len;			\
+=======
+	size_t ulen = len;		\
+					\
+	AA_BUG(len < 0);		\
+	total += ulen;			\
+	ulen = min(ulen, size);		\
+	size -= ulen;			\
+	str += ulen;			\
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 } while (0)
 
 /**
@@ -1601,7 +1611,11 @@ int aa_label_snxprint(char *str, size_t size, struct aa_ns *ns,
 	struct aa_ns *prev_ns = NULL;
 	struct label_it i;
 	int count = 0, total = 0;
+<<<<<<< HEAD
 	size_t len;
+=======
+	ssize_t len;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	AA_BUG(!str && size != 0);
 	AA_BUG(!label);

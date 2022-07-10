@@ -431,7 +431,11 @@ unmap_release:
 		kfree(desc);
 
 	END_USE(vq);
+<<<<<<< HEAD
 	return -EIO;
+=======
+	return -ENOMEM;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /**

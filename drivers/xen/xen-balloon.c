@@ -83,7 +83,11 @@ static void watch_target(struct xenbus_watch *watch,
 				  "%llu", &static_max) == 1))
 			static_max >>= PAGE_SHIFT - 10;
 		else
+<<<<<<< HEAD
 			static_max = new_target;
+=======
+			static_max = balloon_stats.current_pages;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		target_diff = (xen_pv_domain() || xen_initial_domain()) ? 0
 				: static_max - balloon_stats.target_pages;

@@ -528,11 +528,19 @@ typedef u64 acpi_integer;
 #define ACPI_MAKE_RSDP_SIG(dest)        (memcpy (ACPI_CAST_PTR (char, (dest)), ACPI_SIG_RSDP, 8))
 
 /*
+<<<<<<< HEAD
  * Algorithm to obtain access bit width.
+=======
+ * Algorithm to obtain access bit or byte width.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * Can be used with access_width of struct acpi_generic_address and access_size of
  * struct acpi_resource_generic_register.
  */
 #define ACPI_ACCESS_BIT_WIDTH(size)     (1 << ((size) + 2))
+<<<<<<< HEAD
+=======
+#define ACPI_ACCESS_BYTE_WIDTH(size)    (1 << ((size) - 1))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /*******************************************************************************
  *

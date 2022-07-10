@@ -146,6 +146,10 @@ struct kgsl_mmu_pt_ops {
  * @defaultpagetable: Default pagetable object for the MMU
  * @securepagetable: Default secure pagetable object for the MMU
  * @mmu_ops: Function pointers for the MMU sub-type
+<<<<<<< HEAD
+=======
+ * @globalpt_mapped: True if global pagetable entries mapped
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * @secured: True if the MMU needs to be secured
  * @feature: Static list of MMU features
  * @secure_aligned_mask: Mask that secure buffers need to be aligned to
@@ -158,6 +162,10 @@ struct kgsl_mmu {
 	struct kgsl_pagetable *defaultpagetable;
 	struct kgsl_pagetable *securepagetable;
 	const struct kgsl_mmu_ops *mmu_ops;
+<<<<<<< HEAD
+=======
+	bool globalpt_mapped;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	bool secured;
 	unsigned long features;
 	unsigned int secure_align_mask;

@@ -327,6 +327,7 @@ static int hw_atl_utils_fw_upload_dwords(struct aq_hw_s *self, u32 a, u32 *p,
 		err = -ETIME;
 		goto err_exit;
 	}
+<<<<<<< HEAD
 
 	aq_hw_write_reg(self, 0x00000208U, a);
 
@@ -338,6 +339,33 @@ static int hw_atl_utils_fw_upload_dwords(struct aq_hw_s *self, u32 a, u32 *p,
 
 		for (i = 1024U;
 			(0x100U & aq_hw_read_reg(self, 0x00000200U)) && --i;) {
+=======
+	if (IS_CHIP_FEATURE(REVISION_B1)) {
+		u32 offset = 0;
+
+		for (; offset < cnt; ++offset) {
+			aq_hw_write_reg(self, 0x328, p[offset]);
+			aq_hw_write_reg(self, 0x32C,
+					(0x80000000 | (0xFFFF & (offset * 4))));
+			hw_atl_mcp_up_force_intr_set(self, 1);
+			/* 1000 times by 10us = 10ms */
+			AQ_HW_WAIT_FOR((aq_hw_read_reg(self,
+						       0x32C) & 0xF0000000) !=
+				       0x80000000,
+				       10, 1000);
+		}
+	} else {
+		u32 offset = 0;
+
+		aq_hw_write_reg(self, 0x208, a);
+
+		for (; offset < cnt; ++offset) {
+			aq_hw_write_reg(self, 0x20C, p[offset]);
+			aq_hw_write_reg(self, 0x200, 0xC000);
+
+			AQ_HW_WAIT_FOR((aq_hw_read_reg(self, 0x200U) &
+					0x100) == 0, 10, 1000);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 	}
 
@@ -401,7 +429,11 @@ struct aq_hw_atl_utils_fw_rpc_tid_s {
 
 #define hw_atl_utils_fw_rpc_init(_H_) hw_atl_utils_fw_rpc_wait(_H_, NULL)
 
+<<<<<<< HEAD
 static int hw_atl_utils_fw_rpc_call(struct aq_hw_s *self, unsigned int rpc_size)
+=======
+int hw_atl_utils_fw_rpc_call(struct aq_hw_s *self, unsigned int rpc_size)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	int err = 0;
 	struct aq_hw_atl_utils_fw_rpc_tid_s sw;
@@ -425,8 +457,13 @@ err_exit:
 	return err;
 }
 
+<<<<<<< HEAD
 static int hw_atl_utils_fw_rpc_wait(struct aq_hw_s *self,
 				    struct hw_aq_atl_utils_fw_rpc **rpc)
+=======
+int hw_atl_utils_fw_rpc_wait(struct aq_hw_s *self,
+			     struct hw_aq_atl_utils_fw_rpc **rpc)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	int err = 0;
 	struct aq_hw_atl_utils_fw_rpc_tid_s sw;

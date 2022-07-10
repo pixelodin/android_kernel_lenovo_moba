@@ -53,7 +53,11 @@
 
 	leds {
 		compatible = "gpio-leds";
+<<<<<<< HEAD
 		heartbeat_led {
+=======
+		heartbeat-led {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			label = "heartbeat";
 			gpios = <&gpio 23 GPIO_ACTIVE_HIGH>;
 			linux,default-trigger = "heartbeat";
@@ -139,25 +143,41 @@
 		 * 7, 10 - 17 - not connected
 		 */
 
+<<<<<<< HEAD
 		gtr_sel0 {
+=======
+		gtr-sel0 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			gpio-hog;
 			gpios = <0 0>;
 			output-low; /* PCIE = 0, DP = 1 */
 			line-name = "sel0";
 		};
+<<<<<<< HEAD
 		gtr_sel1 {
+=======
+		gtr-sel1 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			gpio-hog;
 			gpios = <1 0>;
 			output-high; /* PCIE = 0, DP = 1 */
 			line-name = "sel1";
 		};
+<<<<<<< HEAD
 		gtr_sel2 {
+=======
+		gtr-sel2 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			gpio-hog;
 			gpios = <2 0>;
 			output-high; /* PCIE = 0, USB0 = 1 */
 			line-name = "sel2";
 		};
+<<<<<<< HEAD
 		gtr_sel3 {
+=======
+		gtr-sel3 {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			gpio-hog;
 			gpios = <3 0>;
 			output-high; /* PCIE = 0, SATA = 1 */

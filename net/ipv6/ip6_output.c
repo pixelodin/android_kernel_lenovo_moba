@@ -1357,7 +1357,11 @@ emsgsize:
 			unsigned int fraglen;
 			unsigned int fraggap;
 			unsigned int alloclen;
+<<<<<<< HEAD
 			unsigned int pagedlen = 0;
+=======
+			unsigned int pagedlen;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 alloc_new_skb:
 			/* There's no room in the current skb */
 			if (skb)
@@ -1381,6 +1385,10 @@ alloc_new_skb:
 			if (datalen > (cork->length <= mtu && !(cork->flags & IPCORK_ALLFRAG) ? mtu : maxfraglen) - fragheaderlen)
 				datalen = maxfraglen - fragheaderlen - rt->dst.trailer_len;
 			fraglen = datalen + fragheaderlen;
+<<<<<<< HEAD
+=======
+			pagedlen = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 			if ((flags & MSG_MORE) &&
 			    !(rt->dst.dev->features&NETIF_F_SG))

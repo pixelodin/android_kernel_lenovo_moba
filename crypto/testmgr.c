@@ -1400,8 +1400,13 @@ static int test_comp(struct crypto_comp *tfm,
 		int ilen;
 		unsigned int dlen = COMP_BUF_SIZE;
 
+<<<<<<< HEAD
 		memset(output, 0, sizeof(COMP_BUF_SIZE));
 		memset(decomp_output, 0, sizeof(COMP_BUF_SIZE));
+=======
+		memset(output, 0, COMP_BUF_SIZE);
+		memset(decomp_output, 0, COMP_BUF_SIZE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		ilen = ctemplate[i].inlen;
 		ret = crypto_comp_compress(tfm, ctemplate[i].input,
@@ -1445,7 +1450,11 @@ static int test_comp(struct crypto_comp *tfm,
 		int ilen;
 		unsigned int dlen = COMP_BUF_SIZE;
 
+<<<<<<< HEAD
 		memset(decomp_output, 0, sizeof(COMP_BUF_SIZE));
+=======
+		memset(decomp_output, 0, COMP_BUF_SIZE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		ilen = dtemplate[i].inlen;
 		ret = crypto_comp_decompress(tfm, dtemplate[i].input,

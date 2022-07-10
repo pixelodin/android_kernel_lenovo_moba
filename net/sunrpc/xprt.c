@@ -796,6 +796,7 @@ void xprt_connect(struct rpc_task *task)
 
 static void xprt_connect_status(struct rpc_task *task)
 {
+<<<<<<< HEAD
 	struct rpc_xprt	*xprt = task->tk_rqstp->rq_xprt;
 
 	if (task->tk_status == 0) {
@@ -807,6 +808,13 @@ static void xprt_connect_status(struct rpc_task *task)
 	}
 
 	switch (task->tk_status) {
+=======
+	switch (task->tk_status) {
+	case 0:
+		dprintk("RPC: %5u xprt_connect_status: connection established\n",
+				task->tk_pid);
+		break;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	case -ECONNREFUSED:
 	case -ECONNRESET:
 	case -ECONNABORTED:
@@ -823,7 +831,11 @@ static void xprt_connect_status(struct rpc_task *task)
 	default:
 		dprintk("RPC: %5u xprt_connect_status: error %d connecting to "
 				"server %s\n", task->tk_pid, -task->tk_status,
+<<<<<<< HEAD
 				xprt->servername);
+=======
+				task->tk_rqstp->rq_xprt->servername);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		task->tk_status = -EIO;
 	}
 }

@@ -441,6 +441,7 @@ int irq_setup_affinity(struct irq_desc *desc)
 {
 	return irq_select_affinity(irq_desc_get_irq(desc));
 }
+<<<<<<< HEAD
 #endif
 
 /*
@@ -458,6 +459,11 @@ int irq_select_affinity_usr(unsigned int irq)
 	return ret;
 }
 #endif
+=======
+#endif /* CONFIG_AUTO_IRQ_AFFINITY */
+#endif /* CONFIG_SMP */
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /**
  *	irq_set_vcpu_affinity - Set vcpu affinity for the interrupt

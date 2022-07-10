@@ -1,7 +1,11 @@
 # SPDX-License-Identifier: GPL-2.0
 VERSION = 4
 PATCHLEVEL = 19
+<<<<<<< HEAD
 SUBLEVEL = 81
+=======
+SUBLEVEL = 113
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 EXTRAVERSION =
 NAME = "People's Front"
 
@@ -500,7 +504,14 @@ ifneq ($(GCC_TOOLCHAIN),)
 CLANG_FLAGS	+= --gcc-toolchain=$(GCC_TOOLCHAIN)
 endif
 CLANG_FLAGS	+= -no-integrated-as
+<<<<<<< HEAD
 CLANG_FLAGS	+= -Werror=unknown-warning-option
+=======
+CLANG_FLAGS	+= $(call cc-option, -Wno-misleading-indentation)
+CLANG_FLAGS	+= $(call cc-option, -Wno-bool-operation)
+CLANG_FLAGS	+= -Werror=unknown-warning-option
+CLANG_FLAGS	+= $(call cc-option, -Wno-unsequenced)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 KBUILD_CFLAGS	+= $(CLANG_FLAGS)
 KBUILD_AFLAGS	+= $(CLANG_FLAGS)
 export CLANG_FLAGS
@@ -836,10 +847,31 @@ LDFLAGS_vmlinux += --gc-sections
 endif
 
 ifdef CONFIG_LTO_CLANG
+<<<<<<< HEAD
 lto-clang-flags	:= -flto -fvisibility=hidden
 
 # allow disabling only clang LTO where needed
 DISABLE_LTO_CLANG := -fno-lto -fvisibility=default
+=======
+ifdef CONFIG_THINLTO
+lto-clang-flags	:= -flto=thin
+KBUILD_LDFLAGS	+= --thinlto-cache-dir=.thinlto-cache
+else
+lto-clang-flags	:= -flto
+endif
+lto-clang-flags += -fvisibility=default $(call cc-option, -fsplit-lto-unit)
+
+# Limit inlining across translation units to reduce binary size
+LD_FLAGS_LTO_CLANG := -mllvm -import-instr-limit=5
+
+KBUILD_LDFLAGS += $(LD_FLAGS_LTO_CLANG)
+KBUILD_LDFLAGS_MODULE += $(LD_FLAGS_LTO_CLANG)
+
+KBUILD_LDFLAGS_MODULE += -T $(srctree)/scripts/module-lto.lds
+
+# allow disabling only clang LTO where needed
+DISABLE_LTO_CLANG := -fno-lto
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 export DISABLE_LTO_CLANG
 endif
 
@@ -852,7 +884,12 @@ export LTO_CFLAGS DISABLE_LTO
 endif
 
 ifdef CONFIG_CFI_CLANG
+<<<<<<< HEAD
 cfi-clang-flags	+= -fsanitize=cfi $(call cc-option, -fsplit-lto-unit)
+=======
+cfi-clang-flags	+= -fsanitize=cfi -fno-sanitize-cfi-canonical-jump-tables \
+		   -fno-sanitize-blacklist
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 DISABLE_CFI_CLANG := -fno-sanitize=cfi
 ifdef CONFIG_MODULES
 cfi-clang-flags	+= -fsanitize-cfi-cross-dso
@@ -877,6 +914,15 @@ DISABLE_LTO	+= $(DISABLE_CFI)
 export CFI_CFLAGS DISABLE_CFI
 endif
 
+<<<<<<< HEAD
+=======
+ifdef CONFIG_SHADOW_CALL_STACK
+CC_FLAGS_SCS	:= -fsanitize=shadow-call-stack
+KBUILD_CFLAGS	+= $(CC_FLAGS_SCS)
+export CC_FLAGS_SCS
+endif
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 # arch Makefile may override CC so keep this after arch Makefile is included
 NOSTDINC_FLAGS += -nostdinc -isystem $(shell $(CC) -print-file-name=include)
 
@@ -925,6 +971,15 @@ KBUILD_CFLAGS   += $(call cc-option,-Werror=designated-init)
 # change __FILE__ to the relative path from the srctree
 KBUILD_CFLAGS	+= $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
 
+<<<<<<< HEAD
+=======
+# ensure -fcf-protection is disabled when using retpoline as it is
+# incompatible with -mindirect-branch=thunk-extern
+ifdef CONFIG_RETPOLINE
+KBUILD_CFLAGS += $(call cc-option,-fcf-protection=none)
+endif
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 # use the deterministic mode of AR if available
 KBUILD_ARFLAGS := $(call ar-option,D)
 
@@ -947,6 +1002,13 @@ ifeq ($(CONFIG_STRIP_ASM_SYMS),y)
 LDFLAGS_vmlinux	+= $(call ld-option, -X,)
 endif
 
+<<<<<<< HEAD
+=======
+ifeq ($(CONFIG_RELR),y)
+LDFLAGS_vmlinux	+= --pack-dyn-relocs=relr
+endif
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 # insure the checker run with the right endianness
 CHECKFLAGS += $(if $(CONFIG_CPU_BIG_ENDIAN),-mbig-endian,-mlittle-endian)
 
@@ -1048,6 +1110,10 @@ ifdef CONFIG_STACK_VALIDATION
   endif
 endif
 
+<<<<<<< HEAD
+=======
+PHONY += prepare0
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 ifeq ($(KBUILD_EXTMOD),)
 core-y		+= kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ block/
@@ -1095,9 +1161,18 @@ endif
 
 autoksyms_h := $(if $(CONFIG_TRIM_UNUSED_KSYMS), include/generated/autoksyms.h)
 
+<<<<<<< HEAD
 $(autoksyms_h):
 	$(Q)mkdir -p $(dir $@)
 	$(Q)touch $@
+=======
+quiet_cmd_autoksyms_h = GEN     $@
+      cmd_autoksyms_h = mkdir -p $(dir $@); \
+			$(CONFIG_SHELL) $(srctree)/scripts/gen_autoksyms.sh $@
+
+$(autoksyms_h):
+	$(call cmd,autoksyms_h)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 ARCH_POSTLINK := $(wildcard $(srctree)/arch/$(SRCARCH)/Makefile.postlink)
 
@@ -1156,8 +1231,12 @@ scripts: scripts_basic asm-generic gcc-plugins $(autoksyms_h)
 # archprepare is used in arch Makefiles and when processed asm symlink,
 # version.h and scripts_basic is processed / created.
 
+<<<<<<< HEAD
 # Listed in dependency order
 PHONY += prepare archprepare prepare0 prepare1 prepare2 prepare3
+=======
+PHONY += prepare archprepare prepare1 prepare2 prepare3
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 # prepare3 is used to check if we are building in a separate output directory,
 # and if so do:
@@ -1599,9 +1678,12 @@ else # KBUILD_EXTMOD
 
 # We are always building modules
 KBUILD_MODULES := 1
+<<<<<<< HEAD
 PHONY += crmodverdir
 crmodverdir:
 	$(cmd_crmodverdir)
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 PHONY += $(objtree)/Module.symvers
 $(objtree)/Module.symvers:
@@ -1613,7 +1695,11 @@ $(objtree)/Module.symvers:
 
 module-dirs := $(addprefix _module_,$(KBUILD_EXTMOD))
 PHONY += $(module-dirs) modules
+<<<<<<< HEAD
 $(module-dirs): crmodverdir $(objtree)/Module.symvers
+=======
+$(module-dirs): prepare $(objtree)/Module.symvers
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	$(Q)$(MAKE) $(build)=$(patsubst _module_%,%,$@)
 
 modules: $(module-dirs)
@@ -1654,7 +1740,12 @@ help:
 
 # Dummies...
 PHONY += prepare scripts
+<<<<<<< HEAD
 prepare: ;
+=======
+prepare:
+	$(cmd_crmodverdir)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 scripts: ;
 endif # KBUILD_EXTMOD
 
@@ -1782,17 +1873,26 @@ endif
 
 # Modules
 /: prepare scripts FORCE
+<<<<<<< HEAD
 	$(cmd_crmodverdir)
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1) \
 	$(build)=$(build-dir)
 # Make sure the latest headers are built for Documentation
 Documentation/ samples/: headers_install
 %/: prepare scripts FORCE
+<<<<<<< HEAD
 	$(cmd_crmodverdir)
 	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1) \
 	$(build)=$(build-dir)
 %.ko: prepare scripts FORCE
 	$(cmd_crmodverdir)
+=======
+	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1) \
+	$(build)=$(build-dir)
+%.ko: prepare scripts FORCE
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	$(Q)$(MAKE) KBUILD_MODULES=$(if $(CONFIG_MODULES),1)   \
 	$(build)=$(build-dir) $(@:.ko=.o)
 	$(Q)$(MAKE) -f $(srctree)/scripts/Makefile.modpost

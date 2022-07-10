@@ -29,6 +29,10 @@
 #include <linux/workqueue.h>
 #include <linux/cgroup.h>
 #include <linux/blk-cgroup.h>
+<<<<<<< HEAD
+=======
+#include <linux/blk-crypto.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #include <trace/events/block.h>
 #include "blk.h"
@@ -245,6 +249,11 @@ fallback:
 void bio_uninit(struct bio *bio)
 {
 	bio_disassociate_task(bio);
+<<<<<<< HEAD
+=======
+
+	bio_crypt_free_ctx(bio);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 EXPORT_SYMBOL(bio_uninit);
 
@@ -580,6 +589,7 @@ inline int bio_phys_segments(struct request_queue *q, struct bio *bio)
 }
 EXPORT_SYMBOL(bio_phys_segments);
 
+<<<<<<< HEAD
 inline void bio_clone_crypt_key(struct bio *dst, const struct bio *src)
 {
 #ifdef CONFIG_PFK
@@ -593,6 +603,8 @@ inline void bio_clone_crypt_key(struct bio *dst, const struct bio *src)
 }
 EXPORT_SYMBOL(bio_clone_crypt_key);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /**
  * 	__bio_clone_fast - clone a bio that shares the original bio's biovec
  * 	@bio: destination bio
@@ -622,7 +634,11 @@ void __bio_clone_fast(struct bio *bio, struct bio *bio_src)
 	bio->bi_write_hint = bio_src->bi_write_hint;
 	bio->bi_iter = bio_src->bi_iter;
 	bio->bi_io_vec = bio_src->bi_io_vec;
+<<<<<<< HEAD
 	bio_clone_crypt_key(bio, bio_src);
+=======
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	bio_clone_blkcg_association(bio, bio_src);
 }
 EXPORT_SYMBOL(__bio_clone_fast);
@@ -645,6 +661,7 @@ struct bio *bio_clone_fast(struct bio *bio, gfp_t gfp_mask, struct bio_set *bs)
 
 	__bio_clone_fast(b, bio);
 
+<<<<<<< HEAD
 	if (bio_integrity(bio)) {
 		int ret;
 
@@ -654,6 +671,14 @@ struct bio *bio_clone_fast(struct bio *bio, gfp_t gfp_mask, struct bio_set *bs)
 			bio_put(b);
 			return NULL;
 		}
+=======
+	bio_crypt_clone(b, bio, gfp_mask);
+
+	if (bio_integrity(bio) &&
+	    bio_integrity_clone(b, bio, gfp_mask) < 0) {
+		bio_put(b);
+		return NULL;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	return b;
@@ -816,6 +841,12 @@ void __bio_add_page(struct bio *bio, struct page *page,
 
 	bio->bi_iter.bi_size += len;
 	bio->bi_vcnt++;
+<<<<<<< HEAD
+=======
+
+	if (!bio_flagged(bio, BIO_WORKINGSET) && unlikely(PageWorkingset(page)))
+		bio_set_flag(bio, BIO_WORKINGSET);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 EXPORT_SYMBOL_GPL(__bio_add_page);
 
@@ -963,6 +994,10 @@ void bio_advance(struct bio *bio, unsigned bytes)
 	if (bio_integrity(bio))
 		bio_integrity_advance(bio, bytes);
 
+<<<<<<< HEAD
+=======
+	bio_crypt_advance(bio, bytes);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	bio_advance_iter(bio, &bio->bi_iter, bytes);
 }
 EXPORT_SYMBOL(bio_advance);
@@ -1761,6 +1796,13 @@ void bio_endio(struct bio *bio)
 again:
 	if (!bio_remaining_done(bio))
 		return;
+<<<<<<< HEAD
+=======
+
+	if (!blk_crypto_endio(bio))
+		return;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!bio_integrity_endio(bio))
 		return;
 

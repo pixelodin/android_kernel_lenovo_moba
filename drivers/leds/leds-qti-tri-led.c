@@ -409,6 +409,7 @@ static int qpnp_tri_led_register(struct qpnp_tri_led_chip *chip)
 		led->cdev.brightness_set_blocking = qpnp_tri_led_set_brightness;
 		led->cdev.brightness_get = qpnp_tri_led_get_brightness;
 		led->cdev.blink_set = qpnp_tri_led_set_blink;
+<<<<<<< HEAD
 		if (!strcmp(led->cdev.name, "green")){
 			led->cdev.default_trigger = led->default_trigger;
 		}
@@ -418,6 +419,12 @@ static int qpnp_tri_led_register(struct qpnp_tri_led_chip *chip)
 		} else
 			led->cdev.brightness = LED_OFF;
 		led->cdev.flags |= LED_KEEP_TRIGGER;
+=======
+		led->cdev.default_trigger = led->default_trigger;
+		led->cdev.brightness = LED_OFF;
+		led->cdev.flags |= LED_KEEP_TRIGGER;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		rc = devm_led_classdev_register(chip->dev, &led->cdev);
 		if (rc < 0) {
 			dev_err(chip->dev, "%s led class device registering failed, rc=%d\n",

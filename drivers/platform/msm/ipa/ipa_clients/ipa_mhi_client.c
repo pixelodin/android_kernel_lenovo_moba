@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2015-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2015-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include <linux/debugfs.h>
@@ -147,11 +151,14 @@ struct ipa_mhi_client_ctx {
 static struct ipa_mhi_client_ctx *ipa_mhi_client_ctx;
 static DEFINE_MUTEX(mhi_client_general_mutex);
 
+<<<<<<< HEAD
 #ifdef CONFIG_DEBUG_FS
 #define IPA_MHI_MAX_MSG_LEN 512
 static char dbg_buff[IPA_MHI_MAX_MSG_LEN];
 static struct dentry *dent;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static char *ipa_mhi_channel_state_str[] = {
 	__stringify(IPA_HW_MHI_CHANNEL_STATE_DISABLE),
 	__stringify(IPA_HW_MHI_CHANNEL_STATE_ENABLE),
@@ -262,6 +269,14 @@ fail_dma_enable:
 	return res;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_DEBUG_FS
+#define IPA_MHI_MAX_MSG_LEN 512
+static char dbg_buff[IPA_MHI_MAX_MSG_LEN];
+static struct dentry *dent;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int ipa_mhi_print_channel_info(struct ipa_mhi_channel_ctx *channel,
 	char *buff, int len)
 {
@@ -2184,10 +2199,18 @@ int ipa_mhi_destroy_all_channels(void)
 	return 0;
 }
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_DEBUG_FS
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static void ipa_mhi_debugfs_destroy(void)
 {
 	debugfs_remove_recursive(dent);
 }
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 static void ipa_mhi_deregister_pm(void)
 {

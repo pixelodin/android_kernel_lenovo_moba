@@ -442,5 +442,9 @@ static inline bool has_ftr_sec1(struct talitos_private *priv)
 
 /* link table extent field bits */
 #define DESC_PTR_LNKTBL_JUMP			0x80
+<<<<<<< HEAD
 #define DESC_PTR_LNKTBL_RETURN			0x02
+=======
+#define DESC_PTR_LNKTBL_RET			0x02
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define DESC_PTR_LNKTBL_NEXT			0x01

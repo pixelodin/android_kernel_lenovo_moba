@@ -102,5 +102,9 @@ __init void process_uboot_commandline(char *commandp, int size)
 	}
 
 	parse_uboot_commandline(commandp, len);
+<<<<<<< HEAD
 	commandp[size - 1] = 0;
+=======
+	commandp[len - 1] = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }

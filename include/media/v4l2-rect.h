@@ -63,10 +63,17 @@ static inline void v4l2_rect_map_inside(struct v4l2_rect *r,
 		r->left = boundary->left;
 	if (r->top < boundary->top)
 		r->top = boundary->top;
+<<<<<<< HEAD
 	if (r->left + r->width > boundary->width)
 		r->left = boundary->width - r->width;
 	if (r->top + r->height > boundary->height)
 		r->top = boundary->height - r->height;
+=======
+	if (r->left + r->width > boundary->left + boundary->width)
+		r->left = boundary->left + boundary->width - r->width;
+	if (r->top + r->height > boundary->top + boundary->height)
+		r->top = boundary->top + boundary->height - r->height;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /**

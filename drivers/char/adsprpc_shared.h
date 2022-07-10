@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
+<<<<<<< HEAD
  * Copyright (c) 2012-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2012-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 #ifndef ADSPRPC_SHARED_H
 #define ADSPRPC_SHARED_H
@@ -250,6 +254,11 @@ enum fastrpc_control_type {
 	FASTRPC_CONTROL_KALLOC		=	3,
 	FASTRPC_CONTROL_WAKELOCK	=	4,
 	FASTRPC_CONTROL_PM		=	5,
+<<<<<<< HEAD
+=======
+/* Clean process on DSP */
+	FASTRPC_CONTROL_DSPPROCESS_CLEAN	=	6,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct fastrpc_ctrl_latency {

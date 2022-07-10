@@ -793,9 +793,14 @@ void mt76x0_phy_recalibrate_after_assoc(struct mt76x0_dev *dev)
 	mt76_wr(dev, MT_TX_ALC_CFG_0, 0);
 	usleep_range(500, 700);
 
+<<<<<<< HEAD
 	reg_val = mt76_rr(dev, 0x2124);
 	reg_val &= 0xffffff7e;
 	mt76_wr(dev, 0x2124, reg_val);
+=======
+	reg_val = mt76_rr(dev, MT_BBP(IBI, 9));
+	mt76_wr(dev, MT_BBP(IBI, 9), 0xffffff7e);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	mt76x0_mcu_calibrate(dev, MCU_CAL_RXDCOC, 0);
 
@@ -806,7 +811,11 @@ void mt76x0_phy_recalibrate_after_assoc(struct mt76x0_dev *dev)
 	mt76x0_mcu_calibrate(dev, MCU_CAL_RXIQ, is_5ghz);
 	mt76x0_mcu_calibrate(dev, MCU_CAL_RX_GROUP_DELAY, is_5ghz);
 
+<<<<<<< HEAD
 	mt76_wr(dev, 0x2124, reg_val);
+=======
+	mt76_wr(dev, MT_BBP(IBI, 9), reg_val);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	mt76_wr(dev, MT_TX_ALC_CFG_0, tx_alc);
 	msleep(100);
 

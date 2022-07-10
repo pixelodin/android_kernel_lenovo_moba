@@ -546,7 +546,10 @@ void __handle_sysrq(int key, bool check_mask)
 	 */
 	orig_log_level = console_loglevel;
 	console_loglevel = CONSOLE_LOGLEVEL_DEFAULT;
+<<<<<<< HEAD
 	pr_info("SysRq : ");
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
         op_p = __sysrq_get_key_op(key);
         if (op_p) {
@@ -555,6 +558,7 @@ void __handle_sysrq(int key, bool check_mask)
 		 * should not) and is the invoked operation enabled?
 		 */
 		if (!check_mask || sysrq_on_mask(op_p->enable_mask)) {
+<<<<<<< HEAD
 			pr_cont("%s\n", op_p->action_msg);
 			console_loglevel = orig_log_level;
 			op_p->handler(key);
@@ -563,6 +567,17 @@ void __handle_sysrq(int key, bool check_mask)
 		}
 	} else {
 		pr_cont("HELP : ");
+=======
+			pr_info("%s\n", op_p->action_msg);
+			console_loglevel = orig_log_level;
+			op_p->handler(key);
+		} else {
+			pr_info("This sysrq operation is disabled.\n");
+			console_loglevel = orig_log_level;
+		}
+	} else {
+		pr_info("HELP : ");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/* Only print the help msg once per handler */
 		for (i = 0; i < ARRAY_SIZE(sysrq_key_table); i++) {
 			if (sysrq_key_table[i]) {

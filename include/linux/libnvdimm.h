@@ -19,6 +19,10 @@
 #include <linux/types.h>
 #include <linux/uuid.h>
 #include <linux/spinlock.h>
+<<<<<<< HEAD
+=======
+#include <linux/bio.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 struct badrange_entry {
 	u64 start;
@@ -59,6 +63,12 @@ enum {
 	 */
 	ND_REGION_PERSIST_MEMCTRL = 2,
 
+<<<<<<< HEAD
+=======
+	/* Platform provides asynchronous flush mechanism */
+	ND_REGION_ASYNC = 3,
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* mark newly adjusted resources as requiring a label update */
 	DPA_RESOURCE_ADJUSTED = 1 << 0,
 };
@@ -115,6 +125,10 @@ struct nd_mapping_desc {
 	int position;
 };
 
+<<<<<<< HEAD
+=======
+struct nd_region;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct nd_region_desc {
 	struct resource *res;
 	struct nd_mapping_desc *mapping;
@@ -126,6 +140,10 @@ struct nd_region_desc {
 	int numa_node;
 	unsigned long flags;
 	struct device_node *of_node;
+<<<<<<< HEAD
+=======
+	int (*flush)(struct nd_region *nd_region, struct bio *bio);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct device;
@@ -201,7 +219,12 @@ unsigned long nd_blk_memremap_flags(struct nd_blk_region *ndbr);
 unsigned int nd_region_acquire_lane(struct nd_region *nd_region);
 void nd_region_release_lane(struct nd_region *nd_region, unsigned int lane);
 u64 nd_fletcher64(void *addr, size_t len, bool le);
+<<<<<<< HEAD
 void nvdimm_flush(struct nd_region *nd_region);
+=======
+int nvdimm_flush(struct nd_region *nd_region, struct bio *bio);
+int generic_nvdimm_flush(struct nd_region *nd_region);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 int nvdimm_has_flush(struct nd_region *nd_region);
 int nvdimm_has_cache(struct nd_region *nd_region);
 

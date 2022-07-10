@@ -27,7 +27,10 @@
 enum field_width {
 	BYTE	= 1,
 	WORD	= 2,
+<<<<<<< HEAD
 	DWORD	= 4,
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 struct desc_field_offset {
@@ -871,6 +874,7 @@ static const struct file_operations ufsdbg_host_regs_fops = {
 	.read		= seq_read,
 };
 
+<<<<<<< HEAD
 static int ufsdbg_dump_health_desc_show(struct seq_file *file, void *data)
 {
 	int err = 0;
@@ -924,6 +928,8 @@ static int ufsdbg_dump_health_desc_show(struct seq_file *file, void *data)
 	return err;
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int ufsdbg_dump_device_desc_show(struct seq_file *file, void *data)
 {
 	int err = 0;
@@ -958,6 +964,7 @@ static int ufsdbg_dump_device_desc_show(struct seq_file *file, void *data)
 		{"bUD0BaseOffset",	0x1A, BYTE},
 		{"bUDConfigPLength",	0x1B, BYTE},
 		{"bDeviceRTTCap",	0x1C, BYTE},
+<<<<<<< HEAD
 		{"wPeriodicRTCUpdate",	0x1D, WORD},
 		{"bUFSFeaturesSupport", 0x1F, BYTE},
 		{"bFFUTimeout", 0x20, BYTE},
@@ -967,6 +974,9 @@ static int ufsdbg_dump_device_desc_show(struct seq_file *file, void *data)
 		{"dPSAMaxDataSize", 0x25, DWORD},
 		{"bPSAStateTimeout", 0x29, BYTE},
 		{"iProductRevisionLevel", 0x2A, BYTE},
+=======
+		{"wPeriodicRTCUpdate",	0x1D, WORD}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	};
 
 	pm_runtime_get_sync(hba->dev);
@@ -992,12 +1002,15 @@ static int ufsdbg_dump_device_desc_show(struct seq_file *file, void *data)
 					   tmp->offset,
 					   tmp->name,
 					   *(u16 *)&desc_buf[tmp->offset]);
+<<<<<<< HEAD
 			} else if (tmp->width_byte == DWORD) {
 				seq_printf(file,
 					   "Device Descriptor[Byte offset 0x%x]: %s = 0x%x\n",
 					   tmp->offset,
 					   tmp->name,
 					   *(u32 *)&desc_buf[tmp->offset]);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			} else {
 				seq_printf(file,
 				"Device Descriptor[offset 0x%x]: %s. Wrong Width = %d",
@@ -1012,6 +1025,7 @@ static int ufsdbg_dump_device_desc_show(struct seq_file *file, void *data)
 	return err;
 }
 
+<<<<<<< HEAD
 static int ufsdbg_string_desc_serial_show(struct seq_file *file, void *data)
 {
 	int err = 0;
@@ -1021,6 +1035,8 @@ static int ufsdbg_string_desc_serial_show(struct seq_file *file, void *data)
  	return err;
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int ufsdbg_show_hba_show(struct seq_file *file, void *data)
 {
 	struct ufs_hba *hba = (struct ufs_hba *)file->private;
@@ -1122,6 +1138,7 @@ static const struct file_operations ufsdbg_dump_device_desc = {
 	.read		= seq_read,
 };
 
+<<<<<<< HEAD
 static int ufsdbg_string_desc_serial_open(struct inode *inode, struct file *file)
 {
 	return single_open(file,
@@ -1145,6 +1162,8 @@ static const struct file_operations ufsdbg_dump_health_desc = {
 	.read		= seq_read,
 };
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int ufsdbg_power_mode_show(struct seq_file *file, void *data)
 {
 	struct ufs_hba *hba = (struct ufs_hba *)file->private;
@@ -1653,16 +1672,22 @@ DEFINE_DEBUGFS_ATTRIBUTE(ufsdbg_err_state,
 
 void ufsdbg_add_debugfs(struct ufs_hba *hba)
 {
+<<<<<<< HEAD
 	char root_name[sizeof("ufshcd0")];
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!hba) {
 		pr_err("%s: NULL hba, exiting\n", __func__);
 		return;
 	}
 
+<<<<<<< HEAD
 	snprintf(root_name, ARRAY_SIZE(root_name), "%s%d", UFSHCD,
 		hba->host->host_no);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	hba->debugfs_files.debugfs_root = debugfs_create_dir(dev_name(hba->dev),
 							     NULL);
 
@@ -1679,8 +1704,11 @@ void ufsdbg_add_debugfs(struct ufs_hba *hba)
 		goto err_no_root;
 	}
 
+<<<<<<< HEAD
 	debugfs_create_symlink(root_name, NULL, dev_name(hba->dev));
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	hba->debugfs_files.stats_folder = debugfs_create_dir("stats",
 					hba->debugfs_files.debugfs_root);
 	if (!hba->debugfs_files.stats_folder) {
@@ -1743,7 +1771,11 @@ void ufsdbg_add_debugfs(struct ufs_hba *hba)
 	}
 
 	hba->debugfs_files.dump_dev_desc =
+<<<<<<< HEAD
 		debugfs_create_file("dump_device_desc", 0444,
+=======
+		debugfs_create_file("dump_device_desc", 0400,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				    hba->debugfs_files.debugfs_root, hba,
 				    &ufsdbg_dump_device_desc);
 	if (!hba->debugfs_files.dump_dev_desc) {
@@ -1752,6 +1784,7 @@ void ufsdbg_add_debugfs(struct ufs_hba *hba)
 		goto err;
 	}
 
+<<<<<<< HEAD
 	hba->debugfs_files.dump_string_desc_serial =
 		debugfs_create_file("dump_string_desc_serial", S_IRUGO,
 					hba->debugfs_files.debugfs_root, hba,
@@ -1772,6 +1805,8 @@ void ufsdbg_add_debugfs(struct ufs_hba *hba)
 		goto err;
 	}
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	hba->debugfs_files.power_mode =
 		debugfs_create_file("power_mode", 0600,
 				    hba->debugfs_files.debugfs_root, hba,
@@ -1827,7 +1862,11 @@ void ufsdbg_add_debugfs(struct ufs_hba *hba)
 	}
 
 	hba->debugfs_files.err_state =
+<<<<<<< HEAD
 		debugfs_create_file("err_state", 0666,
+=======
+		debugfs_create_file("err_state", 0600,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			hba->debugfs_files.debugfs_root, hba,
 			&ufsdbg_err_state);
 	if (!hba->debugfs_files.err_state) {

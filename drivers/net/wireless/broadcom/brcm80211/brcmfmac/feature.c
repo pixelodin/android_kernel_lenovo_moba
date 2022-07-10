@@ -178,7 +178,11 @@ static void brcmf_feat_iovar_data_set(struct brcmf_if *ifp,
 	ifp->fwil_fwerr = false;
 }
 
+<<<<<<< HEAD
 #define MAX_CAPS_BUFFER_SIZE	512
+=======
+#define MAX_CAPS_BUFFER_SIZE	768
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static void brcmf_feat_firmware_capabilities(struct brcmf_if *ifp)
 {
 	char caps[MAX_CAPS_BUFFER_SIZE];

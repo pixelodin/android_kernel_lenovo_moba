@@ -502,6 +502,10 @@ brcms_ops_add_interface(struct ieee80211_hw *hw, struct ieee80211_vif *vif)
 	}
 
 	spin_lock_bh(&wl->lock);
+<<<<<<< HEAD
+=======
+	wl->wlc->vif = vif;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	wl->mute_tx = false;
 	brcms_c_mute(wl->wlc, false);
 	if (vif->type == NL80211_IFTYPE_STATION)
@@ -519,6 +523,14 @@ brcms_ops_add_interface(struct ieee80211_hw *hw, struct ieee80211_vif *vif)
 static void
 brcms_ops_remove_interface(struct ieee80211_hw *hw, struct ieee80211_vif *vif)
 {
+<<<<<<< HEAD
+=======
+	struct brcms_info *wl = hw->priv;
+
+	spin_lock_bh(&wl->lock);
+	wl->wlc->vif = NULL;
+	spin_unlock_bh(&wl->lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int brcms_ops_config(struct ieee80211_hw *hw, u32 changed)
@@ -840,8 +852,13 @@ brcms_ops_ampdu_action(struct ieee80211_hw *hw,
 		status = brcms_c_aggregatable(wl->wlc, tid);
 		spin_unlock_bh(&wl->lock);
 		if (!status) {
+<<<<<<< HEAD
 			brcms_err(wl->wlc->hw->d11core,
 				  "START: tid %d is not agg\'able\n", tid);
+=======
+			brcms_dbg_ht(wl->wlc->hw->d11core,
+				     "START: tid %d is not agg\'able\n", tid);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			return -EINVAL;
 		}
 		ieee80211_start_tx_ba_cb_irqsafe(vif, sta->addr, tid);
@@ -937,6 +954,28 @@ static void brcms_ops_set_tsf(struct ieee80211_hw *hw,
 	spin_unlock_bh(&wl->lock);
 }
 
+<<<<<<< HEAD
+=======
+static int brcms_ops_beacon_set_tim(struct ieee80211_hw *hw,
+				 struct ieee80211_sta *sta, bool set)
+{
+	struct brcms_info *wl = hw->priv;
+	struct sk_buff *beacon = NULL;
+	u16 tim_offset = 0;
+
+	spin_lock_bh(&wl->lock);
+	if (wl->wlc->vif)
+		beacon = ieee80211_beacon_get_tim(hw, wl->wlc->vif,
+						  &tim_offset, NULL);
+	if (beacon)
+		brcms_c_set_new_beacon(wl->wlc, beacon, tim_offset,
+				       wl->wlc->vif->bss_conf.dtim_period);
+	spin_unlock_bh(&wl->lock);
+
+	return 0;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static const struct ieee80211_ops brcms_ops = {
 	.tx = brcms_ops_tx,
 	.start = brcms_ops_start,
@@ -955,6 +994,10 @@ static const struct ieee80211_ops brcms_ops = {
 	.flush = brcms_ops_flush,
 	.get_tsf = brcms_ops_get_tsf,
 	.set_tsf = brcms_ops_set_tsf,
+<<<<<<< HEAD
+=======
+	.set_tim = brcms_ops_beacon_set_tim,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 void brcms_dpc(unsigned long data)
@@ -1578,10 +1621,17 @@ int brcms_ucode_init_buf(struct brcms_info *wl, void **pbuf, u32 idx)
 			if (le32_to_cpu(hdr->idx) == idx) {
 				pdata = wl->fw.fw_bin[i]->data +
 					le32_to_cpu(hdr->offset);
+<<<<<<< HEAD
 				*pbuf = kmemdup(pdata, len, GFP_KERNEL);
 				if (*pbuf == NULL)
 					goto fail;
 
+=======
+				*pbuf = kvmalloc(len, GFP_KERNEL);
+				if (*pbuf == NULL)
+					goto fail;
+				memcpy(*pbuf, pdata, len);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				return 0;
 			}
 		}
@@ -1629,7 +1679,11 @@ int brcms_ucode_init_uint(struct brcms_info *wl, size_t *n_bytes, u32 idx)
  */
 void brcms_ucode_free_buf(void *p)
 {
+<<<<<<< HEAD
 	kfree(p);
+=======
+	kvfree(p);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /*

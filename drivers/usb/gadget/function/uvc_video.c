@@ -125,6 +125,24 @@ uvc_video_encode_isoc(struct usb_request *req, struct uvc_video *video,
  * Request handling
  */
 
+<<<<<<< HEAD
+=======
+static int uvcg_video_ep_queue(struct uvc_video *video, struct usb_request *req)
+{
+	int ret;
+
+	ret = usb_ep_queue(video->ep, req, GFP_ATOMIC);
+	if (ret < 0) {
+		printk(KERN_INFO "Failed to queue request (%d).\n", ret);
+		/* Isochronous endpoints can't be halted. */
+		if (usb_endpoint_xfer_bulk(video->ep->desc))
+			usb_ep_set_halt(video->ep);
+	}
+
+	return ret;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * I somehow feel that synchronisation won't be easy to achieve here. We have
  * three events that control USB requests submission:
@@ -189,6 +207,7 @@ uvc_video_complete(struct usb_ep *ep, struct usb_request *req)
 
 	video->encode(req, video, buf);
 
+<<<<<<< HEAD
 	if ((ret = usb_ep_queue(ep, req, GFP_ATOMIC)) < 0) {
 		printk(KERN_INFO "Failed to queue request (%d).\n", ret);
 		usb_ep_set_halt(ep);
@@ -197,6 +216,15 @@ uvc_video_complete(struct usb_ep *ep, struct usb_request *req)
 		goto requeue;
 	}
 	spin_unlock_irqrestore(&video->queue.irqlock, flags);
+=======
+	ret = uvcg_video_ep_queue(video, req);
+	spin_unlock_irqrestore(&video->queue.irqlock, flags);
+
+	if (ret < 0) {
+		uvcg_queue_cancel(queue, 0);
+		goto requeue;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return;
 
@@ -316,6 +344,7 @@ int uvcg_video_pump(struct uvc_video *video)
 		video->encode(req, video, buf);
 
 		/* Queue the USB request */
+<<<<<<< HEAD
 		ret = usb_ep_queue(video->ep, req, GFP_ATOMIC);
 		if (ret < 0) {
 			printk(KERN_INFO "Failed to queue request (%d)\n", ret);
@@ -325,6 +354,15 @@ int uvcg_video_pump(struct uvc_video *video)
 			break;
 		}
 		spin_unlock_irqrestore(&queue->irqlock, flags);
+=======
+		ret = uvcg_video_ep_queue(video, req);
+		spin_unlock_irqrestore(&queue->irqlock, flags);
+
+		if (ret < 0) {
+			uvcg_queue_cancel(queue, 0);
+			break;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	spin_lock_irqsave(&video->req_lock, flags);

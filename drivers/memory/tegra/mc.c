@@ -664,12 +664,22 @@ static int tegra_mc_probe(struct platform_device *pdev)
 		}
 
 		isr = tegra_mc_irq;
+<<<<<<< HEAD
 	}
 
 	err = tegra_mc_setup_timings(mc);
 	if (err < 0) {
 		dev_err(&pdev->dev, "failed to setup timings: %d\n", err);
 		return err;
+=======
+
+		err = tegra_mc_setup_timings(mc);
+		if (err < 0) {
+			dev_err(&pdev->dev, "failed to setup timings: %d\n",
+				err);
+			return err;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	mc->irq = platform_get_irq(pdev, 0);

@@ -130,7 +130,10 @@ static void pcrypt_aead_done(struct crypto_async_request *areq, int err)
 	struct padata_priv *padata = pcrypt_request_padata(preq);
 
 	padata->info = err;
+<<<<<<< HEAD
 	req->base.flags &= ~CRYPTO_TFM_REQ_MAY_SLEEP;
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	padata_do_serial(padata);
 }
@@ -394,7 +397,11 @@ static int pcrypt_sysfs_add(struct padata_instance *pinst, const char *name)
 	int ret;
 
 	pinst->kobj.kset = pcrypt_kset;
+<<<<<<< HEAD
 	ret = kobject_add(&pinst->kobj, NULL, name);
+=======
+	ret = kobject_add(&pinst->kobj, NULL, "%s", name);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!ret)
 		kobject_uevent(&pinst->kobj, KOBJ_ADD);
 
@@ -505,11 +512,19 @@ err:
 
 static void __exit pcrypt_exit(void)
 {
+<<<<<<< HEAD
+=======
+	crypto_unregister_template(&pcrypt_tmpl);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pcrypt_fini_padata(&pencrypt);
 	pcrypt_fini_padata(&pdecrypt);
 
 	kset_unregister(pcrypt_kset);
+<<<<<<< HEAD
 	crypto_unregister_template(&pcrypt_tmpl);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 module_init(pcrypt_init);

@@ -27,6 +27,10 @@ struct mhi_sfr_info;
  * @MHI_CB_EE_MISSION_MODE: MHI device entered Mission Mode ee
  * @MHI_CB_SYS_ERROR: MHI device enter error state (may recover)
  * @MHI_CB_FATAL_ERROR: MHI device entered fatal error
+<<<<<<< HEAD
+=======
+ * @MHI_CB_BOOTUP_TIMEOUT: MHI device did not get to a bootup state in time
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 enum MHI_CB {
 	MHI_CB_IDLE,
@@ -38,6 +42,11 @@ enum MHI_CB {
 	MHI_CB_EE_MISSION_MODE,
 	MHI_CB_SYS_ERROR,
 	MHI_CB_FATAL_ERROR,
+<<<<<<< HEAD
+=======
+	MHI_CB_FW_FALLBACK_IMG,
+	MHI_CB_BOOTUP_TIMEOUT,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 /**
@@ -221,6 +230,10 @@ struct reg_write_info {
  * @rddm_size: RAM dump size that host should allocate for debugging purpose
  * @sbl_size: SBL image size
  * @seg_len: BHIe vector size
+<<<<<<< HEAD
+=======
+ * @img_pre_alloc: allocate rddm and fbc image buffers one time
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * @fbc_image: Points to firmware image buffer
  * @rddm_image: Points to RAM dump buffer
  * @max_chan: Maximum number of channels controller support
@@ -259,6 +272,10 @@ struct mhi_controller {
 
 	/* mmio base */
 	phys_addr_t base_addr;
+<<<<<<< HEAD
+=======
+	unsigned int len;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	void __iomem *regs;
 	void __iomem *bhi;
 	void __iomem *bhie;
@@ -282,15 +299,28 @@ struct mhi_controller {
 
 	/* fw images */
 	const char *fw_image;
+<<<<<<< HEAD
+=======
+	const char *fw_image_fallback;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	const char *edl_image;
 
 	/* mhi host manages downloading entire fbc images */
 	bool fbc_download;
+<<<<<<< HEAD
+=======
+	bool rddm_supported;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	size_t rddm_size;
 	size_t sbl_size;
 	size_t seg_len;
 	u32 session_id;
 	u32 sequence_id;
+<<<<<<< HEAD
+=======
+
+	bool img_pre_alloc;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct image_info *fbc_image;
 	struct image_info *rddm_image;
 
@@ -348,7 +378,11 @@ struct mhi_controller {
 	/* worker for different state transitions */
 	struct work_struct st_worker;
 	struct work_struct special_work;
+<<<<<<< HEAD
 	struct workqueue_struct *special_wq;
+=======
+	struct workqueue_struct *wq;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	wait_queue_head_t state_event;
 
@@ -604,6 +638,33 @@ void mhi_device_get(struct mhi_device *mhi_dev, int vote);
 int mhi_device_get_sync(struct mhi_device *mhi_dev, int vote);
 
 /**
+<<<<<<< HEAD
+=======
+ * mhi_device_get_sync_atomic - Asserts device_wait and moves device to M0
+ * @mhi_dev: Device associated with the channels
+ * @timeout_us: timeout, in micro-seconds
+ *
+ * The device_wake is asserted to keep device in M0 or bring it to M0.
+ * If device is not in M0 state, then this function will wait for device to
+ * move to M0, until @timeout_us elapses.
+ * However, if device's M1 state-change event races with this function
+ * then there is a possiblity of device moving from M0 to M2 and back
+ * to M0. That can't be avoided as host must transition device from M1 to M2
+ * as per the spec.
+ * Clients can ignore that transition after this function returns as the device
+ * is expected to immediately  move from M2 to M0 as wake is asserted and
+ * wouldn't enter low power state.
+ *
+ * Returns:
+ * 0 if operation was successful (however, M0 -> M2 -> M0 is possible later) as
+ * mentioned above.
+ * -ETIMEDOUT is device faled to move to M0 before @timeout_us elapsed
+ * -EIO if the MHI state is one of the ERROR states.
+ */
+int mhi_device_get_sync_atomic(struct mhi_device *mhi_dev, int timeout_us);
+
+/**
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * mhi_device_put - re-enable low power modes
  * @mhi_dev: Device associated with the channels
  * @vote: vote to remove
@@ -805,6 +866,15 @@ int mhi_get_remote_time_sync(struct mhi_device *mhi_dev,
 			     u64 *t_dev);
 
 /**
+<<<<<<< HEAD
+=======
+ * mhi_get_exec_env - Return execution environment of the device
+ * @mhi_cntrl: MHI controller
+ */
+enum mhi_ee mhi_get_exec_env(struct mhi_controller *mhi_cntrl);
+
+/**
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * mhi_get_mhi_state - Return MHI state of device
  * @mhi_cntrl: MHI controller
  */

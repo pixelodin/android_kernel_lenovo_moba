@@ -293,7 +293,11 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
 	int pasid_max;
 	int ret;
 
+<<<<<<< HEAD
 	if (!iommu)
+=======
+	if (!iommu || dmar_disabled)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EINVAL;
 
 	if (dev_is_pci(dev)) {
@@ -377,7 +381,11 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
 		/* Do not use PASID 0 in caching mode (virtualised IOMMU) */
 		ret = intel_pasid_alloc_id(svm,
 					   !!cap_caching_mode(iommu->cap),
+<<<<<<< HEAD
 					   pasid_max - 1, GFP_KERNEL);
+=======
+					   pasid_max, GFP_KERNEL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (ret < 0) {
 			kfree(svm);
 			kfree(sdev);

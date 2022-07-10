@@ -81,7 +81,11 @@ int read_usb_vudc_device(struct udev_device *sdev, struct usbip_usb_device *dev)
 	FILE *fd = NULL;
 	struct udev_device *plat;
 	const char *speed;
+<<<<<<< HEAD
 	int ret = 0;
+=======
+	size_t ret;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	plat = udev_device_get_parent(sdev);
 	path = udev_device_get_syspath(plat);
@@ -91,8 +95,15 @@ int read_usb_vudc_device(struct udev_device *sdev, struct usbip_usb_device *dev)
 	if (!fd)
 		return -1;
 	ret = fread((char *) &descr, sizeof(descr), 1, fd);
+<<<<<<< HEAD
 	if (ret < 0)
 		goto err;
+=======
+	if (ret != 1) {
+		err("Cannot read vudc device descr file: %s", strerror(errno));
+		goto err;
+	}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	fclose(fd);
 
 	copy_descr_attr(dev, &descr, bDeviceClass);

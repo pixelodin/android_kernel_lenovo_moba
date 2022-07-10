@@ -3524,7 +3524,11 @@ snd_soc_dapm_new_control_unlocked(struct snd_soc_dapm_context *dapm,
 		break;
 	case snd_soc_dapm_pinctrl:
 		w->pinctrl = devm_pinctrl_get(dapm->dev);
+<<<<<<< HEAD
 		if (IS_ERR_OR_NULL(w->pinctrl)) {
+=======
+		if (IS_ERR(w->pinctrl)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			ret = PTR_ERR(w->pinctrl);
 			if (ret == -EPROBE_DEFER)
 				return ERR_PTR(ret);
@@ -3694,7 +3698,11 @@ static int snd_soc_dai_link_event(struct snd_soc_dapm_widget *w,
 	struct snd_pcm_hw_params *params = NULL;
 	struct snd_pcm_runtime *runtime = NULL;
 	unsigned int fmt;
+<<<<<<< HEAD
 	int ret;
+=======
+	int ret = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (WARN_ON(!config) ||
 	    WARN_ON(list_empty(&w->edges[SND_SOC_DAPM_DIR_OUT]) ||
@@ -4562,7 +4570,11 @@ static void soc_dapm_shutdown_dapm(struct snd_soc_dapm_context *dapm)
 			continue;
 		if (w->power) {
 			dapm_seq_insert(w, &down_list, false);
+<<<<<<< HEAD
 			w->power = 0;
+=======
+			w->new_power = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			powerdown = 1;
 		}
 	}

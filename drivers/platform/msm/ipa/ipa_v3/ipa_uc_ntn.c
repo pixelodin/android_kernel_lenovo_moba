@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include "ipa_i.h"
@@ -550,6 +554,12 @@ int ipa3_tear_down_uc_offload_pipes(int ipa_ep_idx_ul,
 		return -EFAULT;
 	}
 
+<<<<<<< HEAD
+=======
+	atomic_set(&ep_ul->disconnect_in_progress, 1);
+	atomic_set(&ep_dl->disconnect_in_progress, 1);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (ipa3_ctx->ipa_hw_type >= IPA_HW_v4_0)
 		cmd.size = sizeof(*cmd_data_v4_0);
 	else

@@ -1009,10 +1009,20 @@ static void rfkill_sync_work(struct work_struct *work)
 int __must_check rfkill_register(struct rfkill *rfkill)
 {
 	static unsigned long rfkill_no;
+<<<<<<< HEAD
 	struct device *dev = &rfkill->dev;
 	int error;
 
 	BUG_ON(!rfkill);
+=======
+	struct device *dev;
+	int error;
+
+	if (!rfkill)
+		return -EINVAL;
+
+	dev = &rfkill->dev;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	mutex_lock(&rfkill_global_mutex);
 
@@ -1323,10 +1333,19 @@ static const struct file_operations rfkill_fops = {
 	.llseek		= no_llseek,
 };
 
+<<<<<<< HEAD
 static struct miscdevice rfkill_miscdev = {
 	.name	= "rfkill",
 	.fops	= &rfkill_fops,
 	.minor	= MISC_DYNAMIC_MINOR,
+=======
+#define RFKILL_NAME "rfkill"
+
+static struct miscdevice rfkill_miscdev = {
+	.fops	= &rfkill_fops,
+	.name	= RFKILL_NAME,
+	.minor	= RFKILL_MINOR,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 static int __init rfkill_init(void)
@@ -1378,3 +1397,9 @@ static void __exit rfkill_exit(void)
 	class_unregister(&rfkill_class);
 }
 module_exit(rfkill_exit);
+<<<<<<< HEAD
+=======
+
+MODULE_ALIAS_MISCDEV(RFKILL_MINOR);
+MODULE_ALIAS("devname:" RFKILL_NAME);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

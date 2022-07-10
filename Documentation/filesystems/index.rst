@@ -359,3 +359,7 @@ encryption of files and directories.
     :maxdepth: 2
 
     fscrypt
+<<<<<<< HEAD
+=======
+    fsverity
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

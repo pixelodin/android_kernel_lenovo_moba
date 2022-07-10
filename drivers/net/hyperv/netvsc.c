@@ -110,7 +110,11 @@ static struct netvsc_device *alloc_net_device(void)
 
 	init_waitqueue_head(&net_device->wait_drain);
 	net_device->destroy = false;
+<<<<<<< HEAD
 	net_device->tx_disable = false;
+=======
+	net_device->tx_disable = true;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	net_device->max_pkt = RNDIS_MAX_PKT_DEFAULT;
 	net_device->pkt_align = RNDIS_PKT_ALIGN_DEFAULT;
@@ -1182,6 +1186,7 @@ static int netvsc_receive(struct net_device *ndev,
 }
 
 static void netvsc_send_table(struct net_device *ndev,
+<<<<<<< HEAD
 			      const struct nvsp_message *nvmsg)
 {
 	struct net_device_context *net_device_ctx = netdev_priv(ndev);
@@ -1189,13 +1194,46 @@ static void netvsc_send_table(struct net_device *ndev,
 	int i;
 
 	count = nvmsg->msg.v5_msg.send_table.count;
+=======
+			      struct netvsc_device *nvscdev,
+			      const struct nvsp_message *nvmsg,
+			      u32 msglen)
+{
+	struct net_device_context *net_device_ctx = netdev_priv(ndev);
+	u32 count, offset, *tab;
+	int i;
+
+	count = nvmsg->msg.v5_msg.send_table.count;
+	offset = nvmsg->msg.v5_msg.send_table.offset;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (count != VRSS_SEND_TAB_SIZE) {
 		netdev_err(ndev, "Received wrong send-table size:%u\n", count);
 		return;
 	}
 
+<<<<<<< HEAD
 	tab = (u32 *)((unsigned long)&nvmsg->msg.v5_msg.send_table +
 		      nvmsg->msg.v5_msg.send_table.offset);
+=======
+	/* If negotiated version <= NVSP_PROTOCOL_VERSION_6, the offset may be
+	 * wrong due to a host bug. So fix the offset here.
+	 */
+	if (nvscdev->nvsp_version <= NVSP_PROTOCOL_VERSION_6 &&
+	    msglen >= sizeof(struct nvsp_message_header) +
+	    sizeof(union nvsp_6_message_uber) + count * sizeof(u32))
+		offset = sizeof(struct nvsp_message_header) +
+			 sizeof(union nvsp_6_message_uber);
+
+	/* Boundary check for all versions */
+	if (offset > msglen - count * sizeof(u32)) {
+		netdev_err(ndev, "Received send-table offset too big:%u\n",
+			   offset);
+		return;
+	}
+
+	tab = (void *)nvmsg + offset;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	for (i = 0; i < count; i++)
 		net_device_ctx->tx_table[i] = tab[i];
@@ -1213,12 +1251,23 @@ static void netvsc_send_vf(struct net_device *ndev,
 		    net_device_ctx->vf_alloc ? "added" : "removed");
 }
 
+<<<<<<< HEAD
 static  void netvsc_receive_inband(struct net_device *ndev,
 				   const struct nvsp_message *nvmsg)
 {
 	switch (nvmsg->hdr.msg_type) {
 	case NVSP_MSG5_TYPE_SEND_INDIRECTION_TABLE:
 		netvsc_send_table(ndev, nvmsg);
+=======
+static void netvsc_receive_inband(struct net_device *ndev,
+				  struct netvsc_device *nvscdev,
+				  const struct nvsp_message *nvmsg,
+				  u32 msglen)
+{
+	switch (nvmsg->hdr.msg_type) {
+	case NVSP_MSG5_TYPE_SEND_INDIRECTION_TABLE:
+		netvsc_send_table(ndev, nvscdev, nvmsg, msglen);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 
 	case NVSP_MSG4_TYPE_SEND_VF_ASSOCIATION:
@@ -1235,6 +1284,10 @@ static int netvsc_process_raw_pkt(struct hv_device *device,
 				  int budget)
 {
 	const struct nvsp_message *nvmsg = hv_pkt_data(desc);
+<<<<<<< HEAD
+=======
+	u32 msglen = hv_pkt_datalen(desc);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	trace_nvsp_recv(ndev, channel, nvmsg);
 
@@ -1250,7 +1303,11 @@ static int netvsc_process_raw_pkt(struct hv_device *device,
 		break;
 
 	case VM_PKT_DATA_INBAND:
+<<<<<<< HEAD
 		netvsc_receive_inband(ndev, nvmsg);
+=======
+		netvsc_receive_inband(ndev, net_device, nvmsg, msglen);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 
 	default:

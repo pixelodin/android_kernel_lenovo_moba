@@ -65,6 +65,12 @@ static void cpu_v7_spectre_init(void)
 		break;
 
 #ifdef CONFIG_ARM_PSCI
+<<<<<<< HEAD
+=======
+	case ARM_CPU_PART_BRAHMA_B53:
+		/* Requires no workaround */
+		break;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	default:
 		/* Other ARM CPUs require no workaround */
 		if (read_cpuid_implementor() == ARM_CPU_IMP_ARM)

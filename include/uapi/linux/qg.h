@@ -1,6 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 /*
+<<<<<<< HEAD
  * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2018, 2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #ifndef __QG_H__
@@ -26,7 +30,11 @@ enum qg {
 	QG_FULL_SOC,
 	QG_CLEAR_LEARNT_DATA,
 	QG_SYS_SOC,
+<<<<<<< HEAD
 	QG_RESERVED_10,
+=======
+	QG_V_IBAT,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	QG_MAX,
 };
 
@@ -39,6 +47,10 @@ enum qg {
 #define QG_FULL_SOC QG_FULL_SOC
 #define QG_CLEAR_LEARNT_DATA QG_CLEAR_LEARNT_DATA
 #define QG_SYS_SOC QG_SYS_SOC
+<<<<<<< HEAD
+=======
+#define QG_V_IBAT QG_V_IBAT
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 struct fifo_data {
 	unsigned int			v;

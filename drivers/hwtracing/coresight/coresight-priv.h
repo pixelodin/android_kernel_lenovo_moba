@@ -26,6 +26,16 @@
 #define CORESIGHT_DEVID		0xfc8
 #define CORESIGHT_DEVTYPE	0xfcc
 
+<<<<<<< HEAD
+=======
+
+/*
+ * Coresight device CLAIM protocol.
+ * See PSCI - ARM DEN 0022D, Section: 6.8.1 Debug and Trace save and restore.
+ */
+#define CORESIGHT_CLAIM_SELF_HOSTED	BIT(1)
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define TIMEOUT_US		100
 #define BMVAL(val, lsb, msb)	((val & GENMASK(msb, lsb)) >> lsb)
 
@@ -138,9 +148,16 @@ static inline void coresight_write_reg_pair(void __iomem *addr, u64 val,
 }
 
 void coresight_disable_path(struct list_head *path);
+<<<<<<< HEAD
 int coresight_enable_path(struct list_head *path, u32 mode);
 struct coresight_device *coresight_get_sink(struct list_head *path);
 struct coresight_device *coresight_get_enabled_sink(bool reset);
+=======
+int coresight_enable_path(struct list_head *path, u32 mode, void *sink_data);
+struct coresight_device *coresight_get_sink(struct list_head *path);
+struct coresight_device *coresight_get_enabled_sink(bool reset);
+struct coresight_device *coresight_get_sink_by_id(u32 id);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 struct list_head *coresight_build_path(struct coresight_device *csdev,
 				       struct coresight_device *sink);
 struct coresight_device *coresight_get_source(struct list_head *path);

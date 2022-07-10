@@ -236,7 +236,11 @@ static void __exit crc32_pmull_mod_exit(void)
 				  ARRAY_SIZE(crc32_pmull_algs));
 }
 
+<<<<<<< HEAD
 static const struct cpu_feature crc32_cpu_feature[] = {
+=======
+static const struct cpu_feature __maybe_unused crc32_cpu_feature[] = {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	{ cpu_feature(CRC32) }, { cpu_feature(PMULL) }, { }
 };
 MODULE_DEVICE_TABLE(cpu, crc32_cpu_feature);

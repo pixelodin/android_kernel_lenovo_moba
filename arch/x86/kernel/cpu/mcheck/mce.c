@@ -812,8 +812,13 @@ static int mce_no_way_out(struct mce *m, char **msg, unsigned long *validp,
 		if (quirk_no_way_out)
 			quirk_no_way_out(i, m, regs);
 
+<<<<<<< HEAD
 		if (mce_severity(m, mca_cfg.tolerant, &tmp, true) >= MCE_PANIC_SEVERITY) {
 			m->bank = i;
+=======
+		m->bank = i;
+		if (mce_severity(m, mca_cfg.tolerant, &tmp, true) >= MCE_PANIC_SEVERITY) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			mce_read_aux(m, i);
 			*msg = tmp;
 			return 1;
@@ -1631,6 +1636,7 @@ static int __mcheck_cpu_apply_quirks(struct cpuinfo_x86 *c)
 		if (c->x86 == 0x15 && c->x86_model <= 0xf)
 			mce_flags.overflow_recov = 1;
 
+<<<<<<< HEAD
 		/*
 		 * Turn off MC4_MISC thresholding banks on those models since
 		 * they're not supported there.
@@ -1661,6 +1667,8 @@ static int __mcheck_cpu_apply_quirks(struct cpuinfo_x86 *c)
 			if (need_toggle)
 				wrmsrl(MSR_K7_HWCR, hwcr);
 		}
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	if (c->x86_vendor == X86_VENDOR_INTEL) {

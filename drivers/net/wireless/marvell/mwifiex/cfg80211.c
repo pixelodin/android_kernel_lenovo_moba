@@ -376,11 +376,28 @@ mwifiex_cfg80211_set_tx_power(struct wiphy *wiphy,
 	struct mwifiex_power_cfg power_cfg;
 	int dbm = MBM_TO_DBM(mbm);
 
+<<<<<<< HEAD
 	if (type == NL80211_TX_POWER_FIXED) {
 		power_cfg.is_power_auto = 0;
 		power_cfg.power_level = dbm;
 	} else {
 		power_cfg.is_power_auto = 1;
+=======
+	switch (type) {
+	case NL80211_TX_POWER_FIXED:
+		power_cfg.is_power_auto = 0;
+		power_cfg.is_power_fixed = 1;
+		power_cfg.power_level = dbm;
+		break;
+	case NL80211_TX_POWER_LIMITED:
+		power_cfg.is_power_auto = 0;
+		power_cfg.is_power_fixed = 0;
+		power_cfg.power_level = dbm;
+		break;
+	case NL80211_TX_POWER_AUTOMATIC:
+		power_cfg.is_power_auto = 1;
+		break;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	priv = mwifiex_get_priv(adapter, MWIFIEX_BSS_ROLE_ANY);

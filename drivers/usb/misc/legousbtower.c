@@ -878,7 +878,11 @@ static int tower_probe (struct usb_interface *interface, const struct usb_device
 				  get_version_reply,
 				  sizeof(*get_version_reply),
 				  1000);
+<<<<<<< HEAD
 	if (result < sizeof(*get_version_reply)) {
+=======
+	if (result != sizeof(*get_version_reply)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (result >= 0)
 			result = -EIO;
 		dev_err(idev, "get version request failed: %d\n", result);

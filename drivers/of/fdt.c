@@ -25,6 +25,10 @@
 #include <linux/debugfs.h>
 #include <linux/serial_core.h>
 #include <linux/sysfs.h>
+<<<<<<< HEAD
+=======
+#include <linux/random.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
 #include <asm/page.h>
@@ -167,6 +171,10 @@ int of_fdt_get_ddrtype(void)
 
 	return ret;
 }
+<<<<<<< HEAD
+=======
+EXPORT_SYMBOL_GPL(of_fdt_get_ddrtype);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /**
  * of_fdt_is_compatible - Return true if given node from the given blob has
@@ -1190,6 +1198,10 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
 	int l = 0;
 	const char *p = NULL;
 	char *cmdline = data;
+<<<<<<< HEAD
+=======
+	const void *rng_seed;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	pr_debug("search \"chosen\", depth: %d, uname: %s\n", depth, uname);
 
@@ -1224,6 +1236,17 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
 
 	pr_debug("Command line is: %s\n", (char*)data);
 
+<<<<<<< HEAD
+=======
+	rng_seed = of_get_flat_dt_prop(node, "rng-seed", &l);
+	if (rng_seed && l > 0) {
+		add_bootloader_randomness(rng_seed, l);
+
+		/* try to clear seed so it won't be found. */
+		fdt_nop_property(initial_boot_params, node, "rng-seed");
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* break now */
 	return 1;
 }
@@ -1326,8 +1349,11 @@ bool __init early_init_dt_verify(void *params)
 
 	/* Setup flat device-tree pointer */
 	initial_boot_params = params;
+<<<<<<< HEAD
 	of_fdt_crc32 = crc32_be(~0, initial_boot_params,
 				fdt_totalsize(initial_boot_params));
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return true;
 }
 
@@ -1353,6 +1379,11 @@ bool __init early_init_dt_scan(void *params)
 		return false;
 
 	early_init_dt_scan_nodes();
+<<<<<<< HEAD
+=======
+	of_fdt_crc32 = crc32_be(~0, initial_boot_params,
+				fdt_totalsize(initial_boot_params));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return true;
 }
 

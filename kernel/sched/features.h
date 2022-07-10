@@ -90,6 +90,10 @@ SCHED_FEAT(WA_BIAS, true)
  * UtilEstimation. Use estimated CPU utilization.
  */
 SCHED_FEAT(UTIL_EST, true)
+<<<<<<< HEAD
+=======
+SCHED_FEAT(UTIL_EST_FASTUP, true)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /*
  * Fast pre-selection of CPU candidates for EAS.

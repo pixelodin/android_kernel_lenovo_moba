@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2011-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2011-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include <linux/compat.h>
@@ -135,8 +139,15 @@ static int kgsl_iommu_map_globals(struct kgsl_pagetable *pagetable)
 			int ret = kgsl_mmu_map(pagetable,
 					global_pt_entries[i].memdesc);
 
+<<<<<<< HEAD
 			if (ret)
 				return ret;
+=======
+			if (ret) {
+				kgsl_iommu_unmap_globals(pagetable);
+				return ret;
+			}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 	}
 
@@ -755,6 +766,10 @@ static int kgsl_iommu_fault_handler(struct iommu_domain *domain,
 	unsigned int no_page_fault_log = 0;
 	char *fault_type = "unknown";
 	char *comm = "unknown";
+<<<<<<< HEAD
+=======
+	bool fault_ret_flag = false;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	struct kgsl_process_private *private;
 
 	static DEFINE_RATELIMIT_STATE(_rs,
@@ -798,9 +813,17 @@ static int kgsl_iommu_fault_handler(struct iommu_domain *domain,
 		 * Turn off GPU IRQ so we don't get faults from it too.
 		 * The device mutex must be held to change power state
 		 */
+<<<<<<< HEAD
 		mutex_lock(&device->mutex);
 		kgsl_pwrctrl_change_state(device, KGSL_STATE_AWARE);
 		mutex_unlock(&device->mutex);
+=======
+		if (mutex_trylock(&device->mutex)) {
+			kgsl_pwrctrl_change_state(device, KGSL_STATE_AWARE);
+			mutex_unlock(&device->mutex);
+		} else
+			fault_ret_flag = true;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	contextidr = KGSL_IOMMU_GET_CTX_REG(ctx, CONTEXTIDR);
@@ -860,13 +883,20 @@ static int kgsl_iommu_fault_handler(struct iommu_domain *domain,
 		}
 	}
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/*
 	 * We do not want the h/w to resume fetching data from an iommu
 	 * that has faulted, this is better for debugging as it will stall
 	 * the GPU and trigger a snapshot. Return EBUSY error.
 	 */
+<<<<<<< HEAD
 	if (test_bit(KGSL_FT_PAGEFAULT_GPUHALT_ENABLE,
+=======
+	if (!fault_ret_flag && test_bit(KGSL_FT_PAGEFAULT_GPUHALT_ENABLE,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		&adreno_dev->ft_pf_policy) &&
 		(flags & IOMMU_FAULT_TRANSACTION_STALLED)) {
 		uint32_t sctlr_val;
@@ -1011,6 +1041,11 @@ static void kgsl_iommu_destroy_pagetable(struct kgsl_pagetable *pt)
 	} else {
 		ctx = &iommu->ctx[KGSL_IOMMU_CONTEXT_USER];
 		kgsl_iommu_unmap_globals(pt);
+<<<<<<< HEAD
+=======
+		if (pt->name == KGSL_MMU_GLOBAL_PT)
+			mmu->globalpt_mapped = false;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	if (iommu_pt->domain) {
@@ -1034,7 +1069,11 @@ static void setup_64bit_pagetable(struct kgsl_mmu *mmu,
 		pt->va_start = KGSL_IOMMU_SECURE_BASE(mmu);
 		pt->va_end = KGSL_IOMMU_SECURE_END(mmu);
 	} else {
+<<<<<<< HEAD
 		pt->compat_va_start = KGSL_IOMMU_SVM_BASE32;
+=======
+		pt->compat_va_start = KGSL_IOMMU_SVM_BASE32(mmu);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		pt->compat_va_end = KGSL_IOMMU_SECURE_BASE(mmu);
 		pt->va_start = KGSL_IOMMU_VA_BASE64;
 		pt->va_end = KGSL_IOMMU_VA_END64;
@@ -1043,7 +1082,11 @@ static void setup_64bit_pagetable(struct kgsl_mmu *mmu,
 	if (pagetable->name != KGSL_MMU_GLOBAL_PT &&
 		pagetable->name != KGSL_MMU_SECURE_PT) {
 		if (kgsl_is_compat_task()) {
+<<<<<<< HEAD
 			pt->svm_start = KGSL_IOMMU_SVM_BASE32;
+=======
+			pt->svm_start = KGSL_IOMMU_SVM_BASE32(mmu);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			pt->svm_end = KGSL_IOMMU_SECURE_BASE(mmu);
 		} else {
 			pt->svm_start = KGSL_IOMMU_SVM_BASE64;
@@ -1063,13 +1106,21 @@ static void setup_32bit_pagetable(struct kgsl_mmu *mmu,
 			pt->va_start = KGSL_IOMMU_SECURE_BASE(mmu);
 			pt->va_end = KGSL_IOMMU_SECURE_END(mmu);
 		} else {
+<<<<<<< HEAD
 			pt->va_start = KGSL_IOMMU_SVM_BASE32;
+=======
+			pt->va_start = KGSL_IOMMU_SVM_BASE32(mmu);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			pt->va_end = KGSL_IOMMU_SECURE_BASE(mmu);
 			pt->compat_va_start = pt->va_start;
 			pt->compat_va_end = pt->va_end;
 		}
 	} else {
+<<<<<<< HEAD
 		pt->va_start = KGSL_IOMMU_SVM_BASE32;
+=======
+		pt->va_start = KGSL_IOMMU_SVM_BASE32(mmu);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		pt->va_end = KGSL_IOMMU_GLOBAL_MEM_BASE(mmu);
 		pt->compat_va_start = pt->va_start;
 		pt->compat_va_end = pt->va_end;
@@ -1077,7 +1128,11 @@ static void setup_32bit_pagetable(struct kgsl_mmu *mmu,
 
 	if (pagetable->name != KGSL_MMU_GLOBAL_PT &&
 		pagetable->name != KGSL_MMU_SECURE_PT) {
+<<<<<<< HEAD
 		pt->svm_start = KGSL_IOMMU_SVM_BASE32;
+=======
+		pt->svm_start = KGSL_IOMMU_SVM_BASE32(mmu);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		pt->svm_end = KGSL_IOMMU_SVM_END32;
 	}
 }
@@ -1244,8 +1299,11 @@ static int _init_global_pt(struct kgsl_mmu *mmu, struct kgsl_pagetable *pt)
 		goto done;
 	}
 
+<<<<<<< HEAD
 	ret = kgsl_iommu_map_globals(pt);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 done:
 	if (ret)
 		_free_pt(ctx, pt);
@@ -1529,6 +1587,21 @@ static int kgsl_iommu_init(struct kgsl_mmu *mmu)
 	kgsl_setup_qdss_desc(device);
 	kgsl_setup_qtimer_desc(device);
 
+<<<<<<< HEAD
+=======
+	mmu->defaultpagetable = kgsl_mmu_getpagetable(mmu,
+				KGSL_MMU_GLOBAL_PT);
+	/* if we don't have a default pagetable, nothing will work */
+	if (IS_ERR(mmu->defaultpagetable)) {
+		status = PTR_ERR(mmu->defaultpagetable);
+		mmu->defaultpagetable = NULL;
+		goto done;
+	} else if (mmu->defaultpagetable == NULL) {
+		status = -ENOMEM;
+		goto done;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!mmu->secured)
 		goto done;
 
@@ -1558,6 +1631,7 @@ static int _setup_user_context(struct kgsl_mmu *mmu)
 	struct kgsl_iommu_pt *iommu_pt = NULL;
 	unsigned int  sctlr_val;
 
+<<<<<<< HEAD
 	if (mmu->defaultpagetable == NULL) {
 		mmu->defaultpagetable = kgsl_mmu_getpagetable(mmu,
 				KGSL_MMU_GLOBAL_PT);
@@ -1570,6 +1644,10 @@ static int _setup_user_context(struct kgsl_mmu *mmu)
 			return -ENOMEM;
 		}
 	}
+=======
+	if (mmu->defaultpagetable == NULL)
+		return -ENOMEM;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	iommu_pt = mmu->defaultpagetable->priv;
 	if (iommu_pt == NULL)
@@ -1678,6 +1756,17 @@ static int kgsl_iommu_start(struct kgsl_mmu *mmu)
 		wmb();
 	}
 
+<<<<<<< HEAD
+=======
+	if (mmu->defaultpagetable != NULL && !mmu->globalpt_mapped) {
+		status = kgsl_iommu_map_globals(mmu->defaultpagetable);
+		if (status)
+			return status;
+
+		mmu->globalpt_mapped = true;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Make sure the hardware is programmed to the default pagetable */
 	kgsl_iommu_set_pt(mmu, mmu->defaultpagetable);
 	kgsl_iommu_disable_clk(mmu);
@@ -2409,6 +2498,25 @@ static uint64_t kgsl_iommu_find_svm_region(struct kgsl_pagetable *pagetable,
 	return addr;
 }
 
+<<<<<<< HEAD
+=======
+static bool iommu_addr_in_svm_ranges(struct kgsl_iommu_pt *pt,
+	u64 gpuaddr, u64 size)
+{
+	if ((gpuaddr >= pt->compat_va_start && gpuaddr < pt->compat_va_end) &&
+		((gpuaddr + size) > pt->compat_va_start &&
+			(gpuaddr + size) <= pt->compat_va_end))
+		return true;
+
+	if ((gpuaddr >= pt->svm_start && gpuaddr < pt->svm_end) &&
+		((gpuaddr + size) > pt->svm_start &&
+			(gpuaddr + size) <= pt->svm_end))
+		return true;
+
+	return false;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int kgsl_iommu_set_svm_region(struct kgsl_pagetable *pagetable,
 		uint64_t gpuaddr, uint64_t size)
 {
@@ -2416,9 +2524,14 @@ static int kgsl_iommu_set_svm_region(struct kgsl_pagetable *pagetable,
 	struct kgsl_iommu_pt *pt = pagetable->priv;
 	struct rb_node *node;
 
+<<<<<<< HEAD
 	/* Make sure the requested address doesn't fall in the global range */
 	if (ADDR_IN_GLOBAL(pagetable->mmu, gpuaddr) ||
 			ADDR_IN_GLOBAL(pagetable->mmu, gpuaddr + size))
+=======
+	/* Make sure the requested address doesn't fall out of SVM range */
+	if (!iommu_addr_in_svm_ranges(pt, gpuaddr, size))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -ENOMEM;
 
 	spin_lock(&pagetable->lock);

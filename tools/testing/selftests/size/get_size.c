@@ -12,23 +12,50 @@
  * own execution.  It also attempts to have as few dependencies
  * on kernel features as possible.
  *
+<<<<<<< HEAD
  * It should be statically linked, with startup libs avoided.
  * It uses no library calls, and only the following 3 syscalls:
+=======
+ * It should be statically linked, with startup libs avoided.  It uses
+ * no library calls except the syscall() function for the following 3
+ * syscalls:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  *   sysinfo(), write(), and _exit()
  *
  * For output, it avoids printf (which in some C libraries
  * has large external dependencies) by  implementing it's own
  * number output and print routines, and using __builtin_strlen()
+<<<<<<< HEAD
+=======
+ *
+ * The test may crash if any of the above syscalls fails because in some
+ * libc implementations (e.g. the GNU C Library) errno is saved in
+ * thread-local storage, which does not get initialized due to avoiding
+ * startup libs.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #include <sys/sysinfo.h>
 #include <unistd.h>
+<<<<<<< HEAD
+=======
+#include <sys/syscall.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #define STDOUT_FILENO 1
 
 static int print(const char *s)
 {
+<<<<<<< HEAD
 	return write(STDOUT_FILENO, s, __builtin_strlen(s));
+=======
+	size_t len = 0;
+
+	while (s[len] != '\0')
+		len++;
+
+	return syscall(SYS_write, STDOUT_FILENO, s, len);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static inline char *num_to_str(unsigned long num, char *buf, int len)
@@ -80,12 +107,20 @@ void _start(void)
 	print("TAP version 13\n");
 	print("# Testing system size.\n");
 
+<<<<<<< HEAD
 	ccode = sysinfo(&info);
+=======
+	ccode = syscall(SYS_sysinfo, &info);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (ccode < 0) {
 		print("not ok 1");
 		print(test_name);
 		print(" ---\n reason: \"could not get sysinfo\"\n ...\n");
+<<<<<<< HEAD
 		_exit(ccode);
+=======
+		syscall(SYS_exit, ccode);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 	print("ok 1");
 	print(test_name);
@@ -101,5 +136,9 @@ void _start(void)
 	print(" ...\n");
 	print("1..1\n");
 
+<<<<<<< HEAD
 	_exit(0);
+=======
+	syscall(SYS_exit, 0);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }

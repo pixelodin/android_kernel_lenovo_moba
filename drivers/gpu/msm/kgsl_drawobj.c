@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2016-2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2016-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 /*
@@ -315,6 +319,12 @@ static void drawobj_destroy_cmd(struct kgsl_drawobj *drawobj)
 
 	/* Destroy the memlist we created */
 	memobj_list_free(&cmdobj->memlist);
+<<<<<<< HEAD
+=======
+
+	if (drawobj->type & CMDOBJ_TYPE)
+		atomic_dec(&drawobj->context->proc_priv->cmd_count);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 /**
@@ -772,6 +782,12 @@ struct kgsl_drawobj_cmd *kgsl_drawobj_cmd_create(struct kgsl_device *device,
 
 		INIT_LIST_HEAD(&cmdobj->cmdlist);
 		INIT_LIST_HEAD(&cmdobj->memlist);
+<<<<<<< HEAD
+=======
+
+		if (type & CMDOBJ_TYPE)
+			atomic_inc(&context->proc_priv->cmd_count);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	return cmdobj;

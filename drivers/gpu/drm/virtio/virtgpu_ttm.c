@@ -106,6 +106,7 @@ static void virtio_gpu_ttm_global_fini(struct virtio_gpu_device *vgdev)
 	}
 }
 
+<<<<<<< HEAD
 #if 0
 /*
  * Hmm, seems to not do anything useful.  Leftover debug hack?
@@ -129,6 +130,8 @@ static int virtio_gpu_ttm_fault(struct vm_fault *vmf)
 }
 #endif
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 int virtio_gpu_mmap(struct file *filp, struct vm_area_struct *vma)
 {
 	struct drm_file *file_priv;
@@ -143,6 +146,7 @@ int virtio_gpu_mmap(struct file *filp, struct vm_area_struct *vma)
 		return -EINVAL;
 	}
 	r = ttm_bo_mmap(filp, vma, &vgdev->mman.bdev);
+<<<<<<< HEAD
 #if 0
 	if (unlikely(r != 0))
 		return r;
@@ -156,6 +160,10 @@ int virtio_gpu_mmap(struct file *filp, struct vm_area_struct *vma)
 #else
 	return r;
 #endif
+=======
+
+	return r;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int virtio_gpu_invalidate_caches(struct ttm_bo_device *bdev,
@@ -206,10 +214,13 @@ static const struct ttm_mem_type_manager_func virtio_gpu_bo_manager_func = {
 static int virtio_gpu_init_mem_type(struct ttm_bo_device *bdev, uint32_t type,
 				    struct ttm_mem_type_manager *man)
 {
+<<<<<<< HEAD
 	struct virtio_gpu_device *vgdev;
 
 	vgdev = virtio_gpu_get_vgdev(bdev);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	switch (type) {
 	case TTM_PL_SYSTEM:
 		/* System memory */
@@ -284,6 +295,7 @@ static void virtio_gpu_ttm_io_mem_free(struct ttm_bo_device *bdev,
  */
 struct virtio_gpu_ttm_tt {
 	struct ttm_dma_tt		ttm;
+<<<<<<< HEAD
 	struct virtio_gpu_device	*vgdev;
 	u64				offset;
 };
@@ -311,15 +323,54 @@ static int virtio_gpu_ttm_backend_unbind(struct ttm_tt *ttm)
 static void virtio_gpu_ttm_backend_destroy(struct ttm_tt *ttm)
 {
 	struct virtio_gpu_ttm_tt *gtt = (void *)ttm;
+=======
+	struct virtio_gpu_object        *obj;
+};
+
+static int virtio_gpu_ttm_tt_bind(struct ttm_tt *ttm,
+				  struct ttm_mem_reg *bo_mem)
+{
+	struct virtio_gpu_ttm_tt *gtt =
+		container_of(ttm, struct virtio_gpu_ttm_tt, ttm.ttm);
+	struct virtio_gpu_device *vgdev =
+		virtio_gpu_get_vgdev(gtt->obj->tbo.bdev);
+
+	virtio_gpu_object_attach(vgdev, gtt->obj, NULL);
+	return 0;
+}
+
+static int virtio_gpu_ttm_tt_unbind(struct ttm_tt *ttm)
+{
+	struct virtio_gpu_ttm_tt *gtt =
+		container_of(ttm, struct virtio_gpu_ttm_tt, ttm.ttm);
+	struct virtio_gpu_device *vgdev =
+		virtio_gpu_get_vgdev(gtt->obj->tbo.bdev);
+
+	virtio_gpu_object_detach(vgdev, gtt->obj);
+	return 0;
+}
+
+static void virtio_gpu_ttm_tt_destroy(struct ttm_tt *ttm)
+{
+	struct virtio_gpu_ttm_tt *gtt =
+		container_of(ttm, struct virtio_gpu_ttm_tt, ttm.ttm);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	ttm_dma_tt_fini(&gtt->ttm);
 	kfree(gtt);
 }
 
+<<<<<<< HEAD
 static struct ttm_backend_func virtio_gpu_backend_func = {
 	.bind = &virtio_gpu_ttm_backend_bind,
 	.unbind = &virtio_gpu_ttm_backend_unbind,
 	.destroy = &virtio_gpu_ttm_backend_destroy,
+=======
+static struct ttm_backend_func virtio_gpu_tt_func = {
+	.bind = &virtio_gpu_ttm_tt_bind,
+	.unbind = &virtio_gpu_ttm_tt_unbind,
+	.destroy = &virtio_gpu_ttm_tt_destroy,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 static struct ttm_tt *virtio_gpu_ttm_tt_create(struct ttm_buffer_object *bo,
@@ -332,8 +383,13 @@ static struct ttm_tt *virtio_gpu_ttm_tt_create(struct ttm_buffer_object *bo,
 	gtt = kzalloc(sizeof(struct virtio_gpu_ttm_tt), GFP_KERNEL);
 	if (gtt == NULL)
 		return NULL;
+<<<<<<< HEAD
 	gtt->ttm.ttm.func = &virtio_gpu_backend_func;
 	gtt->vgdev = vgdev;
+=======
+	gtt->ttm.ttm.func = &virtio_gpu_tt_func;
+	gtt->obj = container_of(bo, struct virtio_gpu_object, tbo);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (ttm_dma_tt_init(&gtt->ttm, bo, page_flags)) {
 		kfree(gtt);
 		return NULL;
@@ -341,6 +397,7 @@ static struct ttm_tt *virtio_gpu_ttm_tt_create(struct ttm_buffer_object *bo,
 	return &gtt->ttm.ttm;
 }
 
+<<<<<<< HEAD
 static void virtio_gpu_move_null(struct ttm_buffer_object *bo,
 				 struct ttm_mem_reg *new_mem)
 {
@@ -395,6 +452,13 @@ static void virtio_gpu_bo_swap_notify(struct ttm_buffer_object *tbo)
 
 	bo = container_of(tbo, struct virtio_gpu_object, tbo);
 	vgdev = (struct virtio_gpu_device *)bo->gem_base.dev->dev_private;
+=======
+static void virtio_gpu_bo_swap_notify(struct ttm_buffer_object *tbo)
+{
+	struct virtio_gpu_object *bo;
+
+	bo = container_of(tbo, struct virtio_gpu_object, tbo);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (bo->pages)
 		virtio_gpu_object_free_sg_table(bo);
@@ -406,11 +470,17 @@ static struct ttm_bo_driver virtio_gpu_bo_driver = {
 	.init_mem_type = &virtio_gpu_init_mem_type,
 	.eviction_valuable = ttm_bo_eviction_valuable,
 	.evict_flags = &virtio_gpu_evict_flags,
+<<<<<<< HEAD
 	.move = &virtio_gpu_bo_move,
 	.verify_access = &virtio_gpu_verify_access,
 	.io_mem_reserve = &virtio_gpu_ttm_io_mem_reserve,
 	.io_mem_free = &virtio_gpu_ttm_io_mem_free,
 	.move_notify = &virtio_gpu_bo_move_notify,
+=======
+	.verify_access = &virtio_gpu_verify_access,
+	.io_mem_reserve = &virtio_gpu_ttm_io_mem_reserve,
+	.io_mem_free = &virtio_gpu_ttm_io_mem_free,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.swap_notify = &virtio_gpu_bo_swap_notify,
 };
 

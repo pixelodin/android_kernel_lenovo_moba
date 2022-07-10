@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-only
 /*
+<<<<<<< HEAD
  * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+=======
+ * Copyright (c) 2019-2020, The Linux Foundation. All rights reserved.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
@@ -889,7 +893,11 @@ static void beac_event_config(struct llcc_perfmon_private *llcc_priv,
 		bool enable)
 {
 	uint32_t val = 0, mask_val;
+<<<<<<< HEAD
 	uint32_t valcfg = 0, mask_valcfg;
+=======
+	uint32_t valcfg = 0, mask_valcfg = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	unsigned int mc_cnt, offset;
 	struct llcc_perfmon_counter_map *counter_map;
 

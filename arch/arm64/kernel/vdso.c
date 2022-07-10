@@ -146,8 +146,11 @@ static int __init vdso_init(void)
 	}
 
 	vdso_pages = (vdso_end - vdso_start) >> PAGE_SHIFT;
+<<<<<<< HEAD
 	pr_info("vdso: %ld pages (%ld code @ %p, %ld data @ %p)\n",
 		vdso_pages + 1, vdso_pages, vdso_start, 1L, vdso_data);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Allocate the vDSO pagelist, plus a page for the data. */
 	vdso_pagelist = kcalloc(vdso_pages + 1, sizeof(struct page *),

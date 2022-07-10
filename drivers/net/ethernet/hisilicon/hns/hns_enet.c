@@ -569,7 +569,10 @@ static int hns_nic_poll_rx_skb(struct hns_nic_ring_data *ring_data,
 	skb = *out_skb = napi_alloc_skb(&ring_data->napi,
 					HNS_RX_HEAD_SIZE);
 	if (unlikely(!skb)) {
+<<<<<<< HEAD
 		netdev_err(ndev, "alloc rx skb fail\n");
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ring->stats.sw_err_cnt++;
 		return -ENOMEM;
 	}
@@ -947,6 +950,7 @@ static int is_valid_clean_head(struct hnae_ring *ring, int h)
 	return u > c ? (h > c && h <= u) : (h > c || h <= u);
 }
 
+<<<<<<< HEAD
 /* netif_tx_lock will turn down the performance, set only when necessary */
 #ifdef CONFIG_NET_POLL_CONTROLLER
 #define NETIF_TX_LOCK(ring) spin_lock(&(ring)->lock)
@@ -956,6 +960,8 @@ static int is_valid_clean_head(struct hnae_ring *ring, int h)
 #define NETIF_TX_UNLOCK(ring)
 #endif
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /* reclaim all desc in one budget
  * return error or number of desc left
  */
@@ -969,6 +975,7 @@ static int hns_nic_tx_poll_one(struct hns_nic_ring_data *ring_data,
 	int head;
 	int bytes, pkts;
 
+<<<<<<< HEAD
 	NETIF_TX_LOCK(ring);
 
 	head = readl_relaxed(ring->io_base + RCB_REG_HEAD);
@@ -978,12 +985,22 @@ static int hns_nic_tx_poll_one(struct hns_nic_ring_data *ring_data,
 		NETIF_TX_UNLOCK(ring);
 		return 0; /* no data to poll */
 	}
+=======
+	head = readl_relaxed(ring->io_base + RCB_REG_HEAD);
+	rmb(); /* make sure head is ready before touch any data */
+
+	if (is_ring_empty(ring) || head == ring->next_to_clean)
+		return 0; /* no data to poll */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (!is_valid_clean_head(ring, head)) {
 		netdev_err(ndev, "wrong head (%d, %d-%d)\n", head,
 			   ring->next_to_use, ring->next_to_clean);
 		ring->stats.io_err_cnt++;
+<<<<<<< HEAD
 		NETIF_TX_UNLOCK(ring);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EIO;
 	}
 
@@ -998,8 +1015,11 @@ static int hns_nic_tx_poll_one(struct hns_nic_ring_data *ring_data,
 	ring->stats.tx_pkts += pkts;
 	ring->stats.tx_bytes += bytes;
 
+<<<<<<< HEAD
 	NETIF_TX_UNLOCK(ring);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	dev_queue = netdev_get_tx_queue(ndev, ring_data->queue_index);
 	netdev_tx_completed_queue(dev_queue, pkts, bytes);
 
@@ -1059,16 +1079,22 @@ static void hns_nic_tx_clr_all_bufs(struct hns_nic_ring_data *ring_data)
 	int head;
 	int bytes, pkts;
 
+<<<<<<< HEAD
 	NETIF_TX_LOCK(ring);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	head = ring->next_to_use; /* ntu :soft setted ring position*/
 	bytes = 0;
 	pkts = 0;
 	while (head != ring->next_to_clean)
 		hns_nic_reclaim_one_desc(ring, &bytes, &pkts);
 
+<<<<<<< HEAD
 	NETIF_TX_UNLOCK(ring);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	dev_queue = netdev_get_tx_queue(ndev, ring_data->queue_index);
 	netdev_tx_reset_queue(dev_queue);
 }
@@ -1080,7 +1106,10 @@ static int hns_nic_common_poll(struct napi_struct *napi, int budget)
 		container_of(napi, struct hns_nic_ring_data, napi);
 	struct hnae_ring *ring = ring_data->ring;
 
+<<<<<<< HEAD
 try_again:
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	clean_complete += ring_data->poll_one(
 				ring_data, budget - clean_complete,
 				ring_data->ex_process);
@@ -1090,7 +1119,11 @@ try_again:
 			napi_complete(napi);
 			ring->q->handle->dev->ops->toggle_ring_irq(ring, 0);
 		} else {
+<<<<<<< HEAD
 			goto try_again;
+=======
+			return budget;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 	}
 

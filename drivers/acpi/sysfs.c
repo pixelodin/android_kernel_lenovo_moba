@@ -816,14 +816,22 @@ end:
  * interface:
  *   echo unmask > /sys/firmware/acpi/interrupts/gpe00
  */
+<<<<<<< HEAD
 #define ACPI_MASKABLE_GPE_MAX	0xFF
+=======
+#define ACPI_MASKABLE_GPE_MAX	0x100
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static DECLARE_BITMAP(acpi_masked_gpes_map, ACPI_MASKABLE_GPE_MAX) __initdata;
 
 static int __init acpi_gpe_set_masked_gpes(char *val)
 {
 	u8 gpe;
 
+<<<<<<< HEAD
 	if (kstrtou8(val, 0, &gpe) || gpe > ACPI_MASKABLE_GPE_MAX)
+=======
+	if (kstrtou8(val, 0, &gpe))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EINVAL;
 	set_bit(gpe, acpi_masked_gpes_map);
 
@@ -835,7 +843,11 @@ void __init acpi_gpe_apply_masked_gpes(void)
 {
 	acpi_handle handle;
 	acpi_status status;
+<<<<<<< HEAD
 	u8 gpe;
+=======
+	u16 gpe;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	for_each_set_bit(gpe, acpi_masked_gpes_map, ACPI_MASKABLE_GPE_MAX) {
 		status = acpi_get_gpe_device(gpe, &handle);

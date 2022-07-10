@@ -29,6 +29,10 @@
 #include <linux/kernel.h>
 #include <linux/kref.h>
 #include <linux/list.h>
+<<<<<<< HEAD
+=======
+#include <linux/mutex.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/netdevice.h>
 #include <linux/printk.h>
 #include <linux/rculist.h>
@@ -933,6 +937,10 @@ batadv_hardif_add_interface(struct net_device *net_dev)
 	INIT_LIST_HEAD(&hard_iface->list);
 	INIT_HLIST_HEAD(&hard_iface->neigh_list);
 
+<<<<<<< HEAD
+=======
+	mutex_init(&hard_iface->bat_iv.ogm_buff_mutex);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	spin_lock_init(&hard_iface->neigh_list_lock);
 	kref_init(&hard_iface->refcount);
 

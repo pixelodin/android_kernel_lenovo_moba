@@ -447,6 +447,11 @@ enum ipmi_stat_indexes {
 
 #define IPMI_IPMB_NUM_SEQ	64
 struct ipmi_smi {
+<<<<<<< HEAD
+=======
+	struct module *owner;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* What interface number are we? */
 	int intf_num;
 
@@ -1139,6 +1144,14 @@ int ipmi_create_user(unsigned int          if_num,
 	if (rv)
 		goto out_kfree;
 
+<<<<<<< HEAD
+=======
+	if (!try_module_get(intf->owner)) {
+		rv = -ENODEV;
+		goto out_kfree;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Note that each existing user holds a refcount to the interface. */
 	kref_get(&intf->refcount);
 
@@ -1269,6 +1282,10 @@ static void _ipmi_destroy_user(struct ipmi_user *user)
 	}
 
 	kref_put(&intf->refcount, intf_free);
+<<<<<<< HEAD
+=======
+	module_put(intf->owner);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 int ipmi_destroy_user(struct ipmi_user *user)
@@ -1365,7 +1382,11 @@ int ipmi_set_my_LUN(struct ipmi_user *user,
 	}
 	release_ipmi_user(user, index);
 
+<<<<<<< HEAD
 	return 0;
+=======
+	return rv;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 EXPORT_SYMBOL(ipmi_set_my_LUN);
 
@@ -2384,7 +2405,11 @@ static int __get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc)
  * been recently fetched, this will just use the cached data.  Otherwise
  * it will run a new fetch.
  *
+<<<<<<< HEAD
  * Except for the first time this is called (in ipmi_register_smi()),
+=======
+ * Except for the first time this is called (in ipmi_add_smi()),
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  * this will always return good data;
  */
 static int __bmc_get_device_id(struct ipmi_smi *intf, struct bmc_device *bmc,
@@ -2957,8 +2982,16 @@ static int __ipmi_bmc_register(struct ipmi_smi *intf,
 		bmc->pdev.name = "ipmi_bmc";
 
 		rv = ida_simple_get(&ipmi_bmc_ida, 0, 0, GFP_KERNEL);
+<<<<<<< HEAD
 		if (rv < 0)
 			goto out;
+=======
+		if (rv < 0) {
+			kfree(bmc);
+			goto out;
+		}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		bmc->pdev.dev.driver = &ipmidriver.driver;
 		bmc->pdev.id = rv;
 		bmc->pdev.dev.release = release_bmc_device;
@@ -3304,10 +3337,18 @@ static void redo_bmc_reg(struct work_struct *work)
 	kref_put(&intf->refcount, intf_free);
 }
 
+<<<<<<< HEAD
 int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
 		      void		       *send_info,
 		      struct device            *si_dev,
 		      unsigned char            slave_addr)
+=======
+int ipmi_add_smi(struct module         *owner,
+		 const struct ipmi_smi_handlers *handlers,
+		 void		       *send_info,
+		 struct device         *si_dev,
+		 unsigned char         slave_addr)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	int              i, j;
 	int              rv;
@@ -3333,7 +3374,11 @@ int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
 		return rv;
 	}
 
+<<<<<<< HEAD
 
+=======
+	intf->owner = owner;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	intf->bmc = &intf->tmp_bmc;
 	INIT_LIST_HEAD(&intf->bmc->intfs);
 	mutex_init(&intf->bmc->dyn_mutex);
@@ -3440,7 +3485,11 @@ int ipmi_register_smi(const struct ipmi_smi_handlers *handlers,
 
 	return rv;
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL(ipmi_register_smi);
+=======
+EXPORT_SYMBOL(ipmi_add_smi);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 static void deliver_smi_err_response(struct ipmi_smi *intf,
 				     struct ipmi_smi_msg *msg,

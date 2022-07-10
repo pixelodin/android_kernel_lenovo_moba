@@ -283,6 +283,7 @@ int security_capset(struct cred *new, const struct cred *old,
 				effective, inheritable, permitted);
 }
 
+<<<<<<< HEAD
 int security_capable(const struct cred *cred, struct user_namespace *ns,
 		     int cap)
 {
@@ -293,6 +294,14 @@ int security_capable_noaudit(const struct cred *cred, struct user_namespace *ns,
 			     int cap)
 {
 	return call_int_hook(capable, 0, cred, ns, cap, SECURITY_CAP_NOAUDIT);
+=======
+int security_capable(const struct cred *cred,
+		     struct user_namespace *ns,
+		     int cap,
+		     unsigned int opts)
+{
+	return call_int_hook(capable, 0, cred, ns, cap, opts);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 int security_quotactl(int cmds, int type, int id, struct super_block *sb)
@@ -623,6 +632,7 @@ int security_inode_create(struct inode *dir, struct dentry *dentry, umode_t mode
 }
 EXPORT_SYMBOL_GPL(security_inode_create);
 
+<<<<<<< HEAD
 int security_inode_post_create(struct inode *dir, struct dentry *dentry,
 				umode_t mode)
 {
@@ -631,6 +641,8 @@ int security_inode_post_create(struct inode *dir, struct dentry *dentry,
 	return call_int_hook(inode_post_create, 0, dir, dentry, mode);
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 int security_inode_link(struct dentry *old_dentry, struct inode *dir,
 			 struct dentry *new_dentry)
 {
@@ -1813,3 +1825,33 @@ void security_bpf_prog_free(struct bpf_prog_aux *aux)
 	call_void_hook(bpf_prog_free_security, aux);
 }
 #endif /* CONFIG_BPF_SYSCALL */
+<<<<<<< HEAD
+=======
+
+#ifdef CONFIG_PERF_EVENTS
+int security_perf_event_open(struct perf_event_attr *attr, int type)
+{
+	return call_int_hook(perf_event_open, 0, attr, type);
+}
+
+int security_perf_event_alloc(struct perf_event *event)
+{
+	return call_int_hook(perf_event_alloc, 0, event);
+}
+
+void security_perf_event_free(struct perf_event *event)
+{
+	call_void_hook(perf_event_free, event);
+}
+
+int security_perf_event_read(struct perf_event *event)
+{
+	return call_int_hook(perf_event_read, 0, event);
+}
+
+int security_perf_event_write(struct perf_event *event)
+{
+	return call_int_hook(perf_event_write, 0, event);
+}
+#endif /* CONFIG_PERF_EVENTS */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82

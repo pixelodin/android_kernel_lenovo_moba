@@ -22,6 +22,10 @@
 #include <linux/module.h>
 #include <linux/of.h>
 #include <linux/of_device.h>
+<<<<<<< HEAD
+=======
+#include <video/of_videomode.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <video/of_display_timing.h>
 #include <linux/regulator/consumer.h>
 #include <video/videomode.h>
@@ -1028,11 +1032,19 @@ static int atmel_lcdfb_of_init(struct atmel_lcdfb_info *sinfo)
 	struct device *dev = &sinfo->pdev->dev;
 	struct device_node *np =dev->of_node;
 	struct device_node *display_np;
+<<<<<<< HEAD
 	struct device_node *timings_np;
 	struct display_timings *timings;
 	struct atmel_lcdfb_power_ctrl_gpio *og;
 	bool is_gpio_power = false;
 	struct gpio_desc *gpiod;
+=======
+	struct atmel_lcdfb_power_ctrl_gpio *og;
+	bool is_gpio_power = false;
+	struct fb_videomode fb_vm;
+	struct gpio_desc *gpiod;
+	struct videomode vm;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int ret = -ENOENT;
 	int i;
 
@@ -1105,6 +1117,7 @@ static int atmel_lcdfb_of_init(struct atmel_lcdfb_info *sinfo)
 	pdata->lcdcon_is_backlight = of_property_read_bool(display_np, "atmel,lcdcon-backlight");
 	pdata->lcdcon_pol_negative = of_property_read_bool(display_np, "atmel,lcdcon-backlight-inverted");
 
+<<<<<<< HEAD
 	timings = of_get_display_timings(display_np);
 	if (!timings) {
 		dev_err(dev, "failed to get display timings\n");
@@ -1143,6 +1156,20 @@ static int atmel_lcdfb_of_init(struct atmel_lcdfb_info *sinfo)
 
 put_timings_node:
 	of_node_put(timings_np);
+=======
+	ret = of_get_videomode(display_np, &vm, OF_USE_NATIVE_MODE);
+	if (ret) {
+		dev_err(dev, "failed to get videomode from DT\n");
+		goto put_display_node;
+	}
+
+	ret = fb_videomode_from_videomode(&vm, &fb_vm);
+	if (ret < 0)
+		goto put_display_node;
+
+	fb_add_videomode(&fb_vm, &info->modelist);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 put_display_node:
 	of_node_put(display_np);
 	return ret;

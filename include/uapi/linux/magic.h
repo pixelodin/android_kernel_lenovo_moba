@@ -74,6 +74,10 @@
 #define DAXFS_MAGIC             0x64646178
 #define BINFMTFS_MAGIC          0x42494e4d
 #define DEVPTS_SUPER_MAGIC	0x1cd1
+<<<<<<< HEAD
+=======
+#define BINDERFS_SUPER_MAGIC	0x6c6f6f70
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define FUTEXFS_SUPER_MAGIC	0xBAD1DEA
 #define PIPEFS_MAGIC            0x50495045
 #define PROC_SUPER_MAGIC	0x9fa0
@@ -91,5 +95,9 @@
 #define UDF_SUPER_MAGIC		0x15013346
 #define BALLOON_KVM_MAGIC	0x13661366
 #define ZSMALLOC_MAGIC		0x58295829
+<<<<<<< HEAD
+=======
+#define DMA_BUF_MAGIC		0x444d4142	/* "DMAB" */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #endif /* __LINUX_MAGIC_H__ */

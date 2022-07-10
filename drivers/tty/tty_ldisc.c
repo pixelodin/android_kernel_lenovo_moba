@@ -336,6 +336,14 @@ int tty_ldisc_lock(struct tty_struct *tty, unsigned long timeout)
 {
 	int ret;
 
+<<<<<<< HEAD
+=======
+	/* Kindly asking blocked readers to release the read side */
+	set_bit(TTY_LDISC_CHANGING, &tty->flags);
+	wake_up_interruptible_all(&tty->read_wait);
+	wake_up_interruptible_all(&tty->write_wait);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = __tty_ldisc_lock(tty, timeout);
 	if (!ret)
 		return -EBUSY;
@@ -346,6 +354,11 @@ int tty_ldisc_lock(struct tty_struct *tty, unsigned long timeout)
 void tty_ldisc_unlock(struct tty_struct *tty)
 {
 	clear_bit(TTY_LDISC_HALTED, &tty->flags);
+<<<<<<< HEAD
+=======
+	/* Can be cleared here - ldisc_unlock will wake up writers firstly */
+	clear_bit(TTY_LDISC_CHANGING, &tty->flags);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	__tty_ldisc_unlock(tty);
 }
 

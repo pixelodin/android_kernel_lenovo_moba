@@ -13,7 +13,10 @@
 #include <linux/netfilter/x_tables.h>
 #include <linux/netfilter/xt_NFLOG.h>
 #include <net/netfilter/nf_log.h>
+<<<<<<< HEAD
 #include <net/netfilter/nfnetlink_log.h>
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 MODULE_AUTHOR("Patrick McHardy <kaber@trash.net>");
 MODULE_DESCRIPTION("Xtables: packet logging to netlink using NFLOG");
@@ -43,6 +46,7 @@ nflog_tg(struct sk_buff *skb, const struct xt_action_param *par)
 	return XT_CONTINUE;
 }
 
+<<<<<<< HEAD
 static unsigned int
 nflog_tg_v1(struct sk_buff *skb, const struct xt_action_param *par)
 {
@@ -64,6 +68,8 @@ nflog_tg_v1(struct sk_buff *skb, const struct xt_action_param *par)
 	return XT_CONTINUE;
 }
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int nflog_tg_check(const struct xt_tgchk_param *par)
 {
 	const struct xt_nflog_info *info = par->targinfo;
@@ -81,6 +87,7 @@ static void nflog_tg_destroy(const struct xt_tgdtor_param *par)
 	nf_logger_put(par->family, NF_LOG_TYPE_ULOG);
 }
 
+<<<<<<< HEAD
 static int nflog_tg_check_v1(const struct xt_tgchk_param *par)
 {
 	const struct xt_nflog_info_v1 *info = par->targinfo;
@@ -115,16 +122,35 @@ static struct xt_target nflog_tg_reg[] __read_mostly = {
 		.targetsize = sizeof(struct xt_nflog_info_v1),
 		.me         = THIS_MODULE,
 	}
+=======
+static struct xt_target nflog_tg_reg __read_mostly = {
+	.name       = "NFLOG",
+	.revision   = 0,
+	.family     = NFPROTO_UNSPEC,
+	.checkentry = nflog_tg_check,
+	.destroy    = nflog_tg_destroy,
+	.target     = nflog_tg,
+	.targetsize = sizeof(struct xt_nflog_info),
+	.me         = THIS_MODULE,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 static int __init nflog_tg_init(void)
 {
+<<<<<<< HEAD
 	return xt_register_targets(nflog_tg_reg, ARRAY_SIZE(nflog_tg_reg));
+=======
+	return xt_register_target(&nflog_tg_reg);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static void __exit nflog_tg_exit(void)
 {
+<<<<<<< HEAD
 	xt_unregister_targets(nflog_tg_reg, ARRAY_SIZE(nflog_tg_reg));
+=======
+	xt_unregister_target(&nflog_tg_reg);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 module_init(nflog_tg_init);

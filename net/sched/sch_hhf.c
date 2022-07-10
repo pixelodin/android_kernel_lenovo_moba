@@ -4,11 +4,18 @@
  * Copyright (C) 2013 Nandita Dukkipati <nanditad@google.com>
  */
 
+<<<<<<< HEAD
 #include <linux/jhash.h>
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <linux/jiffies.h>
 #include <linux/module.h>
 #include <linux/skbuff.h>
 #include <linux/vmalloc.h>
+<<<<<<< HEAD
+=======
+#include <linux/siphash.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <net/pkt_sched.h>
 #include <net/sock.h>
 
@@ -125,7 +132,11 @@ struct wdrr_bucket {
 
 struct hhf_sched_data {
 	struct wdrr_bucket buckets[WDRR_BUCKET_CNT];
+<<<<<<< HEAD
 	u32		   perturbation;   /* hash perturbation */
+=======
+	siphash_key_t	   perturbation;   /* hash perturbation */
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	u32		   quantum;        /* psched_mtu(qdisc_dev(sch)); */
 	u32		   drop_overlimit; /* number of times max qdisc packet
 					    * limit was hit
@@ -263,7 +274,11 @@ static enum wdrr_bucket_idx hhf_classify(struct sk_buff *skb, struct Qdisc *sch)
 	}
 
 	/* Get hashed flow-id of the skb. */
+<<<<<<< HEAD
 	hash = skb_get_hash_perturb(skb, q->perturbation);
+=======
+	hash = skb_get_hash_perturb(skb, &q->perturbation);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Check if this packet belongs to an already established HH flow. */
 	flow_pos = hash & HHF_BIT_MASK;
@@ -580,7 +595,11 @@ static int hhf_init(struct Qdisc *sch, struct nlattr *opt,
 
 	sch->limit = 1000;
 	q->quantum = psched_mtu(qdisc_dev(sch));
+<<<<<<< HEAD
 	q->perturbation = prandom_u32();
+=======
+	get_random_bytes(&q->perturbation, sizeof(q->perturbation));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	INIT_LIST_HEAD(&q->new_buckets);
 	INIT_LIST_HEAD(&q->old_buckets);
 

@@ -198,6 +198,10 @@ static inline int ndisc_is_useropt(const struct net_device *dev,
 	return opt->nd_opt_type == ND_OPT_RDNSS ||
 		opt->nd_opt_type == ND_OPT_DNSSL ||
 		opt->nd_opt_type == ND_OPT_CAPTIVE_PORTAL ||
+<<<<<<< HEAD
+=======
+		opt->nd_opt_type == ND_OPT_PREF64 ||
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ndisc_ops_is_useropt(dev, opt->nd_opt_type);
 }
 

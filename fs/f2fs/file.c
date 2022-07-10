@@ -20,6 +20,10 @@
 #include <linux/uio.h>
 #include <linux/uuid.h>
 #include <linux/file.h>
+<<<<<<< HEAD
+=======
+#include <linux/nls.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #include "f2fs.h"
 #include "node.h"
@@ -51,7 +55,12 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
 	struct inode *inode = file_inode(vmf->vma->vm_file);
 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
 	struct dnode_of_data dn;
+<<<<<<< HEAD
 	int err;
+=======
+	bool need_alloc = true;
+	int err = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (unlikely(f2fs_cp_error(sbi))) {
 		err = -EIO;
@@ -61,6 +70,34 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
 	/* should do out of any locked page */
 	f2fs_balance_fs(sbi, true);
 
+<<<<<<< HEAD
+=======
+	if (!f2fs_is_checkpoint_ready(sbi)) {
+		err = -ENOSPC;
+		goto err;
+	}
+
+#ifdef CONFIG_F2FS_FS_COMPRESSION
+	if (f2fs_compressed_file(inode)) {
+		int ret = f2fs_is_compressed_cluster(inode, page->index);
+
+		if (ret < 0) {
+			err = ret;
+			goto err;
+		} else if (ret) {
+			if (ret < F2FS_I(inode)->i_cluster_size) {
+				err = -EAGAIN;
+				goto err;
+			}
+			need_alloc = false;
+		}
+	}
+#endif
+	/* should do out of any locked page */
+	if (need_alloc)
+		f2fs_balance_fs(sbi, true);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	sb_start_pagefault(inode->i_sb);
 
 	f2fs_bug_on(sbi, f2fs_has_inline_data(inode));
@@ -76,6 +113,7 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
 		goto out_sem;
 	}
 
+<<<<<<< HEAD
 	/* block allocation */
 	__do_map_lock(sbi, F2FS_GET_BLOCK_PRE_AIO, true);
 	set_new_dnode(&dn, inode, NULL, NULL, 0);
@@ -85,6 +123,19 @@ static vm_fault_t f2fs_vm_page_mkwrite(struct vm_fault *vmf)
 	if (err) {
 		unlock_page(page);
 		goto out_sem;
+=======
+	if (need_alloc) {
+		/* block allocation */
+		__do_map_lock(sbi, F2FS_GET_BLOCK_PRE_AIO, true);
+		set_new_dnode(&dn, inode, NULL, NULL, 0);
+		err = f2fs_get_block(&dn, page->index);
+		f2fs_put_dnode(&dn);
+		__do_map_lock(sbi, F2FS_GET_BLOCK_PRE_AIO, false);
+		if (err) {
+			unlock_page(page);
+			goto out_sem;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	/* fill the page */
@@ -151,6 +202,11 @@ static inline enum cp_reason_type need_do_checkpoint(struct inode *inode)
 
 	if (!S_ISREG(inode->i_mode))
 		cp_reason = CP_NON_REGULAR;
+<<<<<<< HEAD
+=======
+	else if (f2fs_compressed_file(inode))
+		cp_reason = CP_COMPRESSED;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	else if (inode->i_nlink != 1)
 		cp_reason = CP_HARDLINK;
 	else if (is_sbi_flag_set(sbi, SBI_NEED_CP))
@@ -492,6 +548,12 @@ static int f2fs_file_mmap(struct file *file, struct vm_area_struct *vma)
 	if (unlikely(f2fs_cp_error(F2FS_I_SB(inode))))
 		return -EIO;
 
+<<<<<<< HEAD
+=======
+	if (!f2fs_is_compress_backend_ready(inode))
+		return -EOPNOTSUPP;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* we don't need to use inline_data strictly */
 	err = f2fs_convert_inline_inode(inode);
 	if (err)
@@ -499,6 +561,10 @@ static int f2fs_file_mmap(struct file *file, struct vm_area_struct *vma)
 
 	file_accessed(file);
 	vma->vm_ops = &f2fs_file_vm_ops;
+<<<<<<< HEAD
+=======
+	set_inode_flag(inode, FI_MMAP_FILE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 }
 
@@ -509,6 +575,16 @@ static int f2fs_file_open(struct inode *inode, struct file *filp)
 	if (err)
 		return err;
 
+<<<<<<< HEAD
+=======
+	if (!f2fs_is_compress_backend_ready(inode))
+		return -EOPNOTSUPP;
+
+	err = fsverity_file_open(inode, filp);
+	if (err)
+		return err;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	filp->f_mode |= FMODE_NOWAIT;
 
 	return dquot_file_open(inode, filp);
@@ -521,6 +597,12 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
 	int nr_free = 0, ofs = dn->ofs_in_node, len = count;
 	__le32 *addr;
 	int base = 0;
+<<<<<<< HEAD
+=======
+	bool compressed_cluster = false;
+	int cluster_index = 0, valid_blocks = 0;
+	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (IS_INODE(dn->node_page) && f2fs_has_extra_attr(dn->inode))
 		base = get_extra_isize(dn->inode);
@@ -528,15 +610,32 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
 	raw_node = F2FS_NODE(dn->node_page);
 	addr = blkaddr_in_node(raw_node) + base + ofs;
 
+<<<<<<< HEAD
 	for (; count > 0; count--, addr++, dn->ofs_in_node++) {
 		block_t blkaddr = le32_to_cpu(*addr);
 
+=======
+	/* Assumption: truncateion starts with cluster */
+	for (; count > 0; count--, addr++, dn->ofs_in_node++, cluster_index++) {
+		block_t blkaddr = le32_to_cpu(*addr);
+
+		if (f2fs_compressed_file(dn->inode) &&
+					!(cluster_index & (cluster_size - 1))) {
+			if (compressed_cluster)
+				f2fs_i_compr_blocks_update(dn->inode,
+							valid_blocks, false);
+			compressed_cluster = (blkaddr == COMPRESS_ADDR);
+			valid_blocks = 0;
+		}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (blkaddr == NULL_ADDR)
 			continue;
 
 		dn->data_blkaddr = NULL_ADDR;
 		f2fs_set_data_blkaddr(dn);
 
+<<<<<<< HEAD
 		if (__is_valid_data_blkaddr(blkaddr) &&
 			!f2fs_is_valid_blkaddr(sbi, blkaddr,
 					DATA_GENERIC_ENHANCE))
@@ -548,6 +647,26 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
 		nr_free++;
 	}
 
+=======
+		if (__is_valid_data_blkaddr(blkaddr)) {
+			if (!f2fs_is_valid_blkaddr(sbi, blkaddr,
+					DATA_GENERIC_ENHANCE))
+				continue;
+			if (compressed_cluster)
+				valid_blocks++;
+		}
+
+		if (dn->ofs_in_node == 0 && IS_INODE(dn->node_page))
+			clear_inode_flag(dn->inode, FI_FIRST_BLOCK_WRITTEN);
+
+		f2fs_invalidate_blocks(sbi, blkaddr);
+		nr_free++;
+	}
+
+	if (compressed_cluster)
+		f2fs_i_compr_blocks_update(dn->inode, valid_blocks, false);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (nr_free) {
 		pgoff_t fofs;
 		/*
@@ -590,6 +709,12 @@ static int truncate_partial_data_page(struct inode *inode, u64 from,
 		return 0;
 	}
 
+<<<<<<< HEAD
+=======
+	if (f2fs_compressed_file(inode))
+		return 0;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	page = f2fs_get_lock_data_page(inode, index, true);
 	if (IS_ERR(page))
 		return PTR_ERR(page) == -ENOENT ? 0 : PTR_ERR(page);
@@ -605,7 +730,11 @@ truncate_out:
 	return 0;
 }
 
+<<<<<<< HEAD
 int f2fs_truncate_blocks(struct inode *inode, u64 from, bool lock)
+=======
+static int do_truncate_blocks(struct inode *inode, u64 from, bool lock)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
 	struct dnode_of_data dn;
@@ -670,6 +799,31 @@ free_partial:
 	return err;
 }
 
+<<<<<<< HEAD
+=======
+int f2fs_truncate_blocks(struct inode *inode, u64 from, bool lock)
+{
+	u64 free_from = from;
+
+	/*
+	 * for compressed file, only support cluster size
+	 * aligned truncation.
+	 */
+	if (f2fs_compressed_file(inode)) {
+		size_t cluster_shift = PAGE_SHIFT +
+					F2FS_I(inode)->i_log_cluster_size;
+		size_t cluster_mask = (1 << cluster_shift) - 1;
+
+		free_from = from >> cluster_shift;
+		if (from & cluster_mask)
+			free_from++;
+		free_from <<= cluster_shift;
+	}
+
+	return do_truncate_blocks(inode, free_from, lock);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 int f2fs_truncate(struct inode *inode)
 {
 	int err;
@@ -684,7 +838,11 @@ int f2fs_truncate(struct inode *inode)
 	trace_f2fs_truncate(inode);
 
 	if (time_to_inject(F2FS_I_SB(inode), FAULT_TRUNCATE)) {
+<<<<<<< HEAD
 		f2fs_show_injection_info(FAULT_TRUNCATE);
+=======
+		f2fs_show_injection_info(F2FS_I_SB(inode), FAULT_TRUNCATE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EIO;
 	}
 
@@ -720,23 +878,40 @@ int f2fs_getattr(const struct path *path, struct kstat *stat,
 		stat->btime.tv_nsec = fi->i_crtime.tv_nsec;
 	}
 
+<<<<<<< HEAD
 	flags = fi->i_flags & F2FS_FL_USER_VISIBLE;
 	if (flags & F2FS_APPEND_FL)
 		stat->attributes |= STATX_ATTR_APPEND;
 	if (flags & F2FS_COMPR_FL)
 		stat->attributes |= STATX_ATTR_COMPRESSED;
+=======
+	flags = fi->i_flags;
+	if (flags & F2FS_APPEND_FL)
+		stat->attributes |= STATX_ATTR_APPEND;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (IS_ENCRYPTED(inode))
 		stat->attributes |= STATX_ATTR_ENCRYPTED;
 	if (flags & F2FS_IMMUTABLE_FL)
 		stat->attributes |= STATX_ATTR_IMMUTABLE;
 	if (flags & F2FS_NODUMP_FL)
 		stat->attributes |= STATX_ATTR_NODUMP;
+<<<<<<< HEAD
 
 	stat->attributes_mask |= (STATX_ATTR_APPEND |
 				  STATX_ATTR_COMPRESSED |
 				  STATX_ATTR_ENCRYPTED |
 				  STATX_ATTR_IMMUTABLE |
 				  STATX_ATTR_NODUMP);
+=======
+	if (IS_VERITY(inode))
+		stat->attributes |= STATX_ATTR_VERITY;
+
+	stat->attributes_mask |= (STATX_ATTR_APPEND |
+				  STATX_ATTR_ENCRYPTED |
+				  STATX_ATTR_IMMUTABLE |
+				  STATX_ATTR_NODUMP |
+				  STATX_ATTR_VERITY);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	generic_fillattr(inode, stat);
 
@@ -786,6 +961,13 @@ int f2fs_setattr(struct dentry *dentry, struct iattr *attr)
 	if (unlikely(f2fs_cp_error(F2FS_I_SB(inode))))
 		return -EIO;
 
+<<<<<<< HEAD
+=======
+	if ((attr->ia_valid & ATTR_SIZE) &&
+		!f2fs_is_compress_backend_ready(inode))
+		return -EOPNOTSUPP;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	err = setattr_prepare(dentry, attr);
 	if (err)
 		return err;
@@ -794,6 +976,13 @@ int f2fs_setattr(struct dentry *dentry, struct iattr *attr)
 	if (err)
 		return err;
 
+<<<<<<< HEAD
+=======
+	err = fsverity_prepare_setattr(dentry, attr);
+	if (err)
+		return err;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (is_quota_modification(inode, attr)) {
 		err = dquot_initialize(inode);
 		if (err)
@@ -824,14 +1013,32 @@ int f2fs_setattr(struct dentry *dentry, struct iattr *attr)
 	}
 
 	if (attr->ia_valid & ATTR_SIZE) {
+<<<<<<< HEAD
 		bool to_smaller = (attr->ia_size <= i_size_read(inode));
+=======
+		loff_t old_size = i_size_read(inode);
+
+		if (attr->ia_size > MAX_INLINE_DATA(inode)) {
+			/*
+			 * should convert inline inode before i_size_write to
+			 * keep smaller than inline_data size with inline flag.
+			 */
+			err = f2fs_convert_inline_inode(inode);
+			if (err)
+				return err;
+		}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 		down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
 		down_write(&F2FS_I(inode)->i_mmap_sem);
 
 		truncate_setsize(inode, attr->ia_size);
 
+<<<<<<< HEAD
 		if (to_smaller)
+=======
+		if (attr->ia_size <= old_size)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			err = f2fs_truncate(inode);
 		/*
 		 * do not trim all blocks after i_size if target size is
@@ -839,6 +1046,7 @@ int f2fs_setattr(struct dentry *dentry, struct iattr *attr)
 		 */
 		up_write(&F2FS_I(inode)->i_mmap_sem);
 		up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+<<<<<<< HEAD
 
 		if (err)
 			return err;
@@ -854,6 +1062,13 @@ int f2fs_setattr(struct dentry *dentry, struct iattr *attr)
 		}
 
 		down_write(&F2FS_I(inode)->i_sem);
+=======
+		if (err)
+			return err;
+
+		down_write(&F2FS_I(inode)->i_sem);
+		inode->i_mtime = inode->i_ctime = current_time(inode);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		F2FS_I(inode)->last_disk_size = i_size_read(inode);
 		up_write(&F2FS_I(inode)->i_sem);
 	}
@@ -1022,8 +1237,13 @@ next_dnode:
 	} else if (ret == -ENOENT) {
 		if (dn.max_level == 0)
 			return -ENOENT;
+<<<<<<< HEAD
 		done = min((pgoff_t)ADDRS_PER_BLOCK(inode) - dn.ofs_in_node,
 									len);
+=======
+		done = min((pgoff_t)ADDRS_PER_BLOCK(inode) -
+						dn.ofs_in_node, len);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		blkaddr += done;
 		do_replace += done;
 		goto next;
@@ -1039,14 +1259,22 @@ next_dnode:
 			!f2fs_is_valid_blkaddr(sbi, *blkaddr,
 					DATA_GENERIC_ENHANCE)) {
 			f2fs_put_dnode(&dn);
+<<<<<<< HEAD
 			return -EFAULT;
+=======
+			return -EFSCORRUPTED;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 
 		if (!f2fs_is_checkpointed_data(sbi, *blkaddr)) {
 
 			if (test_opt(sbi, LFS)) {
 				f2fs_put_dnode(&dn);
+<<<<<<< HEAD
 				return -ENOTSUPP;
+=======
+				return -EOPNOTSUPP;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			}
 
 			/* do not invalidate this block address */
@@ -1138,7 +1366,11 @@ static int __clone_blkaddrs(struct inode *src_inode, struct inode *dst_inode,
 				}
 				dn.ofs_in_node++;
 				i++;
+<<<<<<< HEAD
 				new_size = (dst + i) << PAGE_SHIFT;
+=======
+				new_size = (loff_t)(dst + i) << PAGE_SHIFT;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				if (dst_inode->i_size < new_size)
 					f2fs_i_size_write(dst_inode, new_size);
 			} while (--ilen && (do_replace[i] || blkaddr[i] == NULL_ADDR));
@@ -1186,13 +1418,21 @@ static int __exchange_data_block(struct inode *src_inode,
 
 		src_blkaddr = f2fs_kvzalloc(F2FS_I_SB(src_inode),
 					array_size(olen, sizeof(block_t)),
+<<<<<<< HEAD
 					GFP_KERNEL);
+=======
+					GFP_NOFS);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (!src_blkaddr)
 			return -ENOMEM;
 
 		do_replace = f2fs_kvzalloc(F2FS_I_SB(src_inode),
 					array_size(olen, sizeof(int)),
+<<<<<<< HEAD
 					GFP_KERNEL);
+=======
+					GFP_NOFS);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		if (!do_replace) {
 			kvfree(src_blkaddr);
 			return -ENOMEM;
@@ -1227,7 +1467,11 @@ roll_back:
 static int f2fs_do_collapse(struct inode *inode, loff_t offset, loff_t len)
 {
 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+<<<<<<< HEAD
 	pgoff_t nrpages = (i_size_read(inode) + PAGE_SIZE - 1) / PAGE_SIZE;
+=======
+	pgoff_t nrpages = DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	pgoff_t start = offset >> PAGE_SHIFT;
 	pgoff_t end = (offset + len) >> PAGE_SHIFT;
 	int ret;
@@ -1480,7 +1724,11 @@ static int f2fs_insert_range(struct inode *inode, loff_t offset, loff_t len)
 	pg_start = offset >> PAGE_SHIFT;
 	pg_end = (offset + len) >> PAGE_SHIFT;
 	delta = pg_end - pg_start;
+<<<<<<< HEAD
 	idx = (i_size_read(inode) + PAGE_SIZE - 1) / PAGE_SIZE;
+=======
+	idx = DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* avoid gc operation during block exchange */
 	down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
@@ -1544,7 +1792,48 @@ static int expand_inode_data(struct inode *inode, loff_t offset,
 	if (off_end)
 		map.m_len++;
 
+<<<<<<< HEAD
 	err = f2fs_map_blocks(inode, &map, 1, F2FS_GET_BLOCK_PRE_AIO);
+=======
+	if (!map.m_len)
+		return 0;
+
+	if (f2fs_is_pinned_file(inode)) {
+		block_t len = (map.m_len >> sbi->log_blocks_per_seg) <<
+					sbi->log_blocks_per_seg;
+		block_t done = 0;
+
+		if (map.m_len % sbi->blocks_per_seg)
+			len += sbi->blocks_per_seg;
+
+		map.m_len = sbi->blocks_per_seg;
+next_alloc:
+		if (has_not_enough_free_secs(sbi, 0,
+			GET_SEC_FROM_SEG(sbi, overprovision_segments(sbi)))) {
+			down_write(&sbi->gc_lock);
+			err = f2fs_gc(sbi, true, false, NULL_SEGNO);
+			if (err && err != -ENODATA && err != -EAGAIN)
+				goto out_err;
+		}
+
+		down_write(&sbi->pin_sem);
+		map.m_seg_type = CURSEG_COLD_DATA_PINNED;
+		f2fs_allocate_new_segments(sbi, CURSEG_COLD_DATA);
+		err = f2fs_map_blocks(inode, &map, 1, F2FS_GET_BLOCK_PRE_DIO);
+		up_write(&sbi->pin_sem);
+
+		done += map.m_len;
+		len -= map.m_len;
+		map.m_lblk += map.m_len;
+		if (!err && len)
+			goto next_alloc;
+
+		map.m_len = done;
+	} else {
+		err = f2fs_map_blocks(inode, &map, 1, F2FS_GET_BLOCK_PRE_AIO);
+	}
+out_err:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (err) {
 		pgoff_t last_off;
 
@@ -1578,6 +1867,13 @@ static long f2fs_fallocate(struct file *file, int mode,
 
 	if (unlikely(f2fs_cp_error(F2FS_I_SB(inode))))
 		return -EIO;
+<<<<<<< HEAD
+=======
+	if (!f2fs_is_checkpoint_ready(F2FS_I_SB(inode)))
+		return -ENOSPC;
+	if (!f2fs_is_compress_backend_ready(inode))
+		return -EOPNOTSUPP;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* f2fs only support ->fallocate for regular file */
 	if (!S_ISREG(inode->i_mode))
@@ -1587,6 +1883,14 @@ static long f2fs_fallocate(struct file *file, int mode,
 		(mode & (FALLOC_FL_COLLAPSE_RANGE | FALLOC_FL_INSERT_RANGE)))
 		return -EOPNOTSUPP;
 
+<<<<<<< HEAD
+=======
+	if (f2fs_compressed_file(inode) &&
+		(mode & (FALLOC_FL_PUNCH_HOLE | FALLOC_FL_COLLAPSE_RANGE |
+			FALLOC_FL_ZERO_RANGE | FALLOC_FL_INSERT_RANGE)))
+		return -EOPNOTSUPP;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (mode & ~(FALLOC_FL_KEEP_SIZE | FALLOC_FL_PUNCH_HOLE |
 			FALLOC_FL_COLLAPSE_RANGE | FALLOC_FL_ZERO_RANGE |
 			FALLOC_FL_INSERT_RANGE))
@@ -1661,6 +1965,7 @@ static int f2fs_file_flush(struct file *file, fl_owner_t id)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int f2fs_ioc_getflags(struct file *filp, unsigned long arg)
 {
 	struct inode *inode = file_inode(filp);
@@ -1683,11 +1988,20 @@ static int __f2fs_ioc_setflags(struct inode *inode, unsigned int flags)
 {
 	struct f2fs_inode_info *fi = F2FS_I(inode);
 	unsigned int oldflags;
+=======
+static int f2fs_setflags_common(struct inode *inode, u32 iflags, u32 mask)
+{
+	struct f2fs_inode_info *fi = F2FS_I(inode);
+	u32 masked_flags = fi->i_flags & mask;
+
+	f2fs_bug_on(F2FS_I_SB(inode), (iflags & ~mask));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Is it quota file? Do not allow user to mess with it */
 	if (IS_NOQUOTA(inode))
 		return -EPERM;
 
+<<<<<<< HEAD
 	flags = f2fs_mask_flags(inode->i_mode, flags);
 
 	oldflags = fi->i_flags;
@@ -1699,6 +2013,49 @@ static int __f2fs_ioc_setflags(struct inode *inode, unsigned int flags)
 	flags = flags & F2FS_FL_USER_MODIFIABLE;
 	flags |= oldflags & ~F2FS_FL_USER_MODIFIABLE;
 	fi->i_flags = flags;
+=======
+	if ((iflags ^ masked_flags) & F2FS_CASEFOLD_FL) {
+		if (!f2fs_sb_has_casefold(F2FS_I_SB(inode)))
+			return -EOPNOTSUPP;
+		if (!f2fs_empty_dir(inode))
+			return -ENOTEMPTY;
+	}
+
+	if (iflags & (F2FS_COMPR_FL | F2FS_NOCOMP_FL)) {
+		if (!f2fs_sb_has_compression(F2FS_I_SB(inode)))
+			return -EOPNOTSUPP;
+		if ((iflags & F2FS_COMPR_FL) && (iflags & F2FS_NOCOMP_FL))
+			return -EINVAL;
+	}
+
+	if ((iflags ^ masked_flags) & F2FS_COMPR_FL) {
+		if (S_ISREG(inode->i_mode) &&
+			(masked_flags & F2FS_COMPR_FL || i_size_read(inode) ||
+						F2FS_HAS_BLOCKS(inode)))
+			return -EINVAL;
+		if (iflags & F2FS_NOCOMP_FL)
+			return -EINVAL;
+		if (iflags & F2FS_COMPR_FL) {
+			int err = f2fs_convert_inline_inode(inode);
+
+			if (err)
+				return err;
+
+			if (!f2fs_may_compress(inode))
+				return -EINVAL;
+
+			set_compress_context(inode);
+		}
+	}
+	if ((iflags ^ masked_flags) & F2FS_NOCOMP_FL) {
+		if (masked_flags & F2FS_COMPR_FL)
+			return -EINVAL;
+	}
+
+	fi->i_flags = iflags | (fi->i_flags & ~mask);
+	f2fs_bug_on(F2FS_I_SB(inode), (fi->i_flags & F2FS_COMPR_FL) &&
+					(fi->i_flags & F2FS_NOCOMP_FL));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (fi->i_flags & F2FS_PROJINHERIT_FL)
 		set_inode_flag(inode, FI_PROJ_INHERIT);
@@ -1711,26 +2068,161 @@ static int __f2fs_ioc_setflags(struct inode *inode, unsigned int flags)
 	return 0;
 }
 
+<<<<<<< HEAD
 static int f2fs_ioc_setflags(struct file *filp, unsigned long arg)
 {
 	struct inode *inode = file_inode(filp);
 	unsigned int flags;
+=======
+/* FS_IOC_GETFLAGS and FS_IOC_SETFLAGS support */
+
+/*
+ * To make a new on-disk f2fs i_flag gettable via FS_IOC_GETFLAGS, add an entry
+ * for it to f2fs_fsflags_map[], and add its FS_*_FL equivalent to
+ * F2FS_GETTABLE_FS_FL.  To also make it settable via FS_IOC_SETFLAGS, also add
+ * its FS_*_FL equivalent to F2FS_SETTABLE_FS_FL.
+ */
+
+static const struct {
+	u32 iflag;
+	u32 fsflag;
+} f2fs_fsflags_map[] = {
+	{ F2FS_COMPR_FL,	FS_COMPR_FL },
+	{ F2FS_SYNC_FL,		FS_SYNC_FL },
+	{ F2FS_IMMUTABLE_FL,	FS_IMMUTABLE_FL },
+	{ F2FS_APPEND_FL,	FS_APPEND_FL },
+	{ F2FS_NODUMP_FL,	FS_NODUMP_FL },
+	{ F2FS_NOATIME_FL,	FS_NOATIME_FL },
+	{ F2FS_NOCOMP_FL,	FS_NOCOMP_FL },
+	{ F2FS_INDEX_FL,	FS_INDEX_FL },
+	{ F2FS_DIRSYNC_FL,	FS_DIRSYNC_FL },
+	{ F2FS_PROJINHERIT_FL,	FS_PROJINHERIT_FL },
+	{ F2FS_CASEFOLD_FL,	FS_CASEFOLD_FL },
+};
+
+#define F2FS_GETTABLE_FS_FL (		\
+		FS_COMPR_FL |		\
+		FS_SYNC_FL |		\
+		FS_IMMUTABLE_FL |	\
+		FS_APPEND_FL |		\
+		FS_NODUMP_FL |		\
+		FS_NOATIME_FL |		\
+		FS_NOCOMP_FL |		\
+		FS_INDEX_FL |		\
+		FS_DIRSYNC_FL |		\
+		FS_PROJINHERIT_FL |	\
+		FS_ENCRYPT_FL |		\
+		FS_INLINE_DATA_FL |	\
+		FS_NOCOW_FL |		\
+		FS_VERITY_FL |		\
+		FS_CASEFOLD_FL)
+
+#define F2FS_SETTABLE_FS_FL (		\
+		FS_COMPR_FL |		\
+		FS_SYNC_FL |		\
+		FS_IMMUTABLE_FL |	\
+		FS_APPEND_FL |		\
+		FS_NODUMP_FL |		\
+		FS_NOATIME_FL |		\
+		FS_NOCOMP_FL |		\
+		FS_DIRSYNC_FL |		\
+		FS_PROJINHERIT_FL |	\
+		FS_CASEFOLD_FL)
+
+/* Convert f2fs on-disk i_flags to FS_IOC_{GET,SET}FLAGS flags */
+static inline u32 f2fs_iflags_to_fsflags(u32 iflags)
+{
+	u32 fsflags = 0;
+	int i;
+
+	for (i = 0; i < ARRAY_SIZE(f2fs_fsflags_map); i++)
+		if (iflags & f2fs_fsflags_map[i].iflag)
+			fsflags |= f2fs_fsflags_map[i].fsflag;
+
+	return fsflags;
+}
+
+/* Convert FS_IOC_{GET,SET}FLAGS flags to f2fs on-disk i_flags */
+static inline u32 f2fs_fsflags_to_iflags(u32 fsflags)
+{
+	u32 iflags = 0;
+	int i;
+
+	for (i = 0; i < ARRAY_SIZE(f2fs_fsflags_map); i++)
+		if (fsflags & f2fs_fsflags_map[i].fsflag)
+			iflags |= f2fs_fsflags_map[i].iflag;
+
+	return iflags;
+}
+
+static int f2fs_ioc_getflags(struct file *filp, unsigned long arg)
+{
+	struct inode *inode = file_inode(filp);
+	struct f2fs_inode_info *fi = F2FS_I(inode);
+	u32 fsflags = f2fs_iflags_to_fsflags(fi->i_flags);
+
+	if (IS_ENCRYPTED(inode))
+		fsflags |= FS_ENCRYPT_FL;
+	if (IS_VERITY(inode))
+		fsflags |= FS_VERITY_FL;
+	if (f2fs_has_inline_data(inode) || f2fs_has_inline_dentry(inode))
+		fsflags |= FS_INLINE_DATA_FL;
+	if (is_inode_flag_set(inode, FI_PIN_FILE))
+		fsflags |= FS_NOCOW_FL;
+
+	fsflags &= F2FS_GETTABLE_FS_FL;
+
+	return put_user(fsflags, (int __user *)arg);
+}
+
+static int f2fs_ioc_setflags(struct file *filp, unsigned long arg)
+{
+	struct inode *inode = file_inode(filp);
+	struct f2fs_inode_info *fi = F2FS_I(inode);
+	u32 fsflags, old_fsflags;
+	u32 iflags;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int ret;
 
 	if (!inode_owner_or_capable(inode))
 		return -EACCES;
 
+<<<<<<< HEAD
 	if (get_user(flags, (int __user *)arg))
 		return -EFAULT;
 
+=======
+	if (get_user(fsflags, (int __user *)arg))
+		return -EFAULT;
+
+	if (fsflags & ~F2FS_GETTABLE_FS_FL)
+		return -EOPNOTSUPP;
+	fsflags &= F2FS_SETTABLE_FS_FL;
+
+	iflags = f2fs_fsflags_to_iflags(fsflags);
+	if (f2fs_mask_flags(inode->i_mode, iflags) != iflags)
+		return -EOPNOTSUPP;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = mnt_want_write_file(filp);
 	if (ret)
 		return ret;
 
 	inode_lock(inode);
 
+<<<<<<< HEAD
 	ret = __f2fs_ioc_setflags(inode, flags);
 
+=======
+	old_fsflags = f2fs_iflags_to_fsflags(fi->i_flags);
+	ret = vfs_ioc_setflags_prepare(inode, old_fsflags, fsflags);
+	if (ret)
+		goto out;
+
+	ret = f2fs_setflags_common(inode, iflags,
+			f2fs_fsflags_to_iflags(F2FS_SETTABLE_FS_FL));
+out:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	inode_unlock(inode);
 	mnt_drop_write_file(filp);
 	return ret;
@@ -1756,12 +2248,23 @@ static int f2fs_ioc_start_atomic_write(struct file *filp)
 	if (!S_ISREG(inode->i_mode))
 		return -EINVAL;
 
+<<<<<<< HEAD
+=======
+	if (filp->f_flags & O_DIRECT)
+		return -EINVAL;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = mnt_want_write_file(filp);
 	if (ret)
 		return ret;
 
 	inode_lock(inode);
 
+<<<<<<< HEAD
+=======
+	f2fs_disable_compressed_file(inode);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (f2fs_is_atomic_file(inode)) {
 		if (is_inode_flag_set(inode, FI_ATOMIC_REVOKE_REQUEST))
 			ret = -EINVAL;
@@ -1779,9 +2282,14 @@ static int f2fs_ioc_start_atomic_write(struct file *filp)
 	 * f2fs_is_atomic_file.
 	 */
 	if (get_dirty_pages(inode))
+<<<<<<< HEAD
 		f2fs_msg(F2FS_I_SB(inode)->sb, KERN_WARNING,
 		"Unexpected flush for atomic writes: ino=%lu, npages=%u",
 					inode->i_ino, get_dirty_pages(inode));
+=======
+		f2fs_warn(F2FS_I_SB(inode), "Unexpected flush for atomic writes: ino=%lu, npages=%u",
+			  inode->i_ino, get_dirty_pages(inode));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = filemap_write_and_wait_range(inode->i_mapping, 0, LLONG_MAX);
 	if (ret) {
 		up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
@@ -1791,6 +2299,10 @@ static int f2fs_ioc_start_atomic_write(struct file *filp)
 	spin_lock(&sbi->inode_lock[ATOMIC_FILE]);
 	if (list_empty(&fi->inmem_ilist))
 		list_add_tail(&fi->inmem_ilist, &sbi->inode_list[ATOMIC_FILE]);
+<<<<<<< HEAD
+=======
+	sbi->atomic_files++;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	spin_unlock(&sbi->inode_lock[ATOMIC_FILE]);
 
 	/* add inode in inmem_list first and set atomic_file */
@@ -1800,7 +2312,10 @@ static int f2fs_ioc_start_atomic_write(struct file *filp)
 
 	f2fs_update_time(F2FS_I_SB(inode), REQ_TIME);
 	F2FS_I(inode)->inmem_task = current;
+<<<<<<< HEAD
 	stat_inc_atomic_write(inode);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	stat_update_max_atomic_write(inode);
 out:
 	inode_unlock(inode);
@@ -2125,6 +2640,60 @@ out_err:
 	return err;
 }
 
+<<<<<<< HEAD
+=======
+static int f2fs_ioc_get_encryption_policy_ex(struct file *filp,
+					     unsigned long arg)
+{
+	if (!f2fs_sb_has_encrypt(F2FS_I_SB(file_inode(filp))))
+		return -EOPNOTSUPP;
+
+	return fscrypt_ioctl_get_policy_ex(filp, (void __user *)arg);
+}
+
+static int f2fs_ioc_add_encryption_key(struct file *filp, unsigned long arg)
+{
+	if (!f2fs_sb_has_encrypt(F2FS_I_SB(file_inode(filp))))
+		return -EOPNOTSUPP;
+
+	return fscrypt_ioctl_add_key(filp, (void __user *)arg);
+}
+
+static int f2fs_ioc_remove_encryption_key(struct file *filp, unsigned long arg)
+{
+	if (!f2fs_sb_has_encrypt(F2FS_I_SB(file_inode(filp))))
+		return -EOPNOTSUPP;
+
+	return fscrypt_ioctl_remove_key(filp, (void __user *)arg);
+}
+
+static int f2fs_ioc_remove_encryption_key_all_users(struct file *filp,
+						    unsigned long arg)
+{
+	if (!f2fs_sb_has_encrypt(F2FS_I_SB(file_inode(filp))))
+		return -EOPNOTSUPP;
+
+	return fscrypt_ioctl_remove_key_all_users(filp, (void __user *)arg);
+}
+
+static int f2fs_ioc_get_encryption_key_status(struct file *filp,
+					      unsigned long arg)
+{
+	if (!f2fs_sb_has_encrypt(F2FS_I_SB(file_inode(filp))))
+		return -EOPNOTSUPP;
+
+	return fscrypt_ioctl_get_key_status(filp, (void __user *)arg);
+}
+
+static int f2fs_ioc_get_encryption_nonce(struct file *filp, unsigned long arg)
+{
+	if (!f2fs_sb_has_encrypt(F2FS_I_SB(file_inode(filp))))
+		return -EOPNOTSUPP;
+
+	return fscrypt_ioctl_get_nonce(filp, (void __user *)arg);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int f2fs_ioc_gc(struct file *filp, unsigned long arg)
 {
 	struct inode *inode = file_inode(filp);
@@ -2146,12 +2715,20 @@ static int f2fs_ioc_gc(struct file *filp, unsigned long arg)
 		return ret;
 
 	if (!sync) {
+<<<<<<< HEAD
 		if (!mutex_trylock(&sbi->gc_mutex)) {
+=======
+		if (!down_write_trylock(&sbi->gc_lock)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			ret = -EBUSY;
 			goto out;
 		}
 	} else {
+<<<<<<< HEAD
 		mutex_lock(&sbi->gc_mutex);
+=======
+		down_write(&sbi->gc_lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	ret = f2fs_gc(sbi, sync, true, NULL_SEGNO);
@@ -2189,12 +2766,20 @@ static int f2fs_ioc_gc_range(struct file *filp, unsigned long arg)
 
 do_more:
 	if (!range.sync) {
+<<<<<<< HEAD
 		if (!mutex_trylock(&sbi->gc_mutex)) {
+=======
+		if (!down_write_trylock(&sbi->gc_lock)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			ret = -EBUSY;
 			goto out;
 		}
 	} else {
+<<<<<<< HEAD
 		mutex_lock(&sbi->gc_mutex);
+=======
+		down_write(&sbi->gc_lock);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	}
 
 	ret = f2fs_gc(sbi, range.sync, true, GET_SEGNO(sbi, range.start));
@@ -2219,8 +2804,12 @@ static int f2fs_ioc_write_checkpoint(struct file *filp, unsigned long arg)
 		return -EROFS;
 
 	if (unlikely(is_sbi_flag_set(sbi, SBI_CP_DISABLED))) {
+<<<<<<< HEAD
 		f2fs_msg(sbi->sb, KERN_INFO,
 			"Skipping Checkpoint. Checkpoints currently disabled.");
+=======
+		f2fs_info(sbi, "Skipping Checkpoint. Checkpoints currently disabled.");
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EINVAL;
 	}
 
@@ -2306,10 +2895,19 @@ static int f2fs_defragment_range(struct f2fs_sb_info *sbi,
 		map.m_lblk += map.m_len;
 	}
 
+<<<<<<< HEAD
 	if (!fragmented)
 		goto out;
 
 	sec_num = (total + BLKS_PER_SEC(sbi) - 1) / BLKS_PER_SEC(sbi);
+=======
+	if (!fragmented) {
+		total = 0;
+		goto out;
+	}
+
+	sec_num = DIV_ROUND_UP(total, BLKS_PER_SEC(sbi));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/*
 	 * make sure there are enough free section for LFS allocation, this can
@@ -2337,7 +2935,11 @@ do_map:
 
 		if (!(map.m_flags & F2FS_MAP_FLAGS)) {
 			map.m_lblk = next_pgofs;
+<<<<<<< HEAD
 			continue;
+=======
+			goto check;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 
 		set_inode_flag(inode, FI_DO_DEFRAG);
@@ -2361,8 +2963,13 @@ do_map:
 		}
 
 		map.m_lblk = idx;
+<<<<<<< HEAD
 
 		if (idx < pg_end && cnt < blk_per_seg)
+=======
+check:
+		if (map.m_lblk < pg_end && cnt < blk_per_seg)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			goto do_map;
 
 		clear_inode_flag(inode, FI_DO_DEFRAG);
@@ -2605,10 +3212,15 @@ static int f2fs_ioc_flush_device(struct file *filp, unsigned long arg)
 
 	if (!f2fs_is_multi_device(sbi) || sbi->s_ndevs - 1 <= range.dev_num ||
 			__is_large_section(sbi)) {
+<<<<<<< HEAD
 		f2fs_msg(sbi->sb, KERN_WARNING,
 			"Can't flush %u in %d for segs_per_sec %u != 1",
 				range.dev_num, sbi->s_ndevs,
 				sbi->segs_per_sec);
+=======
+		f2fs_warn(sbi, "Can't flush %u in %d for segs_per_sec %u != 1",
+			  range.dev_num, sbi->s_ndevs, sbi->segs_per_sec);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EINVAL;
 	}
 
@@ -2626,7 +3238,11 @@ static int f2fs_ioc_flush_device(struct file *filp, unsigned long arg)
 	end_segno = min(start_segno + range.segments, dev_end_segno);
 
 	while (start_segno < end_segno) {
+<<<<<<< HEAD
 		if (!mutex_trylock(&sbi->gc_mutex)) {
+=======
+		if (!down_write_trylock(&sbi->gc_lock)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			ret = -EBUSY;
 			goto out;
 		}
@@ -2745,6 +3361,7 @@ static int f2fs_ioc_setproject(struct file *filp, __u32 projid)
 }
 #endif
 
+<<<<<<< HEAD
 /* Transfer internal flags to xflags */
 static inline __u32 f2fs_iflags_to_xflags(unsigned long iflags)
 {
@@ -2786,10 +3403,63 @@ static inline unsigned long f2fs_xflags_to_iflags(__u32 xflags)
 		iflags |= F2FS_NOATIME_FL;
 	if (xflags & FS_XFLAG_PROJINHERIT)
 		iflags |= F2FS_PROJINHERIT_FL;
+=======
+/* FS_IOC_FSGETXATTR and FS_IOC_FSSETXATTR support */
+
+/*
+ * To make a new on-disk f2fs i_flag gettable via FS_IOC_FSGETXATTR and settable
+ * via FS_IOC_FSSETXATTR, add an entry for it to f2fs_xflags_map[], and add its
+ * FS_XFLAG_* equivalent to F2FS_SUPPORTED_XFLAGS.
+ */
+
+static const struct {
+	u32 iflag;
+	u32 xflag;
+} f2fs_xflags_map[] = {
+	{ F2FS_SYNC_FL,		FS_XFLAG_SYNC },
+	{ F2FS_IMMUTABLE_FL,	FS_XFLAG_IMMUTABLE },
+	{ F2FS_APPEND_FL,	FS_XFLAG_APPEND },
+	{ F2FS_NODUMP_FL,	FS_XFLAG_NODUMP },
+	{ F2FS_NOATIME_FL,	FS_XFLAG_NOATIME },
+	{ F2FS_PROJINHERIT_FL,	FS_XFLAG_PROJINHERIT },
+};
+
+#define F2FS_SUPPORTED_XFLAGS (		\
+		FS_XFLAG_SYNC |		\
+		FS_XFLAG_IMMUTABLE |	\
+		FS_XFLAG_APPEND |	\
+		FS_XFLAG_NODUMP |	\
+		FS_XFLAG_NOATIME |	\
+		FS_XFLAG_PROJINHERIT)
+
+/* Convert f2fs on-disk i_flags to FS_IOC_FS{GET,SET}XATTR flags */
+static inline u32 f2fs_iflags_to_xflags(u32 iflags)
+{
+	u32 xflags = 0;
+	int i;
+
+	for (i = 0; i < ARRAY_SIZE(f2fs_xflags_map); i++)
+		if (iflags & f2fs_xflags_map[i].iflag)
+			xflags |= f2fs_xflags_map[i].xflag;
+
+	return xflags;
+}
+
+/* Convert FS_IOC_FS{GET,SET}XATTR flags to f2fs on-disk i_flags */
+static inline u32 f2fs_xflags_to_iflags(u32 xflags)
+{
+	u32 iflags = 0;
+	int i;
+
+	for (i = 0; i < ARRAY_SIZE(f2fs_xflags_map); i++)
+		if (xflags & f2fs_xflags_map[i].xflag)
+			iflags |= f2fs_xflags_map[i].iflag;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return iflags;
 }
 
+<<<<<<< HEAD
 static int f2fs_ioc_fsgetxattr(struct file *filp, unsigned long arg)
 {
 	struct inode *inode = file_inode(filp);
@@ -2803,12 +3473,31 @@ static int f2fs_ioc_fsgetxattr(struct file *filp, unsigned long arg)
 	if (f2fs_sb_has_project_quota(F2FS_I_SB(inode)))
 		fa.fsx_projid = (__u32)from_kprojid(&init_user_ns,
 							fi->i_projid);
+=======
+static void f2fs_fill_fsxattr(struct inode *inode, struct fsxattr *fa)
+{
+	struct f2fs_inode_info *fi = F2FS_I(inode);
+
+	simple_fill_fsxattr(fa, f2fs_iflags_to_xflags(fi->i_flags));
+
+	if (f2fs_sb_has_project_quota(F2FS_I_SB(inode)))
+		fa->fsx_projid = from_kprojid(&init_user_ns, fi->i_projid);
+}
+
+static int f2fs_ioc_fsgetxattr(struct file *filp, unsigned long arg)
+{
+	struct inode *inode = file_inode(filp);
+	struct fsxattr fa;
+
+	f2fs_fill_fsxattr(inode, &fa);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (copy_to_user((struct fsxattr __user *)arg, &fa, sizeof(fa)))
 		return -EFAULT;
 	return 0;
 }
 
+<<<<<<< HEAD
 static int f2fs_ioctl_check_project(struct inode *inode, struct fsxattr *fa)
 {
 	/*
@@ -2839,6 +3528,13 @@ static int f2fs_ioc_fssetxattr(struct file *filp, unsigned long arg)
 	struct f2fs_inode_info *fi = F2FS_I(inode);
 	struct fsxattr fa;
 	unsigned int flags;
+=======
+static int f2fs_ioc_fssetxattr(struct file *filp, unsigned long arg)
+{
+	struct inode *inode = file_inode(filp);
+	struct fsxattr fa, old_fa;
+	u32 iflags;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	int err;
 
 	if (copy_from_user(&fa, (struct fsxattr __user *)arg, sizeof(fa)))
@@ -2848,11 +3544,19 @@ static int f2fs_ioc_fssetxattr(struct file *filp, unsigned long arg)
 	if (!inode_owner_or_capable(inode))
 		return -EACCES;
 
+<<<<<<< HEAD
 	if (fa.fsx_xflags & ~F2FS_SUPPORTED_FS_XFLAGS)
 		return -EOPNOTSUPP;
 
 	flags = f2fs_xflags_to_iflags(fa.fsx_xflags);
 	if (f2fs_mask_flags(inode->i_mode, flags) != flags)
+=======
+	if (fa.fsx_xflags & ~F2FS_SUPPORTED_XFLAGS)
+		return -EOPNOTSUPP;
+
+	iflags = f2fs_xflags_to_iflags(fa.fsx_xflags);
+	if (f2fs_mask_flags(inode->i_mode, iflags) != iflags)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EOPNOTSUPP;
 
 	err = mnt_want_write_file(filp);
@@ -2860,12 +3564,23 @@ static int f2fs_ioc_fssetxattr(struct file *filp, unsigned long arg)
 		return err;
 
 	inode_lock(inode);
+<<<<<<< HEAD
 	err = f2fs_ioctl_check_project(inode, &fa);
 	if (err)
 		goto out;
 	flags = (fi->i_flags & ~F2FS_FL_XFLAG_VISIBLE) |
 				(flags & F2FS_FL_XFLAG_VISIBLE);
 	err = __f2fs_ioc_setflags(inode, flags);
+=======
+
+	f2fs_fill_fsxattr(inode, &old_fa);
+	err = vfs_ioc_fssetxattr_check(inode, &old_fa, &fa);
+	if (err)
+		goto out;
+
+	err = f2fs_setflags_common(inode, iflags,
+			f2fs_xflags_to_iflags(F2FS_SUPPORTED_XFLAGS));
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (err)
 		goto out;
 
@@ -2887,10 +3602,16 @@ int f2fs_pin_file_control(struct inode *inode, bool inc)
 				fi->i_gc_failures[GC_FAILURE_PIN] + 1);
 
 	if (fi->i_gc_failures[GC_FAILURE_PIN] > sbi->gc_pin_file_threshold) {
+<<<<<<< HEAD
 		f2fs_msg(sbi->sb, KERN_WARNING,
 			"%s: Enable GC = ino %lx after %x GC trials",
 			__func__, inode->i_ino,
 			fi->i_gc_failures[GC_FAILURE_PIN]);
+=======
+		f2fs_warn(sbi, "%s: Enable GC = ino %lx after %x GC trials",
+			  __func__, inode->i_ino,
+			  fi->i_gc_failures[GC_FAILURE_PIN]);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		clear_inode_flag(inode, FI_PIN_FILE);
 		return -EAGAIN;
 	}
@@ -2903,9 +3624,12 @@ static int f2fs_ioc_set_pin_file(struct file *filp, unsigned long arg)
 	__u32 pin;
 	int ret = 0;
 
+<<<<<<< HEAD
 	if (!capable(CAP_SYS_ADMIN))
 		return -EPERM;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (get_user(pin, (__u32 __user *)arg))
 		return -EFAULT;
 
@@ -2936,10 +3660,22 @@ static int f2fs_ioc_set_pin_file(struct file *filp, unsigned long arg)
 		ret = -EAGAIN;
 		goto out;
 	}
+<<<<<<< HEAD
+=======
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	ret = f2fs_convert_inline_inode(inode);
 	if (ret)
 		goto out;
 
+<<<<<<< HEAD
+=======
+	if (f2fs_disable_compressed_file(inode)) {
+		ret = -EOPNOTSUPP;
+		goto out;
+	}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	set_inode_flag(inode, FI_PIN_FILE);
 	ret = F2FS_I(inode)->i_gc_failures[GC_FAILURE_PIN];
 done:
@@ -2998,10 +3734,125 @@ static int f2fs_ioc_precache_extents(struct file *filp, unsigned long arg)
 	return f2fs_precache_extents(file_inode(filp));
 }
 
+<<<<<<< HEAD
+=======
+static int f2fs_ioc_resize_fs(struct file *filp, unsigned long arg)
+{
+	struct f2fs_sb_info *sbi = F2FS_I_SB(file_inode(filp));
+	__u64 block_count;
+	int ret;
+
+	if (!capable(CAP_SYS_ADMIN))
+		return -EPERM;
+
+	if (f2fs_readonly(sbi->sb))
+		return -EROFS;
+
+	if (copy_from_user(&block_count, (void __user *)arg,
+			   sizeof(block_count)))
+		return -EFAULT;
+
+	ret = f2fs_resize_fs(sbi, block_count);
+
+	return ret;
+}
+
+static int f2fs_ioc_enable_verity(struct file *filp, unsigned long arg)
+{
+	struct inode *inode = file_inode(filp);
+
+	f2fs_update_time(F2FS_I_SB(inode), REQ_TIME);
+
+	if (!f2fs_sb_has_verity(F2FS_I_SB(inode))) {
+		f2fs_warn(F2FS_I_SB(inode),
+			  "Can't enable fs-verity on inode %lu: the verity feature is not enabled on this filesystem.\n",
+			  inode->i_ino);
+		return -EOPNOTSUPP;
+	}
+
+	return fsverity_ioctl_enable(filp, (const void __user *)arg);
+}
+
+static int f2fs_ioc_measure_verity(struct file *filp, unsigned long arg)
+{
+	if (!f2fs_sb_has_verity(F2FS_I_SB(file_inode(filp))))
+		return -EOPNOTSUPP;
+
+	return fsverity_ioctl_measure(filp, (void __user *)arg);
+}
+
+static int f2fs_get_volume_name(struct file *filp, unsigned long arg)
+{
+	struct inode *inode = file_inode(filp);
+	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+	char *vbuf;
+	int count;
+	int err = 0;
+
+	vbuf = f2fs_kzalloc(sbi, MAX_VOLUME_NAME, GFP_KERNEL);
+	if (!vbuf)
+		return -ENOMEM;
+
+	down_read(&sbi->sb_lock);
+	count = utf16s_to_utf8s(sbi->raw_super->volume_name,
+			ARRAY_SIZE(sbi->raw_super->volume_name),
+			UTF16_LITTLE_ENDIAN, vbuf, MAX_VOLUME_NAME);
+	up_read(&sbi->sb_lock);
+
+	if (copy_to_user((char __user *)arg, vbuf,
+				min(FSLABEL_MAX, count)))
+		err = -EFAULT;
+
+	kvfree(vbuf);
+	return err;
+}
+
+static int f2fs_set_volume_name(struct file *filp, unsigned long arg)
+{
+	struct inode *inode = file_inode(filp);
+	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+	char *vbuf;
+	int err = 0;
+
+	if (!capable(CAP_SYS_ADMIN))
+		return -EPERM;
+
+	vbuf = strndup_user((const char __user *)arg, FSLABEL_MAX);
+	if (IS_ERR(vbuf))
+		return PTR_ERR(vbuf);
+
+	err = mnt_want_write_file(filp);
+	if (err)
+		goto out;
+
+	down_write(&sbi->sb_lock);
+
+	memset(sbi->raw_super->volume_name, 0,
+			sizeof(sbi->raw_super->volume_name));
+	utf8s_to_utf16s(vbuf, strlen(vbuf), UTF16_LITTLE_ENDIAN,
+			sbi->raw_super->volume_name,
+			ARRAY_SIZE(sbi->raw_super->volume_name));
+
+	err = f2fs_commit_super(sbi, false);
+
+	up_write(&sbi->sb_lock);
+
+	mnt_drop_write_file(filp);
+out:
+	kfree(vbuf);
+	return err;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 {
 	if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(filp)))))
 		return -EIO;
+<<<<<<< HEAD
+=======
+	if (!f2fs_is_checkpoint_ready(F2FS_I_SB(file_inode(filp))))
+		return -ENOSPC;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	switch (cmd) {
 	case F2FS_IOC_GETFLAGS:
@@ -3030,6 +3881,21 @@ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 		return f2fs_ioc_get_encryption_policy(filp, arg);
 	case F2FS_IOC_GET_ENCRYPTION_PWSALT:
 		return f2fs_ioc_get_encryption_pwsalt(filp, arg);
+<<<<<<< HEAD
+=======
+	case FS_IOC_GET_ENCRYPTION_POLICY_EX:
+		return f2fs_ioc_get_encryption_policy_ex(filp, arg);
+	case FS_IOC_ADD_ENCRYPTION_KEY:
+		return f2fs_ioc_add_encryption_key(filp, arg);
+	case FS_IOC_REMOVE_ENCRYPTION_KEY:
+		return f2fs_ioc_remove_encryption_key(filp, arg);
+	case FS_IOC_REMOVE_ENCRYPTION_KEY_ALL_USERS:
+		return f2fs_ioc_remove_encryption_key_all_users(filp, arg);
+	case FS_IOC_GET_ENCRYPTION_KEY_STATUS:
+		return f2fs_ioc_get_encryption_key_status(filp, arg);
+	case FS_IOC_GET_ENCRYPTION_NONCE:
+		return f2fs_ioc_get_encryption_nonce(filp, arg);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	case F2FS_IOC_GARBAGE_COLLECT:
 		return f2fs_ioc_gc(filp, arg);
 	case F2FS_IOC_GARBAGE_COLLECT_RANGE:
@@ -3054,11 +3920,38 @@ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
 		return f2fs_ioc_set_pin_file(filp, arg);
 	case F2FS_IOC_PRECACHE_EXTENTS:
 		return f2fs_ioc_precache_extents(filp, arg);
+<<<<<<< HEAD
+=======
+	case F2FS_IOC_RESIZE_FS:
+		return f2fs_ioc_resize_fs(filp, arg);
+	case FS_IOC_ENABLE_VERITY:
+		return f2fs_ioc_enable_verity(filp, arg);
+	case FS_IOC_MEASURE_VERITY:
+		return f2fs_ioc_measure_verity(filp, arg);
+	case F2FS_IOC_GET_VOLUME_NAME:
+		return f2fs_get_volume_name(filp, arg);
+	case F2FS_IOC_SET_VOLUME_NAME:
+		return f2fs_set_volume_name(filp, arg);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	default:
 		return -ENOTTY;
 	}
 }
 
+<<<<<<< HEAD
+=======
+static ssize_t f2fs_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
+{
+	struct file *file = iocb->ki_filp;
+	struct inode *inode = file_inode(file);
+
+	if (!f2fs_is_compress_backend_ready(inode))
+		return -EOPNOTSUPP;
+
+	return generic_file_read_iter(iocb, iter);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static ssize_t f2fs_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
 {
 	struct file *file = iocb->ki_filp;
@@ -3070,6 +3963,7 @@ static ssize_t f2fs_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
 		goto out;
 	}
 
+<<<<<<< HEAD
 	if ((iocb->ki_flags & IOCB_NOWAIT) && !(iocb->ki_flags & IOCB_DIRECT)) {
 		ret = -EINVAL;
 		goto out;
@@ -3080,6 +3974,17 @@ static ssize_t f2fs_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
 			ret = -EAGAIN;
 			goto out;
 		}
+=======
+	if (!f2fs_is_compress_backend_ready(inode))
+		return -EOPNOTSUPP;
+
+	if (iocb->ki_flags & IOCB_NOWAIT) {
+		if (!inode_trylock(inode)) {
+			ret = -EAGAIN;
+			goto out;
+		}
+	} else {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		inode_lock(inode);
 	}
 
@@ -3102,6 +4007,7 @@ static ssize_t f2fs_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
 				ret = -EAGAIN;
 				goto out;
 			}
+<<<<<<< HEAD
 		} else {
 			preallocated = true;
 			target_size = iocb->ki_pos + iov_iter_count(from);
@@ -3114,6 +4020,43 @@ static ssize_t f2fs_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
 				goto out;
 			}
 		}
+=======
+			goto write;
+		}
+
+		if (is_inode_flag_set(inode, FI_NO_PREALLOC))
+			goto write;
+
+		if (iocb->ki_flags & IOCB_DIRECT) {
+			/*
+			 * Convert inline data for Direct I/O before entering
+			 * f2fs_direct_IO().
+			 */
+			err = f2fs_convert_inline_inode(inode);
+			if (err)
+				goto out_err;
+			/*
+			 * If force_buffere_io() is true, we have to allocate
+			 * blocks all the time, since f2fs_direct_IO will fall
+			 * back to buffered IO.
+			 */
+			if (!f2fs_force_buffered_io(inode, iocb, from) &&
+					allow_outplace_dio(inode, iocb, from))
+				goto write;
+		}
+		preallocated = true;
+		target_size = iocb->ki_pos + iov_iter_count(from);
+
+		err = f2fs_preallocate_blocks(iocb, from);
+		if (err) {
+out_err:
+			clear_inode_flag(inode, FI_NO_PREALLOC);
+			inode_unlock(inode);
+			ret = err;
+			goto out;
+		}
+write:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		ret = __generic_file_write_iter(iocb, from);
 		clear_inode_flag(inode, FI_NO_PREALLOC);
 
@@ -3155,6 +4098,15 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	case F2FS_IOC_SET_ENCRYPTION_POLICY:
 	case F2FS_IOC_GET_ENCRYPTION_PWSALT:
 	case F2FS_IOC_GET_ENCRYPTION_POLICY:
+<<<<<<< HEAD
+=======
+	case FS_IOC_GET_ENCRYPTION_POLICY_EX:
+	case FS_IOC_ADD_ENCRYPTION_KEY:
+	case FS_IOC_REMOVE_ENCRYPTION_KEY:
+	case FS_IOC_REMOVE_ENCRYPTION_KEY_ALL_USERS:
+	case FS_IOC_GET_ENCRYPTION_KEY_STATUS:
+	case FS_IOC_GET_ENCRYPTION_NONCE:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	case F2FS_IOC_GARBAGE_COLLECT:
 	case F2FS_IOC_GARBAGE_COLLECT_RANGE:
 	case F2FS_IOC_WRITE_CHECKPOINT:
@@ -3167,6 +4119,14 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 	case F2FS_IOC_GET_PIN_FILE:
 	case F2FS_IOC_SET_PIN_FILE:
 	case F2FS_IOC_PRECACHE_EXTENTS:
+<<<<<<< HEAD
+=======
+	case F2FS_IOC_RESIZE_FS:
+	case FS_IOC_ENABLE_VERITY:
+	case FS_IOC_MEASURE_VERITY:
+	case F2FS_IOC_GET_VOLUME_NAME:
+	case F2FS_IOC_SET_VOLUME_NAME:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		break;
 	default:
 		return -ENOIOCTLCMD;
@@ -3177,7 +4137,11 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
 
 const struct file_operations f2fs_file_operations = {
 	.llseek		= f2fs_llseek,
+<<<<<<< HEAD
 	.read_iter	= generic_file_read_iter,
+=======
+	.read_iter	= f2fs_file_read_iter,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.write_iter	= f2fs_file_write_iter,
 	.open		= f2fs_file_open,
 	.release	= f2fs_release_file,

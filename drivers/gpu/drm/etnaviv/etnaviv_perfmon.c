@@ -113,7 +113,11 @@ static const struct etnaviv_pm_domain doms_3d[] = {
 		.name = "PE",
 		.profile_read = VIVS_MC_PROFILE_PE_READ,
 		.profile_config = VIVS_MC_PROFILE_CONFIG0,
+<<<<<<< HEAD
 		.nr_signals = 5,
+=======
+		.nr_signals = 4,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		.signal = (const struct etnaviv_pm_signal[]) {
 			{
 				"PIXEL_COUNT_KILLED_BY_COLOR_PIPE",
@@ -435,7 +439,11 @@ int etnaviv_pm_query_sig(struct etnaviv_gpu *gpu,
 
 	dom = meta->domains + signal->domain;
 
+<<<<<<< HEAD
 	if (signal->iter > dom->nr_signals)
+=======
+	if (signal->iter >= dom->nr_signals)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EINVAL;
 
 	sig = &dom->signal[signal->iter];
@@ -461,7 +469,11 @@ int etnaviv_pm_req_validate(const struct drm_etnaviv_gem_submit_pmr *r,
 
 	dom = meta->domains + r->domain;
 
+<<<<<<< HEAD
 	if (r->signal > dom->nr_signals)
+=======
+	if (r->signal >= dom->nr_signals)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return -EINVAL;
 
 	return 0;

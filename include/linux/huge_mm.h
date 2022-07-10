@@ -91,7 +91,15 @@ extern bool is_vma_temporary_stack(struct vm_area_struct *vma);
 
 extern unsigned long transparent_hugepage_flags;
 
+<<<<<<< HEAD
 static inline bool transparent_hugepage_enabled(struct vm_area_struct *vma)
+=======
+/*
+ * to be used on vmas which are known to support THP.
+ * Use transparent_hugepage_enabled otherwise
+ */
+static inline bool __transparent_hugepage_enabled(struct vm_area_struct *vma)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	if (vma->vm_flags & VM_NOHUGEPAGE)
 		return false;
@@ -115,6 +123,11 @@ static inline bool transparent_hugepage_enabled(struct vm_area_struct *vma)
 	return false;
 }
 
+<<<<<<< HEAD
+=======
+bool transparent_hugepage_enabled(struct vm_area_struct *vma);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #define transparent_hugepage_use_zero_page()				\
 	(transparent_hugepage_flags &					\
 	 (1<<TRANSPARENT_HUGEPAGE_USE_ZERO_PAGE_FLAG))
@@ -255,6 +268,14 @@ static inline bool thp_migration_supported(void)
 
 #define hpage_nr_pages(x) 1
 
+<<<<<<< HEAD
+=======
+static inline bool __transparent_hugepage_enabled(struct vm_area_struct *vma)
+{
+	return false;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static inline bool transparent_hugepage_enabled(struct vm_area_struct *vma)
 {
 	return false;

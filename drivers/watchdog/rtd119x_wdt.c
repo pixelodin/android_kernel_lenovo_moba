@@ -135,7 +135,11 @@ static int rtd119x_wdt_probe(struct platform_device *pdev)
 	rtd119x_wdt_set_timeout(&data->wdt_dev, data->wdt_dev.timeout);
 	rtd119x_wdt_stop(&data->wdt_dev);
 
+<<<<<<< HEAD
 	ret = devm_watchdog_register_device(&pdev->dev, &data->wdt_dev);
+=======
+	ret = watchdog_register_device(&data->wdt_dev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (ret) {
 		clk_disable_unprepare(data->clk);
 		clk_put(data->clk);

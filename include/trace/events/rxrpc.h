@@ -527,10 +527,17 @@ TRACE_EVENT(rxrpc_local,
 	    );
 
 TRACE_EVENT(rxrpc_peer,
+<<<<<<< HEAD
 	    TP_PROTO(struct rxrpc_peer *peer, enum rxrpc_peer_trace op,
 		     int usage, const void *where),
 
 	    TP_ARGS(peer, op, usage, where),
+=======
+	    TP_PROTO(unsigned int peer_debug_id, enum rxrpc_peer_trace op,
+		     int usage, const void *where),
+
+	    TP_ARGS(peer_debug_id, op, usage, where),
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	    TP_STRUCT__entry(
 		    __field(unsigned int,	peer		)
@@ -540,7 +547,11 @@ TRACE_EVENT(rxrpc_peer,
 			     ),
 
 	    TP_fast_assign(
+<<<<<<< HEAD
 		    __entry->peer = peer->debug_id;
+=======
+		    __entry->peer = peer_debug_id;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		    __entry->op = op;
 		    __entry->usage = usage;
 		    __entry->where = where;
@@ -554,10 +565,17 @@ TRACE_EVENT(rxrpc_peer,
 	    );
 
 TRACE_EVENT(rxrpc_conn,
+<<<<<<< HEAD
 	    TP_PROTO(struct rxrpc_connection *conn, enum rxrpc_conn_trace op,
 		     int usage, const void *where),
 
 	    TP_ARGS(conn, op, usage, where),
+=======
+	    TP_PROTO(unsigned int conn_debug_id, enum rxrpc_conn_trace op,
+		     int usage, const void *where),
+
+	    TP_ARGS(conn_debug_id, op, usage, where),
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	    TP_STRUCT__entry(
 		    __field(unsigned int,	conn		)
@@ -567,7 +585,11 @@ TRACE_EVENT(rxrpc_conn,
 			     ),
 
 	    TP_fast_assign(
+<<<<<<< HEAD
 		    __entry->conn = conn->debug_id;
+=======
+		    __entry->conn = conn_debug_id;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		    __entry->op = op;
 		    __entry->usage = usage;
 		    __entry->where = where;

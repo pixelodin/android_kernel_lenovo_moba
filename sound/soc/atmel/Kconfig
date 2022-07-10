@@ -25,6 +25,11 @@ config SND_ATMEL_SOC_DMA
 
 config SND_ATMEL_SOC_SSC_DMA
 	tristate
+<<<<<<< HEAD
+=======
+	select SND_ATMEL_SOC_DMA
+	select SND_ATMEL_SOC_PDC
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 config SND_ATMEL_SOC_SSC
 	tristate

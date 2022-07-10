@@ -162,7 +162,11 @@ at91_clk_register_main_osc(struct regmap *regmap,
 	if (bypass)
 		regmap_update_bits(regmap,
 				   AT91_CKGR_MOR, MOR_KEY_MASK |
+<<<<<<< HEAD
 				   AT91_PMC_MOSCEN,
+=======
+				   AT91_PMC_OSCBYPASS,
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				   AT91_PMC_OSCBYPASS | AT91_PMC_KEY);
 
 	hw = &osc->hw;
@@ -354,7 +358,14 @@ static int clk_main_probe_frequency(struct regmap *regmap)
 		regmap_read(regmap, AT91_CKGR_MCFR, &mcfr);
 		if (mcfr & AT91_PMC_MAINRDY)
 			return 0;
+<<<<<<< HEAD
 		usleep_range(MAINF_LOOP_MIN_WAIT, MAINF_LOOP_MAX_WAIT);
+=======
+		if (system_state < SYSTEM_RUNNING)
+			udelay(MAINF_LOOP_MIN_WAIT);
+		else
+			usleep_range(MAINF_LOOP_MIN_WAIT, MAINF_LOOP_MAX_WAIT);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	} while (time_before(prep_time, timeout));
 
 	return -ETIMEDOUT;

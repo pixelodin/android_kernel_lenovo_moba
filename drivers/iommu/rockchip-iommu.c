@@ -977,13 +977,21 @@ static struct iommu_domain *rk_iommu_domain_alloc(unsigned type)
 	if (!dma_dev)
 		return NULL;
 
+<<<<<<< HEAD
 	rk_domain = devm_kzalloc(dma_dev, sizeof(*rk_domain), GFP_KERNEL);
+=======
+	rk_domain = kzalloc(sizeof(*rk_domain), GFP_KERNEL);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!rk_domain)
 		return NULL;
 
 	if (type == IOMMU_DOMAIN_DMA &&
 	    iommu_get_dma_cookie(&rk_domain->domain))
+<<<<<<< HEAD
 		return NULL;
+=======
+		goto err_free_domain;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/*
 	 * rk32xx iommus use a 2 level pagetable.
@@ -1018,6 +1026,11 @@ err_free_dt:
 err_put_cookie:
 	if (type == IOMMU_DOMAIN_DMA)
 		iommu_put_dma_cookie(&rk_domain->domain);
+<<<<<<< HEAD
+=======
+err_free_domain:
+	kfree(rk_domain);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	return NULL;
 }
@@ -1046,6 +1059,10 @@ static void rk_iommu_domain_free(struct iommu_domain *domain)
 
 	if (domain->type == IOMMU_DOMAIN_DMA)
 		iommu_put_dma_cookie(&rk_domain->domain);
+<<<<<<< HEAD
+=======
+	kfree(rk_domain);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static int rk_iommu_add_device(struct device *dev)

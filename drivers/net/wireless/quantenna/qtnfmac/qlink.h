@@ -71,6 +71,10 @@ struct qlink_msg_header {
  * @QLINK_HW_CAPAB_DFS_OFFLOAD: device implements DFS offload functionality
  * @QLINK_HW_CAPAB_SCAN_RANDOM_MAC_ADDR: device supports MAC Address
  *	Randomization in probe requests.
+<<<<<<< HEAD
+=======
+ * @QLINK_HW_CAPAB_OBSS_SCAN: device can perform OBSS scanning.
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
  */
 enum qlink_hw_capab {
 	QLINK_HW_CAPAB_REG_UPDATE		= BIT(0),
@@ -78,6 +82,10 @@ enum qlink_hw_capab {
 	QLINK_HW_CAPAB_DFS_OFFLOAD		= BIT(2),
 	QLINK_HW_CAPAB_SCAN_RANDOM_MAC_ADDR	= BIT(3),
 	QLINK_HW_CAPAB_PWR_MGMT			= BIT(4),
+<<<<<<< HEAD
+=======
+	QLINK_HW_CAPAB_OBSS_SCAN		= BIT(5),
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 };
 
 enum qlink_iface_type {

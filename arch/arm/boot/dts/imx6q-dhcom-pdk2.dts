@@ -55,7 +55,11 @@
 		#sound-dai-cells = <0>;
 		clocks = <&clk_ext_audio_codec>;
 		VDDA-supply = <&reg_3p3v>;
+<<<<<<< HEAD
 		VDDIO-supply = <&reg_3p3v>;
+=======
+		VDDIO-supply = <&sw2_reg>;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	};
 };
 

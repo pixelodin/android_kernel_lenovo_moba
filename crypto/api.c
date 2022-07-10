@@ -349,13 +349,20 @@ static unsigned int crypto_ctxsize(struct crypto_alg *alg, u32 type, u32 mask)
 	return len;
 }
 
+<<<<<<< HEAD
 void crypto_shoot_alg(struct crypto_alg *alg)
+=======
+static void crypto_shoot_alg(struct crypto_alg *alg)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 {
 	down_write(&crypto_alg_sem);
 	alg->cra_flags |= CRYPTO_ALG_DYING;
 	up_write(&crypto_alg_sem);
 }
+<<<<<<< HEAD
 EXPORT_SYMBOL_GPL(crypto_shoot_alg);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
 				      u32 mask)

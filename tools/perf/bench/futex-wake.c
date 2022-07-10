@@ -42,7 +42,11 @@ static bool done = false, silent = false, fshared = false;
 static pthread_mutex_t thread_lock;
 static pthread_cond_t thread_parent, thread_worker;
 static struct stats waketime_stats, wakeup_stats;
+<<<<<<< HEAD
 static unsigned int ncpus, threads_starting, nthreads = 0;
+=======
+static unsigned int threads_starting, nthreads = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int futex_flag = 0;
 
 static const struct option options[] = {
@@ -140,7 +144,11 @@ int bench_futex_wake(int argc, const char **argv)
 	sigaction(SIGINT, &act, NULL);
 
 	if (!nthreads)
+<<<<<<< HEAD
 		nthreads = ncpus;
+=======
+		nthreads = cpu->nr;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	worker = calloc(nthreads, sizeof(*worker));
 	if (!worker)

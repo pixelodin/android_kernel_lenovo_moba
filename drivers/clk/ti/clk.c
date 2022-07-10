@@ -188,9 +188,19 @@ void __init ti_dt_clocks_register(struct ti_dt_clk oclks[])
 			clkdev_add(&c->lk);
 		} else {
 			if (num_args && !has_clkctrl_data) {
+<<<<<<< HEAD
 				if (of_find_compatible_node(NULL, NULL,
 							    "ti,clkctrl")) {
 					has_clkctrl_data = true;
+=======
+				struct device_node *np;
+
+				np = of_find_compatible_node(NULL, NULL,
+							     "ti,clkctrl");
+				if (np) {
+					has_clkctrl_data = true;
+					of_node_put(np);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				} else {
 					clkctrl_nodes_missing = true;
 

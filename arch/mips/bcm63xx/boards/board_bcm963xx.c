@@ -23,7 +23,10 @@
 #include <bcm63xx_nvram.h>
 #include <bcm63xx_dev_pci.h>
 #include <bcm63xx_dev_enet.h>
+<<<<<<< HEAD
 #include <bcm63xx_dev_dsp.h>
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <bcm63xx_dev_flash.h>
 #include <bcm63xx_dev_hsspi.h>
 #include <bcm63xx_dev_pcmcia.h>
@@ -289,6 +292,7 @@ static struct board_info __initdata board_96348gw_10 = {
 	.has_pccard			= 1,
 	.has_ehci0			= 1,
 
+<<<<<<< HEAD
 	.has_dsp			= 1,
 	.dsp = {
 		.gpio_rst		= 6,
@@ -297,6 +301,8 @@ static struct board_info __initdata board_96348gw_10 = {
 		.ext_irq		= 2,
 	},
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.leds = {
 		{
 			.name		= "adsl-fail",
@@ -401,6 +407,7 @@ static struct board_info __initdata board_96348gw = {
 
 	.has_ohci0 = 1,
 
+<<<<<<< HEAD
 	.has_dsp			= 1,
 	.dsp = {
 		.gpio_rst		= 6,
@@ -409,6 +416,8 @@ static struct board_info __initdata board_96348gw = {
 		.cs			= 2,
 	},
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.leds = {
 		{
 			.name		= "adsl-fail",
@@ -898,9 +907,12 @@ int __init board_register_devices(void)
 	if (board.has_usbd)
 		bcm63xx_usbd_register(&board.usbd);
 
+<<<<<<< HEAD
 	if (board.has_dsp)
 		bcm63xx_dsp_register(&board.dsp);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/* Generate MAC address for WLAN and register our SPROM,
 	 * do this after registering enet devices
 	 */

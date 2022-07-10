@@ -908,14 +908,24 @@ static u64 xen_read_msr_safe(unsigned int msr, int *err)
 static int xen_write_msr_safe(unsigned int msr, unsigned low, unsigned high)
 {
 	int ret;
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_X86_64
+	unsigned int which;
+	u64 base;
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	ret = 0;
 
 	switch (msr) {
 #ifdef CONFIG_X86_64
+<<<<<<< HEAD
 		unsigned which;
 		u64 base;
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	case MSR_FS_BASE:		which = SEGBASE_FS; goto set;
 	case MSR_KERNEL_GS_BASE:	which = SEGBASE_GS_USER; goto set;
 	case MSR_GS_BASE:		which = SEGBASE_GS_KERNEL; goto set;

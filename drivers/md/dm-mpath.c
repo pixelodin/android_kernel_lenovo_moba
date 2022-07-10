@@ -609,6 +609,7 @@ static struct pgpath *__map_bio(struct multipath *m, struct bio *bio)
 	return pgpath;
 }
 
+<<<<<<< HEAD
 static struct pgpath *__map_bio_fast(struct multipath *m, struct bio *bio)
 {
 	struct pgpath *pgpath;
@@ -648,6 +649,12 @@ static int __multipath_map_bio(struct multipath *m, struct bio *bio,
 		pgpath = __map_bio_fast(m, bio);
 	else
 		pgpath = __map_bio(m, bio);
+=======
+static int __multipath_map_bio(struct multipath *m, struct bio *bio,
+			       struct dm_mpath_io *mpio)
+{
+	struct pgpath *pgpath = __map_bio(m, bio);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	if (IS_ERR(pgpath))
 		return DM_MAPIO_SUBMITTED;

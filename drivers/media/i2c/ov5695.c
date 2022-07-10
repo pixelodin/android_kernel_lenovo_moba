@@ -1110,7 +1110,11 @@ static int ov5695_set_ctrl(struct v4l2_ctrl *ctrl)
 		break;
 	}
 
+<<<<<<< HEAD
 	if (pm_runtime_get_if_in_use(&client->dev) <= 0)
+=======
+	if (!pm_runtime_get_if_in_use(&client->dev))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return 0;
 
 	switch (ctrl->id) {

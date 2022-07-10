@@ -77,8 +77,18 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
 				parent = rcu_dereference_raw(parent->rb_left);
 				continue;
 			}
+<<<<<<< HEAD
 			if (nft_rbtree_interval_end(rbe))
 				goto out;
+=======
+			if (nft_rbtree_interval_end(rbe)) {
+				if (nft_set_is_anonymous(set))
+					return false;
+				parent = rcu_dereference_raw(parent->rb_left);
+				interval = NULL;
+				continue;
+			}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 			*ext = &rbe->ext;
 			return true;
@@ -91,7 +101,11 @@ static bool __nft_rbtree_lookup(const struct net *net, const struct nft_set *set
 		*ext = &interval->ext;
 		return true;
 	}
+<<<<<<< HEAD
 out:
+=======
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return false;
 }
 
@@ -139,8 +153,15 @@ static bool __nft_rbtree_get(const struct net *net, const struct nft_set *set,
 		} else if (d > 0) {
 			parent = rcu_dereference_raw(parent->rb_right);
 		} else {
+<<<<<<< HEAD
 			if (!nft_set_elem_active(&rbe->ext, genmask))
 				parent = rcu_dereference_raw(parent->rb_left);
+=======
+			if (!nft_set_elem_active(&rbe->ext, genmask)) {
+				parent = rcu_dereference_raw(parent->rb_left);
+				continue;
+			}
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 			if (!nft_set_ext_exists(&rbe->ext, NFT_SET_EXT_FLAGS) ||
 			    (*nft_set_ext_flags(&rbe->ext) & NFT_SET_ELEM_INTERVAL_END) ==
@@ -148,7 +169,15 @@ static bool __nft_rbtree_get(const struct net *net, const struct nft_set *set,
 				*elem = rbe;
 				return true;
 			}
+<<<<<<< HEAD
 			return false;
+=======
+
+			if (nft_rbtree_interval_end(rbe))
+				interval = NULL;
+
+			parent = rcu_dereference_raw(parent->rb_left);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		}
 	}
 

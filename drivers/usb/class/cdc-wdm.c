@@ -1107,7 +1107,11 @@ static int wdm_post_reset(struct usb_interface *intf)
 	rv = recover_from_urb_loss(desc);
 	mutex_unlock(&desc->wlock);
 	mutex_unlock(&desc->rlock);
+<<<<<<< HEAD
 	return 0;
+=======
+	return rv;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 }
 
 static struct usb_driver wdm_driver = {

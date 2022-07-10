@@ -71,6 +71,10 @@ struct dmz_dev {
 
 /* Device flags. */
 #define DMZ_BDEV_DYING		(1 << 0)
+<<<<<<< HEAD
+=======
+#define DMZ_CHECK_BDEV		(2 << 0)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 /*
  * Zone descriptor.
@@ -254,5 +258,9 @@ void dmz_schedule_reclaim(struct dmz_reclaim *zrc);
  * Functions defined in dm-zoned-target.c
  */
 bool dmz_bdev_is_dying(struct dmz_dev *dmz_dev);
+<<<<<<< HEAD
+=======
+bool dmz_check_bdev(struct dmz_dev *dmz_dev);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 #endif /* DM_ZONED_H */

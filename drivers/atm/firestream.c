@@ -927,6 +927,10 @@ static int fs_open(struct atm_vcc *atm_vcc)
 			}
 			if (!to) {
 				printk ("No more free channels for FS50..\n");
+<<<<<<< HEAD
+=======
+				kfree(vcc);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				return -EBUSY;
 			}
 			vcc->channo = dev->channo;
@@ -937,6 +941,10 @@ static int fs_open(struct atm_vcc *atm_vcc)
 			if (((DO_DIRECTION(rxtp) && dev->atm_vccs[vcc->channo])) ||
 			    ( DO_DIRECTION(txtp) && test_bit (vcc->channo, dev->tx_inuse))) {
 				printk ("Channel is in use for FS155.\n");
+<<<<<<< HEAD
+=======
+				kfree(vcc);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 				return -EBUSY;
 			}
 		}
@@ -950,6 +958,10 @@ static int fs_open(struct atm_vcc *atm_vcc)
 			    tc, sizeof (struct fs_transmit_config));
 		if (!tc) {
 			fs_dprintk (FS_DEBUG_OPEN, "fs: can't alloc transmit_config.\n");
+<<<<<<< HEAD
+=======
+			kfree(vcc);
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			return -ENOMEM;
 		}
 

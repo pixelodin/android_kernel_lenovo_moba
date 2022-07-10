@@ -21,6 +21,10 @@
  */
 #define HAS_DMA
 
+<<<<<<< HEAD
+=======
+#ifdef CONFIG_PARPORT_PC_FIFO
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static DEFINE_SPINLOCK(dma_spin_lock);
 
 #define claim_dma_lock() \
@@ -31,6 +35,10 @@ static DEFINE_SPINLOCK(dma_spin_lock);
 
 #define release_dma_lock(__flags) \
 	spin_unlock_irqrestore(&dma_spin_lock, __flags);
+<<<<<<< HEAD
+=======
+#endif
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 static struct sparc_ebus_info {
 	struct ebus_dma_info info;

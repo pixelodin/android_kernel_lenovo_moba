@@ -1395,13 +1395,21 @@ static void tw5864_handle_frame(struct tw5864_h264_frame *frame)
 	input->vb = NULL;
 	spin_unlock_irqrestore(&input->slock, flags);
 
+<<<<<<< HEAD
 	v4l2_buf = to_vb2_v4l2_buffer(&vb->vb.vb2_buf);
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (!vb) { /* Gone because of disabling */
 		dev_dbg(&dev->pci->dev, "vb is empty, dropping frame\n");
 		return;
 	}
 
+<<<<<<< HEAD
+=======
+	v4l2_buf = to_vb2_v4l2_buffer(&vb->vb.vb2_buf);
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	/*
 	 * Check for space.
 	 * Mind the overhead of startcode emulation prevention.

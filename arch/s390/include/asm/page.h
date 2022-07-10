@@ -33,6 +33,11 @@
 #define ARCH_HAS_PREPARE_HUGEPAGE
 #define ARCH_HAS_HUGEPAGE_CLEAR_FLUSH
 
+<<<<<<< HEAD
+=======
+#define HAVE_ARCH_HUGETLB_UNMAPPED_AREA
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <asm/setup.h>
 #ifndef __ASSEMBLY__
 
@@ -40,7 +45,11 @@ void __storage_key_init_range(unsigned long start, unsigned long end);
 
 static inline void storage_key_init_range(unsigned long start, unsigned long end)
 {
+<<<<<<< HEAD
 	if (PAGE_DEFAULT_KEY)
+=======
+	if (PAGE_DEFAULT_KEY != 0)
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		__storage_key_init_range(start, end);
 }
 

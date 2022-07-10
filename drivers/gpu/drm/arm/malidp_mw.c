@@ -55,7 +55,11 @@ malidp_mw_connector_mode_valid(struct drm_connector *connector,
 	return MODE_OK;
 }
 
+<<<<<<< HEAD
 const struct drm_connector_helper_funcs malidp_mw_connector_helper_funcs = {
+=======
+static const struct drm_connector_helper_funcs malidp_mw_connector_helper_funcs = {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	.get_modes = malidp_mw_connector_get_modes,
 	.mode_valid = malidp_mw_connector_mode_valid,
 };

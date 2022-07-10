@@ -147,14 +147,20 @@ struct l2cache_pmu {
 	struct list_head clusters;
 };
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static unsigned int which_cluster_tenure = 1;
 static u32 l2_counter_present_mask;
 
 #define to_l2cache_pmu(p)	(container_of(p, struct l2cache_pmu, pmu))
 #define to_cluster_device(d)	container_of(d, struct cluster_pmu, dev)
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static inline struct cluster_pmu *get_cluster_pmu(
 	struct l2cache_pmu *l2cache_pmu, int cpu)
 {
@@ -408,7 +414,11 @@ static void l2_cache_event_update(struct perf_event *event, u32 ovsr)
 	u64 delta, prev, now;
 	u32 event_idx = hwc->config_base;
 	u32 event_grp;
+<<<<<<< HEAD
 	struct cluster_pmu *cluster;
+=======
+	struct cluster_pmu *cluster = event->pmu_private;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	prev = local64_read(&hwc->prev_count);
 	if (ovsr) {
@@ -416,7 +426,10 @@ static void l2_cache_event_update(struct perf_event *event, u32 ovsr)
 		goto out;
 	}
 
+<<<<<<< HEAD
 	cluster = get_cluster_pmu(to_l2cache_pmu(event->pmu), event->cpu);
+=======
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	event_idx = (hwc->config_base & REGBIT_MASK) >> REGBIT_SHIFT;
 	event_grp = hwc->config_base & EVENT_GROUP_MASK;
 	do {
@@ -557,6 +570,10 @@ static int l2_cache_event_init(struct perf_event *event)
 	hwc->idx = -1;
 	hwc->config_base = event->attr.config;
 	event->readable_on_cpus = CPU_MASK_ALL;
+<<<<<<< HEAD
+=======
+	event->pmu_private = cluster;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/*
 	 * We are overiding event->cpu, as it is possible to enable events,
@@ -568,12 +585,20 @@ static int l2_cache_event_init(struct perf_event *event)
 
 static void l2_cache_event_start(struct perf_event *event, int flags)
 {
+<<<<<<< HEAD
 	struct cluster_pmu *cluster;
 	struct hw_perf_event *hwc = &event->hw;
 	int event_idx;
 
 	hwc->state = 0;
 	cluster = get_cluster_pmu(to_l2cache_pmu(event->pmu), event->cpu);
+=======
+	struct hw_perf_event *hwc = &event->hw;
+	struct cluster_pmu *cluster = event->pmu_private;
+	int event_idx;
+
+	hwc->state = 0;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	event_idx = (hwc->config_base & REGBIT_MASK) >> REGBIT_SHIFT;
 	if ((hwc->config_base & EVENT_GROUP_MASK) == TENURE_CNTRS_GROUP_ID) {
 		cluster_tenure_counter_enable(cluster, event_idx);
@@ -586,11 +611,18 @@ static void l2_cache_event_start(struct perf_event *event, int flags)
 static void l2_cache_event_stop(struct perf_event *event, int flags)
 {
 	struct hw_perf_event *hwc = &event->hw;
+<<<<<<< HEAD
 	struct cluster_pmu *cluster;
 	int event_idx;
 	u32 ovsr;
 
 	cluster = get_cluster_pmu(to_l2cache_pmu(event->pmu), event->cpu);
+=======
+	struct cluster_pmu *cluster = event->pmu_private;
+	int event_idx;
+	u32 ovsr;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	if (hwc->state & PERF_HES_STOPPED)
 		return;
 
@@ -615,10 +647,16 @@ static void l2_cache_event_stop(struct perf_event *event, int flags)
 static int l2_cache_event_add(struct perf_event *event, int flags)
 {
 	struct hw_perf_event *hwc = &event->hw;
+<<<<<<< HEAD
 	int idx;
 	struct cluster_pmu *cluster;
 
 	cluster = get_cluster_pmu(to_l2cache_pmu(event->pmu), event->cpu);
+=======
+	struct cluster_pmu *cluster = event->pmu_private;
+	int idx;
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	idx = l2_cache_get_event_idx(cluster, event);
 	if (idx < 0)
 		return idx;
@@ -640,11 +678,17 @@ static int l2_cache_event_add(struct perf_event *event, int flags)
 static void l2_cache_event_del(struct perf_event *event, int flags)
 {
 	struct hw_perf_event *hwc = &event->hw;
+<<<<<<< HEAD
 	struct cluster_pmu *cluster;
 	int idx = hwc->idx;
 	unsigned long intr_flag;
 
 	cluster = get_cluster_pmu(to_l2cache_pmu(event->pmu), event->cpu);
+=======
+	int idx = hwc->idx;
+	unsigned long intr_flag;
+	struct cluster_pmu *cluster = event->pmu_private;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/*
 	 * We could race here with overflow interrupt of this event.
@@ -913,13 +957,35 @@ static struct cluster_pmu *l2_cache_associate_cpu_with_cluster(
 	return cluster;
 }
 
+<<<<<<< HEAD
+=======
+static void clusters_initialization(struct l2cache_pmu *l2cache_pmu,
+						unsigned int cpu)
+{
+	struct cluster_pmu *temp_cluster = NULL;
+
+	list_for_each_entry(temp_cluster, &l2cache_pmu->clusters, next) {
+		cluster_pmu_reset(temp_cluster);
+		enable_irq(temp_cluster->irq);
+		temp_cluster->on_cpu = cpu;
+	}
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int l2cache_pmu_online_cpu(unsigned int cpu, struct hlist_node *node)
 {
 	struct cluster_pmu *cluster;
 	struct l2cache_pmu *l2cache_pmu;
+<<<<<<< HEAD
 
 	if (!node)
 		return 0;
+=======
+	cpumask_t cluster_online_cpus;
+
+	if (!node)
+		goto out;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	l2cache_pmu = hlist_entry_safe(node, struct l2cache_pmu, node);
 	cluster = get_cluster_pmu(l2cache_pmu, cpu);
@@ -929,6 +995,7 @@ static int l2cache_pmu_online_cpu(unsigned int cpu, struct hlist_node *node)
 		if (!cluster) {
 			/* Only if broken firmware doesn't list every cluster */
 			WARN_ONCE(1, "No L2 cache cluster for CPU%d\n", cpu);
+<<<<<<< HEAD
 			return 0;
 		}
 	}
@@ -950,24 +1017,75 @@ static int l2cache_pmu_online_cpu(unsigned int cpu, struct hlist_node *node)
 	return 0;
 }
 
+=======
+			goto out;
+		}
+	}
+
+	/*
+	 * If another CPU is managing this cluster, whether that cpu is
+	 * from the same cluster.
+	 */
+	if (cluster->on_cpu != -1) {
+		cpumask_and(&cluster_online_cpus, &cluster->cluster_cpus,
+						get_cpu_mask(cluster->on_cpu));
+		if (cpumask_test_cpu(cluster->on_cpu, &cluster_online_cpus))
+			goto out;
+	} else {
+		clusters_initialization(l2cache_pmu, cpu);
+		cpumask_set_cpu(cpu, &l2cache_pmu->cpumask);
+		goto out;
+	}
+
+	cluster->on_cpu = cpu;
+	cpumask_set_cpu(cpu, &l2cache_pmu->cpumask);
+
+out:
+	return 0;
+}
+
+static void disable_clusters_interrupt(struct l2cache_pmu *l2cache_pmu)
+{
+	struct cluster_pmu *temp_cluster = NULL;
+
+	list_for_each_entry(temp_cluster, &l2cache_pmu->clusters, next)
+		disable_irq(temp_cluster->irq);
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 static int l2cache_pmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
 {
 	struct cluster_pmu *cluster;
 	struct l2cache_pmu *l2cache_pmu;
 	cpumask_t cluster_online_cpus;
 	unsigned int target;
+<<<<<<< HEAD
 
 	if (!node)
 		return 0;
+=======
+	struct cluster_pmu *temp_cluster = NULL;
+
+	if (!node)
+		goto out;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	l2cache_pmu = hlist_entry_safe(node, struct l2cache_pmu, node);
 	cluster = get_cluster_pmu(l2cache_pmu, cpu);
 	if (!cluster)
+<<<<<<< HEAD
 		return 0;
 
 	/* If this CPU is not managing the cluster, we're done */
 	if (cluster->on_cpu != cpu)
 		return 0;
+=======
+		goto out;
+
+	/* If this CPU is not managing the cluster, we're done */
+	if (cluster->on_cpu != cpu)
+		goto out;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 
 	/* Give up ownership of cluster */
 	cpumask_clear_cpu(cpu, &l2cache_pmu->cpumask);
@@ -975,6 +1093,7 @@ static int l2cache_pmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
 
 	/* Any other CPU for this cluster which is still online */
 	cpumask_and(&cluster_online_cpus, &cluster->cluster_cpus,
+<<<<<<< HEAD
 		    cpu_online_mask);
 	target = cpumask_any_but(&cluster_online_cpus, cpu);
 	if (target >= nr_cpu_ids) {
@@ -986,6 +1105,33 @@ static int l2cache_pmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
 	cluster->on_cpu = target;
 	cpumask_set_cpu(target, &l2cache_pmu->cpumask);
 
+=======
+			cpu_online_mask);
+	target = cpumask_any_but(&cluster_online_cpus, cpu);
+	if (target >= nr_cpu_ids) {
+		cpumask_and(&cluster_online_cpus, &l2cache_pmu->cpumask,
+			cpu_online_mask);
+		target = cpumask_first(&cluster_online_cpus);
+		if (target >= nr_cpu_ids) {
+			disable_clusters_interrupt(l2cache_pmu);
+			goto out;
+		}
+	}
+
+	cluster->on_cpu = target;
+	if (cpumask_first(&l2cache_pmu->cpumask) >= nr_cpu_ids) {
+		list_for_each_entry(temp_cluster,
+					&l2cache_pmu->clusters, next) {
+			if (temp_cluster->cluster_id != cluster->cluster_id)
+				temp_cluster->on_cpu = target;
+		}
+	}
+
+	perf_pmu_migrate_context(&l2cache_pmu->pmu, cpu, target);
+	cpumask_set_cpu(target, &l2cache_pmu->cpumask);
+
+out:
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	return 0;
 }
 

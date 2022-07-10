@@ -39,6 +39,10 @@
 #include <asm/exception.h>
 #include <asm/debug-monitors.h>
 #include <asm/esr.h>
+<<<<<<< HEAD
+=======
+#include <asm/kasan.h>
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 #include <asm/sysreg.h>
 #include <asm/system_misc.h>
 #include <asm/pgtable.h>
@@ -126,6 +130,21 @@ static void mem_abort_decode(unsigned int esr)
 		data_abort_decode(esr);
 }
 
+<<<<<<< HEAD
+=======
+static inline bool is_ttbr0_addr(unsigned long addr)
+{
+	/* entry assembly clears tags for TTBR0 addrs */
+	return addr < TASK_SIZE;
+}
+
+static inline bool is_ttbr1_addr(unsigned long addr)
+{
+	/* TTBR1 addresses may have a tag if KASAN_SW_TAGS is in use */
+	return arch_kasan_reset_tag(addr) >= VA_START;
+}
+
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 /*
  * Dump out the page tables associated with 'addr' in the currently active mm.
  */
@@ -135,7 +154,11 @@ void show_pte(unsigned long addr)
 	pgd_t *pgdp;
 	pgd_t pgd;
 
+<<<<<<< HEAD
 	if (addr < TASK_SIZE) {
+=======
+	if (is_ttbr0_addr(addr)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/* TTBR0 */
 		mm = current->active_mm;
 		if (mm == &init_mm) {
@@ -143,7 +166,11 @@ void show_pte(unsigned long addr)
 				 addr);
 			return;
 		}
+<<<<<<< HEAD
 	} else if (addr >= VA_START) {
+=======
+	} else if (is_ttbr1_addr(addr)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/* TTBR1 */
 		mm = &init_mm;
 	} else {
@@ -249,7 +276,11 @@ static inline bool is_el1_permission_fault(unsigned int esr,
 	if (fsc_type == ESR_ELx_FSC_PERM)
 		return true;
 
+<<<<<<< HEAD
 	if (addr < TASK_SIZE && system_uses_ttbr0_pan())
+=======
+	if (is_ttbr0_addr(addr) && system_uses_ttbr0_pan())
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return fsc_type == ESR_ELx_FSC_FAULT &&
 			(regs->pstate & PSR_PAN_BIT);
 
@@ -314,7 +345,11 @@ static void __do_user_fault(struct siginfo *info, unsigned int esr)
 	 * type", so we ignore this wrinkle and just return the translation
 	 * fault.)
 	 */
+<<<<<<< HEAD
 	if (current->thread.fault_address >= TASK_SIZE) {
+=======
+	if (!is_ttbr0_addr(current->thread.fault_address)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		switch (ESR_ELx_EC(esr)) {
 		case ESR_ELx_EC_DABT_LOW:
 			/*
@@ -427,7 +462,11 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
 	struct mm_struct *mm;
 	struct siginfo si;
 	vm_fault_t fault, major = 0;
+<<<<<<< HEAD
 	unsigned long vm_flags = VM_READ | VM_WRITE;
+=======
+	unsigned long vm_flags = VM_READ | VM_WRITE | VM_EXEC;
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 	unsigned int mm_flags = FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
 	struct vm_area_struct *vma = NULL;
 
@@ -454,7 +493,11 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
 		mm_flags |= FAULT_FLAG_WRITE;
 	}
 
+<<<<<<< HEAD
 	if (addr < TASK_SIZE && is_el1_permission_fault(esr, regs, addr)) {
+=======
+	if (is_ttbr0_addr(addr) && is_el1_permission_fault(esr, regs, addr)) {
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		/* regs->orig_addr_limit may be 0 if we entered from EL0 */
 		if (regs->orig_addr_limit == KERNEL_DS)
 			die_kernel_fault("access to user memory with fs=KERNEL_DS",
@@ -641,7 +684,11 @@ static int __kprobes do_translation_fault(unsigned long addr,
 					  unsigned int esr,
 					  struct pt_regs *regs)
 {
+<<<<<<< HEAD
 	if (addr < TASK_SIZE)
+=======
+	if (is_ttbr0_addr(addr))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		return do_page_fault(addr, esr, regs);
 
 	do_bad_area(addr, esr, regs);
@@ -805,7 +852,11 @@ asmlinkage void __exception do_el0_ia_bp_hardening(unsigned long addr,
 	 * re-enabled IRQs. If the address is a kernel address, apply
 	 * BP hardening prior to enabling IRQs and pre-emption.
 	 */
+<<<<<<< HEAD
 	if (addr > TASK_SIZE)
+=======
+	if (!is_ttbr0_addr(addr))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		arm64_apply_bp_hardening();
 
 	local_irq_enable();
@@ -820,7 +871,11 @@ asmlinkage void __exception do_sp_pc_abort(unsigned long addr,
 	struct siginfo info;
 
 	if (user_mode(regs)) {
+<<<<<<< HEAD
 		if (instruction_pointer(regs) > TASK_SIZE)
+=======
+		if (!is_ttbr0_addr(instruction_pointer(regs)))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 			arm64_apply_bp_hardening();
 		local_irq_enable();
 	}
@@ -912,7 +967,11 @@ asmlinkage int __exception do_debug_exception(unsigned long addr_if_watchpoint,
 	if (interrupts_enabled(regs))
 		trace_hardirqs_off();
 
+<<<<<<< HEAD
 	if (user_mode(regs) && pc > TASK_SIZE)
+=======
+	if (user_mode(regs) && !is_ttbr0_addr(pc))
+>>>>>>> abf4fbc657532dbe8f302d9ce2d78dbd2a009b82
 		arm64_apply_bp_hardening();
 
 	if (!inf->fn(addr_if_watchpoint, esr, regs)) {
